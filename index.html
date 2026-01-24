@@ -2,162 +2,179 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>TIMSシミュレーター</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TIMS Simulator</title>
 
 <style>
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: #f2f2f2;
+body{
+  margin:0;
+  background:#050b10;
+  color:#00ff9c;
+  font-family:monospace;
+}
+.screen{
+  max-width:1000px;
+  margin:auto;
+  padding:10px;
+}
+.header{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:10px;
 }
 
-header {
-  background: #ffffff;
-  padding: 15px;
-  text-align: center;
-  font-weight: bold;
-  font-size: 20px;
+/* パネル */
+.panel{
+  background:#0d1b26;
+  border:1px solid #0f3;
+  padding:10px;
+  margin-bottom:10px;
 }
 
-.panel {
-  background: #fff;
-  margin: 15px;
-  padding: 15px;
-  border-radius: 12px;
+/* ボタン */
+.menu{
+  display:flex;
+  gap:10px;
+}
+.tims-btn{
+  flex:1;
+  background:#204060;
+  border:2px solid #4aa3ff;
+  color:white;
+  padding:15px;
+  text-align:center;
+  font-size:16px;
+  cursor:pointer;
+  user-select:none;
+  transition:background-color 0.05s;
+  -webkit-tap-highlight-color: transparent;
 }
 
-button {
-  width: 100%;
-  padding: 14px;
-  font-size: 16px;
-  border: none;
-  border-radius: 10px;
-  background: #007aff;
-  color: #fff;
-  margin-top: 10px;
+/* 押した瞬間だけ白 */
+.tims-btn:active{
+  background:#ffffff;
+  color:#000000;
 }
 
-button:active {
-  opacity: 0.8;
+.hidden{display:none}
+
+/* 走行矢印 */
+.arrow{
+  text-align:center;
+  font-size:32px;
+  color:yellow;
 }
 
-/* 編成図 */
-.train-wrapper {
-  margin-top: 15px;
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
+/* 編成 */
+.train{
+  display:flex;
+  gap:4px;
+  margin-top:8px;
+}
+.car{
+  flex:1;
+  height:40px;
+  border:1px solid #0f3;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:#031016;
+  cursor:pointer;
+  transition:background-color 0.05s;
+}
+.car.sub{border-color:#09f}
+
+/* 押した瞬間白 */
+.car:active{
+  background:#ffffff;
+  color:#000;
 }
 
-.car {
-  width: 36px;
-  height: 28px;
-  border: 2px solid #2ecc71;
-  margin: 3px;
-  text-align: center;
-  line-height: 28px;
-  font-size: 12px;
-  border-radius: 4px;
-  background: #fff;
-  cursor: pointer;
-}
-
-.car.basic {
-  border-color: #2ecc71;
-}
-
-.car.sub {
-  border-color: #3498db;
-}
-
-.car.active {
-  background: yellow;
-}
-
-/* 非公式表記 */
-.note {
-  font-size: 12px;
-  color: #666;
-  text-align: center;
-  margin-top: 20px;
+/* 選択後黄色 */
+.car.active{
+  background:yellow;
+  color:black;
+  font-weight:bold;
 }
 </style>
 </head>
 
 <body>
+<div class="screen">
 
-<header>
-🚆 TIMSシミュレーター
-</header>
+  <div class="header">
+    <div>TIMS 運転情報シミュレーター</div>
+    <div id="speed">0 km/h</div>
+  </div>
 
-<div class="panel">
-  <div>現在駅：君津</div>
-  <div id="time"></div>
+  <!-- 初期選択 -->
+  <div class="panel">
+    <div class="menu">
+      <div class="tims-btn">運転士</div>
+      <div class="tims-btn">乗務</div>
+      <div class="tims-btn" id="doorBtn">ドアカット</div>
+    </div>
+  </div>
 
-  <button onclick="toggleDoorCut()">ドアカット</button>
+  <!-- 操作 -->
+  <div class="panel">
+    <div class="tims-btn" id="nextBtn">次の駅へ</div>
+  </div>
 
-  <div id="trainArea" class="train-wrapper" style="display:none;"></div>
+  <!-- 状態 -->
+  <div class="panel">
+    <div id="status">停車中（君津）</div>
+    <div id="arrow" class="arrow hidden">➡ ➡ ➡</div>
+  </div>
+
+  <!-- ドアカット -->
+  <div class="panel hidden" id="doorPanel">
+    <div>ドアカット（基本11両＋付属4両）</div>
+    <div class="train" id="train"></div>
+  </div>
+
 </div>
 
-<p class="note">
-※ 本サイトはTIMSを模した非公式シミュレーター（ゲーム）です。
-</p>
-
 <script>
-/* 時刻表示 */
-function updateTime() {
-  const now = new Date();
-  document.getElementById("time").textContent =
-    "時刻：" + now.toLocaleTimeString();
-}
-setInterval(updateTime, 1000);
-updateTime();
+let running = false;
+let arrived = false;
 
-/* ドアカット表示 */
-let doorCutVisible = false;
+const nextBtn = document.getElementById("nextBtn");
+const status = document.getElementById("status");
+const arrow = document.getElementById("arrow");
+const speed = document.getElementById("speed");
+const doorBtn = document.getElementById("doorBtn");
+const doorPanel = document.getElementById("doorPanel");
 
-function toggleDoorCut() {
-  const area = document.getElementById("trainArea");
-
-  if (!doorCutVisible) {
-    area.style.display = "flex";
-    if (area.children.length === 0) {
-      createTrain();
-    }
-    doorCutVisible = true;
-  } else {
-    area.style.display = "none";
-    doorCutVisible = false;
+// 次の駅処理
+nextBtn.onclick = () => {
+  if(!running){
+    running = true;
+    arrived = false;
+    status.textContent = "走行中";
+    arrow.classList.remove("hidden");
+    speed.textContent = "90 km/h";
+  }else if(!arrived){
+    arrived = true;
+    running = false;
+    arrow.classList.add("hidden");
+    speed.textContent = "0 km/h";
+    status.textContent = "千葉駅 到着（総武快速線・快速）";
   }
-}
+};
 
-/* 編成作成（11両＋4両） */
-function createTrain() {
-  const area = document.getElementById("trainArea");
+// ドアカット表示
+doorBtn.onclick = () => {
+  doorPanel.classList.toggle("hidden");
+};
 
-  // 基本編成 11両
-  for (let i = 1; i <= 11; i++) {
-    const car = document.createElement("div");
-    car.className = "car basic";
-    car.textContent = i;
-    car.onclick = () => toggleCar(car);
-    area.appendChild(car);
-  }
-
-  // 付属編成 4両
-  for (let i = 12; i <= 15; i++) {
-    const car = document.createElement("div");
-    car.className = "car sub";
-    car.textContent = i;
-    car.onclick = () => toggleCar(car);
-    area.appendChild(car);
-  }
-}
-
-/* 車両選択 */
-function toggleCar(car) {
-  car.classList.toggle("active");
+// 編成生成
+const train = document.getElementById("train");
+for(let i=1;i<=15;i++){
+  const car = document.createElement("div");
+  car.textContent = i;
+  car.className = "car" + (i>11 ? " sub" : "");
+  car.onclick = () => car.classList.toggle("active");
+  train.appendChild(car);
 }
 </script>
 
