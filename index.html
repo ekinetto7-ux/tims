@@ -2,94 +2,96 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
+<title>TIMS 再現</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TIMS</title>
 
 <style>
 body {
   margin: 0;
   background: #000;
-  font-family: "Noto Sans JP", "MS Gothic", monospace;
-  color: #00ff66;
+  font-family: "MS Gothic", monospace;
+  color: #ccc;
 }
 
-/* 全体画面 */
+:root {
+  --line-color: #f4d03f;
+}
+
 #tims {
-  max-width: 420px;
-  margin: 0 auto;
-  padding: 8px;
-  box-sizing: border-box;
+  max-width: 1100px;
+  margin: 20px auto;
+  border: 3px solid #2aff2a;
+  padding: 10px;
 }
 
-/* 上部路線表示 */
-#header {
-  border: 2px solid #00ff66;
-  padding: 6px 8px;
+.header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-}
-
-#line {
-  color: #ffd800; /* 内房線 */
-  font-size: 18px;
-}
-
-#station {
-  font-size: 16px;
-}
-
-/* メニューボタン */
-#menu {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
+  border-bottom: 2px solid #2aff2a;
+  padding-bottom: 6px;
   margin-bottom: 10px;
 }
 
-.menu-btn {
-  border: 2px solid #00ff66;
-  padding: 18px 0;
-  text-align: center;
-  font-size: 16px;
+#line {
+  font-size: 28px;
+  color: var(--line-color);
 }
 
-/* メイン枠 */
-#panel {
-  border: 2px solid #00ff66;
-  padding: 8px;
+#dest {
+  font-size: 22px;
+  color: #2aff2a;
 }
 
-/* 車両表示 */
-#cars {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  margin-bottom: 6px;
+.info {
+  background: #111;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.cars {
+  display: grid;
+  grid-template-columns: repeat(15, 1fr);
+  gap: 5px;
+  margin-bottom: 10px;
 }
 
 .car {
-  width: 36px;
-  height: 28px;
-  border: 1px solid #00ff66;
+  border: 1px solid #555;
   text-align: center;
-  line-height: 28px;
-  font-size: 13px;
+  padding: 4px 0;
+  color: #9adbd3;
 }
 
-/* ドア表示 */
-#doors {
+.buttons {
   display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
+  gap: 10px;
 }
 
-.door {
-  width: 36px;
-  height: 10px;
+.btn {
+  border: 2px solid #2aff2a;
+  color: #2aff2a;
+  padding: 8px 16px;
+  cursor: pointer;
   background: #000;
-  border: 1px solid #333;
+}
+
+.btn:disabled {
+  opacity: 0.3;
+}
+
+#notice {
+  margin-top: 8px;
+  height: 24px;
+  color: #0ff;
+}
+
+.blink {
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%,50%,100% { opacity: 1; }
+  25%,75% { opacity: 0; }
 }
 </style>
 </head>
@@ -97,45 +99,97 @@ body {
 <body>
 
 <div id="tims">
-
-  <!-- 上部 -->
-  <div id="header">
+  <div class="header">
     <div id="line">内房線</div>
-    <div id="station">君津</div>
+    <div id="dest">君津</div>
   </div>
 
-  <!-- メニュー -->
-  <div id="menu">
-    <div class="menu-btn">運転情報</div>
-    <div class="menu-btn">車掌</div>
-    <div class="menu-btn">放送</div>
-    <div class="menu-btn">Suica</div>
+  <div class="info">
+    列車番号：2680E　
+    次駅：<span id="next">木更津</span>
   </div>
 
-  <!-- 情報画面 -->
-  <div id="panel">
-    <div id="cars">
-      <!-- 1〜11号車 -->
-      <div class="car">1</div><div class="car">2</div><div class="car">3</div>
-      <div class="car">4</div><div class="car">5</div><div class="car">6</div>
-      <div class="car">7</div><div class="car">8</div><div class="car">9</div>
-      <div class="car">10</div><div class="car">11</div>
-      <!-- 増結 -->
-      <div class="car">増1</div><div class="car">増2</div>
-      <div class="car">増3</div><div class="car">増4</div>
-    </div>
-
-    <div id="doors">
-      <!-- ドア（見た目だけ） -->
-      <div class="door"></div><div class="door"></div><div class="door"></div>
-      <div class="door"></div><div class="door"></div><div class="door"></div>
-      <div class="door"></div><div class="door"></div><div class="door"></div>
-      <div class="door"></div><div class="door"></div><div class="door"></div>
-      <div class="door"></div><div class="door"></div><div class="door"></div>
-    </div>
+  <div class="cars">
+    <div class="car">1</div><div class="car">2</div><div class="car">3</div>
+    <div class="car">4</div><div class="car">5</div><div class="car">6</div>
+    <div class="car">7</div><div class="car">8</div><div class="car">9</div>
+    <div class="car">10</div><div class="car">11</div>
+    <div class="car">増1</div><div class="car">増2</div>
+    <div class="car">増3</div><div class="car">増4</div>
   </div>
 
+  <div class="buttons">
+    <button class="btn" onclick="setUchibo()">内房線</button>
+    <button class="btn" onclick="setSobu()">総武快速線</button>
+    <button class="btn" onclick="nextStation()">次駅</button>
+  </div>
+
+  <div id="notice"></div>
 </div>
+
+<script>
+let stations = ["木更津", "五井", "蘇我", "千葉", "東京"];
+let index = 0;
+let locked = false;
+
+/* チーン音 */
+function chime() {
+  const ctx = new AudioContext();
+  for (let i = 0; i < 2; i++) {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.frequency.value = 880;
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(ctx.currentTime + i * 0.4);
+    osc.stop(ctx.currentTime + i * 0.4 + 0.25);
+  }
+}
+
+/* 路線切替 */
+function setUchibo() {
+  if (locked) return;
+  document.getElementById("line").textContent = "内房線";
+  document.documentElement.style.setProperty("--line-color", "#f4d03f");
+  notice("路線切替");
+  chime();
+}
+
+function setSobu() {
+  if (locked) return;
+  document.getElementById("line").textContent = "総武快速線";
+  document.documentElement.style.setProperty("--line-color", "#0080ff");
+  notice("路線切替");
+  chime();
+}
+
+/* 次駅進行 */
+function nextStation() {
+  if (locked) return;
+
+  if (index < stations.length - 1) {
+    index++;
+    document.getElementById("next").textContent = stations[index];
+  }
+
+  if (index === stations.length - 1) {
+    document.getElementById("next").textContent = "終点";
+    document.getElementById("next").classList.add("blink");
+    lockAll();
+  }
+}
+
+function notice(text) {
+  const n = document.getElementById("notice");
+  n.textContent = text;
+  setTimeout(() => n.textContent = "", 1500);
+}
+
+function lockAll() {
+  locked = true;
+  document.querySelectorAll("button").forEach(b => b.disabled = true);
+}
+</script>
 
 </body>
 </html>
