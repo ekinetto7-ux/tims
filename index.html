@@ -3,239 +3,150 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TIMS</title>
+<title>TIMS 運転情報</title>
 
 <style>
-body{
-  margin:0;
-  background:black;
-  overflow:hidden;
-  font-family: monospace;
+body {
+  margin: 0;
+  background: black;
+  color: #00ff00;
+  font-family: "MS Gothic", monospace;
 }
 
-/* 縦画面警告 */
-#rotateWarning{
-  display:none;
-  position:fixed;
-  inset:0;
-  background:black;
-  color:#00ff00;
-  font-size:28px;
-  align-items:center;
-  justify-content:center;
-  z-index:9999;
-}
-@media (orientation: portrait){
-  #outer{ display:none; }
-  #rotateWarning{ display:flex; }
+#screen {
+  border: 2px solid #00ff00;
+  margin: 10px;
+  padding: 10px;
 }
 
-/* 中央配置 */
-#outer{
-  width:100vw;
-  height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
+.header {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 2px solid #00ff00;
+  padding-bottom: 5px;
 }
 
-/* 本体（業務端末） */
-#tims{
-  width:1280px;
-  height:720px;
-  background:black;
-  border:2px solid #00ff00;
-  color:#00ff00;
-  display:flex;
-  flex-direction:column;
+.route {
+  color: yellow;
+  font-size: 20px;
 }
 
-/* 上部バー */
-#header{
-  height:50px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:0 12px;
-  border-bottom:2px solid #00ff00;
-}
-.route-yellow{ color:yellow; }
-.route-blue{ color:#4fc3f7; }
-.blink{ animation:blink 1s infinite; }
-@keyframes blink{50%{opacity:0;}}
-
-/* タブ（見た目だけ） */
-#tabs{
-  display:flex;
-  gap:10px;
-  padding:10px;
-}
-.tab{
-  padding:6px 14px;
-  border:2px solid #00ff00;
+.tabs button {
+  background: black;
+  color: #00ff00;
+  border: 2px solid #00ff00;
+  margin-right: 5px;
+  padding: 5px 10px;
 }
 
-/* 車両 */
-#cars{
-  display:flex;
-  gap:6px;
-  padding:10px;
-}
-.car{
-  width:55px;
-  height:35px;
-  border:2px solid #00ff00;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  cursor:pointer;
-}
-.car.open{
-  background:red;
-  color:black;
-}
-.car.locked{
-  opacity:.4;
-  pointer-events:none;
+.controls {
+  margin-top: 10px;
 }
 
-/* ボタン */
-#buttons{
-  display:flex;
-  gap:10px;
-  padding:10px;
+.controls button {
+  padding: 10px;
+  margin-right: 10px;
+  font-size: 16px;
 }
-.btn{
-  padding:10px 18px;
-  font-size:18px;
-  border:none;
-  cursor:pointer;
-}
-.next{ background:#0066ff; color:white; }
-.emg{ background:red; color:white; }
-.btn:disabled{ opacity:.4; }
 
-#main{ flex:1; }
+#next {
+  background: #0066ff;
+  color: white;
+}
+
+#emergency {
+  background: red;
+  color: white;
+}
+
+.cars {
+  margin-top: 20px;
+  display: flex;
+  gap: 5px;
+}
+
+.car {
+  width: 40px;
+  height: 30px;
+  border: 2px solid #00ff00;
+  text-align: center;
+  line-height: 30px;
+  cursor: pointer;
+}
+
+.car.active {
+  background: red;
+}
+
+.doors {
+  margin-top: 10px;
+  display: flex;
+  gap: 5px;
+}
+
+.door {
+  width: 40px;
+  height: 15px;
+  background: black;
+  border: 1px solid #00ff00;
+}
+
+.door.open {
+  background: red;
+}
 </style>
 </head>
 
 <body>
 
-<div id="rotateWarning">横画面にしてください</div>
-
-<div id="outer">
-<div id="tims">
-
-  <!-- 上部 -->
-  <div id="header">
-    <div id="lineName" class="route-yellow">内房線</div>
-    <div id="stationName">君津</div>
+<div id="screen">
+  <div class="header">
+    <div class="route" id="route">内房線</div>
+    <div>君津</div>
   </div>
 
-  <!-- タブ -->
-  <div id="tabs">
-    <div class="tab">運転情報</div>
-    <div class="tab">車掌</div>
+  <div class="tabs">
+    <button>運転情報</button>
+    <button>車掌</button>
   </div>
 
-  <!-- 車両 -->
-  <div id="cars"></div>
-
-  <!-- ボタン -->
-  <div id="buttons">
-    <button class="btn next" id="nextBtn">次の駅</button>
-    <button class="btn emg" id="emgBtn">非常</button>
+  <div class="controls">
+    <button id="next">次の駅</button>
+    <button id="emergency">非常</button>
   </div>
 
-  <div id="main"></div>
-
-</div>
+  <div class="cars" id="cars"></div>
+  <div class="doors" id="doors"></div>
 </div>
 
 <script>
-/* ===== 駅データ ===== */
-const stations=[
-"君津","木更津","袖ケ浦","長浦","姉ケ崎","五井",
-"八幡宿","浜野","蘇我","千葉",
-"稲毛","津田沼","船橋","市川",
-"新小岩","錦糸町","馬喰町","新日本橋","東京"
-];
-let idx=0;
-let locked=false;
+const carsDiv = document.getElementById("cars");
+const doorsDiv = document.getElementById("doors");
+let doorOpen = false;
 
-/* ===== 音 ===== */
-function beep(){
- const c=new AudioContext();
- const o=c.createOscillator();
- o.frequency.value=1200;
- o.connect(c.destination);
- o.start();
- o.stop(c.currentTime+0.08);
-}
-function chime(){
- const c=new AudioContext();
- [880,660].forEach((f,i)=>{
-  const o=c.createOscillator();
-  o.frequency.value=f;
-  o.connect(c.destination);
-  o.start(c.currentTime+i*0.3);
-  o.stop(c.currentTime+i*0.3+0.4);
- });
+// 編成 11 + 増1〜4
+for (let i = 1; i <= 15; i++) {
+  const car = document.createElement("div");
+  car.className = "car";
+  car.textContent = i <= 11 ? i : "増" + (i - 11);
+  car.onclick = () => car.classList.toggle("active");
+  carsDiv.appendChild(car);
+
+  const door = document.createElement("div");
+  door.className = "door";
+  doorsDiv.appendChild(door);
 }
 
-/* ===== 車両 ===== */
-const carsEl=document.getElementById("cars");
-const cars=[1,2,3,4,5,6,7,8,9,10,11,"増1","増2","増3","増4"];
-let door={};
-cars.forEach(c=>door[c]=false);
-
-cars.forEach(c=>{
- const d=document.createElement("div");
- d.className="car";
- d.textContent=c;
- d.onclick=()=>{
-  if(locked) return;
-  beep();
-  door[c]=!door[c];
-  d.classList.toggle("open",door[c]);
- };
- carsEl.appendChild(d);
-});
-
-/* ===== 次の駅 ===== */
-nextBtn.onclick=()=>{
- if(locked) return;
- beep();
- idx++;
- if(idx>=stations.length) return;
- stationName.textContent=stations[idx];
-
- if(stations[idx]==="千葉"){
-  lineName.textContent="総武快速線";
-  lineName.className="route-blue";
-  chime(); chime();
- }
-
- if(stations[idx]==="東京"){
-  lockAll();
- }
+document.getElementById("next").onclick = () => {
+  doorOpen = !doorOpen;
+  document.querySelectorAll(".door").forEach(d => {
+    d.classList.toggle("open", doorOpen);
+  });
 };
 
-/* ===== 非常 ===== */
-emgBtn.onclick=()=>{
- if(locked) return;
- beep();
- lockAll();
+document.getElementById("emergency").onclick = () => {
+  alert("非常扱い中");
 };
-
-/* ===== 全ロック ===== */
-function lockAll(){
- locked=true;
- lineName.classList.add("blink");
- stationName.classList.add("blink");
- document.querySelectorAll(".car").forEach(c=>c.classList.add("locked"));
- document.querySelectorAll("button").forEach(b=>b.disabled=true);
-}
 </script>
 
 </body>
