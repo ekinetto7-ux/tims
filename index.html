@@ -3,180 +3,139 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TIMS 運転情報</title>
+<title>TIMS</title>
+
 <style>
 body {
   margin: 0;
   background: #000;
+  font-family: "Noto Sans JP", "MS Gothic", monospace;
   color: #00ff66;
-  font-family: "Arial", monospace;
 }
-.header {
-  border-bottom: 2px solid #00ff66;
-  padding: 8px 12px;
+
+/* 全体画面 */
+#tims {
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+/* 上部路線表示 */
+#header {
+  border: 2px solid #00ff66;
+  padding: 6px 8px;
   display: flex;
   justify-content: space-between;
-}
-.line-uchibo { color: #ffd800; }
-.line-sobu { color: #00a0ff; }
-
-.panel {
-  border: 2px solid #00ff66;
-  margin: 12px;
-  padding: 10px;
+  align-items: center;
+  margin-bottom: 8px;
 }
 
-.tabs button {
-  background: #000;
-  color: #00ff66;
-  border: 2px solid #00ff66;
-  margin-right: 6px;
-  padding: 6px 12px;
-}
-
-.controls {
-  margin-top: 10px;
-}
-.controls button {
-  font-size: 16px;
-  padding: 10px 18px;
-  margin-right: 10px;
-  border: none;
-}
-#nextBtn { background:#0066ff; color:#fff; }
-#emgBtn { background:#ff0000; color:#fff; }
-
-.cars {
-  display: flex;
-  gap: 6px;
-  margin-top: 15px;
-}
-.car {
-  width: 42px;
-  height: 32px;
-  border: 2px solid #00ff66;
-  text-align: center;
-  line-height: 32px;
-  cursor: pointer;
-}
-.car.active {
-  background: red;
-}
-.car.add { color:#00ffaa; }
-
-.doors {
-  display: flex;
-  gap: 6px;
-  margin-top: 8px;
-}
-.door {
-  width: 42px;
-  height: 12px;
-  background: #000;
-  border: 1px solid #444;
-}
-.door.open { background: red; }
-
-.status {
-  margin-top: 12px;
+#line {
+  color: #ffd800; /* 内房線 */
   font-size: 18px;
 }
-.blink {
-  animation: blink 1s infinite;
+
+#station {
+  font-size: 16px;
 }
-@keyframes blink {
-  50% { opacity: 0; }
+
+/* メニューボタン */
+#menu {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.menu-btn {
+  border: 2px solid #00ff66;
+  padding: 18px 0;
+  text-align: center;
+  font-size: 16px;
+}
+
+/* メイン枠 */
+#panel {
+  border: 2px solid #00ff66;
+  padding: 8px;
+}
+
+/* 車両表示 */
+#cars {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 6px;
+}
+
+.car {
+  width: 36px;
+  height: 28px;
+  border: 1px solid #00ff66;
+  text-align: center;
+  line-height: 28px;
+  font-size: 13px;
+}
+
+/* ドア表示 */
+#doors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.door {
+  width: 36px;
+  height: 10px;
+  background: #000;
+  border: 1px solid #333;
 }
 </style>
 </head>
+
 <body>
 
-<div class="header">
-  <div id="lineName" class="line-uchibo">内房線</div>
-  <div id="station">君津</div>
-</div>
+<div id="tims">
 
-<div class="panel">
-  <div class="tabs">
-    <button>運転情報</button>
-    <button>車掌</button>
+  <!-- 上部 -->
+  <div id="header">
+    <div id="line">内房線</div>
+    <div id="station">君津</div>
   </div>
 
-  <div class="controls">
-    <button id="nextBtn">次の駅</button>
-    <button id="emgBtn">非常</button>
+  <!-- メニュー -->
+  <div id="menu">
+    <div class="menu-btn">運転情報</div>
+    <div class="menu-btn">車掌</div>
+    <div class="menu-btn">放送</div>
+    <div class="menu-btn">Suica</div>
   </div>
 
-  <div class="cars" id="cars"></div>
-  <div class="doors" id="doors"></div>
+  <!-- 情報画面 -->
+  <div id="panel">
+    <div id="cars">
+      <!-- 1〜11号車 -->
+      <div class="car">1</div><div class="car">2</div><div class="car">3</div>
+      <div class="car">4</div><div class="car">5</div><div class="car">6</div>
+      <div class="car">7</div><div class="car">8</div><div class="car">9</div>
+      <div class="car">10</div><div class="car">11</div>
+      <!-- 増結 -->
+      <div class="car">増1</div><div class="car">増2</div>
+      <div class="car">増3</div><div class="car">増4</div>
+    </div>
 
-  <div class="status" id="status">停車中</div>
+    <div id="doors">
+      <!-- ドア（見た目だけ） -->
+      <div class="door"></div><div class="door"></div><div class="door"></div>
+      <div class="door"></div><div class="door"></div><div class="door"></div>
+      <div class="door"></div><div class="door"></div><div class="door"></div>
+      <div class="door"></div><div class="door"></div><div class="door"></div>
+      <div class="door"></div><div class="door"></div><div class="door"></div>
+    </div>
+  </div>
+
 </div>
-
-<script>
-const stations = [
-  "君津","木更津","袖ケ浦","長浦","姉ケ崎","五井","八幡宿","浜野","蘇我","千葉",
-  "稲毛","津田沼","船橋","市川","新小岩","錦糸町","馬喰町","新日本橋","東京"
-];
-
-let index = 0;
-let emergency = false;
-let finished = false;
-
-const stationEl = document.getElementById("station");
-const lineEl = document.getElementById("lineName");
-const statusEl = document.getElementById("status");
-
-const carsEl = document.getElementById("cars");
-const doorsEl = document.getElementById("doors");
-
-for(let i=1;i<=11;i++){
-  const d=document.createElement("div");
-  d.className="car";
-  d.textContent=i;
-  d.onclick=()=>d.classList.toggle("active");
-  carsEl.appendChild(d);
-}
-["増1","増2","増3","増4"].forEach(t=>{
-  const d=document.createElement("div");
-  d.className="car add";
-  d.textContent=t;
-  d.onclick=()=>d.classList.toggle("active");
-  carsEl.appendChild(d);
-});
-
-for(let i=0;i<15;i++){
-  const d=document.createElement("div");
-  d.className="door";
-  d.onclick=()=>d.classList.toggle("open");
-  doorsEl.appendChild(d);
-}
-
-document.getElementById("nextBtn").onclick=()=>{
-  if(emergency||finished) return;
-  index++;
-  if(index>=stations.length-1){
-    stationEl.textContent="東京";
-    lineEl.textContent="総武快速線";
-    lineEl.className="line-sobu blink";
-    statusEl.textContent="終点 到着";
-    finished=true;
-    return;
-  }
-  stationEl.textContent=stations[index];
-  if(stations[index]==="千葉"){
-    lineEl.textContent="総武快速線";
-    lineEl.className="line-sobu";
-    new Audio("data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABAAZGF0YQAAAAA=").play();
-    new Audio("data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABAAZGF0YQAAAAA=").play();
-  }
-};
-
-document.getElementById("emgBtn").onclick=()=>{
-  emergency=!emergency;
-  statusEl.textContent=emergency?"非常中":"停車中";
-};
-</script>
 
 </body>
 </html>
