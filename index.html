@@ -2,253 +2,181 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>TIMS Simulator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TIMS シミュレーター</title>
 
 <style>
-body{
-  margin:0;
-  background:#050b10;
-  color:#00ff9c;
-  font-family:monospace;
-}
-.screen{
-  max-width:1000px;
-  margin:auto;
-  padding:10px;
-}
-.header{
-  display:flex;
-  justify-content:space-between;
-  margin-bottom:10px;
+body {
+  background: #000;
+  color: #0ff;
+  font-family: sans-serif;
+  margin: 0;
+  padding: 10px;
 }
 
-/* パネル */
-.panel{
-  background:#0d1b26;
-  border:1px solid #0f3;
-  padding:10px;
-  margin-bottom:10px;
+.panel {
+  border: 2px solid #0ff;
+  padding: 10px;
+  margin-bottom: 10px;
 }
 
-/* ボタン */
-.menu{
-  display:flex;
-  gap:10px;
-}
-.tims-btn{
-  flex:1;
-  background:#204060;
-  border:2px solid #4aa3ff;
-  color:white;
-  padding:15px;
-  text-align:center;
-  font-size:16px;
-  cursor:pointer;
-  user-select:none;
-  transition:background-color 0.05s;
-  -webkit-tap-highlight-color: transparent;
+.buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
-/* 押した瞬間だけ白 */
-.tims-btn:active{
-  background:#ffffff;
-  color:#000000;
+.tims-btn {
+  border: 2px solid #4aa3ff;
+  padding: 10px 16px;
+  cursor: pointer;
+  user-select: none;
+  text-align: center;
 }
 
-.hidden{display:none}
-
-/* 走行矢印 */
-.arrow{
-  text-align:center;
-  font-size:32px;
-  color:yellow;
+.tims-btn:active {
+  background: white;
+  color: black;
 }
 
-/* 編成 */
-.train{
-  display:flex;
-  gap:4px;
-  margin-top:8px;
-}
-.car{
-  flex:1;
-  height:40px;
-  border:1px solid #0f3;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  background:#031016;
-  cursor:pointer;
-  transition:background-color 0.05s;
-}
-.car.sub{border-color:#09f}
-
-/* 押した瞬間白 */
-.car:active{
-  background:#ffffff;
-  color:#000;
+#status {
+  font-size: 18px;
+  margin-bottom: 5px;
 }
 
-/* 選択後黄色 */
-.car.active{
-  background:yellow;
-  color:black;
-  font-weight:bold;
+#speed {
+  font-size: 16px;
+}
+
+#arrow {
+  font-size: 30px;
+  color: yellow;
+}
+
+.hidden {
+  display: none;
+}
+
+/* ドアカット */
+#doorPanel {
+  margin-top: 10px;
+}
+
+#train {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.car {
+  width: 30px;
+  height: 40px;
+  border: 2px solid #0ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.car.sub {
+  border-color: #aaa;
+}
+
+.car.active {
+  background: yellow;
+  color: black;
 }
 </style>
 </head>
 
 <body>
-<div class="screen">
 
-  <div class="header">
-    <div>TIMS 運転情報シミュレーター</div>
-    <div id="speed">0 km/h</div>
+<div class="panel">
+  <div class="buttons">
+    <div class="tims-btn" id="driverBtn">運転士</div>
+    <div class="tims-btn" id="conductorBtn">車掌</div>
+    <div class="tims-btn" id="nextBtn">次の駅</div>
+    <div class="tims-btn" id="doorBtn">ドアカット</div>
   </div>
+</div>
 
-  <!-- 初期選択 -->
-  <div class="panel">
-    <div class="menu">
-      <div class="tims-btn">運転士</div>
-      <div class="tims-btn">乗務</div>
-      <div class="tims-btn" id="doorBtn">ドアカット</div>
-    </div>
-  </div>
+<div class="panel">
+  <div id="status">運転士モード</div>
+  <div id="speed">0 km/h</div>
+  <div id="arrow" class="hidden">▶</div>
+</div>
 
-  <!-- 操作 -->
-  <div class="panel">
-    <div class="tims-btn" id="nextBtn">次の駅へ</div>
-  </div>
-
-  <!-- 状態 -->
-  <div class="panel">
-    <div id="status">停車中（君津）</div>
-    <div id="arrow" class="arrow hidden">➡ ➡ ➡</div>
-  </div>
-
-  <!-- ドアカット -->
-  <div class="panel hidden" id="doorPanel">
-    <div>ドアカット（基本11両＋付属4両）</div>
-    <div class="train" id="train"></div>
-  </div>
-
+<div class="panel hidden" id="doorPanel">
+  <div>15両編成（基本11＋付属4）</div>
+  <div id="train"></div>
 </div>
 
 <script>
+let mode = "driver";
 let running = false;
 let arrived = false;
 
-const nextBtn = document.getElementById("nextBtn");
 const status = document.getElementById("status");
-const arrow = document.getElementById("arrow");
 const speed = document.getElementById("speed");
-const doorBtn = document.getElementById("doorBtn");
-const doorPanel = document.getElementById("doorPanel");
-
-// 次の駅処理
-nextBtn.onclick = () => {
-  if(!running){
-    running = true;
-    arrived = false;
-    status.textContent = "走行中";
-    arrow.classList.remove("hidden");
-    speed.textContent = "90 km/h";
-  }else if(!arrived){
-    arrived = true;
-    running = false;
-    arrow.classList.add("hidden");
-    speed.textContent = "0 km/h";
-    status.textContent = "千葉駅 到着（総武快速線・快速）";
-  }
-};
-
-// ドアカット表示
-doorBtn.onclick = () => {
-  doorPanel.classList.toggle("hidden");
-};
-
-// 編成生成
-const train = document.getElementById("train");
-for(let i=1;i<=15;i++){
-  const car = document.createElement("div");
-  car.textContent = i;
-  car.className = "car" + (i>11 ? " sub" : "");
-  car.onclick = () => car.classList.toggle("active");
-  train.appendChild(car);
-}
-</script>
-
-</body>
-</html>
-<script>
-let running = false;
-let arrived = false;
-let mode = "driver"; // driver / conductor
-
-const nextBtn = document.getElementById("nextBtn");
-const status = document.getElementById("status");
 const arrow = document.getElementById("arrow");
-const speed = document.getElementById("speed");
 
 const driverBtn = document.getElementById("driverBtn");
 const conductorBtn = document.getElementById("conductorBtn");
+const nextBtn = document.getElementById("nextBtn");
 const doorBtn = document.getElementById("doorBtn");
 const doorPanel = document.getElementById("doorPanel");
 
-/* ===== 初期状態 ===== */
+/* 初期 */
 driverBtn.style.borderColor = "yellow";
-conductorBtn.style.borderColor = "#4aa3ff";
 
-/* ===== 運転士モード ===== */
+/* モード切替 */
 driverBtn.onclick = () => {
   mode = "driver";
   status.textContent = "運転士モード";
-
   driverBtn.style.borderColor = "yellow";
   conductorBtn.style.borderColor = "#4aa3ff";
-
-  nextBtn.classList.remove("disabled");
 };
 
-/* ===== 車掌モード ===== */
 conductorBtn.onclick = () => {
   mode = "conductor";
   status.textContent = "車掌モード";
-
   conductorBtn.style.borderColor = "yellow";
   driverBtn.style.borderColor = "#4aa3ff";
-
-  nextBtn.classList.add("disabled");
 };
 
-/* ===== 次の駅（運転士のみ） ===== */
+/* 次の駅（運転士のみ） */
 nextBtn.onclick = () => {
-  if (mode !== "driver") return;
+  if (mode !== "driver") {
+    status.textContent = "※ 車掌モードでは操作不可";
+    return;
+  }
 
   if (!running) {
     running = true;
     arrived = false;
     status.textContent = "走行中";
-    arrow.classList.remove("hidden");
     speed.textContent = "90 km/h";
+    arrow.classList.remove("hidden");
   } else if (!arrived) {
-    arrived = true;
     running = false;
-    arrow.classList.add("hidden");
+    arrived = true;
     speed.textContent = "0 km/h";
+    arrow.classList.add("hidden");
     status.textContent = "千葉駅 到着（総武快速線・快速）";
   }
 };
 
-/* ===== ドアカット表示 ===== */
+/* ドアカット（車掌のみ） */
 doorBtn.onclick = () => {
+  if (mode !== "conductor") {
+    status.textContent = "※ 運転士モードでは操作不可";
+    return;
+  }
   doorPanel.classList.toggle("hidden");
 };
 
-/* ===== 編成（15両：基本11＋付属4） ===== */
+/* 編成表示 15両 */
 const train = document.getElementById("train");
-train.innerHTML = "";
-
 for (let i = 1; i <= 15; i++) {
   const car = document.createElement("div");
   car.textContent = i;
@@ -257,3 +185,6 @@ for (let i = 1; i <= 15; i++) {
   train.appendChild(car);
 }
 </script>
+
+</body>
+</html>
