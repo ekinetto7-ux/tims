@@ -163,6 +163,457 @@ body {
 </div>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>運転情報（非常対応）</title>
+
+<style>
+body {
+  margin: 0;
+  background: #111;
+  color: #fff;
+  font-family: sans-serif;
+}
+
+/* 上部表示 */
+.header {
+  text-align: center;
+  padding: 15px;
+  font-size: 22px;
+}
+
+/* 非常表示 */
+.emergency-text {
+  color: red;
+  font-weight: bold;
+  display: none;
+}
+
+/* 編成 */
+.train-area {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.train {
+  width: 260px;
+  height: 60px;
+  background: #555;
+  border-radius: 6px;
+  text-align: center;
+  line-height: 60px;
+  font-size: 20px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.train.active {
+  background: red;
+}
+
+/* ボタンエリア */
+.button-area {
+  position: fixed;
+  bottom: 30px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+}
+
+/* 共通ボタン */
+.btn {
+  width: 160px;
+  height: 60px;
+  font-size: 18px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: 0.1s;
+}
+
+.btn:active {
+  background: #fff;
+  color: #000;
+}
+
+/* 次の駅 */
+.next-btn {
+  background: #1e90ff;
+  color: #fff;
+}
+
+/* 非常 */
+.emergency-btn {
+  background: red;
+  color: #fff;
+}
+
+/* 無効化 */
+.disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  運転情報  
+  <div id="emergencyText" class="emergency-text">非常中</div>
+</div>
+
+<div class="train-area">
+  <div id="train" class="train">列車</div>
+</div>
+
+<div class="button-area">
+  <button id="nextBtn" class="btn next-btn">次の駅</button>
+  <button id="emergencyBtn" class="btn emergency-btn">非常</button>
+</div>
+
+<script>
+let emergency = false;
+
+const train = document.getElementById("train");
+const nextBtn = document.getElementById("nextBtn");
+const emergencyBtn = document.getElementById("emergencyBtn");
+const emergencyText = document.getElementById("emergencyText");
+
+/* 編成クリック */
+train.addEventListener("click", () => {
+  if (emergency) return;
+  train.classList.toggle("active");
+});
+
+/* 非常ボタン */
+emergencyBtn.addEventListener("click", () => {
+  emergency = !emergency;
+
+  if (emergency) {
+    emergencyText.style.display = "block";
+    nextBtn.classList.add("disabled");
+    train.classList.add("disabled");
+  } else {
+    emergencyText.style.display = "none";
+    nextBtn.classList.remove("disabled");
+    train.classList.remove("disabled");
+  }
+});
+
+/* 次の駅（テスト用） */
+nextBtn.addEventListener("click", () => {
+  if (emergency) return;
+  alert("次の駅へ進みます");
+});
+</script>
+
+</body>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>運転情報（非常対応）</title>
+
+<style>
+body {
+  margin: 0;
+  background: #111;
+  color: #fff;
+  font-family: sans-serif;
+}
+
+/* 上部表示 */
+.header {
+  text-align: center;
+  padding: 15px;
+  font-size: 22px;
+}
+
+/* 非常表示 */
+.emergency-text {
+  color: red;
+  font-weight: bold;
+  display: none;
+}
+
+/* 編成 */
+.train-area {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.train {
+  width: 260px;
+  height: 60px;
+  background: #555;
+  border-radius: 6px;
+  text-align: center;
+  line-height: 60px;
+  font-size: 20px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.train.active {
+  background: red;
+}
+
+/* ボタンエリア */
+.button-area {
+  position: fixed;
+  bottom: 30px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+}
+
+/* 共通ボタン */
+.btn {
+  width: 160px;
+  height: 60px;
+  font-size: 18px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: 0.1s;
+}
+
+.btn:active {
+  background: #fff;
+  color: #000;
+}
+
+/* 次の駅 */
+.next-btn {
+  background: #1e90ff;
+  color: #fff;
+}
+
+/* 非常 */
+.emergency-btn {
+  background: red;
+  color: #fff;
+}
+
+/* 無効化 */
+.disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  運転情報  
+  <div id="emergencyText" class="emergency-text">非常中</div>
+</div>
+
+<div class="train-area">
+  <div id="train" class="train">列車</div>
+</div>
+
+<div class="button-area">
+  <button id="nextBtn" class="btn next-btn">次の駅</button>
+  <button id="emergencyBtn" class="btn emergency-btn">非常</button>
+</div>
+
+<script>
+let emergency = false;
+
+const train = document.getElementById("train");
+const nextBtn = document.getElementById("nextBtn");
+const emergencyBtn = document.getElementById("emergencyBtn");
+const emergencyText = document.getElementById("emergencyText");
+
+/* 編成クリック */
+train.addEventListener("click", () => {
+  if (emergency) return;
+  train.classList.toggle("active");
+});
+
+/* 非常ボタン */
+emergencyBtn.addEventListener("click", () => {
+  emergency = !emergency;
+
+  if (emergency) {
+    emergencyText.style.display = "block";
+    nextBtn.classList.add("disabled");
+    train.classList.add("disabled");
+  } else {
+    emergencyText.style.display = "none";
+    nextBtn.classList.remove("disabled");
+    train.classList.remove("disabled");
+  }
+});
+
+/* 次の駅（テスト用） */
+nextBtn.addEventListener("click", () => {
+  if (emergency) return;
+  alert("次の駅へ進みます");
+});
+</script>
+
+</body>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>運転情報（非常対応）</title>
+
+<style>
+body {
+  margin: 0;
+  background: #111;
+  color: #fff;
+  font-family: sans-serif;
+}
+
+/* 上部表示 */
+.header {
+  text-align: center;
+  padding: 15px;
+  font-size: 22px;
+}
+
+/* 非常表示 */
+.emergency-text {
+  color: red;
+  font-weight: bold;
+  display: none;
+}
+
+/* 編成 */
+.train-area {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.train {
+  width: 260px;
+  height: 60px;
+  background: #555;
+  border-radius: 6px;
+  text-align: center;
+  line-height: 60px;
+  font-size: 20px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.train.active {
+  background: red;
+}
+
+/* ボタンエリア */
+.button-area {
+  position: fixed;
+  bottom: 30px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+}
+
+/* 共通ボタン */
+.btn {
+  width: 160px;
+  height: 60px;
+  font-size: 18px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: 0.1s;
+}
+
+.btn:active {
+  background: #fff;
+  color: #000;
+}
+
+/* 次の駅 */
+.next-btn {
+  background: #1e90ff;
+  color: #fff;
+}
+
+/* 非常 */
+.emergency-btn {
+  background: red;
+  color: #fff;
+}
+
+/* 無効化 */
+.disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  運転情報  
+  <div id="emergencyText" class="emergency-text">非常中</div>
+</div>
+
+<div class="train-area">
+  <div id="train" class="train">列車</div>
+</div>
+
+<div class="button-area">
+  <button id="nextBtn" class="btn next-btn">次の駅</button>
+  <button id="emergencyBtn" class="btn emergency-btn">非常</button>
+</div>
+
+<script>
+let emergency = false;
+
+const train = document.getElementById("train");
+const nextBtn = document.getElementById("nextBtn");
+const emergencyBtn = document.getElementById("emergencyBtn");
+const emergencyText = document.getElementById("emergencyText");
+
+/* 編成クリック */
+train.addEventListener("click", () => {
+  if (emergency) return;
+  train.classList.toggle("active");
+});
+
+/* 非常ボタン */
+emergencyBtn.addEventListener("click", () => {
+  emergency = !emergency;
+
+  if (emergency) {
+    emergencyText.style.display = "block";
+    nextBtn.classList.add("disabled");
+    train.classList.add("disabled");
+  } else {
+    emergencyText.style.display = "none";
+    nextBtn.classList.remove("disabled");
+    train.classList.remove("disabled");
+  }
+});
+
+/* 次の駅（テスト用） */
+nextBtn.addEventListener("click", () => {
+  if (emergency) return;
+  alert("次の駅へ進みます");
+});
+</script>
+
+</body>
+</html>
 
 
   
