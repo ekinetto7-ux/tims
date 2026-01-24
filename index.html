@@ -2,23 +2,21 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>列車の時刻</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TIMSシミュレーター</title>
   <style>
     body {
-      font-family: sans-serif;
-      background: #f5f5f5;
+      font-family: system-ui;
+      background: #f4f4f4;
       padding: 20px;
     }
     h1 {
       text-align: center;
     }
-    .box {
+    .panel {
       background: white;
       padding: 15px;
       border-radius: 10px;
-      max-width: 500px;
-      margin: auto;
+      margin-bottom: 15px;
     }
     button {
       width: 100%;
@@ -26,17 +24,61 @@
       font-size: 16px;
       margin-top: 10px;
     }
+    .log {
+      background: black;
+      color: lime;
+      font-family: monospace;
+      padding: 10px;
+      height: 200px;
+      overflow-y: auto;
+    }
   </style>
 </head>
 <body>
-  <h1>🚃 列車の時刻</h1>
 
-  <div class="box">
-    <p>これはテストページです。</p>
-    <p>ここから時刻表やシミュレーターを作っていきます。</p>
-    <button onclick="alert('ボタンが押されました！')">
-      テストボタン
-    </button>
-  </div>
+<h1>🚉 TIMS シミュレーター</h1>
+
+<div class="panel">
+  <div>現在駅：<b id="station">巌根</b></div>
+  <div>時刻：<span id="time"></span></div>
+
+  <button onclick="arrive()">到着</button>
+  <button onclick="depart()">発車</button>
+</div>
+
+<div class="panel log" id="log">
+  TIMS LOG START
+</div>
+
+<script>
+  const station = "巌根";
+
+  function now() {
+    const d = new Date();
+    return d.toLocaleTimeString("ja-JP");
+  }
+
+  function updateTime() {
+    document.getElementById("time").textContent = now();
+  }
+
+  function log(text) {
+    const logDiv = document.getElementById("log");
+    logDiv.innerHTML += "<br>" + text;
+    logDiv.scrollTop = logDiv.scrollHeight;
+  }
+
+  function arrive() {
+    log(`[${now()}] ${station} 到着`);
+  }
+
+  function depart() {
+    log(`[${now()}] ${station} 発車`);
+  }
+
+  setInterval(updateTime, 1000);
+  updateTime();
+</script>
+
 </body>
 </html>
