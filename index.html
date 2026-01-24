@@ -2,199 +2,269 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TIMS シミュレーター</title>
+<title>TIMS Simulator</title>
 
 <style>
 body {
-  background: #000;
-  color: #0ff;
-  font-family: sans-serif;
   margin: 0;
-  padding: 10px;
+  background: #000814;
+  color: white;
+  font-family: sans-serif;
 }
 
-.panel {
-  border: 2px solid #0ff;
-  padding: 10px;
-  margin-bottom: 10px;
-}
-
-.buttons {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.tims-btn {
-  border: 2px solid #4aa3ff;
-  padding: 10px 16px;
-  cursor: pointer;
-  user-select: none;
-  text-align: center;
-  .tims-btn {
-  border: 2px solid #4aa3ff;
-  padding: 10px 16px;
-  cursor: pointer;
-  user-select: none;
-  text-align: center;
-
+.screen {
+  padding: 20px;
+  height: 100vh;
   position: relative;
-  z-index: 10;
-}
-}
-
-.tims-btn:active {
-  background: white;
-  color: black;
+  box-sizing: border-box;
 }
 
-#status {
-  font-size: 18px;
-  margin-bottom: 5px;
+/* ===== 表示 ===== */
+.station-box {
+  text-align: center;
+  margin-top: 20px;
 }
 
-#speed {
-  font-size: 16px;
-}
-
-#arrow {
+#current-station {
   font-size: 30px;
-  color: yellow;
 }
 
-.hidden {
-  display: none;
+#next-station {
+  margin-top: 6px;
+  font-size: 18px;
 }
 
-/* ドアカット */
-#doorPanel {
-  margin-top: 10px;
+#info {
+  margin-top: 8px;
+  font-size: 18px;
 }
 
-#train {
+.yellow {
+  color: #ffd400;
+  font-weight: bold;
+}
+
+.blink {
+  animation: blink 1.8s step-start infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+/* ===== 編成 ===== */
+.formation {
   display: flex;
+  justify-content: center;
   gap: 4px;
-  flex-wrap: wrap;
+  margin-top: 20px;
 }
 
 .car {
-  width: 30px;
-  height: 40px;
-  border: 2px solid #0ff;
+  width: 34px;
+  height: 48px;
+  border: 2px solid #4aa3ff;
+  font-size: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  background: #001d3d;
 }
 
-.car.sub {
-  border-color: #aaa;
-}
-
-.car.active {
-  background: yellow;
+.car.selected {
+  background: #ffd400;
   color: black;
+}
+
+/* ===== 下部ボタン ===== */
+.bottom-controls {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 14px;
+}
+
+button {
+  padding: 14px 22px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: 2px solid #4aa3ff;
+  background: #001d3d;
+  color: white;
+  cursor: pointer;
+}
+
+button:active {
+  background: white;
+  color: black;
+}
+
+button.disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.emergency {
+  border-color: #ff4444;
+  background: #3a0000;
 }
 </style>
 </head>
 
 <body>
 
-<div class="panel">
-  <div class="buttons">
-    <div class="tims-btn" id="driverBtn">運転士</div>
-    <div class="tims-btn" id="conductorBtn">車掌</div>
-    <div class="tims-btn" id="nextBtn">次の駅</div>
-    <div class="tims-btn" id="doorBtn">ドアカット</div>
+<div class="screen">
+
+  <div class="station-box">
+    <div id="current-station"></div>
+    <div id="next-station"></div>
+    <div id="info"></div>
   </div>
-</div>
 
-<div class="panel">
-  <div id="status">運転士モード</div>
-  <div id="speed">0 km/h</div>
-  <div id="arrow" class="hidden">▶</div>
-</div>
+  <!-- 編成 -->
+  <div class="formation" id="formation"></div>
 
-<div class="panel hidden" id="doorPanel">
-  <div>15両編成（基本11＋付属4）</div>
-  <div id="train"></div>
+  <!-- ボタン -->
+  <div class="bottom-controls">
+    <button id="next-btn" onclick="nextAction()">次の駅</button>
+    <button onclick="toggleAddonDoorCut()">増結ドアカット</button>
+    <button class="emergency" onclick="toggleEmergency()">非常</button>
+  </div>
+
 </div>
 
 <script>
-let mode = "driver";
+/* ===== 電子音 ===== */
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+function playButtonSound() {
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = "square";
+  osc.frequency.value = 1200;
+  gain.gain.value = 0.15;
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.start();
+  osc.stop(audioCtx.currentTime + 0.08);
+}
+
+/* ===== 駅 ===== */
+const stations = [
+  "君津","木更津","袖ケ浦","長浦","姉ケ崎","五井","八幡宿","浜野",
+  "蘇我","千葉","稲毛","津田沼","船橋","市川","新小岩",
+  "錦糸町","馬喰町","新日本橋","東京"
+];
+
+let index = 0;
 let running = false;
-let arrived = false;
+let emergency = false;
 
-const status = document.getElementById("status");
-const speed = document.getElementById("speed");
-const arrow = document.getElementById("arrow");
+/* ===== 編成 ===== */
+const totalCars = 15;
+let doorCutCars = new Set();
 
-const driverBtn = document.getElementById("driverBtn");
-const conductorBtn = document.getElementById("conductorBtn");
-const nextBtn = document.getElementById("nextBtn");
-const doorBtn = document.getElementById("doorBtn");
-const doorPanel = document.getElementById("doorPanel");
+/* ===== 編成描画 ===== */
+function renderFormation() {
+  const f = document.getElementById("formation");
+  f.innerHTML = "";
 
-/* 初期 */
-driverBtn.style.borderColor = "yellow";
+  for (let i = 1; i <= totalCars; i++) {
+    const car = document.createElement("div");
+    car.className = "car";
 
-/* モード切替 */
-driverBtn.onclick = () => {
-  mode = "driver";
-  status.textContent = "運転士モード";
-  driverBtn.style.borderColor = "yellow";
-  conductorBtn.style.borderColor = "#4aa3ff";
-};
+    car.textContent = i <= 11 ? i : "増" + (i - 11);
 
-conductorBtn.onclick = () => {
-  mode = "conductor";
-  status.textContent = "車掌モード";
-  conductorBtn.style.borderColor = "yellow";
-  driverBtn.style.borderColor = "#4aa3ff";
-};
+    if (doorCutCars.has(i)) car.classList.add("selected");
 
-/* 次の駅（運転士のみ） */
-nextBtn.onclick = () => {
-  if (mode !== "driver") {
-    status.textContent = "※ 車掌モードでは操作不可";
+    car.onclick = () => {
+      if (emergency) return;
+      playButtonSound();
+      doorCutCars.has(i) ? doorCutCars.delete(i) : doorCutCars.add(i);
+      renderFormation();
+    };
+
+    f.appendChild(car);
+  }
+}
+
+/* ===== 表示更新 ===== */
+function updateDisplay() {
+  const current = document.getElementById("current-station");
+  const next = document.getElementById("next-station");
+  const info = document.getElementById("info");
+  const nextBtn = document.getElementById("next-btn");
+
+  info.innerHTML = "";
+
+  if (emergency) {
+    info.innerHTML = "<span class='yellow'>非常扱い中</span>";
+    nextBtn.classList.add("disabled");
+  } else {
+    nextBtn.classList.remove("disabled");
+  }
+
+  if (index === stations.length - 1) {
+    current.innerHTML =
+      "<span class='yellow blink'>東京</span> <span class='yellow blink'>終点</span>";
+    next.textContent = "―";
+    nextBtn.classList.add("disabled");
     return;
   }
+
+  current.textContent =
+    index === 0 && !running ? "君津（始発）" : stations[index];
+  next.textContent = "次は " + stations[index + 1];
+
+  if (stations[index] === "千葉") {
+    info.innerHTML += "<span class='yellow'>総武快速線直通</span>　";
+  }
+
+  info.innerHTML += running ? "ドア閉" : "ドア開";
+}
+
+/* ===== 操作 ===== */
+function nextAction() {
+  playButtonSound();
+  if (emergency) return;
 
   if (!running) {
     running = true;
-    arrived = false;
-    status.textContent = "走行中";
-    speed.textContent = "90 km/h";
-    arrow.classList.remove("hidden");
-  } else if (!arrived) {
+  } else {
     running = false;
-    arrived = true;
-    speed.textContent = "0 km/h";
-    arrow.classList.add("hidden");
-    status.textContent = "千葉駅 到着（総武快速線・快速）";
+    index++;
   }
-};
-
-/* ドアカット（車掌のみ） */
-doorBtn.onclick = () => {
-  if (mode !== "conductor") {
-    status.textContent = "※ 運転士モードでは操作不可";
-    return;
-  }
-  doorPanel.classList.toggle("hidden");
-};
-
-/* 編成表示 15両 */
-const train = document.getElementById("train");
-for (let i = 1; i <= 15; i++) {
-  const car = document.createElement("div");
-  car.textContent = i;
-  car.className = "car" + (i > 11 ? " sub" : "");
-  car.onclick = () => car.classList.toggle("active");
-  train.appendChild(car);
+  updateDisplay();
 }
+
+function toggleEmergency() {
+  playButtonSound();
+  emergency = !emergency;
+  updateDisplay();
+}
+
+function toggleAddonDoorCut() {
+  playButtonSound();
+  if (emergency) return;
+
+  let allOn = true;
+  for (let i = 12; i <= 15; i++) {
+    if (!doorCutCars.has(i)) allOn = false;
+  }
+
+  for (let i = 12; i <= 15; i++) {
+    allOn ? doorCutCars.delete(i) : doorCutCars.add(i);
+  }
+  renderFormation();
+}
+
+/* 初期化 */
+renderFormation();
+updateDisplay();
 </script>
 
 </body>
 </html>
+  
