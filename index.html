@@ -180,3 +180,80 @@ for(let i=1;i<=15;i++){
 
 </body>
 </html>
+<script>
+let running = false;
+let arrived = false;
+let mode = "driver"; // driver / conductor
+
+const nextBtn = document.getElementById("nextBtn");
+const status = document.getElementById("status");
+const arrow = document.getElementById("arrow");
+const speed = document.getElementById("speed");
+
+const driverBtn = document.getElementById("driverBtn");
+const conductorBtn = document.getElementById("conductorBtn");
+const doorBtn = document.getElementById("doorBtn");
+const doorPanel = document.getElementById("doorPanel");
+
+/* ===== 初期状態 ===== */
+driverBtn.style.borderColor = "yellow";
+conductorBtn.style.borderColor = "#4aa3ff";
+
+/* ===== 運転士モード ===== */
+driverBtn.onclick = () => {
+  mode = "driver";
+  status.textContent = "運転士モード";
+
+  driverBtn.style.borderColor = "yellow";
+  conductorBtn.style.borderColor = "#4aa3ff";
+
+  nextBtn.classList.remove("disabled");
+};
+
+/* ===== 車掌モード ===== */
+conductorBtn.onclick = () => {
+  mode = "conductor";
+  status.textContent = "車掌モード";
+
+  conductorBtn.style.borderColor = "yellow";
+  driverBtn.style.borderColor = "#4aa3ff";
+
+  nextBtn.classList.add("disabled");
+};
+
+/* ===== 次の駅（運転士のみ） ===== */
+nextBtn.onclick = () => {
+  if (mode !== "driver") return;
+
+  if (!running) {
+    running = true;
+    arrived = false;
+    status.textContent = "走行中";
+    arrow.classList.remove("hidden");
+    speed.textContent = "90 km/h";
+  } else if (!arrived) {
+    arrived = true;
+    running = false;
+    arrow.classList.add("hidden");
+    speed.textContent = "0 km/h";
+    status.textContent = "千葉駅 到着（総武快速線・快速）";
+  }
+};
+
+/* ===== ドアカット表示 ===== */
+doorBtn.onclick = () => {
+  doorPanel.classList.toggle("hidden");
+};
+
+/* ===== 編成（15両：基本11＋付属4） ===== */
+const train = document.getElementById("train");
+train.innerHTML = "";
+
+for (let i = 1; i <= 15; i++) {
+  const car = document.createElement("div");
+  car.textContent = i;
+  car.className = "car" + (i > 11 ? " sub" : "");
+  car.onclick = () => car.classList.toggle("active");
+  train.appendChild(car);
+}
+</script>
