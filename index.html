@@ -2,223 +2,191 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>TIMS 再現システム</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TIMS 運転情報</title>
 
 <style>
+/* ===== 全体 ===== */
 body{
   margin:0;
-  background:#000;
-  color:#0f0;
-  font-family:monospace;
+  background:black;
+  overflow:hidden;
+  font-family: monospace;
 }
 
-/* ===== ヘッダ ===== */
-header{
+/* 縦画面警告 */
+#rotateWarning{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:black;
+  color:#00ff00;
+  font-size:28px;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+}
+
+@media (orientation: portrait){
+  #outer{ display:none; }
+  #rotateWarning{ display:flex; }
+}
+
+/* 中央配置 */
+#outer{
+  width:100vw;
+  height:100vh;
   display:flex;
-  justify-content:space-between;
-  padding:8px 12px;
-  border-bottom:2px solid #0f0;
+  justify-content:center;
+  align-items:center;
 }
 
-.route-yellow{ color:yellow; font-weight:bold; }
-.route-blue{ color:#4fc3f7; font-weight:bold; }
+/* ===== 本体 ===== */
+#tims{
+  width:1280px;
+  height:720px;
+  background:black;
+  border:2px solid #00ff00;
+  color:#00ff00;
+  display:flex;
+  flex-direction:column;
+}
 
-.blink{ animation:blink 1s infinite; }
-@keyframes blink{ 50%{opacity:0;} }
+/* 上部 路線表示 */
+#header{
+  height:50px;
+  display:flex;
+  align-items:center;
+  padding-left:10px;
+  border-bottom:2px solid #00ff00;
+}
 
-/* ===== 画面 ===== */
-.nav{
+#lineName{
+  color:yellow;
+  font-size:20px;
+}
+
+/* タブ */
+#tabs{
   display:flex;
   gap:10px;
   padding:10px;
 }
 
-button{
-  padding:12px 18px;
-  font-size:15px;
-  border:none;
+.tab{
+  padding:6px 14px;
+  border:2px solid #00ff00;
   cursor:pointer;
 }
 
-.gray{ background:#333; color:#fff; }
-.blue{ background:#1e90ff; color:#fff; }
-.red{ background:red; color:#fff; }
-
-button:disabled{ opacity:.4; cursor:not-allowed; }
-
-.screen{ display:none; padding:15px; }
-.screen.active{ display:block; }
-
-/* ===== 車両 ===== */
-.train{
+/* 車両列 */
+#cars{
   display:flex;
   gap:6px;
-  flex-wrap:wrap;
-  margin-bottom:15px;
+  padding:10px;
 }
 
 .car{
-  width:42px;
-  height:26px;
-  border:2px solid #0f0;
-  background:#000;
-  color:#0f0;
+  width:55px;
+  height:35px;
+  border:2px solid #00ff00;
   display:flex;
   align-items:center;
   justify-content:center;
   cursor:pointer;
 }
 
-.car.open{
+.car.active{
   background:red;
-  color:#fff;
+  color:black;
 }
 
-.car.disabled{
-  opacity:.4;
-  pointer-events:none;
+/* ボタン */
+#buttons{
+  display:flex;
+  gap:10px;
+  padding:10px;
+}
+
+.btn{
+  padding:10px 18px;
+  font-size:18px;
+  cursor:pointer;
+  border:none;
+}
+
+.next{
+  background:#0066ff;
+  color:white;
+}
+
+.emg{
+  background:red;
+  color:white;
+}
+
+/* 下部余白 */
+#main{
+  flex:1;
 }
 </style>
 </head>
 
 <body>
 
-<header>
-  <div id="route" class="route-yellow">内房線</div>
-  <div id="station">君津</div>
-</header>
+<div id="rotateWarning">横画面にしてください</div>
 
-<div class="nav">
-  <button class="gray" onclick="showScreen('drive')">運転情報</button>
-  <button class="gray" onclick="showScreen('conductor')">車掌</button>
-</div>
+<div id="outer">
+  <div id="tims">
 
-<!-- 運転情報画面 -->
-<div id="drive" class="screen active">
-  <div class="train" id="driveCars"></div>
-  <button class="blue" id="nextBtn">次の駅</button>
-  <button class="red" id="emergencyBtn">非常</button>
-</div>
+    <!-- 路線 -->
+    <div id="header">
+      <div id="lineName">内房線</div>
+    </div>
 
-<!-- 車掌画面 -->
-<div id="conductor" class="screen">
-  <div class="train" id="condCars"></div>
+    <!-- タブ -->
+    <div id="tabs">
+      <div class="tab">運転情報</div>
+      <div class="tab">車掌</div>
+    </div>
+
+    <!-- 車両 -->
+    <div id="cars">
+      <div class="car">1</div>
+      <div class="car">2</div>
+      <div class="car">3</div>
+      <div class="car">4</div>
+      <div class="car">5</div>
+      <div class="car">6</div>
+      <div class="car">7</div>
+      <div class="car">8</div>
+      <div class="car">9</div>
+      <div class="car">10</div>
+      <div class="car">11</div>
+      <div class="car">増1</div>
+      <div class="car">増2</div>
+      <div class="car">増3</div>
+      <div class="car">増4</div>
+    </div>
+
+    <!-- ボタン -->
+    <div id="buttons">
+      <button class="btn next">次の駅</button>
+      <button class="btn emg">非常</button>
+    </div>
+
+    <div id="main"></div>
+
+  </div>
 </div>
 
 <script>
-/* ===== 駅 ===== */
-const stations=[
-"君津","木更津","袖ケ浦","長浦","姉ケ崎","五井",
-"八幡宿","浜野","蘇我","千葉",
-"稲毛","津田沼","船橋","市川",
-"新小岩","錦糸町","馬喰町","新日本橋","東京"
-];
-
-let idx=0;
-let locked=false;
-
-/* ===== 音 ===== */
-function beep(){
- const c=new AudioContext();
- const o=c.createOscillator();
- o.frequency.value=1200;
- o.connect(c.destination);
- o.start();
- o.stop(c.currentTime+0.08);
-}
-
-function chime(){
- const c=new AudioContext();
- [880,660].forEach((f,i)=>{
-   const o=c.createOscillator();
-   o.frequency.value=f;
-   o.connect(c.destination);
-   o.start(c.currentTime+i*0.3);
-   o.stop(c.currentTime+i*0.3+0.4);
- });
-}
-
-/* ===== 車両 ===== */
-const cars=[...Array(11).keys()].map(i=>i+1).concat(["増1","増2","増3","増4"]);
-const driveCars=document.getElementById("driveCars");
-const condCars=document.getElementById("condCars");
-
-let doorState={};
-cars.forEach(c=>doorState[c]=false);
-
-function createCar(c,parent){
- const d=document.createElement("div");
- d.className="car";
- d.textContent=c;
-
- d.onclick=()=>{
-  if(locked) return;
-  beep();
-
-  if(String(c).includes("増")){
-    const newState=!doorState[c];
-    cars.filter(x=>String(x).includes("増")).forEach(x=>doorState[x]=newState);
-  }else{
-    doorState[c]=!doorState[c];
-  }
-  renderDoors();
- };
- parent.appendChild(d);
-}
-
-cars.forEach(c=>createCar(c,driveCars));
-cars.forEach(c=>createCar(c,condCars));
-
-function renderDoors(){
- document.querySelectorAll(".car").forEach(el=>{
-  const c=el.textContent;
-  el.classList.toggle("open",doorState[c]);
- });
-}
-
-/* ===== 画面切替 ===== */
-function showScreen(id){
- if(locked) return;
- beep();
- document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
- document.getElementById(id).classList.add("active");
-}
-
-/* ===== 次の駅 ===== */
-nextBtn.onclick=()=>{
- if(locked) return;
- beep();
- idx++;
- if(idx>=stations.length) return;
-
- station.textContent=stations[idx];
-
- if(stations[idx]==="千葉"){
-   route.textContent="総武快速線";
-   route.classList.remove("route-yellow");
-   route.classList.add("route-blue");
-   chime(); chime();
- }
-
- if(stations[idx]==="東京"){
-   route.classList.add("blink");
-   station.classList.add("blink");
-   lockAll();
- }
-};
-
-/* ===== 非常 ===== */
-emergencyBtn.onclick=()=>{
- beep();
- lockAll();
-};
-
-/* ===== 全ロック ===== */
-function lockAll(){
- locked=true;
- document.querySelectorAll(".car").forEach(c=>c.classList.add("disabled"));
- document.querySelectorAll("button").forEach(b=>b.disabled=true);
-}
+/* 車両選択（赤⇔戻す） */
+document.querySelectorAll('.car').forEach(car=>{
+  car.addEventListener('click',()=>{
+    car.classList.toggle('active');
+  });
+});
 </script>
 
 </body>
