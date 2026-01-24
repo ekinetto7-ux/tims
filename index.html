@@ -4,148 +4,177 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TIMS 運転情報</title>
-
 <style>
 body {
   margin: 0;
-  background: black;
-  color: #00ff00;
-  font-family: "MS Gothic", monospace;
+  background: #000;
+  color: #00ff66;
+  font-family: "Arial", monospace;
 }
+.header {
+  border-bottom: 2px solid #00ff66;
+  padding: 8px 12px;
+  display: flex;
+  justify-content: space-between;
+}
+.line-uchibo { color: #ffd800; }
+.line-sobu { color: #00a0ff; }
 
-#screen {
-  border: 2px solid #00ff00;
-  margin: 10px;
+.panel {
+  border: 2px solid #00ff66;
+  margin: 12px;
   padding: 10px;
 }
 
-.header {
-  display: flex;
-  justify-content: space-between;
-  border-bottom: 2px solid #00ff00;
-  padding-bottom: 5px;
-}
-
-.route {
-  color: yellow;
-  font-size: 20px;
-}
-
 .tabs button {
-  background: black;
-  color: #00ff00;
-  border: 2px solid #00ff00;
-  margin-right: 5px;
-  padding: 5px 10px;
+  background: #000;
+  color: #00ff66;
+  border: 2px solid #00ff66;
+  margin-right: 6px;
+  padding: 6px 12px;
 }
 
 .controls {
   margin-top: 10px;
 }
-
 .controls button {
-  padding: 10px;
-  margin-right: 10px;
   font-size: 16px;
+  padding: 10px 18px;
+  margin-right: 10px;
+  border: none;
 }
-
-#next {
-  background: #0066ff;
-  color: white;
-}
-
-#emergency {
-  background: red;
-  color: white;
-}
+#nextBtn { background:#0066ff; color:#fff; }
+#emgBtn { background:#ff0000; color:#fff; }
 
 .cars {
-  margin-top: 20px;
   display: flex;
-  gap: 5px;
+  gap: 6px;
+  margin-top: 15px;
 }
-
 .car {
-  width: 40px;
-  height: 30px;
-  border: 2px solid #00ff00;
+  width: 42px;
+  height: 32px;
+  border: 2px solid #00ff66;
   text-align: center;
-  line-height: 30px;
+  line-height: 32px;
   cursor: pointer;
 }
-
 .car.active {
   background: red;
 }
+.car.add { color:#00ffaa; }
 
 .doors {
-  margin-top: 10px;
   display: flex;
-  gap: 5px;
+  gap: 6px;
+  margin-top: 8px;
 }
-
 .door {
-  width: 40px;
-  height: 15px;
-  background: black;
-  border: 1px solid #00ff00;
+  width: 42px;
+  height: 12px;
+  background: #000;
+  border: 1px solid #444;
 }
+.door.open { background: red; }
 
-.door.open {
-  background: red;
+.status {
+  margin-top: 12px;
+  font-size: 18px;
+}
+.blink {
+  animation: blink 1s infinite;
+}
+@keyframes blink {
+  50% { opacity: 0; }
 }
 </style>
 </head>
-
 <body>
 
-<div id="screen">
-  <div class="header">
-    <div class="route" id="route">内房線</div>
-    <div>君津</div>
-  </div>
+<div class="header">
+  <div id="lineName" class="line-uchibo">内房線</div>
+  <div id="station">君津</div>
+</div>
 
+<div class="panel">
   <div class="tabs">
     <button>運転情報</button>
     <button>車掌</button>
   </div>
 
   <div class="controls">
-    <button id="next">次の駅</button>
-    <button id="emergency">非常</button>
+    <button id="nextBtn">次の駅</button>
+    <button id="emgBtn">非常</button>
   </div>
 
   <div class="cars" id="cars"></div>
   <div class="doors" id="doors"></div>
+
+  <div class="status" id="status">停車中</div>
 </div>
 
 <script>
-const carsDiv = document.getElementById("cars");
-const doorsDiv = document.getElementById("doors");
-let doorOpen = false;
+const stations = [
+  "君津","木更津","袖ケ浦","長浦","姉ケ崎","五井","八幡宿","浜野","蘇我","千葉",
+  "稲毛","津田沼","船橋","市川","新小岩","錦糸町","馬喰町","新日本橋","東京"
+];
 
-// 編成 11 + 増1〜4
-for (let i = 1; i <= 15; i++) {
-  const car = document.createElement("div");
-  car.className = "car";
-  car.textContent = i <= 11 ? i : "増" + (i - 11);
-  car.onclick = () => car.classList.toggle("active");
-  carsDiv.appendChild(car);
+let index = 0;
+let emergency = false;
+let finished = false;
 
-  const door = document.createElement("div");
-  door.className = "door";
-  doorsDiv.appendChild(door);
+const stationEl = document.getElementById("station");
+const lineEl = document.getElementById("lineName");
+const statusEl = document.getElementById("status");
+
+const carsEl = document.getElementById("cars");
+const doorsEl = document.getElementById("doors");
+
+for(let i=1;i<=11;i++){
+  const d=document.createElement("div");
+  d.className="car";
+  d.textContent=i;
+  d.onclick=()=>d.classList.toggle("active");
+  carsEl.appendChild(d);
+}
+["増1","増2","増3","増4"].forEach(t=>{
+  const d=document.createElement("div");
+  d.className="car add";
+  d.textContent=t;
+  d.onclick=()=>d.classList.toggle("active");
+  carsEl.appendChild(d);
+});
+
+for(let i=0;i<15;i++){
+  const d=document.createElement("div");
+  d.className="door";
+  d.onclick=()=>d.classList.toggle("open");
+  doorsEl.appendChild(d);
 }
 
-document.getElementById("next").onclick = () => {
-  doorOpen = !doorOpen;
-  document.querySelectorAll(".door").forEach(d => {
-    d.classList.toggle("open", doorOpen);
-  });
+document.getElementById("nextBtn").onclick=()=>{
+  if(emergency||finished) return;
+  index++;
+  if(index>=stations.length-1){
+    stationEl.textContent="東京";
+    lineEl.textContent="総武快速線";
+    lineEl.className="line-sobu blink";
+    statusEl.textContent="終点 到着";
+    finished=true;
+    return;
+  }
+  stationEl.textContent=stations[index];
+  if(stations[index]==="千葉"){
+    lineEl.textContent="総武快速線";
+    lineEl.className="line-sobu";
+    new Audio("data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABAAZGF0YQAAAAA=").play();
+    new Audio("data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABAAZGF0YQAAAAA=").play();
+  }
 };
 
-document.getElementById("emergency").onclick = () => {
-  alert("非常扱い中");
+document.getElementById("emgBtn").onclick=()=>{
+  emergency=!emergency;
+  statusEl.textContent=emergency?"非常中":"停車中";
 };
 </script>
 
