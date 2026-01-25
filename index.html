@@ -17,25 +17,17 @@ body{
 .header{font-size:26px;margin-bottom:8px;}
 .info{font-size:18px;margin:4px 0;}
 
-/* 起動 */
-#boot{
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  height:100vh;
-}
-
 /* 初期選択 */
 .select-btn{
-  width:260px;
-  padding:18px;
+  width:300px;
+  padding:20px;
   margin:20px 0;
   border:2px solid #00ff66;
   text-align:center;
   font-size:24px;
 }
 
-/* 警告 */
+/* 非常警告 */
 .alert{
   border:2px solid #00ff66;
   padding:10px;
@@ -91,11 +83,9 @@ button{
   border:2px solid #00ff66;
   padding:18px 28px;
   font-size:22px;
-  min-width:160px;
+  min-width:180px;
 }
-button:disabled{
-  opacity:0.2;
-}
+button:disabled{opacity:0.2;}
 
 /* 下部操作 */
 .control-bar{
@@ -108,38 +98,33 @@ button:disabled{
   gap:40px;
 }
 
-/* ログ */
+/* ログ共通 */
 .log{
-  position:fixed;
-  bottom:0;
-  left:0;
-  right:0;
-  height:100px;
-  border-top:2px solid #00ff66;
-  padding:6px;
-  font-size:14px;
+  border:2px solid #00ff66;
+  height:300px;
+  padding:8px;
   overflow-y:auto;
+  font-size:14px;
+  background:black;
 }
 
-/* 操作ロック用 */
-.lock{
-  pointer-events:none;
+/* 司令画面 */
+.command-status{
+  font-size:20px;
+  margin-bottom:10px;
 }
 </style>
 </head>
 
 <body>
 
-<div id="boot" class="screen active">
-  <div>TIMS SYSTEM</div>
-  <div>BOOTING...</div>
-  <div id="bootLog"></div>
-</div>
-
-<div id="select" class="screen">
+<!-- 初期選択 -->
+<div id="select" class="screen active">
   <div class="select-btn" onclick="openDriver()">運転情報</div>
+  <div class="select-btn" onclick="openCommand()">司令画面</div>
 </div>
 
+<!-- 運転情報 -->
 <div id="driver" class="screen">
   <div class="header">運転情報</div>
 
@@ -160,6 +145,7 @@ button:disabled{
   </div>
 </div>
 
+<!-- 非常理由 -->
 <div id="emergencySelect" class="screen">
   <div class="header">非常扱い理由選択</div>
   <button onclick="setEmergency('地震')">地震</button>
@@ -167,6 +153,7 @@ button:disabled{
   <button onclick="setEmergency('人身事故')">人身事故</button>
 </div>
 
+<!-- 解除確認 -->
 <div id="emergencyConfirm" class="screen">
   <div style="border:2px solid #00ff66;padding:30px;text-align:center;">
     非常扱いを解除しますか？<br><br>
@@ -174,48 +161,40 @@ button:disabled{
   </div>
 </div>
 
+<!-- 司令画面 -->
+<div id="command" class="screen">
+  <div class="header">司令画面</div>
+  <div class="command-status">
+    状態：<span id="cmdStatus"></span><br>
+    非常理由：<span id="cmdReason"></span>
+  </div>
+  <div class="log" id="commandLog"></div>
+</div>
+
+<!-- 中央指示 -->
 <div id="quakeMsg" class="centerMsg"><div class="box">直ちに高台に避難<br>車掌と連携すること</div></div>
 <div id="fireMsg" class="centerMsg"><div class="box">閉められるすべての窓を閉じること<br>トンネル内停車を避けること</div></div>
 <div id="accidentMsg" class="centerMsg"><div class="box">直ちに警察・消防・車掌・駅員に通報すること</div></div>
 
-<div class="log" id="log"></div>
-
 <script>
-const screens=["boot","select","driver","emergencySelect","emergencyConfirm"];
+const screens=["select","driver","emergencySelect","emergencyConfirm","command"];
 const stations=["君津","木更津","袖ケ浦","長浦","姉ヶ崎","五井","八幡宿","浜野","蘇我","本千葉","千葉","津田沼","船橋","市川","新小岩","錦糸町","新日本橋","東京"];
 let idx=0;
-let running=false;
 let emergencyMode=false;
 let emergencyReason="";
-const logBox=document.getElementById("log");
-
-/* ログ */
-function addLog(t){
- const time=new Date().toLocaleTimeString();
- logBox.innerHTML+=`[${time}] ${t}<br>`;
- logBox.scrollTop=logBox.scrollHeight;
-}
-
-/* 起動 */
-let step=0;
-const bootSteps=["IO CHECK","MEMORY CHECK","DISPLAY CHECK","COMM CHECK","READY"];
-const bl=setInterval(()=>{
- if(step<bootSteps.length){
-  document.getElementById("bootLog").innerHTML+=bootSteps[step++]+"<br>";
- }else{
-  clearInterval(bl);
-  show("select");
- }
-},500);
+const logs=[];
 
 function show(id){
  screens.forEach(s=>document.getElementById(s).classList.remove("active"));
  document.getElementById(id).classList.add("active");
 }
+function openDriver(){show("driver");update();}
+function openCommand(){show("command");updateCommand();}
 
-function openDriver(){
- show("driver");
- update();
+function addLog(t){
+ const time=new Date().toLocaleTimeString();
+ logs.push(`[${time}] ${t}`);
+ updateCommand();
 }
 
 function update(){
@@ -235,8 +214,14 @@ function update(){
  stations.forEach((s,i)=>{
   bar.innerHTML+=`<div class="station ${i===idx?"current":""}">${s}</div>`;
  });
+}
 
- document.body.classList.toggle("lock",emergencyMode);
+function updateCommand(){
+ document.getElementById("cmdStatus").textContent=emergencyMode?"非常":"通常";
+ document.getElementById("cmdReason").textContent=emergencyReason||"―";
+ const box=document.getElementById("commandLog");
+ box.innerHTML=logs.join("<br>");
+ box.scrollTop=box.scrollHeight;
 }
 
 function nextStation(){
@@ -246,7 +231,7 @@ function nextStation(){
 }
 
 function emergency(){
- emergencyMode ? show("emergencyConfirm") : show("emergencySelect");
+ emergencyMode?show("emergencyConfirm"):show("emergencySelect");
 }
 
 function setEmergency(r){
