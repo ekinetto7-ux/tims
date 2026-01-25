@@ -13,12 +13,12 @@ body {
   font-family: sans-serif;
 }
 
-.screen { 
-  display: none; 
-  padding: 20px; 
+.screen {
+  display: none;
+  padding: 20px;
 }
-.screen.active { 
-  display: block; 
+.screen.active {
+  display: block;
 }
 
 .title {
@@ -138,19 +138,33 @@ body {
   </div>
 </div>
 
-<!-- ===== 運転情報（ATS一切なし） ===== -->
+<!-- ===== 運転情報（入力どおり・最小構成） ===== -->
 <div id="drive-screen" class="screen">
   <div class="title">運転情報</div>
 
-  <div style="text-align:center; margin-top:40px; font-size:22px;">
-    運転情報表示画面<br><br>
-    （次駅・種別・行先など）
+  <!-- 次駅表示（黄色・中央） -->
+  <div id="next-station" style="
+    text-align:center;
+    font-size:34px;
+    color:yellow;
+    margin-top:40px;
+    font-weight:bold;
+  ">
+    次駅表示
+  </div>
+
+  <!-- その他情報（今は空・後で入力） -->
+  <div id="drive-info" style="
+    text-align:center;
+    font-size:22px;
+    margin-top:20px;
+  ">
   </div>
 
   <button class="back-btn" onclick="goHome()">戻る</button>
 </div>
 
-<!-- ===== ATS メニュー（ATS図はここだけ） ===== -->
+<!-- ===== ATS メニュー ===== -->
 <div id="ats-screen" class="screen">
   <div class="title">ATS メニュー</div>
 
