@@ -49,7 +49,7 @@ body {
   font-size: 20px;
 }
 
-/* ===== ATS 図 ===== */
+/* ===== ATS 図（ATS画面のみ） ===== */
 .ats-diagram {
   border: 3px solid #00aa66;
   background: #001a10;
@@ -86,13 +86,6 @@ body {
   background: #ff3333;
   border-color: #ff3333;
   color: #000;
-}
-
-/* 運転情報 下側中央 */
-.drive-ats-wrap {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
 }
 
 /* ===== 指令表示 ===== */
@@ -135,19 +128,13 @@ body {
   </div>
 </div>
 
-<!-- ===== 運転情報 ===== -->
+<!-- ===== 運転情報（元のシンプル画面） ===== -->
 <div id="drive-screen" class="screen">
   <div class="title">運転情報</div>
 
-  <div class="drive-ats-wrap">
-    <div class="ats-diagram">
-      <div id="d-box-ats" class="diagram-box">ATS</div>
-      <div class="diagram-row">
-        <div id="d-box-atsp" class="diagram-box">ATS-P</div>
-        <div id="d-box-emergency" class="diagram-box">非常</div>
-      </div>
-      <div id="d-box-device" class="diagram-box">機器</div>
-    </div>
+  <div style="text-align:center; margin-top:40px; font-size:22px;">
+    運転情報表示画面<br><br>
+    （次駅・種別・行先などを表示予定）
   </div>
 
   <button class="back-btn" onclick="goHome()">戻る</button>
@@ -236,14 +223,11 @@ function deviceOpen(){
   playBeep(); resetDiagram();
 }
 
-/* 図反映（上下連動） */
 function setGreen(name){
   document.getElementById("box-"+name).classList.add("active-green");
-  document.getElementById("d-box-"+name).classList.add("active-green");
 }
 function setRed(name){
   document.getElementById("box-"+name).classList.add("active-red");
-  document.getElementById("d-box-"+name).classList.add("active-red");
 }
 </script>
 
