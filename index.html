@@ -76,20 +76,19 @@ body {
 
 .diagram-row .diagram-box { width: 48%; }
 
-/* ===== 塗りつぶし状態 ===== */
+/* 塗りつぶし状態 */
 .diagram-box.active-green {
   background: #00ff66;
   border-color: #00ff66;
   color: #000;
 }
-
 .diagram-box.active-red {
   background: #ff3333;
   border-color: #ff3333;
   color: #000;
 }
 
-/* 運転情報画面 下側中央 */
+/* 運転情報 下側中央 */
 .drive-ats-wrap {
   display: flex;
   justify-content: center;
@@ -100,20 +99,20 @@ body {
 
 <body>
 
-<!-- ===== 初期選択画面 ===== -->
+<!-- ===== 初期選択 ===== -->
 <div id="home-screen" class="screen active">
   <div class="title">初期選択</div>
   <div class="menu-buttons">
     <button class="menu-btn" onclick="openDrive()">運転情報</button>
     <button class="menu-btn" onclick="openATS()">ATS</button>
+    <button class="menu-btn" onclick="openCommand()">指令</button>
   </div>
 </div>
 
-<!-- ===== 運転情報画面 ===== -->
+<!-- ===== 運転情報 ===== -->
 <div id="drive-screen" class="screen">
   <div class="title">運転情報</div>
 
-  <!-- 下側中央：図だけ -->
   <div class="drive-ats-wrap">
     <div class="ats-diagram">
       <div id="d-box-ats" class="diagram-box">ATS</div>
@@ -132,7 +131,6 @@ body {
 <div id="ats-screen" class="screen">
   <div class="title">ATS メニュー</div>
 
-  <!-- 上：大きめの図 -->
   <div class="ats-diagram">
     <div id="box-ats" class="diagram-box">ATS</div>
     <div class="diagram-row">
@@ -152,8 +150,20 @@ body {
   <button class="back-btn" onclick="goHome()">初期選択</button>
 </div>
 
+<!-- ===== 指令 ===== -->
+<div id="command-screen" class="screen">
+  <div class="title">指令</div>
+
+  <div style="text-align:center; margin-top:40px; font-size:22px;">
+    指令情報表示エリア<br><br>
+    （今後：非常・通告文・時刻などを追加）
+  </div>
+
+  <button class="back-btn" onclick="goHome()">初期選択</button>
+</div>
+
 <script>
-/* ===== ピ音（0.1秒） ===== */
+/* ピ音 */
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 function playBeep(){
   const o = audioCtx.createOscillator();
@@ -165,7 +175,7 @@ function playBeep(){
   setTimeout(()=>o.stop(),100);
 }
 
-/* ===== 画面切替 ===== */
+/* 画面切替 */
 function showScreen(id){
   document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
@@ -173,39 +183,31 @@ function showScreen(id){
 function goHome(){ playBeep(); showScreen("home-screen"); }
 function openDrive(){ playBeep(); showScreen("drive-screen"); }
 function openATS(){ playBeep(); showScreen("ats-screen"); }
+function openCommand(){ playBeep(); showScreen("command-screen"); }
 
-/* ===== 図リセット ===== */
+/* 図制御 */
 function resetDiagram(){
   document.querySelectorAll(".diagram-box").forEach(b=>{
     b.classList.remove("active-green","active-red");
   });
 }
 
-/* ===== ATS 操作 ===== */
 function atsOpen(){
-  playBeep();
-  resetDiagram();
+  playBeep(); resetDiagram();
   setGreen("ats");
 }
-
 function atsP(){
-  playBeep();
-  resetDiagram();
+  playBeep(); resetDiagram();
   setGreen("atsp");
 }
-
 function atsEmergency(){
-  playBeep();
-  resetDiagram();
+  playBeep(); resetDiagram();
   setRed("emergency");
 }
-
 function deviceOpen(){
-  playBeep();
-  resetDiagram(); // 全解除のみ
+  playBeep(); resetDiagram();
 }
 
-/* ===== 図反映（上下連動） ===== */
 function setGreen(name){
   document.getElementById("box-"+name).classList.add("active-green");
   document.getElementById("d-box-"+name).classList.add("active-green");
