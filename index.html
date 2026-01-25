@@ -13,13 +13,18 @@ body {
   font-family: sans-serif;
 }
 
-.screen { display: none; padding: 20px; }
-.screen.active { display: block; }
+.screen { 
+  display: none; 
+  padding: 20px; 
+}
+.screen.active { 
+  display: block; 
+}
 
 .title {
   text-align: center;
   font-size: 28px;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 
 /* ===== ボタン共通 ===== */
@@ -40,7 +45,10 @@ body {
   border: none;
   border-radius: 6px;
 }
-.menu-btn:active { background: #1e46a5; }
+
+.menu-btn:active {
+  background: #1e46a5;
+}
 
 .back-btn {
   display: block;
@@ -54,7 +62,7 @@ body {
   border: 3px solid #00aa66;
   background: #001a10;
   padding: 20px;
-  margin: 10px auto 25px;
+  margin: 0 auto 25px;
   width: 95%;
   max-width: 520px;
 }
@@ -74,14 +82,16 @@ body {
   font-weight: bold;
 }
 
-.diagram-row .diagram-box { width: 48%; }
+.diagram-row .diagram-box {
+  width: 48%;
+}
 
-/* 塗りつぶし */
 .diagram-box.active-green {
   background: #00ff66;
   border-color: #00ff66;
   color: #000;
 }
+
 .diagram-box.active-red {
   background: #ff3333;
   border-color: #ff3333;
@@ -128,19 +138,19 @@ body {
   </div>
 </div>
 
-<!-- ===== 運転情報（元のシンプル画面） ===== -->
+<!-- ===== 運転情報（ATS一切なし） ===== -->
 <div id="drive-screen" class="screen">
   <div class="title">運転情報</div>
 
   <div style="text-align:center; margin-top:40px; font-size:22px;">
     運転情報表示画面<br><br>
-    （次駅・種別・行先などを表示予定）
+    （次駅・種別・行先など）
   </div>
 
   <button class="back-btn" onclick="goHome()">戻る</button>
 </div>
 
-<!-- ===== ATS メニュー ===== -->
+<!-- ===== ATS メニュー（ATS図はここだけ） ===== -->
 <div id="ats-screen" class="screen">
   <div class="title">ATS メニュー</div>
 
@@ -182,52 +192,70 @@ const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 function playBeep(){
   const o = audioCtx.createOscillator();
   const g = audioCtx.createGain();
-  o.connect(g); g.connect(audioCtx.destination);
+  o.connect(g);
+  g.connect(audioCtx.destination);
   o.frequency.value = 1000;
   g.gain.value = 0.2;
   o.start();
-  setTimeout(()=>o.stop(),100);
+  setTimeout(()=>o.stop(), 100);
 }
 
 /* 画面切替 */
 function showScreen(id){
-  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  document.querySelectorAll(".screen").forEach(s=>{
+    s.classList.remove("active");
+  });
   document.getElementById(id).classList.add("active");
 }
-function goHome(){ playBeep(); showScreen("home-screen"); }
-function openDrive(){ playBeep(); showScreen("drive-screen"); }
-function openATS(){ playBeep(); showScreen("ats-screen"); }
-function openCommand(){ playBeep(); showScreen("command-screen"); }
 
-/* 図リセット */
+function goHome(){
+  playBeep();
+  showScreen("home-screen");
+}
+
+function openDrive(){
+  playBeep();
+  showScreen("drive-screen");
+}
+
+function openATS(){
+  playBeep();
+  showScreen("ats-screen");
+}
+
+function openCommand(){
+  playBeep();
+  showScreen("command-screen");
+}
+
+/* ATS 図制御（ATS画面のみ） */
 function resetDiagram(){
-  document.querySelectorAll(".diagram-box").forEach(b=>{
+  document.querySelectorAll("#ats-screen .diagram-box").forEach(b=>{
     b.classList.remove("active-green","active-red");
   });
 }
 
-/* ATS操作 */
 function atsOpen(){
-  playBeep(); resetDiagram();
-  setGreen("ats");
-}
-function atsP(){
-  playBeep(); resetDiagram();
-  setGreen("atsp");
-}
-function atsEmergency(){
-  playBeep(); resetDiagram();
-  setRed("emergency");
-}
-function deviceOpen(){
-  playBeep(); resetDiagram();
+  playBeep();
+  resetDiagram();
+  document.getElementById("box-ats").classList.add("active-green");
 }
 
-function setGreen(name){
-  document.getElementById("box-"+name).classList.add("active-green");
+function atsP(){
+  playBeep();
+  resetDiagram();
+  document.getElementById("box-atsp").classList.add("active-green");
 }
-function setRed(name){
-  document.getElementById("box-"+name).classList.add("active-red");
+
+function atsEmergency(){
+  playBeep();
+  resetDiagram();
+  document.getElementById("box-emergency").classList.add("active-red");
+}
+
+function deviceOpen(){
+  playBeep();
+  resetDiagram();
 }
 </script>
 
