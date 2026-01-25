@@ -76,7 +76,7 @@ body {
 
 .diagram-row .diagram-box { width: 48%; }
 
-/* 塗りつぶし状態 */
+/* 塗りつぶし */
 .diagram-box.active-green {
   background: #00ff66;
   border-color: #00ff66;
@@ -93,6 +93,32 @@ body {
   display: flex;
   justify-content: center;
   margin-top: 20px;
+}
+
+/* ===== 指令表示 ===== */
+.command-board {
+  margin: 40px auto 0;
+  width: 95%;
+  max-width: 600px;
+  height: 60px;
+  border: 3px solid yellow;
+  overflow: hidden;
+  background: #000;
+}
+
+.command-scroll {
+  white-space: nowrap;
+  color: yellow;
+  font-size: 26px;
+  font-weight: bold;
+  line-height: 60px;
+  padding-left: 100%;
+  animation: command-move 12s linear infinite;
+}
+
+@keyframes command-move {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-100%); }
 }
 </style>
 </head>
@@ -124,7 +150,7 @@ body {
     </div>
   </div>
 
-  <button class="back-btn" onclick="goHome()">初期選択</button>
+  <button class="back-btn" onclick="goHome()">戻る</button>
 </div>
 
 <!-- ===== ATS メニュー ===== -->
@@ -147,19 +173,20 @@ body {
     <button class="menu-btn" onclick="deviceOpen()">機器開放</button>
   </div>
 
-  <button class="back-btn" onclick="goHome()">初期選択</button>
+  <button class="back-btn" onclick="goHome()">戻る</button>
 </div>
 
 <!-- ===== 指令 ===== -->
 <div id="command-screen" class="screen">
   <div class="title">指令</div>
 
-  <div style="text-align:center; margin-top:40px; font-size:22px;">
-    指令情報表示エリア<br><br>
-    （今後：非常・通告文・時刻などを追加）
+  <div class="command-board">
+    <div class="command-scroll">
+      寝台サンライズ瀬戸・出雲　運転見合わせ
+    </div>
   </div>
 
-  <button class="back-btn" onclick="goHome()">初期選択</button>
+  <button class="back-btn" onclick="goHome()">戻る</button>
 </div>
 
 <script>
@@ -185,13 +212,14 @@ function openDrive(){ playBeep(); showScreen("drive-screen"); }
 function openATS(){ playBeep(); showScreen("ats-screen"); }
 function openCommand(){ playBeep(); showScreen("command-screen"); }
 
-/* 図制御 */
+/* 図リセット */
 function resetDiagram(){
   document.querySelectorAll(".diagram-box").forEach(b=>{
     b.classList.remove("active-green","active-red");
   });
 }
 
+/* ATS操作 */
 function atsOpen(){
   playBeep(); resetDiagram();
   setGreen("ats");
@@ -208,6 +236,7 @@ function deviceOpen(){
   playBeep(); resetDiagram();
 }
 
+/* 図反映（上下連動） */
 function setGreen(name){
   document.getElementById("box-"+name).classList.add("active-green");
   document.getElementById("d-box-"+name).classList.add("active-green");
