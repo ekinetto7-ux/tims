@@ -4,273 +4,185 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TIMS</title>
-
 <style>
-body {
-  margin: 0;
-  background: #000;
-  color: #fff;
-  font-family: sans-serif;
-}
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: black;
+    color: white;
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial;
+    height: 100%;
+  }
 
-.screen {
-  display: none;
-  padding: 20px;
-}
-.screen.active {
-  display: block;
-}
+  .screen {
+    display: none;
+    width: 100%;
+    height: 100%;
+  }
 
-.title {
-  text-align: center;
-  font-size: 28px;
-  margin-bottom: 20px;
-}
+  .title {
+    text-align: center;
+    font-size: 26px;
+    margin-top: 30px;
+  }
 
-/* ===== ボタン共通 ===== */
-.menu-buttons, .menu-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  justify-items: center;
-}
+  button {
+    font-size: 18px;
+    padding: 12px 26px;
+    border-radius: 20px;
+    border: none;
+  }
 
-.menu-btn {
-  width: 90%;
-  max-width: 260px;
-  padding: 18px;
-  font-size: 22px;
-  background: #2b5fd9;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-}
+  .home-btn {
+    width: 220px;
+    margin: 12px auto;
+    display: block;
+  }
 
-.menu-btn:active {
-  background: #1e46a5;
-}
+  .back-btn {
+    background: #ddd;
+  }
 
-.back-btn {
-  display: block;
-  margin: 30px auto 0;
-  padding: 14px 40px;
-  font-size: 20px;
-}
+  /* ===== 初期画面 ===== */
+  #home {
+    display: block;
+    padding-top: 80px;
+  }
 
-/* ===== ATS 図（ATS画面のみ） ===== */
-.ats-diagram {
-  border: 3px solid #00aa66;
-  background: #001a10;
-  padding: 20px;
-  margin: 0 auto 25px;
-  width: 95%;
-  max-width: 520px;
-}
+  /* ===== 運転情報 ===== */
+  #drive-screen {
+    padding-top: 30px;
+  }
 
-.diagram-row {
-  display: flex;
-  justify-content: space-between;
-}
+  /* ===== ATS ===== */
+  #ats-screen {
+    padding-top: 20px;
+    text-align: center;
+  }
 
-.diagram-box {
-  border: 3px solid #00aa66;
-  color: #00aa66;
-  padding: 16px;
-  margin: 10px 0;
-  text-align: center;
-  font-size: 20px;
-  font-weight: bold;
-}
+  .ats-diagram {
+    width: 200px;
+    height: 80px;
+    border: 2px solid white;
+    margin: 20px auto;
+    line-height: 80px;
+    font-size: 20px;
+  }
 
-.diagram-row .diagram-box {
-  width: 48%;
-}
+  .ats-green {
+    background: green;
+  }
 
-.diagram-box.active-green {
-  background: #00ff66;
-  border-color: #00ff66;
-  color: #000;
-}
+  .ats-red {
+    background: red;
+  }
 
-.diagram-box.active-red {
-  background: #ff3333;
-  border-color: #ff3333;
-  color: #000;
-}
-
-/* ===== 指令表示 ===== */
-.command-board {
-  margin: 40px auto 0;
-  width: 95%;
-  max-width: 600px;
-  height: 60px;
-  border: 3px solid yellow;
-  overflow: hidden;
-  background: #000;
-}
-
-.command-scroll {
-  white-space: nowrap;
-  color: yellow;
-  font-size: 26px;
-  font-weight: bold;
-  line-height: 60px;
-  padding-left: 100%;
-  animation: command-move 12s linear infinite;
-}
-
-@keyframes command-move {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-100%); }
-}
 </style>
 </head>
-
 <body>
 
-<!-- ===== 初期選択 ===== -->
-<div id="home-screen" class="screen active">
-  <div class="title">初期選択</div>
-  <div class="menu-buttons">
-    <button class="menu-btn" onclick="openDrive()">運転情報</button>
-    <button class="menu-btn" onclick="openATS()">ATS</button>
-    <button class="menu-btn" onclick="openCommand()">指令</button>
-  </div>
+<!-- ===== 初期選択画面 ===== -->
+<div id="home" class="screen">
+  <button class="home-btn" onclick="openDrive()">運転情報</button>
+  <button class="home-btn" onclick="openATS()">ATS</button>
 </div>
 
-<!-- ===== 運転情報（入力どおり・最小構成） ===== -->
+<!-- ===== 運転情報画面 ===== -->
 <div id="drive-screen" class="screen">
   <div class="title">運転情報</div>
 
-  <!-- 次駅表示（黄色・中央） -->
-  <div id="next-station" style="
-    text-align:center;
-    font-size:34px;
-    color:yellow;
-    margin-top:40px;
-    font-weight:bold;
-  ">
+  <!-- 指令表示 -->
+  <div style="margin-top:30px; text-align:center; color:yellow; font-size:20px;">
+    寝台サンライズ瀬戸・出雲<br>運転見合わせ
+  </div>
+
+  <!-- 次駅表示 -->
+  <div style="margin-top:40px; text-align:center; font-size:34px; color:yellow; font-weight:bold;">
     次駅表示
   </div>
 
-  <!-- その他情報（今は空・後で入力） -->
-  <div id="drive-info" style="
-    text-align:center;
-    font-size:22px;
-    margin-top:20px;
-  ">
-  </div>
+  <!-- ATS 図（下側・干渉しない） -->
+  <div class="ats-diagram" id="drive-ats-diagram"></div>
 
-  <button class="back-btn" onclick="goHome()">戻る</button>
+  <div style="text-align:center; margin-top:40px;">
+    <button class="back-btn" onclick="goHome()">戻る</button>
+  </div>
 </div>
 
-<!-- ===== ATS メニュー ===== -->
+<!-- ===== ATS画面 ===== -->
 <div id="ats-screen" class="screen">
-  <div class="title">ATS メニュー</div>
+  <div class="title">ATS</div>
 
-  <div class="ats-diagram">
-    <div id="box-ats" class="diagram-box">ATS</div>
-    <div class="diagram-row">
-      <div id="box-atsp" class="diagram-box">ATS-P</div>
-      <div id="box-emergency" class="diagram-box">非常</div>
-    </div>
-    <div id="box-device" class="diagram-box">機器</div>
+  <!-- 図（上・大きめ） -->
+  <div class="ats-diagram" id="ats-diagram"></div>
+
+  <button class="home-btn" onclick="setATS('open')">ATS開放</button>
+  <button class="home-btn" onclick="setATS('emergency')">ATS非常</button>
+  <button class="home-btn" onclick="setATS('p')">ATS-P</button>
+  <button class="home-btn" onclick="setATS('reset')">機器開放</button>
+
+  <div style="margin-top:30px;">
+    <button class="back-btn" onclick="goHome()">戻る</button>
   </div>
-
-  <div class="menu-grid">
-    <button class="menu-btn" onclick="atsOpen()">ATS開放</button>
-    <button class="menu-btn" onclick="atsEmergency()">ATS非常</button>
-    <button class="menu-btn" onclick="atsP()">ATS-P</button>
-    <button class="menu-btn" onclick="deviceOpen()">機器開放</button>
-  </div>
-
-  <button class="back-btn" onclick="goHome()">戻る</button>
-</div>
-
-<!-- ===== 指令 ===== -->
-<div id="command-screen" class="screen">
-  <div class="title">指令</div>
-
-  <div class="command-board">
-    <div class="command-scroll">
-      寝台サンライズ瀬戸・出雲　運転見合わせ
-    </div>
-  </div>
-
-  <button class="back-btn" onclick="goHome()">戻る</button>
 </div>
 
 <script>
-/* ピ音 */
-const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-function playBeep(){
-  const o = audioCtx.createOscillator();
-  const g = audioCtx.createGain();
-  o.connect(g);
-  g.connect(audioCtx.destination);
-  o.frequency.value = 1000;
-  g.gain.value = 0.2;
-  o.start();
-  setTimeout(()=>o.stop(), 100);
-}
+  const screens = ["home", "drive-screen", "ats-screen"];
+  const atsDiagram = () => document.getElementById("ats-diagram");
+  const driveATSDiagram = () => document.getElementById("drive-ats-diagram");
 
-/* 画面切替 */
-function showScreen(id){
-  document.querySelectorAll(".screen").forEach(s=>{
-    s.classList.remove("active");
-  });
-  document.getElementById(id).classList.add("active");
-}
+  function show(id) {
+    screens.forEach(s => document.getElementById(s).style.display = "none");
+    document.getElementById(id).style.display = "block";
+  }
 
-function goHome(){
-  playBeep();
-  showScreen("home-screen");
-}
+  function goHome() {
+    show("home");
+  }
 
-function openDrive(){
-  playBeep();
-  showScreen("drive-screen");
-}
+  function openDrive() {
+    show("drive-screen");
+  }
 
-function openATS(){
-  playBeep();
-  showScreen("ats-screen");
-}
+  function openATS() {
+    show("ats-screen");
+  }
 
-function openCommand(){
-  playBeep();
-  showScreen("command-screen");
-}
+  function resetDiagram() {
+    atsDiagram().className = "ats-diagram";
+    driveATSDiagram().className = "ats-diagram";
+    atsDiagram().innerText = "";
+    driveATSDiagram().innerText = "";
+  }
 
-/* ATS 図制御（ATS画面のみ） */
-function resetDiagram(){
-  document.querySelectorAll("#ats-screen .diagram-box").forEach(b=>{
-    b.classList.remove("active-green","active-red");
-  });
-}
+  function setATS(type) {
+    resetDiagram();
 
-function atsOpen(){
-  playBeep();
-  resetDiagram();
-  document.getElementById("box-ats").classList.add("active-green");
-}
+    if (type === "open") {
+      atsDiagram().classList.add("ats-green");
+      atsDiagram().innerText = "ATS開放";
+      driveATSDiagram().classList.add("ats-green");
+      driveATSDiagram().innerText = "ATS開放";
+    }
 
-function atsP(){
-  playBeep();
-  resetDiagram();
-  document.getElementById("box-atsp").classList.add("active-green");
-}
+    if (type === "p") {
+      atsDiagram().classList.add("ats-green");
+      atsDiagram().innerText = "ATS-P";
+      driveATSDiagram().classList.add("ats-green");
+      driveATSDiagram().innerText = "ATS-P";
+    }
 
-function atsEmergency(){
-  playBeep();
-  resetDiagram();
-  document.getElementById("box-emergency").classList.add("active-red");
-}
+    if (type === "emergency") {
+      atsDiagram().classList.add("ats-red");
+      atsDiagram().innerText = "ATS非常";
+      driveATSDiagram().classList.add("ats-red");
+      driveATSDiagram().innerText = "ATS非常";
+    }
 
-function deviceOpen(){
-  playBeep();
-  resetDiagram();
-}
+    if (type === "reset") {
+      resetDiagram();
+    }
+  }
 </script>
 
 </body>
