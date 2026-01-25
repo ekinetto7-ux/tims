@@ -1,139 +1,162 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>TIMS</title>
 
 <style>
-body{
-  margin:0;
-  background:black;
-  color:white;
-  font-family:-apple-system,BlinkMacSystemFont,sans-serif;
-  text-align:center;
-}
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+  }
 
-/* 共通 */
-.hidden{display:none;}
+  /* ===== 共通 ===== */
+  .hidden { display: none; }
+  .screen {
+    width: 100%;
+    height: 100%;
+  }
 
-button{
-  background:#f2f2f2;
-  color:#007aff;
-  border:none;
-  border-radius:30px;
-  padding:16px 40px;
-  font-size:20px;
-  margin:16px;
-}
+  /* ===== 初期画面 ===== */
+  #home {
+    background: #6f7f93;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
 
-.main-btn{
-  width:260px;
-}
+  .header {
+    color: #e6f0ff;
+    font-size: 14px;
+    padding: 10px 14px;
+  }
 
-/* 画面タイトル */
-.title{
-  font-size:28px;
-  margin:40px 0 30px;
-}
+  .button-area {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+    padding: 0 20px;
+  }
 
-/* 運転情報 */
-.next-title{
-  color:yellow;
-  font-size:32px;
-  font-weight:bold;
-  margin-bottom:20px;
-}
+  .menu-button {
+    width: 140px;
+    height: 120px;
+    background: #1f5fd1;
+    border: 2px solid #ffffff;
+    color: #ffffff;
+    font-size: 20px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    user-select: none;
+  }
 
-.next-box{
-  width:300px;
-  height:140px;
-  border:3px solid white;
-  margin:0 auto 40px;
-}
+  .menu-button:active {
+    background: #174aa5;
+  }
 
-/* ATS */
-.ats-diagram{
-  width:220px;
-  height:100px;
-  border:3px solid white;
-  margin:30px auto;
-}
+  /* ===== Suica アナウンス ===== */
+  .suica-message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 32px;
+    font-weight: bold;
+    color: #ffe600;
+    background: rgba(0,0,0,0.6);
+    padding: 20px 30px;
+    border-radius: 10px;
+    text-align: center;
+  }
+
+  /* ===== 運転情報画面 ===== */
+  #operation {
+    background: #000000;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .op-title {
+    font-size: 26px;
+    margin-bottom: 40px;
+  }
+
+  .next-station {
+    font-size: 36px;
+    color: #ffe600;
+    font-weight: bold;
+    margin-bottom: 60px;
+  }
+
+  .back-button {
+    padding: 12px 30px;
+    font-size: 18px;
+    border-radius: 20px;
+    border: none;
+    background: #e6e6e6;
+    color: #2a6dd8;
+  }
 </style>
 </head>
 
 <body>
 
 <!-- 初期画面 -->
-<div id="home">
-  <div style="margin-top:120px">
-    <button class="main-btn" onclick="showDrive()">運転情報</button><br>
-    <button class="main-btn" onclick="showATS()">ATS</button>
+<div id="home" class="screen">
+  <div class="header">列車情報表示装置</div>
+
+  <div class="button-area">
+    <div class="menu-button">運転士</div>
+    <div class="menu-button">車掌</div>
+    <div class="menu-button" onclick="showOperation()">指令</div>
+    <div class="menu-button" onclick="showSuica()">Suica</div>
+  </div>
+
+  <!-- Suicaメッセージ -->
+  <div id="suicaMessage" class="suica-message hidden">
+    Suicaを挿入してください
   </div>
 </div>
 
 <!-- 運転情報画面 -->
-<div id="drive" class="hidden">
-  <div class="title">運転情報</div>
-
-  <div class="next-title">次駅表示</div>
-
-  <div class="next-box"></div>
-
-  <button onclick="backHome()">戻る</button>
-</div>
-
-<!-- ATS画面 -->
-<div id="ats" class="hidden">
-  <div class="title">ATS</div>
-
-  <div id="atsBox" class="ats-diagram"></div>
-
-  <button onclick="atsOpen()">ATS開放</button><br>
-  <button onclick="atsEmergency()">ATS非常</button><br>
-  <button onclick="atsReset()">機器開放</button><br>
-
-  <button onclick="backHome()">戻る</button>
+<div id="operation" class="screen hidden">
+  <div class="op-title">運転情報</div>
+  <div class="next-station">次駅表示</div>
+  <button class="back-button" onclick="backHome()">戻る</button>
 </div>
 
 <script>
-function hideAll(){
-  document.getElementById("home").classList.add("hidden");
-  document.getElementById("drive").classList.add("hidden");
-  document.getElementById("ats").classList.add("hidden");
-}
+  function showOperation() {
+    document.getElementById("home").classList.add("hidden");
+    document.getElementById("operation").classList.remove("hidden");
+  }
 
-function backHome(){
-  hideAll();
-  document.getElementById("home").classList.remove("hidden");
-}
+  function backHome() {
+    document.getElementById("operation").classList.add("hidden");
+    document.getElementById("home").classList.remove("hidden");
+    document.getElementById("suicaMessage").classList.add("hidden");
+  }
 
-function showDrive(){
-  hideAll();
-  document.getElementById("drive").classList.remove("hidden");
-}
+  function showSuica() {
+    const msg = document.getElementById("suicaMessage");
+    msg.classList.remove("hidden");
 
-function showATS(){
-  hideAll();
-  document.getElementById("ats").classList.remove("hidden");
-  atsReset();
-}
-
-/* ATS制御 */
-function atsOpen(){
-  const b=document.getElementById("atsBox");
-  b.style.background="green";
-}
-
-function atsEmergency(){
-  const b=document.getElementById("atsBox");
-  b.style.background="red";
-}
-
-function atsReset(){
-  const b=document.getElementById("atsBox");
-  b.style.background="transparent";
-}
+    // 3秒後に自動で消す
+    setTimeout(() => {
+      msg.classList.add("hidden");
+    }, 3000);
+  }
 </script>
 
 </body>
