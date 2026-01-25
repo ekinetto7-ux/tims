@@ -2,161 +2,179 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TIMS</title>
-
+<title>TIMS Simulator</title>
 <style>
-body{
-  margin:0;
-  background:#000;
-  color:#0f0;
-  font-family:"MS Gothic", monospace;
+body {
+  margin: 0;
+  background: black;
+  color: #00ff66;
+  font-family: "MS Gothic", monospace;
 }
-
-/* ===== 共通枠 ===== */
-.box{
-  border:2px solid #0f0;
-  padding:6px 10px;
-  margin-bottom:6px;
+.screen {
+  display: none;
+  padding: 20px;
 }
-
-/* ===== 上部ステータス ===== */
-#status{
-  display:flex;
-  justify-content:space-between;
-  font-size:14px;
+.active {
+  display: block;
 }
-
-/* ===== 運転情報 ===== */
-#drive{
-  color:#6cf;
-  font-size:18px;
+.header {
+  font-size: 24px;
+  margin-bottom: 10px;
 }
-
-/* ===== 駅情報 ===== */
-#station{
-  font-size:22px;
+.info {
+  font-size: 18px;
+  margin: 5px 0;
 }
-#next{
-  color:#ff0;
-  font-size:20px;
+.station-bar {
+  display: flex;
+  overflow-x: auto;
+  margin-top: 10px;
 }
-
-/* ===== 車両 ===== */
-#cars{
-  display:flex;
-  gap:4px;
+.station {
+  border: 1px solid #00ff66;
+  padding: 5px;
+  margin-right: 4px;
+  font-size: 12px;
 }
-.car{
-  width:20px;
-  height:26px;
-  border:1px solid #0f0;
-  text-align:center;
-  line-height:26px;
-  font-size:12px;
+.current {
+  background: #00ff66;
+  color: black;
 }
-
-/* ===== 操作 ===== */
-#buttons{
-  display:flex;
-  justify-content:flex-end;
-  gap:10px;
+button {
+  background: black;
+  color: #00ff66;
+  border: 2px solid #00ff66;
+  padding: 10px;
+  margin: 5px;
+  font-size: 16px;
 }
-button{
-  background:#102a40;
-  color:#fff;
-  border:1px solid #6cf;
-  padding:10px 16px;
-  font-size:16px;
+button:active {
+  background: #00ff66;
+  color: black;
 }
-button:active{
-  background:#1e6aa8;
+.footer {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
 }
 </style>
 </head>
-
 <body>
 
-<!-- 上部ステータス -->
-<div class="box" id="status">
-  <div>
-    <span id="clock">--:--:--</span>
-    <span style="color:#ff0">2680E</span>
-    <span>快速</span>
-    <span style="color:#6cf">内房→総武快速</span>
-  </div>
-  <div>停車中</div>
-</div>
+<!-- 運転情報画面 -->
+<div id="driver" class="screen active">
+  <div class="header">運転情報</div>
+  <div class="info">列車番号：2680E</div>
+  <div class="info" id="state">状態：停車中</div>
+  <div class="info" id="currentStation"></div>
+  <div class="info" id="nextStation"></div>
 
-<!-- 運転情報 -->
-<div class="box" id="drive">
-  運転情報：平常運転
-</div>
+  <div class="station-bar" id="stationBar"></div>
 
-<!-- 駅情報 -->
-<div class="box" id="station">
-  現在駅：<span id="current">君津</span><br>
-  <span id="next">次駅：木更津</span>
-</div>
-
-<!-- 車両 -->
-<div class="box">
-  <div id="cars"></div>
-</div>
-
-<!-- 操作 -->
-<div class="box" id="buttons">
   <button onclick="nextStation()">次駅</button>
-  <button onclick="beep()">設定</button>
+  <button onclick="toggleDoor()">ドア</button>
+
+  <div class="footer">
+    <button onclick="showConductor()">車掌</button>
+  </div>
 </div>
 
-<audio id="beep">
-<source src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABAAZGF0YQAAAAA=">
-</audio>
+<!-- 車掌画面 -->
+<div id="conductor" class="screen">
+  <div class="header">車掌画面</div>
+  <div class="info">ドア状態：<span id="doorState">閉</span></div>
+
+  <div class="station-bar">
+    <script>
+      for(let i=1;i<=15;i++){
+        document.write(`<div class="station">${i}</div>`);
+      }
+    </script>
+  </div>
+
+  <div class="footer">
+    <button onclick="showDriver()">戻る</button>
+  </div>
+</div>
 
 <script>
-/* 時刻 */
-function clock(){
-  document.getElementById("clock").textContent =
-    new Date().toLocaleTimeString("ja-JP",{hour12:false});
-}
-setInterval(clock,1000); clock();
-
-/* 駅 */
-const stations=[
-"君津","木更津","袖ヶ浦","長浦","姉ヶ崎","五井",
-"八幡宿","浜野","蘇我","本千葉","千葉",
-"津田沼","船橋","市川","新小岩",
-"錦糸町","新日本橋","東京"
+const stations = [
+  "君津","木更津","袖ヶ浦","長浦","姉ヶ崎","五井","八幡宿",
+  "浜野","蘇我","本千葉","千葉",
+  "津田沼","船橋","市川","新小岩","錦糸町","新日本橋","東京"
 ];
-let i=0;
-const cur=document.getElementById("current");
-const next=document.getElementById("next");
 
-/* 車両 */
-const cars=document.getElementById("cars");
-for(let n=1;n<=15;n++){
-  const d=document.createElement("div");
-  d.className="car";
-  d.textContent=n;
-  cars.appendChild(d);
+let index = 0;
+let running = false;
+let doorOpen = false;
+
+const beep = () => {
+  const ctx = new AudioContext();
+  const osc = ctx.createOscillator();
+  osc.frequency.value = 1000;
+  osc.connect(ctx.destination);
+  osc.start();
+  setTimeout(()=>osc.stop(),100);
+};
+
+function renderStations(){
+  const bar = document.getElementById("stationBar");
+  bar.innerHTML = "";
+  stations.forEach((s,i)=>{
+    const d = document.createElement("div");
+    d.className = "station" + (i===index ? " current":"");
+    d.textContent = s;
+    bar.appendChild(d);
+  });
 }
 
-/* 音 */
-function beep(){
-  const b=document.getElementById("beep");
-  b.currentTime=0; b.play();
+function update(){
+  document.getElementById("currentStation").textContent =
+    "現在駅：" + stations[index];
+  document.getElementById("nextStation").textContent =
+    index < stations.length-1
+      ? "次駅：" + stations[index+1]
+      : "終点";
+  document.getElementById("state").textContent =
+    running ? "状態：走行中" : "状態：停車中";
+  document.getElementById("doorState").textContent =
+    doorOpen ? "開" : "閉";
+  renderStations();
 }
 
-/* 次駅 */
 function nextStation(){
   beep();
-  if(i<stations.length-1){
-    i++;
-    cur.textContent=stations[i];
-    next.textContent="次駅："+(stations[i+1]??"終点");
-  }
+  if(running || index >= stations.length-1) return;
+  running = true;
+  doorOpen = false;
+  update();
+  setTimeout(()=>{
+    index++;
+    running = false;
+    update();
+  },2000);
 }
+
+function toggleDoor(){
+  beep();
+  if(running) return;
+  doorOpen = !doorOpen;
+  update();
+}
+
+function showConductor(){
+  beep();
+  document.getElementById("driver").classList.remove("active");
+  document.getElementById("conductor").classList.add("active");
+}
+
+function showDriver(){
+  beep();
+  document.getElementById("conductor").classList.remove("active");
+  document.getElementById("driver").classList.add("active");
+}
+
+update();
 </script>
 
 </body>
