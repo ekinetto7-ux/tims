@@ -3,159 +3,135 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TIMS</title>
+<title>TIMS風 運転情報</title>
 
 <style>
-body{
-  margin:0;
-  background:#000;
-  color:#e0e0e0;
-  font-family: "MS Gothic", monospace;
+body {
+  margin: 0;
+  background: #000;
+  color: #0f0;
+  font-family: "Segoe UI", sans-serif;
 }
 
-/* 全体枠 */
-#tims{
-  border:3px solid #00ff66;
-  margin:10px;
-  padding:10px;
+.container {
+  padding: 20px;
 }
 
-/* 上部 */
-#top{
-  display:flex;
-  justify-content:space-between;
-  font-size:18px;
-  margin-bottom:10px;
+/* 上部情報 */
+.status {
+  font-size: 26px;
+  margin-bottom: 10px;
 }
 
-/* メイン情報 */
-#main{
-  border:2px solid #555;
-  padding:10px;
-  margin-bottom:10px;
+.sub {
+  font-size: 20px;
+  color: #6cf;
+  margin-bottom: 20px;
 }
 
-.green{ color:#00ff66; }
-.yellow{ color:#ffcc00; }
-
-/* 次駅 */
-#next{
-  font-size:22px;
-  margin:10px 0;
+/* ドア・車両表示 */
+.car-bar {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 15px;
 }
 
-/* ドア表示 */
-#doors{
-  display:flex;
-  margin:8px 0;
-}
-.door{
-  width:20px;
-  height:14px;
-  margin-right:2px;
-  background:#ff9900;
+.car {
+  width: 20px;
+  height: 30px;
+  border: 1px solid #0f0;
+  text-align: center;
+  font-size: 12px;
+  line-height: 30px;
 }
 
-/* 車両番号 */
-#cars{
-  display:flex;
-}
-.car{
-  width:26px;
-  text-align:center;
-  border:1px solid #00ff66;
-  margin-right:2px;
-  font-size:12px;
+.car.active {
+  background: #0f0;
+  color: #000;
 }
 
 /* ボタン */
-#buttons{
-  display:flex;
-  justify-content:flex-end;
-  margin-top:10px;
+.buttons {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  display: flex;
+  gap: 10px;
 }
-button{
-  background:#1c3f6e;
-  color:#fff;
-  border:1px solid #7aa7ff;
-  font-size:16px;
-  padding:6px 14px;
-  margin-left:10px;
+
+button {
+  background: #123a5a;
+  color: #fff;
+  border: 1px solid #6cf;
+  padding: 10px 18px;
+  font-size: 16px;
+  border-radius: 4px;
+}
+
+button:active {
+  background: #1e6aa8;
 }
 </style>
 </head>
 
 <body>
-<div id="tims">
 
-  <!-- 上部 -->
-  <div id="top">
-    <div>13:16:30　0km/h</div>
-    <div class="green">2680E</div>
-  </div>
+<div class="container">
+  <div class="status">現在駅：<span id="current">君津</span></div>
+  <div class="sub">次駅：<span id="next">木更津</span></div>
 
-  <!-- メイン -->
-  <div id="main">
-    <div class="green">運転情報</div>
-    <div>現在駅：<span class="yellow" id="now">君津</span></div>
-    <div id="next">次停車駅：<span class="yellow" id="nextSta">木更津</span></div>
-
-    <!-- ドア -->
-    <div id="doors"></div>
-
-    <!-- 車両 -->
-    <div id="cars"></div>
-  </div>
-
-  <!-- ボタン -->
-  <div id="buttons">
-    <button onclick="nextStation()">次駅</button>
-    <button onclick="beep()">設定</button>
-  </div>
-
+  <!-- 車両表示 -->
+  <div class="car-bar" id="cars"></div>
 </div>
 
-<audio id="beep" src="click.mp3"></audio>
+<!-- ボタン -->
+<div class="buttons">
+  <button onclick="nextStation()">次駅</button>
+  <button onclick="beep()">設定</button>
+</div>
+
+<!-- ピ音 -->
+<audio id="beep">
+  <source src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABAAZGF0YQAAAAA=">
+</audio>
 
 <script>
 const stations = [
   "君津","木更津","袖ヶ浦","長浦","姉ヶ崎","五井",
   "八幡宿","浜野","蘇我","本千葉","千葉",
-  "津田沼","船橋","市川","新小岩",
-  "錦糸町","新日本橋","東京"
+  "津田沼","船橋","市川","新小岩","錦糸町",
+  "新日本橋","東京"
 ];
+
 let index = 0;
 
-function beep(){
-  const b = document.getElementById("beep");
-  b.currentTime = 0;
-  b.play();
+const currentEl = document.getElementById("current");
+const nextEl = document.getElementById("next");
+const beepSound = document.getElementById("beep");
+
+/* 車両描画 */
+const cars = document.getElementById("cars");
+for (let i = 1; i <= 15; i++) {
+  const div = document.createElement("div");
+  div.className = "car";
+  div.textContent = i;
+  if (i === 1) div.classList.add("active");
+  cars.appendChild(div);
 }
 
-function nextStation(){
+function beep() {
+  beepSound.currentTime = 0;
+  beepSound.play();
+}
+
+/* 次駅進行 */
+function nextStation() {
   beep();
-  if(index < stations.length-1){
-    document.getElementById("now").textContent = stations[index];
-    document.getElementById("nextSta").textContent = stations[index+1];
+  if (index < stations.length - 1) {
     index++;
+    currentEl.textContent = stations[index];
+    nextEl.textContent = stations[index + 1] ?? "終点";
   }
-}
-
-/* ドア生成 */
-const d = document.getElementById("doors");
-for(let i=0;i<15;i++){
-  const e = document.createElement("div");
-  e.className="door";
-  d.appendChild(e);
-}
-
-/* 車両生成 */
-const c = document.getElementById("cars");
-for(let i=1;i<=15;i++){
-  const e = document.createElement("div");
-  e.className="car";
-  e.textContent=i;
-  c.appendChild(e);
 }
 </script>
 
