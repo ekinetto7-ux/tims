@@ -5,207 +5,266 @@
 <title>TIMS Simulator</title>
 
 <style>
-body {
-  margin: 0;
-  background: black;
-  color: #00ff66;
-  font-family: "MS Gothic", monospace;
+body{
+  margin:0;
+  background:black;
+  color:#00ff66;
+  font-family:"MS Gothic",monospace;
+}
+.screen{display:none;padding:20px;}
+.active{display:block;}
+
+.header{font-size:26px;margin-bottom:8px;}
+.info{font-size:18px;margin:4px 0;}
+
+/* 起動 */
+#boot{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  height:100vh;
 }
 
-.screen {
-  display: none;
-  padding: 20px;
+/* 初期選択 */
+.select-btn{
+  width:260px;
+  padding:18px;
+  margin:20px 0;
+  border:2px solid #00ff66;
+  text-align:center;
+  font-size:24px;
 }
 
-.active {
-  display: block;
+/* 警告 */
+.alert{
+  border:2px solid #00ff66;
+  padding:10px;
+  margin:10px 0;
+  font-size:22px;
+  display:none;
+}
+.blink{
+  animation:blink 1s steps(1) infinite;
+}
+@keyframes blink{
+  50%{background:#00ff66;color:black;}
 }
 
-.header {
-  font-size: 26px;
-  margin-bottom: 10px;
+/* 中央指示 */
+.centerMsg{
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  pointer-events:none;
+}
+.centerMsg .box{
+  border:3px solid yellow;
+  padding:24px 30px;
+  color:yellow;
+  font-size:26px;
+  text-align:center;
+  background:rgba(0,0,0,0.85);
 }
 
-.info {
-  font-size: 20px;
-  margin: 6px 0;
+/* 駅 */
+.station-bar{
+  display:flex;
+  overflow-x:auto;
+  margin:10px 0;
+}
+.station{
+  border:2px solid #00ff66;
+  padding:6px 10px;
+  margin-right:6px;
+}
+.current{
+  background:#00ff66;
+  color:black;
 }
 
-/* 駅バー */
-.station-bar {
-  display: flex;
-  overflow-x: auto;
-  margin: 15px 0;
+/* ボタン */
+button{
+  background:black;
+  color:#00ff66;
+  border:2px solid #00ff66;
+  padding:18px 28px;
+  font-size:22px;
+  min-width:160px;
+}
+button:disabled{
+  opacity:0.2;
 }
 
-.station {
-  border: 2px solid #00ff66;
-  padding: 6px 10px;
-  margin-right: 6px;
-  font-size: 14px;
+/* 下部操作 */
+.control-bar{
+  position:fixed;
+  bottom:120px;
+  left:0;
+  right:0;
+  display:flex;
+  justify-content:center;
+  gap:40px;
 }
 
-.current {
-  background: #00ff66;
-  color: black;
+/* ログ */
+.log{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  height:100px;
+  border-top:2px solid #00ff66;
+  padding:6px;
+  font-size:14px;
+  overflow-y:auto;
 }
 
-/* ボタン（大きめ） */
-button {
-  background: black;
-  color: #00ff66;
-  border: 2px solid #00ff66;
-  padding: 18px 28px;
-  margin: 8px;
-  font-size: 22px;
-  min-width: 140px;
-  font-family: "MS Gothic", monospace;
-}
-
-button:active {
-  background: #00ff66;
-  color: black;
-}
-
-.footer {
-  position: fixed;
-  bottom: 10px;
-  right: 10px;
+/* 操作ロック用 */
+.lock{
+  pointer-events:none;
 }
 </style>
 </head>
 
 <body>
 
-<!-- 運転情報画面 -->
-<div id="driver" class="screen active">
+<div id="boot" class="screen active">
+  <div>TIMS SYSTEM</div>
+  <div>BOOTING...</div>
+  <div id="bootLog"></div>
+</div>
+
+<div id="select" class="screen">
+  <div class="select-btn" onclick="openDriver()">運転情報</div>
+</div>
+
+<div id="driver" class="screen">
   <div class="header">運転情報</div>
 
-  <div class="info">列車番号：2680E</div>
-  <div class="info" id="state">状態：停車中</div>
-  <div class="info" id="currentStation"></div>
-  <div class="info" id="nextStation"></div>
+  <div class="alert blink" id="alertBox">
+    ⚠ 非常扱い中<br>
+    理由：<span id="alertReason"></span>
+  </div>
 
-  <div class="station-bar" id="stationBar"></div>
+  <div class="info">状態：<span id="mode"></span></div>
+  <div class="info">現在駅：<span id="nowStation"></span></div>
+  <div class="info">次駅：<span id="nextStation"></span></div>
 
-  <button onclick="nextStation()">次駅</button>
-  <button onclick="toggleDoor()">ドア</button>
+  <div class="station-bar" id="stations"></div>
 
-  <div class="footer">
-    <button onclick="showConductor()">車掌</button>
+  <div class="control-bar">
+    <button id="nextBtn" onclick="nextStation()">次駅</button>
+    <button onclick="emergency()">非常扱い</button>
   </div>
 </div>
 
-<!-- 車掌画面 -->
-<div id="conductor" class="screen">
-  <div class="header">車掌画面</div>
+<div id="emergencySelect" class="screen">
+  <div class="header">非常扱い理由選択</div>
+  <button onclick="setEmergency('地震')">地震</button>
+  <button onclick="setEmergency('火災')">火災</button>
+  <button onclick="setEmergency('人身事故')">人身事故</button>
+</div>
 
-  <div class="info">ドア状態：<span id="doorState">閉</span></div>
-
-  <div class="station-bar">
-    <script>
-      for (let i = 1; i <= 15; i++) {
-        document.write(`<div class="station">${i}</div>`);
-      }
-    </script>
-  </div>
-
-  <div class="footer">
-    <button onclick="showDriver()">戻る</button>
+<div id="emergencyConfirm" class="screen">
+  <div style="border:2px solid #00ff66;padding:30px;text-align:center;">
+    非常扱いを解除しますか？<br><br>
+    <button onclick="confirmRelease()">確認</button>
   </div>
 </div>
+
+<div id="quakeMsg" class="centerMsg"><div class="box">直ちに高台に避難<br>車掌と連携すること</div></div>
+<div id="fireMsg" class="centerMsg"><div class="box">閉められるすべての窓を閉じること<br>トンネル内停車を避けること</div></div>
+<div id="accidentMsg" class="centerMsg"><div class="box">直ちに警察・消防・車掌・駅員に通報すること</div></div>
+
+<div class="log" id="log"></div>
 
 <script>
-/* 停車駅（確定） */
-const stations = [
-  "君津","木更津","袖ヶ浦","長浦","姉ヶ崎",
-  "五井","八幡宿","浜野","蘇我","本千葉",
-  "千葉","津田沼","船橋","市川",
-  "新小岩","錦糸町","新日本橋","東京"
-];
+const screens=["boot","select","driver","emergencySelect","emergencyConfirm"];
+const stations=["君津","木更津","袖ケ浦","長浦","姉ヶ崎","五井","八幡宿","浜野","蘇我","本千葉","千葉","津田沼","船橋","市川","新小岩","錦糸町","新日本橋","東京"];
+let idx=0;
+let running=false;
+let emergencyMode=false;
+let emergencyReason="";
+const logBox=document.getElementById("log");
 
-let index = 0;
-let running = false;
-let doorOpen = false;
-
-/* ピ音 */
-function beep() {
-  const ctx = new AudioContext();
-  const osc = ctx.createOscillator();
-  osc.frequency.value = 1000;
-  osc.connect(ctx.destination);
-  osc.start();
-  setTimeout(() => osc.stop(), 100);
+/* ログ */
+function addLog(t){
+ const time=new Date().toLocaleTimeString();
+ logBox.innerHTML+=`[${time}] ${t}<br>`;
+ logBox.scrollTop=logBox.scrollHeight;
 }
 
-/* 駅表示 */
-function renderStations() {
-  const bar = document.getElementById("stationBar");
-  bar.innerHTML = "";
-  stations.forEach((s, i) => {
-    const d = document.createElement("div");
-    d.className = "station" + (i === index ? " current" : "");
-    d.textContent = s;
-    bar.appendChild(d);
-  });
+/* 起動 */
+let step=0;
+const bootSteps=["IO CHECK","MEMORY CHECK","DISPLAY CHECK","COMM CHECK","READY"];
+const bl=setInterval(()=>{
+ if(step<bootSteps.length){
+  document.getElementById("bootLog").innerHTML+=bootSteps[step++]+"<br>";
+ }else{
+  clearInterval(bl);
+  show("select");
+ }
+},500);
+
+function show(id){
+ screens.forEach(s=>document.getElementById(s).classList.remove("active"));
+ document.getElementById(id).classList.add("active");
 }
 
-/* 画面更新 */
-function update() {
-  document.getElementById("currentStation").textContent =
-    "現在駅：" + stations[index];
-
-  document.getElementById("nextStation").textContent =
-    index < stations.length - 1
-      ? "次駅：" + stations[index + 1]
-      : "終点";
-
-  document.getElementById("state").textContent =
-    running ? "状態：走行中" : "状態：停車中";
-
-  document.getElementById("doorState").textContent =
-    doorOpen ? "開" : "閉";
-
-  renderStations();
+function openDriver(){
+ show("driver");
+ update();
 }
 
-/* 次駅（※B無し＝走行中でも押せる） */
-function nextStation() {
-  beep();
-  if (index >= stations.length - 1) return;
+function update(){
+ document.getElementById("mode").textContent=emergencyMode?"非常":"停車中";
+ document.getElementById("nowStation").textContent=stations[idx];
+ document.getElementById("nextStation").textContent=stations[idx+1]||"終点";
+ document.getElementById("alertBox").style.display=emergencyMode?"block":"none";
+ document.getElementById("alertReason").textContent=emergencyReason;
+ document.getElementById("nextBtn").disabled=emergencyMode;
 
-  running = true;
-  doorOpen = false;
-  update();
+ document.getElementById("quakeMsg").style.display=emergencyMode&&emergencyReason==="地震"?"flex":"none";
+ document.getElementById("fireMsg").style.display=emergencyMode&&emergencyReason==="火災"?"flex":"none";
+ document.getElementById("accidentMsg").style.display=emergencyMode&&emergencyReason==="人身事故"?"flex":"none";
 
-  setTimeout(() => {
-    index++;
-    running = false;
-    update();
-  }, 2000);
+ const bar=document.getElementById("stations");
+ bar.innerHTML="";
+ stations.forEach((s,i)=>{
+  bar.innerHTML+=`<div class="station ${i===idx?"current":""}">${s}</div>`;
+ });
+
+ document.body.classList.toggle("lock",emergencyMode);
 }
 
-/* ドア */
-function toggleDoor() {
-  beep();
-  doorOpen = !doorOpen;
-  update();
+function nextStation(){
+ if(emergencyMode)return;
+ if(idx<stations.length-1) idx++;
+ update();
 }
 
-/* 画面切替 */
-function showConductor() {
-  beep();
-  document.getElementById("driver").classList.remove("active");
-  document.getElementById("conductor").classList.add("active");
+function emergency(){
+ emergencyMode ? show("emergencyConfirm") : show("emergencySelect");
 }
 
-function showDriver() {
-  beep();
-  document.getElementById("conductor").classList.remove("active");
-  document.getElementById("driver").classList.add("active");
+function setEmergency(r){
+ emergencyMode=true;
+ emergencyReason=r;
+ addLog(`司令：非常扱い開始（${r}）`);
+ addLog("指令：運転規制を指示");
+ show("driver");
+ update();
 }
 
-update();
+function confirmRelease(){
+ emergencyMode=false;
+ emergencyReason="";
+ addLog("司令：非常扱い解除");
+ show("driver");
+ update();
+}
 </script>
 
 </body>
