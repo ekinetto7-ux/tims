@@ -2,235 +2,223 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>TIMS 完成版</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TIMS風 次駅表示</title>
 
 <style>
-/* ===== 全体 ===== */
-body{
-  margin:0;
-  background:#000;
-  color:#ffd400;
-  font-family: monospace;
-}
-.wrapper{
-  width:1280px;
-  transform-origin: top left;
-}
-@media(max-width:1280px){
-  .wrapper{ transform:scale(calc(100vw/1280)); }
-}
+  body {
+    margin: 0;
+    background: #111;
+    color: #fff;
+    font-family: sans-serif;
+  }
 
-/* ===== 上段 ===== */
-.topbar{
-  display:flex;
-  justify-content:space-between;
-  padding:6px 10px;
-  font-size:20px;
-  border-bottom:3px solid #ffd400;
-}
+  .screen {
+    position: absolute;
+    inset: 0;
+    padding: 20px;
+  }
 
-/* ===== 路線表示 ===== */
-.line{
-  font-size:28px;
-  margin:10px;
-}
-.uchibo{ color:#ffd400; }
-.sobu{ color:#00aaff; }
-.terminal{
-  color:#fff;
-  animation: blink 1s steps(1) infinite;
-}
-@keyframes blink{50%{opacity:0;}}
+  .hidden {
+    display: none;
+  }
 
-/* ===== 駅一覧 ===== */
-.station-window{
-  height:360px;
-  overflow:hidden;
-  margin-left:10px;
-}
-#stationList{
-  transition:transform .4s ease;
-}
-.station{
-  font-size:28px;
-  line-height:44px;
-}
-.station.current{
-  background:#1e3a5f;
-  font-size:30px;
-  font-weight:bold;
-}
+  /* メイン画面 */
+  #mainScreen {
+    background: #000;
+  }
 
-/* ===== 編成・ドア ===== */
-.doors{
-  display:flex;
-  gap:6px;
-  margin:10px;
-}
-.car{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-}
-.car-num{
-  font-size:14px;
-  color:#00ff66;
-}
-.door{
-  width:30px;
-  height:14px;
-  background:#000;
-  border:1px solid #ffd400;
-}
-.door.open{ background:red; }
+  #currentStation {
+    font-size: 32px;
+    margin-bottom: 10px;
+  }
 
-/* ===== ボタン ===== */
-.controls{
-  margin:10px;
-}
-button{
-  background:#000;
-  color:#ffd400;
-  border:1px solid #ffd400;
-  padding:6px 12px;
-  margin-right:6px;
-}
+  #nextStation {
+    font-size: 22px;
+    color: #7fbfff;
+  }
+
+  /* 右下ボタン */
+  #bottom-buttons {
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+    display: flex;
+    gap: 10px;
+  }
+
+  /* ボタン共通 */
+  button {
+    background: #2f5f9e;
+    color: #fff;
+    border: 1px solid #9fc3ff;
+    padding: 8px 16px;
+    font-size: 16px;
+    border-radius: 3px;
+  }
+
+  button:active {
+    background: #1e3f6f;
+  }
+
+  button:disabled {
+    background: #555;
+    border-color: #777;
+    color: #aaa;
+  }
+
+  /* 設定画面 */
+  #settingScreen {
+    background: #111;
+  }
+
+  .setting-buttons {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .big {
+    width: 200px;
+    height: 60px;
+    font-size: 22px;
+  }
 </style>
 </head>
 
 <body>
-<div class="wrapper">
-
-  <!-- 上段 -->
-  <div class="topbar">
-    <div id="time">--:--:--</div>
-    <div id="lineName" class="uchibo">内房線</div>
-    <div>0.0 km/h</div>
-  </div>
-
-  <!-- 駅一覧 -->
-  <div class="station-window">
-    <div id="stationList"></div>
-  </div>
-
-  <!-- 編成 -->
-  <div class="doors" id="doors"></div>
-
-  <!-- 操作 -->
-  <div class="controls">
-    <button onclick="toggleRun()">走行/停車</button>
-    <button onclick="nextStation()">進駅</button>
-  </div>
-
-</div>
 
 <!-- 効果音 -->
-<audio id="chime" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
+<audio id="clickSound" src="click.mp3" preload="auto"></audio>
+
+<!-- メイン画面 -->
+<div id="mainScreen" class="screen">
+  <div id="currentStation"></div>
+  <div id="nextStation"></div>
+
+  <div id="bottom-buttons">
+    <button id="settingBtn">設定</button>
+  </div>
+</div>
+
+<!-- 設定画面（文章なし） -->
+<div id="settingScreen" class="screen hidden">
+  <div class="setting-buttons">
+    <button id="selectNextStation" class="big">次駅</button>
+    <button id="confirmBtn" class="big">確認</button>
+  </div>
+</div>
 
 <script>
-/* ===== 停車駅 ===== */
-const stations=[
- "君津","木更津","袖ヶ浦","長浦","姉ヶ崎","五井",
- "八幡宿","浜野","蘇我","本千葉","千葉",
- "津田沼","船橋","市川","新小岩","錦糸町",
- "新日本橋","東京"
+/* ===== データ ===== */
+const stations = [
+  "君津",
+  "木更津",
+  "袖ヶ浦",
+  "長浦",
+  "姉ヶ崎",
+  "五井",
+  "八幡宿",
+  "浜野",
+  "蘇我",
+  "本千葉",
+  "千葉",
+  "津田沼",
+  "船橋",
+  "市川",
+  "新小岩",
+  "錦糸町",
+  "新日本橋",
+  "東京"
 ];
-let currentIndex=0;
-let running=false;
-let locked=false;
 
-/* ===== 初期生成 ===== */
-const stationList=document.getElementById("stationList");
-stations.forEach(s=>{
-  const d=document.createElement("div");
-  d.className="station";
-  d.textContent=s;
-  stationList.appendChild(d);
-});
+let currentIndex = 0;
+let pendingAction = null;
 
-/* 編成15両 */
-const doors=document.getElementById("doors");
-for(let i=1;i<=15;i++){
-  doors.innerHTML+=`
-   <div class="car">
-     <div class="car-num">${i}</div>
-     <div class="door"></div>
-   </div>`;
-}
+/* ===== 要素 ===== */
+const currentStationEl = document.getElementById("currentStation");
+const nextStationEl = document.getElementById("nextStation");
+const mainScreen = document.getElementById("mainScreen");
+const settingScreen = document.getElementById("settingScreen");
+const selectNextStationBtn = document.getElementById("selectNextStation");
 
 /* ===== 表示更新 ===== */
-function render(){
-  document.querySelectorAll(".station").forEach((s,i)=>{
-    s.classList.toggle("current",i===currentIndex);
-  });
+function updateDisplay() {
+  currentStationEl.textContent = "現在駅：" + stations[currentIndex];
 
-  // 自動スクロール
-  const top=Math.max(0,currentIndex-4);
-  stationList.style.transform=`translateY(${-top*44}px)`;
-
-  // 路線表示
-  const ln=document.getElementById("lineName");
-  if(currentIndex<10){
-    ln.textContent="内房線";
-    ln.className="uchibo";
-  }else if(currentIndex<stations.length-1){
-    ln.textContent="総武快速線";
-    ln.className="sobu";
-  }else{
-    ln.textContent="終点";
-    ln.className="terminal";
+  if (currentIndex < stations.length - 1) {
+    nextStationEl.textContent = "次駅：" + stations[currentIndex + 1];
+  } else {
+    nextStationEl.textContent = "終点";
   }
 }
 
-/* ===== ドア ===== */
-function updateDoors(){
-  document.querySelectorAll(".door").forEach(d=>{
-    d.classList.toggle("open",!running);
-  });
-}
-
-/* ===== 操作 ===== */
-function toggleRun(){
-  if(locked) return;
-  running=!running;
-  updateDoors();
-}
-function nextStation(){
-  if(locked) return;
-  if(currentIndex<stations.length-1){
-    running=true;
-    updateDoors();
-    setTimeout(()=>{
-      currentIndex++;
-      running=false;
-      updateDoors();
-
-      if(stations[currentIndex]==="千葉"){
-        play("chime");setTimeout(()=>play("chime"),300);
-      }
-      if(stations[currentIndex]==="東京"){
-        locked=true;
-      }
-      render();
-    },800);
+/* ===== 次駅ボタン有効制御 ===== */
+function updateNextButtonState() {
+  if (currentIndex >= stations.length - 1) {
+    selectNextStationBtn.disabled = true;
+  } else {
+    selectNextStationBtn.disabled = false;
   }
 }
 
-/* ===== 音 ===== */
-function play(id){
-  const a=document.getElementById(id);
-  a.currentTime=0;a.play();
+/* ===== 画面切替 ===== */
+function showMain() {
+  settingScreen.classList.add("hidden");
+  mainScreen.classList.remove("hidden");
 }
 
-/* ===== 時計 ===== */
-setInterval(()=>{
-  document.getElementById("time").textContent=
-    new Date().toLocaleTimeString();
-},1000);
+function showSetting() {
+  updateNextButtonState();
+  mainScreen.classList.add("hidden");
+  settingScreen.classList.remove("hidden");
+}
 
-/* 初期 */
-render();
-updateDoors();
+/* ===== 処理 ===== */
+function goNextStation() {
+  if (currentIndex < stations.length - 1) {
+    currentIndex++;
+    updateDisplay();
+  }
+}
+
+/* ===== 音（全ボタン共通） ===== */
+function playClickSound() {
+  const sound = document.getElementById("clickSound");
+  sound.currentTime = 0;
+  sound.play();
+}
+
+/* ===== イベント ===== */
+document.getElementById("settingBtn").onclick = () => {
+  showSetting();
+};
+
+selectNextStationBtn.onclick = () => {
+  pendingAction = "next";
+};
+
+document.getElementById("confirmBtn").onclick = () => {
+  if (pendingAction === "next") {
+    goNextStation();
+  }
+  pendingAction = null;
+  showMain();
+};
+
+/* 全ボタンで音 */
+document.querySelectorAll("button").forEach(btn => {
+  btn.addEventListener("click", () => {
+    if (!btn.disabled) playClickSound();
+  });
+});
+
+/* 初期表示 */
+updateDisplay();
 </script>
+
 </body>
 </html>
