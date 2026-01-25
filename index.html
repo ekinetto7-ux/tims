@@ -6,44 +6,58 @@
 <title>TIMS</title>
 
 <style>
-body {
-  margin: 0;
-  background: black;
-  color: white;
-  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-  text-align: center;
+body{
+  margin:0;
+  background:black;
+  color:white;
+  font-family:-apple-system,BlinkMacSystemFont,sans-serif;
+  text-align:center;
 }
 
-.hidden { display: none; }
+/* 共通 */
+.hidden{display:none;}
 
-button {
-  background: #eee;
-  color: #007aff;
-  border: none;
-  border-radius: 30px;
-  padding: 14px 36px;
-  font-size: 18px;
-  margin: 15px;
+button{
+  background:#f2f2f2;
+  color:#007aff;
+  border:none;
+  border-radius:30px;
+  padding:16px 40px;
+  font-size:20px;
+  margin:16px;
+}
+
+.main-btn{
+  width:260px;
+}
+
+/* 画面タイトル */
+.title{
+  font-size:28px;
+  margin:40px 0 30px;
 }
 
 /* 運転情報 */
-.title {
-  font-size: 26px;
-  margin-top: 40px;
+.next-title{
+  color:yellow;
+  font-size:32px;
+  font-weight:bold;
+  margin-bottom:20px;
 }
 
-.next {
-  color: yellow;
-  font-size: 30px;
-  font-weight: bold;
-  margin: 40px 0 20px;
+.next-box{
+  width:300px;
+  height:140px;
+  border:3px solid white;
+  margin:0 auto 40px;
 }
 
-.box {
-  width: 280px;
-  height: 120px;
-  border: 2px solid white;
-  margin: 0 auto 40px;
+/* ATS */
+.ats-diagram{
+  width:220px;
+  height:100px;
+  border:3px solid white;
+  margin:30px auto;
 }
 </style>
 </head>
@@ -53,8 +67,8 @@ button {
 <!-- 初期画面 -->
 <div id="home">
   <div style="margin-top:120px">
-    <button onclick="showDrive()">運転情報</button><br>
-    <button onclick="showATS()">ATS</button>
+    <button class="main-btn" onclick="showDrive()">運転情報</button><br>
+    <button class="main-btn" onclick="showATS()">ATS</button>
   </div>
 </div>
 
@@ -62,9 +76,9 @@ button {
 <div id="drive" class="hidden">
   <div class="title">運転情報</div>
 
-  <div class="next">次駅表示</div>
+  <div class="next-title">次駅表示</div>
 
-  <div class="box"></div>
+  <div class="next-box"></div>
 
   <button onclick="backHome()">戻る</button>
 </div>
@@ -73,11 +87,7 @@ button {
 <div id="ats" class="hidden">
   <div class="title">ATS</div>
 
-  <svg width="200" height="100" style="margin:30px auto;">
-    <rect id="atsRect"
-      x="10" y="10" width="180" height="80"
-      stroke="white" stroke-width="3" fill="none"/>
-  </svg>
+  <div id="atsBox" class="ats-diagram"></div>
 
   <button onclick="atsOpen()">ATS開放</button><br>
   <button onclick="atsEmergency()">ATS非常</button><br>
@@ -87,38 +97,42 @@ button {
 </div>
 
 <script>
-function hideAll() {
+function hideAll(){
   document.getElementById("home").classList.add("hidden");
   document.getElementById("drive").classList.add("hidden");
   document.getElementById("ats").classList.add("hidden");
 }
 
-function backHome() {
+function backHome(){
   hideAll();
   document.getElementById("home").classList.remove("hidden");
 }
 
-function showDrive() {
+function showDrive(){
   hideAll();
   document.getElementById("drive").classList.remove("hidden");
 }
 
-function showATS() {
+function showATS(){
   hideAll();
   document.getElementById("ats").classList.remove("hidden");
+  atsReset();
 }
 
 /* ATS制御 */
-function atsOpen() {
-  document.getElementById("atsRect").setAttribute("fill", "green");
+function atsOpen(){
+  const b=document.getElementById("atsBox");
+  b.style.background="green";
 }
 
-function atsEmergency() {
-  document.getElementById("atsRect").setAttribute("fill", "red");
+function atsEmergency(){
+  const b=document.getElementById("atsBox");
+  b.style.background="red";
 }
 
-function atsReset() {
-  document.getElementById("atsRect").setAttribute("fill", "none");
+function atsReset(){
+  const b=document.getElementById("atsBox");
+  b.style.background="transparent";
 }
 </script>
 
