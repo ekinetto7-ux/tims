@@ -10,75 +10,53 @@ body {
   margin: 0;
   background: black;
   color: white;
-  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: sans-serif;
   text-align: center;
 }
 
-.screen {
-  display: none;
-  padding: 40px 20px;
+/* 共通 */
+.hidden { display: none; }
+
+button {
+  font-size: 20px;
+  padding: 12px 40px;
+  border-radius: 30px;
+  border: none;
+  margin: 10px;
 }
 
-.screen.active {
-  display: block;
+/* 初期画面 */
+#home {
+  margin-top: 120px;
 }
 
-h1 {
-  font-size: 28px;
-  margin-bottom: 20px;
+/* 運転情報画面 */
+#driveInfo {
+  margin-top: 60px;
 }
 
 .yellow {
   color: yellow;
-  font-size: 22px;
-  margin: 20px 0;
-}
-
-.big-yellow {
-  color: yellow;
-  font-size: 30px;
-  margin: 30px 0;
-}
-
-.button {
-  display: block;
-  width: 70%;
-  margin: 20px auto;
-  padding: 18px;
-  font-size: 20px;
-  border-radius: 30px;
-  border: none;
-  background: #eee;
-  color: #007aff;
-}
-
-.back {
-  margin-top: 40px;
+  font-weight: bold;
 }
 
 .box {
-  width: 80%;
-  height: 80px;
+  width: 260px;
+  height: 120px;
   border: 2px solid white;
-  margin: 30px auto;
+  margin: 20px auto;
 }
 
-/* ATS */
-.ats-diagram {
-  width: 80%;
+/* ATS画面 */
+#atsMenu {
+  margin-top: 80px;
+}
+
+.ats-box {
+  width: 200px;
   height: 80px;
   border: 2px solid white;
   margin: 20px auto;
-  line-height: 80px;
-  font-size: 22px;
-}
-
-.ats-green {
-  background: green;
-}
-
-.ats-red {
-  background: red;
 }
 </style>
 </head>
@@ -86,71 +64,77 @@ h1 {
 <body>
 
 <!-- 初期画面 -->
-<div id="home" class="screen active">
-  <button class="button" onclick="show('drive')">運転情報</button>
-  <button class="button" onclick="show('ats')">ATS</button>
+<div id="home">
+  <button onclick="openDrive()">運転情報</button><br>
+  <button onclick="openATS()">ATS</button>
 </div>
 
 <!-- 運転情報 -->
-<div id="drive" class="screen">
-  <h1>運転情報</h1>
+<div id="driveInfo" class="hidden">
+  <h2>運転情報</h2>
 
-  <div class="yellow">
-    寝台サンライズ瀬戸・出雲<br>運転見合わせ
-  </div>
+  <p class="yellow">
+    寝台サンライズ瀬戸・出雲<br>
+    運転見合わせ
+  </p>
 
-  <div class="big-yellow">次駅表示</div>
+  <h2 class="yellow">次駅表示</h2>
 
   <div class="box"></div>
 
-  <!-- 運転情報用 ATS 図（表示のみ） -->
-  <div id="driveAts" class="ats-diagram"></div>
-
-  <button class="button back" onclick="show('home')">戻る</button>
+  <button onclick="backHome()">戻る</button>
 </div>
 
 <!-- ATS -->
-<div id="ats" class="screen">
-  <h1>ATS</h1>
+<div id="atsMenu" class="hidden">
+  <h2>ATS</h2>
 
-  <div id="atsDiagram" class="ats-diagram"></div>
+  <button onclick="atsNormal()">ATS開放</button><br>
+  <button onclick="atsEmergency()">ATS非常</button><br>
+  <button onclick="atsReset()">機器開放</button>
 
-  <button class="button" onclick="setATS('open')">ATS開放</button>
-  <button class="button" onclick="setATS('emergency')">ATS非常</button>
-  <button class="button" onclick="setATS('p')">ATS-P</button>
-  <button class="button" onclick="setATS('reset')">機器開放</button>
+  <div id="atsView" class="ats-box"></div>
 
-  <button class="button back" onclick="show('home')">戻る</button>
+  <button onclick="backHome()">戻る</button>
 </div>
 
 <script>
-function show(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+function hideAll() {
+  document.getElementById("home").classList.add("hidden");
+  document.getElementById("driveInfo").classList.add("hidden");
+  document.getElementById("atsMenu").classList.add("hidden");
 }
 
-function setATS(type) {
-  const ats = document.getElementById('atsDiagram');
-  const drive = document.getElementById('driveAts');
+function backHome() {
+  hideAll();
+  document.getElementById("home").classList.remove("hidden");
+}
 
-  ats.className = 'ats-diagram';
-  drive.className = 'ats-diagram';
-  ats.textContent = '';
-  drive.textContent = '';
+function openDrive() {
+  hideAll();
+  document.getElementById("driveInfo").classList.remove("hidden");
+}
 
-  if (type === 'reset') return;
+function openATS() {
+  hideAll();
+  document.getElementById("atsMenu").classList.remove("hidden");
+  atsReset();
+}
 
-  if (type === 'emergency') {
-    ats.classList.add('ats-red');
-    drive.classList.add('ats-red');
-    ats.textContent = 'ATS非常';
-    drive.textContent = 'ATS非常';
-  } else {
-    ats.classList.add('ats-green');
-    drive.classList.add('ats-green');
-    ats.textContent = type === 'open' ? 'ATS開放' : 'ATS-P';
-    drive.textContent = ats.textContent;
-  }
+/* ATS制御 */
+function atsNormal() {
+  const v = document.getElementById("atsView");
+  v.style.background = "green";
+}
+
+function atsEmergency() {
+  const v = document.getElementById("atsView");
+  v.style.background = "red";
+}
+
+function atsReset() {
+  const v = document.getElementById("atsView");
+  v.style.background = "transparent";
 }
 </script>
 
