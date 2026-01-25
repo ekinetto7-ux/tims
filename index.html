@@ -3,221 +3,160 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TIMS風 次駅表示</title>
+<title>TIMS</title>
 
 <style>
-  body {
-    margin: 0;
-    background: #111;
-    color: #fff;
-    font-family: sans-serif;
-  }
+body{
+  margin:0;
+  background:#000;
+  color:#e0e0e0;
+  font-family: "MS Gothic", monospace;
+}
 
-  .screen {
-    position: absolute;
-    inset: 0;
-    padding: 20px;
-  }
+/* 全体枠 */
+#tims{
+  border:3px solid #00ff66;
+  margin:10px;
+  padding:10px;
+}
 
-  .hidden {
-    display: none;
-  }
+/* 上部 */
+#top{
+  display:flex;
+  justify-content:space-between;
+  font-size:18px;
+  margin-bottom:10px;
+}
 
-  /* メイン画面 */
-  #mainScreen {
-    background: #000;
-  }
+/* メイン情報 */
+#main{
+  border:2px solid #555;
+  padding:10px;
+  margin-bottom:10px;
+}
 
-  #currentStation {
-    font-size: 32px;
-    margin-bottom: 10px;
-  }
+.green{ color:#00ff66; }
+.yellow{ color:#ffcc00; }
 
-  #nextStation {
-    font-size: 22px;
-    color: #7fbfff;
-  }
+/* 次駅 */
+#next{
+  font-size:22px;
+  margin:10px 0;
+}
 
-  /* 右下ボタン */
-  #bottom-buttons {
-    position: absolute;
-    right: 20px;
-    bottom: 20px;
-    display: flex;
-    gap: 10px;
-  }
+/* ドア表示 */
+#doors{
+  display:flex;
+  margin:8px 0;
+}
+.door{
+  width:20px;
+  height:14px;
+  margin-right:2px;
+  background:#ff9900;
+}
 
-  /* ボタン共通 */
-  button {
-    background: #2f5f9e;
-    color: #fff;
-    border: 1px solid #9fc3ff;
-    padding: 8px 16px;
-    font-size: 16px;
-    border-radius: 3px;
-  }
+/* 車両番号 */
+#cars{
+  display:flex;
+}
+.car{
+  width:26px;
+  text-align:center;
+  border:1px solid #00ff66;
+  margin-right:2px;
+  font-size:12px;
+}
 
-  button:active {
-    background: #1e3f6f;
-  }
-
-  button:disabled {
-    background: #555;
-    border-color: #777;
-    color: #aaa;
-  }
-
-  /* 設定画面 */
-  #settingScreen {
-    background: #111;
-  }
-
-  .setting-buttons {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-  }
-
-  .big {
-    width: 200px;
-    height: 60px;
-    font-size: 22px;
-  }
+/* ボタン */
+#buttons{
+  display:flex;
+  justify-content:flex-end;
+  margin-top:10px;
+}
+button{
+  background:#1c3f6e;
+  color:#fff;
+  border:1px solid #7aa7ff;
+  font-size:16px;
+  padding:6px 14px;
+  margin-left:10px;
+}
 </style>
 </head>
 
 <body>
+<div id="tims">
 
-<!-- 効果音 -->
-<audio id="clickSound" src="click.mp3" preload="auto"></audio>
-
-<!-- メイン画面 -->
-<div id="mainScreen" class="screen">
-  <div id="currentStation"></div>
-  <div id="nextStation"></div>
-
-  <div id="bottom-buttons">
-    <button id="settingBtn">設定</button>
+  <!-- 上部 -->
+  <div id="top">
+    <div>13:16:30　0km/h</div>
+    <div class="green">2680E</div>
   </div>
+
+  <!-- メイン -->
+  <div id="main">
+    <div class="green">運転情報</div>
+    <div>現在駅：<span class="yellow" id="now">君津</span></div>
+    <div id="next">次停車駅：<span class="yellow" id="nextSta">木更津</span></div>
+
+    <!-- ドア -->
+    <div id="doors"></div>
+
+    <!-- 車両 -->
+    <div id="cars"></div>
+  </div>
+
+  <!-- ボタン -->
+  <div id="buttons">
+    <button onclick="nextStation()">次駅</button>
+    <button onclick="beep()">設定</button>
+  </div>
+
 </div>
 
-<!-- 設定画面（文章なし） -->
-<div id="settingScreen" class="screen hidden">
-  <div class="setting-buttons">
-    <button id="selectNextStation" class="big">次駅</button>
-    <button id="confirmBtn" class="big">確認</button>
-  </div>
-</div>
+<audio id="beep" src="click.mp3"></audio>
 
 <script>
-/* ===== データ ===== */
 const stations = [
-  "君津",
-  "木更津",
-  "袖ヶ浦",
-  "長浦",
-  "姉ヶ崎",
-  "五井",
-  "八幡宿",
-  "浜野",
-  "蘇我",
-  "本千葉",
-  "千葉",
-  "津田沼",
-  "船橋",
-  "市川",
-  "新小岩",
-  "錦糸町",
-  "新日本橋",
-  "東京"
+  "君津","木更津","袖ヶ浦","長浦","姉ヶ崎","五井",
+  "八幡宿","浜野","蘇我","本千葉","千葉",
+  "津田沼","船橋","市川","新小岩",
+  "錦糸町","新日本橋","東京"
 ];
+let index = 0;
 
-let currentIndex = 0;
-let pendingAction = null;
+function beep(){
+  const b = document.getElementById("beep");
+  b.currentTime = 0;
+  b.play();
+}
 
-/* ===== 要素 ===== */
-const currentStationEl = document.getElementById("currentStation");
-const nextStationEl = document.getElementById("nextStation");
-const mainScreen = document.getElementById("mainScreen");
-const settingScreen = document.getElementById("settingScreen");
-const selectNextStationBtn = document.getElementById("selectNextStation");
-
-/* ===== 表示更新 ===== */
-function updateDisplay() {
-  currentStationEl.textContent = "現在駅：" + stations[currentIndex];
-
-  if (currentIndex < stations.length - 1) {
-    nextStationEl.textContent = "次駅：" + stations[currentIndex + 1];
-  } else {
-    nextStationEl.textContent = "終点";
+function nextStation(){
+  beep();
+  if(index < stations.length-1){
+    document.getElementById("now").textContent = stations[index];
+    document.getElementById("nextSta").textContent = stations[index+1];
+    index++;
   }
 }
 
-/* ===== 次駅ボタン有効制御 ===== */
-function updateNextButtonState() {
-  if (currentIndex >= stations.length - 1) {
-    selectNextStationBtn.disabled = true;
-  } else {
-    selectNextStationBtn.disabled = false;
-  }
+/* ドア生成 */
+const d = document.getElementById("doors");
+for(let i=0;i<15;i++){
+  const e = document.createElement("div");
+  e.className="door";
+  d.appendChild(e);
 }
 
-/* ===== 画面切替 ===== */
-function showMain() {
-  settingScreen.classList.add("hidden");
-  mainScreen.classList.remove("hidden");
+/* 車両生成 */
+const c = document.getElementById("cars");
+for(let i=1;i<=15;i++){
+  const e = document.createElement("div");
+  e.className="car";
+  e.textContent=i;
+  c.appendChild(e);
 }
-
-function showSetting() {
-  updateNextButtonState();
-  mainScreen.classList.add("hidden");
-  settingScreen.classList.remove("hidden");
-}
-
-/* ===== 処理 ===== */
-function goNextStation() {
-  if (currentIndex < stations.length - 1) {
-    currentIndex++;
-    updateDisplay();
-  }
-}
-
-/* ===== 音（全ボタン共通） ===== */
-function playClickSound() {
-  const sound = document.getElementById("clickSound");
-  sound.currentTime = 0;
-  sound.play();
-}
-
-/* ===== イベント ===== */
-document.getElementById("settingBtn").onclick = () => {
-  showSetting();
-};
-
-selectNextStationBtn.onclick = () => {
-  pendingAction = "next";
-};
-
-document.getElementById("confirmBtn").onclick = () => {
-  if (pendingAction === "next") {
-    goNextStation();
-  }
-  pendingAction = null;
-  showMain();
-};
-
-/* 全ボタンで音 */
-document.querySelectorAll("button").forEach(btn => {
-  btn.addEventListener("click", () => {
-    if (!btn.disabled) playClickSound();
-  });
-});
-
-/* 初期表示 */
-updateDisplay();
 </script>
 
 </body>
