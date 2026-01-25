@@ -10,83 +10,65 @@ body{
   margin:0;
   background:#000;
   color:#0f0;
-  font-family: "MS Gothic", monospace;
+  font-family:"MS Gothic", monospace;
 }
 
-/* ===== 上部ステータスバー ===== */
-#statusBar{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  border-bottom:2px solid #0f0;
+/* ===== 共通枠 ===== */
+.box{
+  border:2px solid #0f0;
   padding:6px 10px;
-  font-size:14px;
-}
-
-.status-left span{
-  margin-right:12px;
-}
-
-.route{
-  color:#6cf;
-}
-
-.type{
-  color:#0f0;
-}
-
-.trainNo{
-  color:#ff0;
-}
-
-/* ===== メイン画面 ===== */
-#main{
-  padding:16px;
-}
-
-.current{
-  font-size:24px;
   margin-bottom:6px;
 }
 
-.next{
-  font-size:20px;
-  color:#ff0;
+/* ===== 上部ステータス ===== */
+#status{
+  display:flex;
+  justify-content:space-between;
+  font-size:14px;
 }
 
-/* 車両バー */
+/* ===== 運転情報 ===== */
+#drive{
+  color:#6cf;
+  font-size:18px;
+}
+
+/* ===== 駅情報 ===== */
+#station{
+  font-size:22px;
+}
+#next{
+  color:#ff0;
+  font-size:20px;
+}
+
+/* ===== 車両 ===== */
 #cars{
   display:flex;
   gap:4px;
-  margin-top:14px;
 }
-
 .car{
   width:20px;
-  height:28px;
+  height:26px;
   border:1px solid #0f0;
   text-align:center;
-  line-height:28px;
+  line-height:26px;
   font-size:12px;
 }
 
-/* ボタン */
+/* ===== 操作 ===== */
 #buttons{
-  position:fixed;
-  right:20px;
-  bottom:20px;
   display:flex;
+  justify-content:flex-end;
   gap:10px;
 }
-
 button{
-  background:#123a5a;
+  background:#102a40;
   color:#fff;
   border:1px solid #6cf;
   padding:10px 16px;
   font-size:16px;
 }
-
 button:active{
   background:#1e6aa8;
 }
@@ -96,83 +78,83 @@ button:active{
 <body>
 
 <!-- 上部ステータス -->
-<div id="statusBar">
-  <div class="status-left">
+<div class="box" id="status">
+  <div>
     <span id="clock">--:--:--</span>
-    <span class="trainNo">2680E</span>
-    <span class="type">快速</span>
-    <span class="route">内房線 → 総武快速線</span>
+    <span style="color:#ff0">2680E</span>
+    <span>快速</span>
+    <span style="color:#6cf">内房→総武快速</span>
   </div>
-  <div>0 km/h</div>
+  <div>停車中</div>
 </div>
 
-<!-- メイン -->
-<div id="main">
-  <div class="current">
-    現在駅：<span id="currentSta">君津</span>
-  </div>
-  <div class="next">
-    次駅：<span id="nextSta">木更津</span>
-  </div>
+<!-- 運転情報 -->
+<div class="box" id="drive">
+  運転情報：平常運転
+</div>
 
+<!-- 駅情報 -->
+<div class="box" id="station">
+  現在駅：<span id="current">君津</span><br>
+  <span id="next">次駅：木更津</span>
+</div>
+
+<!-- 車両 -->
+<div class="box">
   <div id="cars"></div>
 </div>
 
-<!-- ボタン -->
-<div id="buttons">
+<!-- 操作 -->
+<div class="box" id="buttons">
   <button onclick="nextStation()">次駅</button>
   <button onclick="beep()">設定</button>
 </div>
 
 <audio id="beep">
-  <source src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABAAZGF0YQAAAAA=">
+<source src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABAAZGF0YQAAAAA=">
 </audio>
 
 <script>
-/* ===== 時刻 ===== */
-function updateClock(){
-  const d = new Date();
-  const t = d.toLocaleTimeString("ja-JP",{hour12:false});
-  document.getElementById("clock").textContent = t;
+/* 時刻 */
+function clock(){
+  document.getElementById("clock").textContent =
+    new Date().toLocaleTimeString("ja-JP",{hour12:false});
 }
-setInterval(updateClock,1000);
-updateClock();
+setInterval(clock,1000); clock();
 
-/* ===== 駅データ ===== */
-const stations = [
-  "君津","木更津","袖ヶ浦","長浦","姉ヶ崎","五井",
-  "八幡宿","浜野","蘇我","本千葉","千葉",
-  "津田沼","船橋","市川","新小岩",
-  "錦糸町","新日本橋","東京"
+/* 駅 */
+const stations=[
+"君津","木更津","袖ヶ浦","長浦","姉ヶ崎","五井",
+"八幡宿","浜野","蘇我","本千葉","千葉",
+"津田沼","船橋","市川","新小岩",
+"錦糸町","新日本橋","東京"
 ];
-let idx = 0;
+let i=0;
+const cur=document.getElementById("current");
+const next=document.getElementById("next");
 
-const currentEl = document.getElementById("currentSta");
-const nextEl = document.getElementById("nextSta");
-
-/* ===== 車両表示 ===== */
-const cars = document.getElementById("cars");
-for(let i=1;i<=15;i++){
-  const c=document.createElement("div");
-  c.className="car";
-  c.textContent=i;
-  cars.appendChild(c);
+/* 車両 */
+const cars=document.getElementById("cars");
+for(let n=1;n<=15;n++){
+  const d=document.createElement("div");
+  d.className="car";
+  d.textContent=n;
+  cars.appendChild(d);
 }
 
-/* ===== 音 ===== */
+/* 音 */
 function beep(){
   const b=document.getElementById("beep");
-  b.currentTime=0;
-  b.play();
+  b.currentTime=0; b.play();
 }
 
-/* ===== 次駅 ===== */
+/* 次駅 */
 function nextStation(){
   beep();
-  if(idx < stations.length-1){
-    idx++;
-    currentEl.textContent = stations[idx];
-    nextEl.textContent = stations[idx+1] ?? "終点";
+  if(i<stations.length-1){
+    i++;
+    cur.textContent=stations[i];
+    next.textContent="次駅："+(stations[i+1]??"終点");
   }
 }
 </script>
