@@ -15,19 +15,22 @@ body{
 .active{display:block;}
 
 .header{font-size:26px;margin-bottom:8px;}
-.info{font-size:18px;margin:4px 0;}
+.info{font-size:20px;margin:6px 0;}
 
-/* 初期選択 */
 .select-btn{
-  width:300px;
-  padding:20px;
-  margin:20px 0;
-  border:2px solid #00ff66;
+  width:280px;
+  padding:14px;
+  margin:20px auto;
   text-align:center;
-  font-size:24px;
+  cursor:pointer;
+  background: linear-gradient(#2f6fae, #1f4f87);
+  color:white;
+  border:2px solid #8bb6e0;
+  border-radius:6px;
+  font-size:20px;
+  font-weight:bold;
 }
 
-/* 非常警告 */
 .alert{
   border:2px solid #00ff66;
   padding:10px;
@@ -35,14 +38,9 @@ body{
   font-size:22px;
   display:none;
 }
-.blink{
-  animation:blink 1s steps(1) infinite;
-}
-@keyframes blink{
-  50%{background:#00ff66;color:black;}
-}
+.blink{animation:blink 1s steps(1) infinite;}
+@keyframes blink{50%{background:#00ff66;color:black;}}
 
-/* 中央指示 */
 .centerMsg{
   position:fixed;
   inset:0;
@@ -53,18 +51,17 @@ body{
 }
 .centerMsg .box{
   border:3px solid yellow;
-  padding:24px 30px;
+  padding:26px 30px;
   color:yellow;
   font-size:26px;
   text-align:center;
   background:rgba(0,0,0,0.85);
 }
 
-/* 駅 */
 .station-bar{
   display:flex;
   overflow-x:auto;
-  margin:10px 0;
+  margin:12px 0;
 }
 .station{
   border:2px solid #00ff66;
@@ -76,18 +73,6 @@ body{
   color:black;
 }
 
-/* ボタン */
-button{
-  background:black;
-  color:#00ff66;
-  border:2px solid #00ff66;
-  padding:18px 28px;
-  font-size:22px;
-  min-width:180px;
-}
-button:disabled{opacity:0.2;}
-
-/* 下部操作 */
 .control-bar{
   position:fixed;
   bottom:120px;
@@ -95,57 +80,58 @@ button:disabled{opacity:0.2;}
   right:0;
   display:flex;
   justify-content:center;
-  gap:40px;
+  gap:20px;
 }
 
-/* ログ共通 */
-.log{
-  border:2px solid #00ff66;
-  height:300px;
-  padding:8px;
-  overflow-y:auto;
-  font-size:14px;
+button{
   background:black;
-}
-
-/* 司令画面 */
-.command-status{
+  color:#00ff66;
+  border:2px solid #00ff66;
+  padding:16px 22px;
   font-size:20px;
-  margin-bottom:10px;
+}
+button:disabled{opacity:0.3;}
+
+.log{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  height:100px;
+  border-top:2px solid #00ff66;
+  padding:6px;
+  font-size:14px;
+  overflow-y:auto;
 }
 </style>
 </head>
 
 <body>
 
-<!-- 初期選択 -->
 <div id="select" class="screen active">
-  <div class="select-btn" onclick="openDriver()">運転情報</div>
-  <div class="select-btn" onclick="openCommand()">司令画面</div>
+  <div class="select-btn" onclick="goDriver()">運転情報</div>
+  <div class="select-btn" onclick="goCommand()">司令画面</div>
 </div>
 
-<!-- 運転情報 -->
 <div id="driver" class="screen">
   <div class="header">運転情報</div>
 
   <div class="alert blink" id="alertBox">
-    ⚠ 非常扱い中<br>
-    理由：<span id="alertReason"></span>
+    ⚠ 非常扱い中（<span id="alertReason"></span>）
   </div>
 
-  <div class="info">状態：<span id="mode"></span></div>
   <div class="info">現在駅：<span id="nowStation"></span></div>
-  <div class="info">次駅：<span id="nextStation"></span></div>
+  <div class="info" style="color:yellow;">次駅：<span id="nextStation"></span></div>
 
   <div class="station-bar" id="stations"></div>
 
   <div class="control-bar">
     <button id="nextBtn" onclick="nextStation()">次駅</button>
     <button onclick="emergency()">非常扱い</button>
+    <button onclick="backToSelect()">初期画面</button>
   </div>
 </div>
 
-<!-- 非常理由 -->
 <div id="emergencySelect" class="screen">
   <div class="header">非常扱い理由選択</div>
   <button onclick="setEmergency('地震')">地震</button>
@@ -153,7 +139,6 @@ button:disabled{opacity:0.2;}
   <button onclick="setEmergency('人身事故')">人身事故</button>
 </div>
 
-<!-- 解除確認 -->
 <div id="emergencyConfirm" class="screen">
   <div style="border:2px solid #00ff66;padding:30px;text-align:center;">
     非常扱いを解除しますか？<br><br>
@@ -161,22 +146,36 @@ button:disabled{opacity:0.2;}
   </div>
 </div>
 
-<!-- 司令画面 -->
 <div id="command" class="screen">
   <div class="header">司令画面</div>
-  <div class="command-status">
-    状態：<span id="cmdStatus"></span><br>
-    非常理由：<span id="cmdReason"></span>
-  </div>
+  <div id="commandStatus"></div>
   <div class="log" id="commandLog"></div>
+  <button onclick="backToSelect()">初期画面</button>
 </div>
 
-<!-- 中央指示 -->
 <div id="quakeMsg" class="centerMsg"><div class="box">直ちに高台に避難<br>車掌と連携すること</div></div>
 <div id="fireMsg" class="centerMsg"><div class="box">閉められるすべての窓を閉じること<br>トンネル内停車を避けること</div></div>
 <div id="accidentMsg" class="centerMsg"><div class="box">直ちに警察・消防・車掌・駅員に通報すること</div></div>
 
+<div class="log" id="log"></div>
+
 <script>
+/* ====== 音 ====== */
+let audioCtx=null;
+function beep(){
+  if(!audioCtx){
+    audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+  }
+  const o=audioCtx.createOscillator();
+  const g=audioCtx.createGain();
+  o.frequency.value=1200;
+  g.gain.value=0.15;
+  o.connect(g); g.connect(audioCtx.destination);
+  o.start();
+  setTimeout(()=>o.stop(),100);
+}
+
+/* ====== 状態 ====== */
 const screens=["select","driver","emergencySelect","emergencyConfirm","command"];
 const stations=["君津","木更津","袖ケ浦","長浦","姉ヶ崎","五井","八幡宿","浜野","蘇我","本千葉","千葉","津田沼","船橋","市川","新小岩","錦糸町","新日本橋","東京"];
 let idx=0;
@@ -185,70 +184,70 @@ let emergencyReason="";
 const logs=[];
 
 function show(id){
- screens.forEach(s=>document.getElementById(s).classList.remove("active"));
- document.getElementById(id).classList.add("active");
+  beep();
+  screens.forEach(s=>document.getElementById(s).classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  update();
 }
-function openDriver(){show("driver");update();}
-function openCommand(){show("command");updateCommand();}
 
 function addLog(t){
- const time=new Date().toLocaleTimeString();
- logs.push(`[${time}] ${t}`);
- updateCommand();
+  const time=new Date().toLocaleTimeString();
+  logs.push(`[${time}] ${t}`);
+  document.getElementById("log").innerHTML=logs.join("<br>");
+  document.getElementById("commandLog").innerHTML=logs.join("<br>");
 }
 
+/* ====== 画面遷移 ====== */
+function goDriver(){show("driver");}
+function goCommand(){show("command");}
+function backToSelect(){ if(!emergencyMode) show("select"); }
+
+/* ====== 更新 ====== */
 function update(){
- document.getElementById("mode").textContent=emergencyMode?"非常":"停車中";
- document.getElementById("nowStation").textContent=stations[idx];
- document.getElementById("nextStation").textContent=stations[idx+1]||"終点";
- document.getElementById("alertBox").style.display=emergencyMode?"block":"none";
- document.getElementById("alertReason").textContent=emergencyReason;
- document.getElementById("nextBtn").disabled=emergencyMode;
+  document.getElementById("nowStation").textContent=stations[idx];
+  document.getElementById("nextStation").textContent=stations[idx+1]||"終点";
+  document.getElementById("alertBox").style.display=emergencyMode?"block":"none";
+  document.getElementById("alertReason").textContent=emergencyReason;
+  document.getElementById("nextBtn").disabled=emergencyMode;
 
- document.getElementById("quakeMsg").style.display=emergencyMode&&emergencyReason==="地震"?"flex":"none";
- document.getElementById("fireMsg").style.display=emergencyMode&&emergencyReason==="火災"?"flex":"none";
- document.getElementById("accidentMsg").style.display=emergencyMode&&emergencyReason==="人身事故"?"flex":"none";
+  ["quakeMsg","fireMsg","accidentMsg"].forEach(id=>{
+    document.getElementById(id).style.display="none";
+  });
+  if(emergencyMode){
+    if(emergencyReason==="地震") quakeMsg.style.display="flex";
+    if(emergencyReason==="火災") fireMsg.style.display="flex";
+    if(emergencyReason==="人身事故") accidentMsg.style.display="flex";
+  }
 
- const bar=document.getElementById("stations");
- bar.innerHTML="";
- stations.forEach((s,i)=>{
-  bar.innerHTML+=`<div class="station ${i===idx?"current":""}">${s}</div>`;
- });
+  const bar=document.getElementById("stations");
+  bar.innerHTML="";
+  stations.forEach((s,i)=>{
+    bar.innerHTML+=`<div class="station ${i===idx?"current":""}">${s}</div>`;
+  });
+
+  document.getElementById("commandStatus").innerHTML=
+    `状態：${emergencyMode?"非常":"通常"}<br>理由：${emergencyReason||"―"}`;
 }
 
-function updateCommand(){
- document.getElementById("cmdStatus").textContent=emergencyMode?"非常":"通常";
- document.getElementById("cmdReason").textContent=emergencyReason||"―";
- const box=document.getElementById("commandLog");
- box.innerHTML=logs.join("<br>");
- box.scrollTop=box.scrollHeight;
-}
-
+/* ====== 操作 ====== */
 function nextStation(){
- if(emergencyMode)return;
- if(idx<stations.length-1) idx++;
- update();
+  beep();
+  if(!emergencyMode && idx<stations.length-1){idx++;update();}
 }
-
-function emergency(){
- emergencyMode?show("emergencyConfirm"):show("emergencySelect");
-}
-
+function emergency(){beep(); emergencyMode?show("emergencyConfirm"):show("emergencySelect");}
 function setEmergency(r){
- emergencyMode=true;
- emergencyReason=r;
- addLog(`司令：非常扱い開始（${r}）`);
- addLog("指令：運転規制を指示");
- show("driver");
- update();
+  beep();
+  emergencyMode=true;
+  emergencyReason=r;
+  addLog(`非常扱い開始（${r}）`);
+  show("driver");
 }
-
 function confirmRelease(){
- emergencyMode=false;
- emergencyReason="";
- addLog("司令：非常扱い解除");
- show("driver");
- update();
+  beep();
+  emergencyMode=false;
+  emergencyReason="";
+  addLog("非常扱い解除");
+  show("driver");
 }
 </script>
 
