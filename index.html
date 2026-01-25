@@ -2,194 +2,235 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>TIMS 再現</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TIMS 完成版</title>
 
 <style>
-body {
-  margin: 0;
-  background: #000;
-  font-family: "MS Gothic", monospace;
-  color: #ccc;
+/* ===== 全体 ===== */
+body{
+  margin:0;
+  background:#000;
+  color:#ffd400;
+  font-family: monospace;
+}
+.wrapper{
+  width:1280px;
+  transform-origin: top left;
+}
+@media(max-width:1280px){
+  .wrapper{ transform:scale(calc(100vw/1280)); }
 }
 
-:root {
-  --line-color: #f4d03f;
+/* ===== 上段 ===== */
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  padding:6px 10px;
+  font-size:20px;
+  border-bottom:3px solid #ffd400;
 }
 
-#tims {
-  max-width: 1100px;
-  margin: 20px auto;
-  border: 3px solid #2aff2a;
-  padding: 10px;
+/* ===== 路線表示 ===== */
+.line{
+  font-size:28px;
+  margin:10px;
+}
+.uchibo{ color:#ffd400; }
+.sobu{ color:#00aaff; }
+.terminal{
+  color:#fff;
+  animation: blink 1s steps(1) infinite;
+}
+@keyframes blink{50%{opacity:0;}}
+
+/* ===== 駅一覧 ===== */
+.station-window{
+  height:360px;
+  overflow:hidden;
+  margin-left:10px;
+}
+#stationList{
+  transition:transform .4s ease;
+}
+.station{
+  font-size:28px;
+  line-height:44px;
+}
+.station.current{
+  background:#1e3a5f;
+  font-size:30px;
+  font-weight:bold;
 }
 
-.header {
-  display: flex;
-  justify-content: space-between;
-  border-bottom: 2px solid #2aff2a;
-  padding-bottom: 6px;
-  margin-bottom: 10px;
+/* ===== 編成・ドア ===== */
+.doors{
+  display:flex;
+  gap:6px;
+  margin:10px;
 }
-
-#line {
-  font-size: 28px;
-  color: var(--line-color);
+.car{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
 }
-
-#dest {
-  font-size: 22px;
-  color: #2aff2a;
+.car-num{
+  font-size:14px;
+  color:#00ff66;
 }
-
-.info {
-  background: #111;
-  padding: 10px;
-  margin-bottom: 10px;
+.door{
+  width:30px;
+  height:14px;
+  background:#000;
+  border:1px solid #ffd400;
 }
+.door.open{ background:red; }
 
-.cars {
-  display: grid;
-  grid-template-columns: repeat(15, 1fr);
-  gap: 5px;
-  margin-bottom: 10px;
+/* ===== ボタン ===== */
+.controls{
+  margin:10px;
 }
-
-.car {
-  border: 1px solid #555;
-  text-align: center;
-  padding: 4px 0;
-  color: #9adbd3;
-}
-
-.buttons {
-  display: flex;
-  gap: 10px;
-}
-
-.btn {
-  border: 2px solid #2aff2a;
-  color: #2aff2a;
-  padding: 8px 16px;
-  cursor: pointer;
-  background: #000;
-}
-
-.btn:disabled {
-  opacity: 0.3;
-}
-
-#notice {
-  margin-top: 8px;
-  height: 24px;
-  color: #0ff;
-}
-
-.blink {
-  animation: blink 1s infinite;
-}
-
-@keyframes blink {
-  0%,50%,100% { opacity: 1; }
-  25%,75% { opacity: 0; }
+button{
+  background:#000;
+  color:#ffd400;
+  border:1px solid #ffd400;
+  padding:6px 12px;
+  margin-right:6px;
 }
 </style>
 </head>
 
 <body>
+<div class="wrapper">
 
-<div id="tims">
-  <div class="header">
-    <div id="line">内房線</div>
-    <div id="dest">君津</div>
+  <!-- 上段 -->
+  <div class="topbar">
+    <div id="time">--:--:--</div>
+    <div id="lineName" class="uchibo">内房線</div>
+    <div>0.0 km/h</div>
   </div>
 
-  <div class="info">
-    列車番号：2680E　
-    次駅：<span id="next">木更津</span>
+  <!-- 駅一覧 -->
+  <div class="station-window">
+    <div id="stationList"></div>
   </div>
 
-  <div class="cars">
-    <div class="car">1</div><div class="car">2</div><div class="car">3</div>
-    <div class="car">4</div><div class="car">5</div><div class="car">6</div>
-    <div class="car">7</div><div class="car">8</div><div class="car">9</div>
-    <div class="car">10</div><div class="car">11</div>
-    <div class="car">増1</div><div class="car">増2</div>
-    <div class="car">増3</div><div class="car">増4</div>
+  <!-- 編成 -->
+  <div class="doors" id="doors"></div>
+
+  <!-- 操作 -->
+  <div class="controls">
+    <button onclick="toggleRun()">走行/停車</button>
+    <button onclick="nextStation()">進駅</button>
   </div>
 
-  <div class="buttons">
-    <button class="btn" onclick="setUchibo()">内房線</button>
-    <button class="btn" onclick="setSobu()">総武快速線</button>
-    <button class="btn" onclick="nextStation()">次駅</button>
-  </div>
-
-  <div id="notice"></div>
 </div>
 
+<!-- 効果音 -->
+<audio id="chime" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
+
 <script>
-let stations = ["木更津", "五井", "蘇我", "千葉", "東京"];
-let index = 0;
-let locked = false;
+/* ===== 停車駅 ===== */
+const stations=[
+ "君津","木更津","袖ヶ浦","長浦","姉ヶ崎","五井",
+ "八幡宿","浜野","蘇我","本千葉","千葉",
+ "津田沼","船橋","市川","新小岩","錦糸町",
+ "新日本橋","東京"
+];
+let currentIndex=0;
+let running=false;
+let locked=false;
 
-/* チーン音 */
-function chime() {
-  const ctx = new AudioContext();
-  for (let i = 0; i < 2; i++) {
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.frequency.value = 880;
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.start(ctx.currentTime + i * 0.4);
-    osc.stop(ctx.currentTime + i * 0.4 + 0.25);
+/* ===== 初期生成 ===== */
+const stationList=document.getElementById("stationList");
+stations.forEach(s=>{
+  const d=document.createElement("div");
+  d.className="station";
+  d.textContent=s;
+  stationList.appendChild(d);
+});
+
+/* 編成15両 */
+const doors=document.getElementById("doors");
+for(let i=1;i<=15;i++){
+  doors.innerHTML+=`
+   <div class="car">
+     <div class="car-num">${i}</div>
+     <div class="door"></div>
+   </div>`;
+}
+
+/* ===== 表示更新 ===== */
+function render(){
+  document.querySelectorAll(".station").forEach((s,i)=>{
+    s.classList.toggle("current",i===currentIndex);
+  });
+
+  // 自動スクロール
+  const top=Math.max(0,currentIndex-4);
+  stationList.style.transform=`translateY(${-top*44}px)`;
+
+  // 路線表示
+  const ln=document.getElementById("lineName");
+  if(currentIndex<10){
+    ln.textContent="内房線";
+    ln.className="uchibo";
+  }else if(currentIndex<stations.length-1){
+    ln.textContent="総武快速線";
+    ln.className="sobu";
+  }else{
+    ln.textContent="終点";
+    ln.className="terminal";
   }
 }
 
-/* 路線切替 */
-function setUchibo() {
-  if (locked) return;
-  document.getElementById("line").textContent = "内房線";
-  document.documentElement.style.setProperty("--line-color", "#f4d03f");
-  notice("路線切替");
-  chime();
+/* ===== ドア ===== */
+function updateDoors(){
+  document.querySelectorAll(".door").forEach(d=>{
+    d.classList.toggle("open",!running);
+  });
 }
 
-function setSobu() {
-  if (locked) return;
-  document.getElementById("line").textContent = "総武快速線";
-  document.documentElement.style.setProperty("--line-color", "#0080ff");
-  notice("路線切替");
-  chime();
+/* ===== 操作 ===== */
+function toggleRun(){
+  if(locked) return;
+  running=!running;
+  updateDoors();
 }
+function nextStation(){
+  if(locked) return;
+  if(currentIndex<stations.length-1){
+    running=true;
+    updateDoors();
+    setTimeout(()=>{
+      currentIndex++;
+      running=false;
+      updateDoors();
 
-/* 次駅進行 */
-function nextStation() {
-  if (locked) return;
-
-  if (index < stations.length - 1) {
-    index++;
-    document.getElementById("next").textContent = stations[index];
+      if(stations[currentIndex]==="千葉"){
+        play("chime");setTimeout(()=>play("chime"),300);
+      }
+      if(stations[currentIndex]==="東京"){
+        locked=true;
+      }
+      render();
+    },800);
   }
-
-  if (index === stations.length - 1) {
-    document.getElementById("next").textContent = "終点";
-    document.getElementById("next").classList.add("blink");
-    lockAll();
-  }
 }
 
-function notice(text) {
-  const n = document.getElementById("notice");
-  n.textContent = text;
-  setTimeout(() => n.textContent = "", 1500);
+/* ===== 音 ===== */
+function play(id){
+  const a=document.getElementById(id);
+  a.currentTime=0;a.play();
 }
 
-function lockAll() {
-  locked = true;
-  document.querySelectorAll("button").forEach(b => b.disabled = true);
-}
+/* ===== 時計 ===== */
+setInterval(()=>{
+  document.getElementById("time").textContent=
+    new Date().toLocaleTimeString();
+},1000);
+
+/* 初期 */
+render();
+updateDoors();
 </script>
-
 </body>
 </html>
