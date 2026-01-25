@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>TIMS Simulator</title>
+
 <style>
 body {
   margin: 0;
@@ -10,48 +11,62 @@ body {
   color: #00ff66;
   font-family: "MS Gothic", monospace;
 }
+
 .screen {
   display: none;
   padding: 20px;
 }
+
 .active {
   display: block;
 }
+
 .header {
-  font-size: 24px;
+  font-size: 26px;
   margin-bottom: 10px;
 }
+
 .info {
-  font-size: 18px;
-  margin: 5px 0;
+  font-size: 20px;
+  margin: 6px 0;
 }
+
+/* 駅バー */
 .station-bar {
   display: flex;
   overflow-x: auto;
-  margin-top: 10px;
+  margin: 15px 0;
 }
+
 .station {
-  border: 1px solid #00ff66;
-  padding: 5px;
-  margin-right: 4px;
-  font-size: 12px;
+  border: 2px solid #00ff66;
+  padding: 6px 10px;
+  margin-right: 6px;
+  font-size: 14px;
 }
+
 .current {
   background: #00ff66;
   color: black;
 }
+
+/* ボタン（大きめ） */
 button {
   background: black;
   color: #00ff66;
   border: 2px solid #00ff66;
-  padding: 10px;
-  margin: 5px;
-  font-size: 16px;
+  padding: 18px 28px;
+  margin: 8px;
+  font-size: 22px;
+  min-width: 140px;
+  font-family: "MS Gothic", monospace;
 }
+
 button:active {
   background: #00ff66;
   color: black;
 }
+
 .footer {
   position: fixed;
   bottom: 10px;
@@ -59,11 +74,13 @@ button:active {
 }
 </style>
 </head>
+
 <body>
 
 <!-- 運転情報画面 -->
 <div id="driver" class="screen active">
   <div class="header">運転情報</div>
+
   <div class="info">列車番号：2680E</div>
   <div class="info" id="state">状態：停車中</div>
   <div class="info" id="currentStation"></div>
@@ -82,11 +99,12 @@ button:active {
 <!-- 車掌画面 -->
 <div id="conductor" class="screen">
   <div class="header">車掌画面</div>
+
   <div class="info">ドア状態：<span id="doorState">閉</span></div>
 
   <div class="station-bar">
     <script>
-      for(let i=1;i<=15;i++){
+      for (let i = 1; i <= 15; i++) {
         document.write(`<div class="station">${i}</div>`);
       }
     </script>
@@ -98,77 +116,90 @@ button:active {
 </div>
 
 <script>
+/* 停車駅（確定） */
 const stations = [
-  "君津","木更津","袖ヶ浦","長浦","姉ヶ崎","五井","八幡宿",
-  "浜野","蘇我","本千葉","千葉",
-  "津田沼","船橋","市川","新小岩","錦糸町","新日本橋","東京"
+  "君津","木更津","袖ヶ浦","長浦","姉ヶ崎",
+  "五井","八幡宿","浜野","蘇我","本千葉",
+  "千葉","津田沼","船橋","市川",
+  "新小岩","錦糸町","新日本橋","東京"
 ];
 
 let index = 0;
 let running = false;
 let doorOpen = false;
 
-const beep = () => {
+/* ピ音 */
+function beep() {
   const ctx = new AudioContext();
   const osc = ctx.createOscillator();
   osc.frequency.value = 1000;
   osc.connect(ctx.destination);
   osc.start();
-  setTimeout(()=>osc.stop(),100);
-};
+  setTimeout(() => osc.stop(), 100);
+}
 
-function renderStations(){
+/* 駅表示 */
+function renderStations() {
   const bar = document.getElementById("stationBar");
   bar.innerHTML = "";
-  stations.forEach((s,i)=>{
+  stations.forEach((s, i) => {
     const d = document.createElement("div");
-    d.className = "station" + (i===index ? " current":"");
+    d.className = "station" + (i === index ? " current" : "");
     d.textContent = s;
     bar.appendChild(d);
   });
 }
 
-function update(){
+/* 画面更新 */
+function update() {
   document.getElementById("currentStation").textContent =
     "現在駅：" + stations[index];
+
   document.getElementById("nextStation").textContent =
-    index < stations.length-1
-      ? "次駅：" + stations[index+1]
+    index < stations.length - 1
+      ? "次駅：" + stations[index + 1]
       : "終点";
+
   document.getElementById("state").textContent =
     running ? "状態：走行中" : "状態：停車中";
+
   document.getElementById("doorState").textContent =
     doorOpen ? "開" : "閉";
+
   renderStations();
 }
 
-function nextStation(){
+/* 次駅（※B無し＝走行中でも押せる） */
+function nextStation() {
   beep();
-  if(running || index >= stations.length-1) return;
+  if (index >= stations.length - 1) return;
+
   running = true;
   doorOpen = false;
   update();
-  setTimeout(()=>{
+
+  setTimeout(() => {
     index++;
     running = false;
     update();
-  },2000);
+  }, 2000);
 }
 
-function toggleDoor(){
+/* ドア */
+function toggleDoor() {
   beep();
-  if(running) return;
   doorOpen = !doorOpen;
   update();
 }
 
-function showConductor(){
+/* 画面切替 */
+function showConductor() {
   beep();
   document.getElementById("driver").classList.remove("active");
   document.getElementById("conductor").classList.add("active");
 }
 
-function showDriver(){
+function showDriver() {
   beep();
   document.getElementById("conductor").classList.remove("active");
   document.getElementById("driver").classList.add("active");
