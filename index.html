@@ -7,84 +7,89 @@
 <style>
 body{
   margin:0;
-  font-family:sans-serif;
-  background:#111;
+  background:#000;
   color:#fff;
-}
-header{
-  background:#222;
-  padding:10px;
-  text-align:center;
+  font-family:sans-serif;
 }
 
-button{
-  font-size:22px;
-  padding:18px 30px;
-  margin:10px;
-  cursor:pointer;
+/* ===== 固定 初期選択 ===== */
+#homeBtn{
+  position:fixed;
+  top:12px;
+  right:12px;
+  z-index:200;
+  font-size:18px;
+  padding:12px 18px;
 }
-.big{font-size:26px;padding:22px 36px;}
-.yellow{background:#ffd800;color:#000;}
-.red{background:#c00;color:#fff;}
-
-.center{text-align:center;}
 .hidden{display:none;}
 
+/* ===== 表示 ===== */
+header{
+  text-align:center;
+  padding:10px;
+  background:#111;
+}
+
 #status{
-  font-size:24px;
-  margin:15px;
+  text-align:center;
+  font-size:26px;
+  margin:20px;
 }
 .normal{color:#0f0;}
 .emergency{color:red;font-weight:bold;}
 
-#homeBtn{
-  position:fixed;
-  top:10px;
-  right:10px;
-  z-index:50;
-  font-size:18px;
-  padding:12px 18px;
+button{
+  font-size:24px;
+  padding:20px 36px;
+  margin:10px;
+  cursor:pointer;
 }
+.red{background:#c00;color:#fff;}
+.yellow{background:#ffd800;color:#000;}
 
+.center{text-align:center;}
+
+/* ===== オーバーレイ ===== */
 .overlay{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,0.85);
+  background:rgba(0,0,0,0.9);
   display:none;
   align-items:center;
   justify-content:center;
-  z-index:20;
+  z-index:100;
 }
 .overlay.active{display:flex;}
 
 .box{
-  background:#222;
   border:2px solid red;
   padding:30px;
   max-width:520px;
+  background:#000;
 }
 .box p{
   color:red;
-  font-size:20px;
+  font-size:22px;
 }
 </style>
 </head>
 
 <body>
 
-<button id="homeBtn" onclick="goHome()">初期画面</button>
+<!-- ★ 固定 初期選択 -->
+<button id="homeBtn" onclick="goHome()">初期選択</button>
 
 <header>
   <h2>運転支援システム</h2>
 </header>
 
-<div id="status" class="normal center">平常運転しています</div>
+<div id="status" class="normal">平常運転しています</div>
 
 <div id="homeScreen" class="center">
-  <button class="big red" onclick="emergencyButton()">非常</button>
+  <button class="red" onclick="emergencyButton()">非常</button>
 </div>
 
-<!-- 非常理由選択 -->
+<!-- ===== 理由選択 ===== -->
 <div id="reasonOverlay" class="overlay">
   <div class="box center">
     <h3>非常理由を選択</h3>
@@ -95,18 +100,18 @@ button{
   </div>
 </div>
 
-<!-- 非常内容表示 -->
+<!-- ===== 非常表示 ===== -->
 <div id="messageOverlay" class="overlay">
   <div class="box center">
     <p id="emergencyText"></p>
   </div>
 </div>
 
-<!-- 非常解除確認 -->
+<!-- ===== 解除確認 ===== -->
 <div id="releaseOverlay" class="overlay">
   <div class="box center">
     <h3>非常を解除しますか？</h3>
-    <button class="big yellow" onclick="releaseEmergency()">非常解除</button>
+    <button class="yellow" onclick="releaseEmergency()">非常解除</button>
   </div>
 </div>
 
@@ -120,8 +125,8 @@ let emergency=false;
 let logs=[];
 let currentIndex=null;
 
-let currentSection="君津 → 木更津";
-let trainState="停車中";
+const section="君津 → 東京";
+const trainState="停車中";
 
 function now(){
   return new Date().toLocaleTimeString();
@@ -129,43 +134,45 @@ function now(){
 
 function goHome(){
   if(emergency) return;
-  document.getElementById("homeScreen").classList.remove("hidden");
+  document.getElementById("homeScreen").style.display="block";
 }
 
 function emergencyButton(){
   if(!emergency){
     document.getElementById("reasonOverlay").classList.add("active");
   }else{
+    // ★ 重要：非常表示を必ず消す
+    document.getElementById("messageOverlay").classList.remove("active");
     document.getElementById("releaseOverlay").classList.add("active");
   }
 }
 
-function emergencyMessage(reason){
-  const map={
-    "人身事故":"直ちに、消防、警察、車掌に連絡すること",
-    "地震":"直ちに高台に避難すること。車掌と連携し指令に報告",
-    "線路内侵入":"直ちに他の列車に連絡。警察にも連絡",
-    "火災":"占められる窓は全て閉める。乗客を安全な場所へ避難。トンネル内停車を避けること"
-  };
-  return map[reason];
+function messageFor(reason){
+  return {
+    "人身事故":"直ちに、消防・警察・車掌に連絡すること",
+    "地震":"直ちに高台へ避難。車掌と連携し指令に報告",
+    "線路内侵入":"直ちに他列車へ連絡。警察にも連絡",
+    "火災":"閉められる窓は全て閉め、乗客を安全な場所へ避難。トンネル内停車を避けること"
+  }[reason];
 }
 
 function startEmergency(reason){
   emergency=true;
+
   document.getElementById("homeBtn").classList.add("hidden");
   document.getElementById("reasonOverlay").classList.remove("active");
 
-  document.getElementById("status").textContent="非常扱い";
+  document.getElementById("status").textContent="非常モードです。安全を確認してください";
   document.getElementById("status").className="emergency";
 
   document.getElementById("emergencyText").textContent=
-    reason + "： " + emergencyMessage(reason);
+    reason + "：\n" + messageFor(reason);
   document.getElementById("messageOverlay").classList.add("active");
 
   logs.unshift({
     reason,
-    section:currentSection,
-    state:trainState,
+    section,
+    trainState,
     start:now(),
     end:null
   });
@@ -199,7 +206,7 @@ function renderLog(){
     li.innerHTML=
       `理由：${l.reason}<br>
        区間：${l.section}<br>
-       状態：${l.state}<br>
+       状態：${l.trainState}<br>
        発生：${l.start}<br>
        解除：${l.end ?? "未解除"}`;
     ul.appendChild(li);
