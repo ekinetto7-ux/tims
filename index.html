@@ -12,14 +12,25 @@ body{
   font-family:sans-serif;
 }
 
+/* iOS対策：ボタンデザイン固定 */
+button{
+  -webkit-appearance:none;
+  appearance:none;
+  border-radius:6px;
+  border:1px solid #666;
+  background:#111;
+  color:#fff;
+  cursor:pointer;
+}
+
 /* 固定ボタン */
 #homeBtn{
   position:fixed;
   top:10px;
   right:10px;
   z-index:1000;
-  padding:14px 22px;
-  font-size:20px;
+  padding:12px 20px;
+  font-size:18px;
 }
 
 /* 画面 */
@@ -34,52 +45,40 @@ body{
 
 /* 路線表示 */
 #route{
-  font-size:28px;
-  margin-bottom:15px;
+  font-size:26px;
+  margin-bottom:12px;
 }
 
 /* 次駅 */
 #nextStation{
-  font-size:44px;
-  margin:20px;
-  color:yellow;
-  transition:opacity .15s;
+  font-size:40px;
+  margin:16px;
+  transition:opacity .1s;
 }
 
 /* 3駅表示 */
 #stationList{
-  font-size:24px;
-  line-height:1.7;
-  color:#fff;
-  margin-bottom:20px;
+  font-size:22px;
+  line-height:1.6;
 }
 
-/* ボタン共通 */
-button{
-  cursor:pointer;
+/* ボタンサイズ */
+.startBtn{
+  font-size:30px;
+  padding:26px 56px;
+  margin:12px;
+}
+
+.bigBtn{
+  font-size:26px;
+  padding:20px 42px;
   margin:10px;
 }
 
-/* 初期選択（特大） */
-.startBtn{
-  font-size:32px;
-  padding:28px 60px;
-}
-
-/* 通常大 */
-.bigBtn{
-  font-size:26px;
-  padding:22px 44px;
-}
-
-.red{
-  background:#c00;
-  color:#fff;
-}
-.yellow{
-  background:#ffd800;
-  color:#000;
-}
+/* 色 */
+.red{background:#c00;}
+.yellow{background:#ffd800;color:#000;}
+.blue{color:#4aa3ff;}
 
 /* 非常 */
 .overlay{
@@ -96,21 +95,13 @@ button{
 .box{
   border:2px solid red;
   padding:30px;
-  max-width:600px;
   text-align:center;
-}
-
-.reasonBtn{
-  font-size:26px;
-  padding:18px 36px;
-  margin:10px;
 }
 
 .redText{
   color:red;
   font-size:26px;
 }
-.blue{color:#4aa3ff;}
 </style>
 </head>
 
@@ -118,7 +109,7 @@ button{
 
 <button id="homeBtn" onclick="goHome()">初期選択</button>
 
-<!-- 初期画面 -->
+<!-- 初期選択 -->
 <div id="initial" class="screen active">
   <h2>初期選択</h2>
   <button class="startBtn" onclick="enterMain()">運転士</button>
@@ -141,10 +132,10 @@ button{
 <div id="reason" class="overlay">
   <div class="box">
     <p class="redText">非常理由を選択</p>
-    <button class="reasonBtn" onclick="startEmergency('人身事故')">人身事故</button>
-    <button class="reasonBtn" onclick="startEmergency('地震')">地震</button>
-    <button class="reasonBtn" onclick="startEmergency('線路内侵入')">線路内侵入</button>
-    <button class="reasonBtn" onclick="startEmergency('火災')">火災</button>
+    <button class="bigBtn" onclick="startEmergency('人身事故')">人身事故</button>
+    <button class="bigBtn" onclick="startEmergency('地震')">地震</button>
+    <button class="bigBtn" onclick="startEmergency('線路内侵入')">線路内侵入</button>
+    <button class="bigBtn" onclick="startEmergency('火災')">火災</button>
   </div>
 </div>
 
@@ -185,98 +176,93 @@ let idx = 0;
 let phase = 0;
 let emergency = false;
 
-/* 初期表示 */
-renderStations();
+render();
 
 /* 次駅ボタン */
 function nextStation(){
- if(emergency || idx >= stations.length) return;
+  if(emergency || idx >= stations.length) return;
 
- blink();
+  blink();
 
- const st = stations[idx];
+  const st = stations[idx];
 
- if(!st.s){
-   setTimeout(()=>{
-     showNext(st.n+"（通過）","blue");
-     idx++;
-     renderStations();
-   },150);
-   return;
- }
+  if(!st.s){
+    setTimeout(()=>{
+      show(st.n + "（通過）");
+      idx++;
+      render();
+    },120);
+    return;
+  }
 
- if(phase===0){
-   setTimeout(()=>{
-     showNext(st.n,"yellow");
-     phase=1;
-   },150);
- }else{
-   setTimeout(()=>{
-     showNext("停車中","#fff");
-     idx++;
-     phase=0;
-     renderStations();
-   },150);
- }
+  if(phase === 0){
+    setTimeout(()=>{
+      show(st.n);
+      phase = 1;
+    },120);
+  }else{
+    setTimeout(()=>{
+      show("停車中");
+      idx++;
+      phase = 0;
+      render();
+    },120);
+  }
 }
 
-/* 表示更新（★ここが直った） */
-function renderStations(){
- const a = stations[idx]?.n || "終点";
- const b = stations[idx+1]?.n || "";
- const c = stations[idx+2]?.n || "";
+/* 表示更新 */
+function render(){
+  const a = stations[idx]?.n || "終点";
+  const b = stations[idx+1]?.n || "";
+  const c = stations[idx+2]?.n || "";
 
- document.getElementById("nextStation").textContent = a;
- document.getElementById("nextStation").style.color = "yellow";
-
- document.getElementById("stationList").innerHTML =
-   `<div>${a}</div><div>${b}</div><div>${c}</div>`;
+  show(a);
+  document.getElementById("stationList").innerHTML =
+    `<div>${a}</div><div>${b}</div><div>${c}</div>`;
 }
 
-/* 表示補助 */
-function showNext(t,c){
- const e=document.getElementById("nextStation");
- e.textContent=t;
- e.style.color=c;
+/* 次駅表示（確定仕様） */
+function show(stationName){
+  const e = document.getElementById("nextStation");
+  e.textContent = "次　" + stationName;
+
+  if(stationName.includes("巌根")){
+    e.style.color = "#4aa3ff"; // 巌根だけ青
+  }else{
+    e.style.color = "#ffffff"; // それ以外は白
+  }
 }
+
 function blink(){
- const e=document.getElementById("nextStation");
- e.style.opacity=0;
- setTimeout(()=>e.style.opacity=1,80);
+  const e = document.getElementById("nextStation");
+  e.style.opacity = 0;
+  setTimeout(()=>e.style.opacity = 1,80);
 }
 
 /* 画面遷移 */
 function enterMain(){
- document.getElementById("initial").classList.remove("active");
- document.getElementById("main").classList.add("active");
+  document.getElementById("initial").classList.remove("active");
+  document.getElementById("main").classList.add("active");
 }
 function goHome(){
- if(emergency) return;
- document.getElementById("main").classList.remove("active");
- document.getElementById("initial").classList.add("active");
+  if(emergency) return;
+  document.getElementById("main").classList.remove("active");
+  document.getElementById("initial").classList.add("active");
 }
 
 /* 非常 */
 function openReason(){
- if(emergency) return;
- document.getElementById("reason").classList.add("active");
+  if(!emergency) document.getElementById("reason").classList.add("active");
 }
 function startEmergency(r){
- emergency=true;
- document.getElementById("reason").classList.remove("active");
- document.getElementById("emergency").classList.add("active");
- document.getElementById("emText").textContent =
-   r+"："+
-   ({
-     "人身事故":"直ちに消防・警察・車掌に連絡",
-     "地震":"高台へ避難、車掌・指令と連携",
-     "線路内侵入":"他列車・警察に連絡",
-     "火災":"窓を閉め避難、トンネル内停車回避"
-   })[r];
+  emergency = true;
+  document.getElementById("reason").classList.remove("active");
+  document.getElementById("emergency").classList.add("active");
+  document.getElementById("emText").textContent = r;
 }
 function releaseEmergency(){
- emergency=false;
- document.getElementById("emergency").classList.remove("active");
+  emergency = false;
+  document.getElementById("emergency").classList.remove("active");
 }
 </script>
 
