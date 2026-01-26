@@ -6,222 +6,317 @@
 <title>運転支援システム</title>
 
 <style>
-body {
-  margin: 0;
-  font-family: sans-serif;
-  background: #000;
-  color: #0f0;
+body{
+  margin:0;
+  font-family:sans-serif;
+  background:#000;
+  color:#fff;
 }
 
-button {
-  font-size: 16px;
-  padding: 10px;
-  margin: 5px;
+/* ===== 共通 ===== */
+.screen{display:none;padding:70px 15px 90px}
+.screen.active{display:block}
+
+button{
+  border:none;
+  border-radius:8px;
+  padding:18px 26px;          /* ← 大きめ */
+  font-size:20px;             /* ← 大きめ */
+  margin:8px;
+  cursor:pointer;
 }
 
-.top-fixed {
-  position: fixed;
-  top: 10px;
-  right: 10px;
-  z-index: 100;
+.btn{background:#333;color:#fff}
+.btn.red{background:#c00}
+.btn.yellow{background:#facc15;color:#000;font-weight:800}
+
+/* 初期選択固定 */
+.fixed-home{
+  position:fixed;
+  top:10px;
+  right:10px;
+  z-index:5000;
 }
 
-.screen {
-  padding: 60px 10px 80px;
+/* ===== 運転情報 ===== */
+#opStatus.normal{color:#0f0}
+#opStatus.emergency{color:red;font-weight:900}
+
+#stationDisplay{
+  font-size:28px;
+  color:#facc15;
+  font-weight:800;
+  margin-top:20px;
 }
 
-.hidden {
-  display: none;
+#runningSection,#runningArrow{
+  color:#facc15;
+  font-size:22px;
+  display:none;
 }
-
-/* 非常表示 */
-.overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.95);
-  color: red;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  z-index: 999;
-  flex-direction: column;
+#runningArrow{
+  font-size:30px;
+  animation:blink 1s step-start infinite;
 }
+@keyframes blink{50%{opacity:0}}
 
-.overlay.active {
-  display: flex;
+/* ===== overlay ===== */
+.overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.95);
+  display:none;
+  z-index:3000;
+  align-items:center;
+  justify-content:center;
 }
+.overlay.active{display:flex}
+.overlay-box{text-align:center}
 
-.big {
-  font-size: 22px;
-  margin-bottom: 20px;
+/* 非常文 */
+#emergencyMain{
+  color:red;
+  font-size:26px;
+  font-weight:900;
+  animation:blink 1s step-start infinite;
 }
-
-.yellow {
-  background: yellow;
-  color: black;
-  font-size: 18px;
-  padding: 15px 25px;
+#emergencyDetail{
+  color:red;
+  font-size:22px;
+  font-weight:800;
+  margin-top:20px;
+  line-height:1.6;
 }
 
 /* 操作ロック */
-#lockOverlay {
-  position: fixed;
-  inset: 0;
-  z-index: 500;
-  display: none;
+#lockOverlay{
+  position:fixed;
+  inset:0;
+  z-index:2500;
+  display:none;
 }
+#lockOverlay.active{display:block}
 
-#lockOverlay.active {
-  display: block;
+/* 履歴 */
+#history{
+  margin-top:25px;
+  border-top:1px solid #555;
+  padding-top:10px;
+  font-size:15px;
 }
 </style>
 </head>
 
 <body>
 
-<!-- 初期選択 -->
-<div class="screen" id="initScreen">
+<!-- 初期選択固定 -->
+<div class="fixed-home">
+  <button class="btn" onclick="goHome()">初期選択</button>
+</div>
+
+<!-- 初期画面 -->
+<div id="home" class="screen active">
   <h2>初期選択</h2>
-  <button onclick="openMode('driver')">運転士</button>
-  <button onclick="openMode('conductor')">車掌</button>
-  <button onclick="openMode('oneMan')">ワンマン</button>
-</div>
-
-<!-- 右上固定 -->
-<div class="top-fixed hidden" id="homeBtn">
-  <button onclick="goHome()">初期選択</button>
-</div>
-
-<!-- ワンマン画面 -->
-<div class="screen hidden" id="oneManScreen">
-  <h3>ワンマン運用</h3>
-  <button onclick="showDriveInfo()">運転情報</button>
-  <button onclick="showDoor()">ドア開閉</button>
-  <button onclick="pressEmergency()">非常</button>
+  <button class="btn" onclick="openOp()">運転士</button>
+  <button class="btn" onclick="openOp()">車掌</button>
+  <button class="btn" onclick="openOp()">ワンマン</button>
 </div>
 
 <!-- 運転情報 -->
-<div class="screen hidden" id="driveInfo">
-  <h3>運転情報</h3>
-  <div id="statusText">平常運転しています</div>
-  <div id="nextInfo">次駅：君津</div>
-  <button onclick="nextStation()">次駅</button>
-  <button onclick="showDoor()">ドア開閉</button>
-</div>
+<div id="op" class="screen">
+  <div id="opStatus" class="normal">平常運転しています</div>
 
-<!-- ドア -->
-<div class="screen hidden" id="doorScreen">
-  <h3>ドア操作</h3>
-  <button onclick="setDoor('open')">ドア開</button>
-  <button onclick="setDoor('close')">ドア閉</button>
-</div>
+  <div id="stationDisplay">
+    君津<br><span style="font-size:20px">停車中</span>
+  </div>
 
-<!-- 非常メイン -->
-<div class="overlay" id="emergencyOverlay">
-  <div class="big">非常モードです。<br>安全を確認してください</div>
+  <div id="runningSection"></div>
+  <div id="runningArrow">▶▶▶</div>
+
+  <div style="position:fixed;bottom:15px;right:15px">
+    <button class="btn" onclick="nextStation()">次駅</button>
+    <button class="btn red" onclick="pressEmergency()">非常</button>
+  </div>
+
+  <div id="history"></div>
 </div>
 
 <!-- 非常理由 -->
-<div class="overlay" id="reasonOverlay">
-  <div class="big">非常理由を選択</div>
-  <button onclick="selectReason('人身事故')">人身事故</button>
-  <button onclick="selectReason('地震')">地震</button>
-  <button onclick="selectReason('線路内侵入')">線路内侵入</button>
-  <button onclick="selectReason('火災')">火災</button>
+<div id="reasonOverlay" class="overlay">
+  <div class="overlay-box">
+    <h2 style="color:red">非常理由を選択</h2>
+    <button class="btn red" onclick="selectReason('人身事故')">人身事故</button><br>
+    <button class="btn red" onclick="selectReason('地震')">地震</button><br>
+    <button class="btn red" onclick="selectReason('線路内立ち入り')">線路内立ち入り</button><br>
+    <button class="btn red" onclick="selectReason('火災')">火災</button>
+  </div>
 </div>
 
-<!-- 指示表示 -->
-<div class="overlay" id="instructionOverlay">
-  <div class="big" id="instructionText"></div>
-  <button onclick="confirmRelease()" class="yellow">非常解除</button>
+<!-- 非常表示 -->
+<div id="emergencyOverlay" class="overlay">
+  <div class="overlay-box">
+    <div id="emergencyMain">
+      非常モードです。<br>安全を確認してください
+    </div>
+    <div id="emergencyDetail"></div>
+  </div>
+</div>
+
+<!-- 解除確認 -->
+<div id="releaseOverlay" class="overlay">
+  <div class="overlay-box">
+    <div style="margin-bottom:15px">
+      非常を解除します。よろしいですか
+    </div>
+    <button class="btn yellow" onclick="releaseEmergency()">非常解除</button>
+  </div>
 </div>
 
 <div id="lockOverlay"></div>
 
 <script>
-const stations = [
-  "君津","木更津","袖ヶ浦","長浦","姉ヶ崎","五井",
-  "八幡宿","浜野","蘇我","本千葉","千葉",
-  "津田沼","船橋","市川","新小岩",
+/* ===== 路線 ===== */
+const stations=[
+  "君津","木更津","袖ヶ浦","長浦","姉ヶ崎",
+  "五井","八幡宿","浜野","蘇我","本千葉",
+  "千葉","津田沼","船橋","市川","新小岩",
   "馬喰町","新日本橋","東京"
 ];
 
-let index = 0;
-let emergency = false;
+let idx=0;
+let running=false;
+let emergency=false;
 
-const instructionMap = {
+/* 非常履歴 */
+let history=[];
+let currentEmergencyIndex=null;
+
+const messages={
   "人身事故":"直ちに、消防、警察、車掌に連絡すること",
-  "地震":"直ちに高台に避難すること。車掌と連携し指令に報告",
-  "線路内侵入":"直ちに他の列車に連絡。警察にも連絡",
-  "火災":"窓を全て閉め、乗客を安全な場所へ避難。トンネル内停車を避ける"
+  "地震":"直ちに高台に避難すること<br>車掌と連携すること<br>指令に報告",
+  "線路内立ち入り":"直ちに、他の列車に連絡<br>警察にも連絡",
+  "火災":"直ちに、閉められる窓は全て閉める<br>乗客を安全なところに避難させる<br>トンネル内停車を避けること"
 };
 
-function openMode(mode){
-  hideAll();
-  document.getElementById("homeBtn").classList.remove("hidden");
-  if(mode==="oneMan") oneManScreen.classList.remove("hidden");
+function now(){
+  const d=new Date();
+  return d.toLocaleTimeString();
 }
 
+/* ===== 画面 ===== */
+function openOp(){
+  home.classList.remove("active");
+  op.classList.add("active");
+}
 function goHome(){
-  hideAll();
-  initScreen.classList.remove("hidden");
-  homeBtn.classList.add("hidden");
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  home.classList.add("active");
 }
 
-function hideAll(){
-  document.querySelectorAll(".screen").forEach(s=>s.classList.add("hidden"));
-}
-
-function showDriveInfo(){
-  hideAll();
-  driveInfo.classList.remove("hidden");
-}
-
-function showDoor(){
-  hideAll();
-  doorScreen.classList.remove("hidden");
-}
-
+/* ===== 次駅 ===== */
 function nextStation(){
-  if(index < stations.length-1){
-    index++;
-    document.getElementById("nextInfo").textContent =
-      index < stations.length-1
-      ? "次駅：" + stations[index]
-      : "終点：東京";
+  if(emergency) return;
+
+  if(running){
+    running=false;
+    runningSection.style.display="none";
+    runningArrow.style.display="none";
+    stationDisplay.innerHTML=
+      stations[idx]+'<br><span style="font-size:20px">停車中</span>';
+    return;
+  }
+
+  if(idx<stations.length-1){
+    running=true;
+    runningSection.style.display="block";
+    runningArrow.style.display="block";
+    runningSection.textContent=
+      stations[idx]+" → "+stations[idx+1];
+    idx++;
   }
 }
 
-function setDoor(state){
-  alert("ドア：" + (state==="open"?"開":"閉"));
-}
-
+/* ===== 非常 ===== */
 function pressEmergency(){
-  emergency = true;
-  emergencyOverlay.classList.add("active");
+  if(emergency){
+    releaseOverlay.classList.add("active");
+    return;
+  }
   reasonOverlay.classList.add("active");
-  lockOverlay.classList.add("active");
-  document.getElementById("statusText").textContent = "非常扱い";
 }
 
-function selectReason(r){
+function selectReason(reason){
+  emergency=true;
   reasonOverlay.classList.remove("active");
-  instructionText.textContent = instructionMap[r];
-  instructionOverlay.classList.add("active");
+  emergencyOverlay.classList.add("active");
+  lockOverlay.classList.add("active");
+
+  emergencyDetail.innerHTML=messages[reason];
+  opStatus.textContent="非常扱い（"+reason+"）";
+  opStatus.className="emergency";
+
+  const record={
+    reason,
+    start:now(),
+    end:null,
+    section:running
+      ? stations[idx-1]+" → "+stations[idx]
+      : stations[idx],
+    state:running?"走行中":"停車中"
+  };
+  history.unshift(record);
+  currentEmergencyIndex=0;
+  renderHistory();
 }
 
-function confirmRelease(){
-  emergency = false;
-  emergencyOverlay.classList.remove("active");
-  instructionOverlay.classList.remove("active");
+function releaseEmergency(){
+  emergency=false;
+
+  document.querySelectorAll(".overlay").forEach(o=>o.classList.remove("active"));
   lockOverlay.classList.remove("active");
-  document.getElementById("statusText").textContent = "平常運転しています";
+
+  if(currentEmergencyIndex!==null){
+    history[currentEmergencyIndex].end=now();
+    currentEmergencyIndex=null;
+  }
+
+  opStatus.textContent="平常運転しています";
+  opStatus.className="normal";
+  renderHistory();
 }
 
-/* ★ 初期化（重要） */
-window.onload = ()=>{
-  emergency = false;
+/* ===== 履歴 ===== */
+function renderHistory(){
+  historyBox.innerHTML="";
+  history.forEach(h=>{
+    const d=document.createElement("div");
+    d.innerHTML=
+      `理由：${h.reason}<br>
+       区間：${h.section}<br>
+       状態：${h.state}<br>
+       発生：${h.start}<br>
+       解除：${h.end??"未解除"}<hr>`;
+    historyBox.appendChild(d);
+  });
+}
+
+/* DOM */
+const home=document.getElementById("home");
+const op=document.getElementById("op");
+const stationDisplay=document.getElementById("stationDisplay");
+const runningSection=document.getElementById("runningSection");
+const runningArrow=document.getElementById("runningArrow");
+const opStatus=document.getElementById("opStatus");
+const reasonOverlay=document.getElementById("reasonOverlay");
+const emergencyOverlay=document.getElementById("emergencyOverlay");
+const emergencyDetail=document.getElementById("emergencyDetail");
+const releaseOverlay=document.getElementById("releaseOverlay");
+const lockOverlay=document.getElementById("lockOverlay");
+const historyBox=document.getElementById("history");
+
+/* 初期化（重要） */
+window.onload=()=>{
+  emergency=false;
   document.querySelectorAll(".overlay").forEach(o=>o.classList.remove("active"));
   lockOverlay.classList.remove("active");
 };
