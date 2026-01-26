@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>運転支援システム</title>
+<title>運転情報システム</title>
 
 <style>
 body{
@@ -14,20 +14,19 @@ body{
 }
 
 /* ===== 共通 ===== */
-.screen{display:none;padding:70px 15px 90px}
+.screen{display:none;padding:20px}
 .screen.active{display:block}
 
 button{
   border:none;
-  border-radius:8px;
-  padding:18px 26px;          /* ← 大きめ */
-  font-size:20px;             /* ← 大きめ */
-  margin:8px;
-  cursor:pointer;
+  border-radius:6px;
+  padding:16px 22px;   /* 大きめ */
+  font-size:18px;      /* 大きめ */
+  margin:6px;
 }
 
 .btn{background:#333;color:#fff}
-.btn.red{background:#c00}
+.btn.red{background:red}
 .btn.yellow{background:#facc15;color:#000;font-weight:800}
 
 /* 初期選択固定 */
@@ -35,7 +34,7 @@ button{
   position:fixed;
   top:10px;
   right:10px;
-  z-index:5000;
+  z-index:3000;
 }
 
 /* ===== 運転情報 ===== */
@@ -43,19 +42,19 @@ button{
 #opStatus.emergency{color:red;font-weight:900}
 
 #stationDisplay{
-  font-size:28px;
+  font-size:26px;
   color:#facc15;
   font-weight:800;
   margin-top:20px;
 }
 
 #runningSection,#runningArrow{
+  display:none;
   color:#facc15;
   font-size:22px;
-  display:none;
 }
 #runningArrow{
-  font-size:30px;
+  font-size:28px;
   animation:blink 1s step-start infinite;
 }
 @keyframes blink{50%{opacity:0}}
@@ -64,16 +63,16 @@ button{
 .overlay{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,.95);
+  background:rgba(0,0,0,.9);
   display:none;
-  z-index:3000;
+  z-index:2000;
   align-items:center;
   justify-content:center;
 }
 .overlay.active{display:flex}
 .overlay-box{text-align:center}
 
-/* 非常文 */
+/* 非常表示 */
 #emergencyMain{
   color:red;
   font-size:26px;
@@ -92,17 +91,17 @@ button{
 #lockOverlay{
   position:fixed;
   inset:0;
-  z-index:2500;
   display:none;
+  z-index:2500;
 }
 #lockOverlay.active{display:block}
 
 /* 履歴 */
-#history{
-  margin-top:25px;
+#logBox{
+  margin-top:20px;
   border-top:1px solid #555;
   padding-top:10px;
-  font-size:15px;
+  font-size:14px;
 }
 </style>
 </head>
@@ -122,23 +121,23 @@ button{
   <button class="btn" onclick="openOp()">ワンマン</button>
 </div>
 
-<!-- 運転情報 -->
+<!-- 運転情報画面 -->
 <div id="op" class="screen">
   <div id="opStatus" class="normal">平常運転しています</div>
 
   <div id="stationDisplay">
-    君津<br><span style="font-size:20px">停車中</span>
+    君津<br><span style="font-size:18px">停車中</span>
   </div>
 
   <div id="runningSection"></div>
   <div id="runningArrow">▶▶▶</div>
 
-  <div style="position:fixed;bottom:15px;right:15px">
+  <div style="position:fixed;bottom:20px;right:20px">
     <button class="btn" onclick="nextStation()">次駅</button>
     <button class="btn red" onclick="pressEmergency()">非常</button>
   </div>
 
-  <div id="history"></div>
+  <div id="logBox"></div>
 </div>
 
 <!-- 非常理由 -->
@@ -152,7 +151,7 @@ button{
   </div>
 </div>
 
-<!-- 非常表示 -->
+<!-- 非常中 -->
 <div id="emergencyOverlay" class="overlay">
   <div class="overlay-box">
     <div id="emergencyMain">
@@ -162,10 +161,10 @@ button{
   </div>
 </div>
 
-<!-- 解除確認 -->
-<div id="releaseOverlay" class="overlay">
+<!-- 非常解除確認 -->
+<div id="confirmOverlay" class="overlay">
   <div class="overlay-box">
-    <div style="margin-bottom:15px">
+    <div style="margin-bottom:12px">
       非常を解除します。よろしいですか
     </div>
     <button class="btn yellow" onclick="releaseEmergency()">非常解除</button>
@@ -188,7 +187,7 @@ let running=false;
 let emergency=false;
 
 /* 非常履歴 */
-let history=[];
+let logs=[];
 let currentEmergencyIndex=null;
 
 const messages={
@@ -222,7 +221,7 @@ function nextStation(){
     runningSection.style.display="none";
     runningArrow.style.display="none";
     stationDisplay.innerHTML=
-      stations[idx]+'<br><span style="font-size:20px">停車中</span>';
+      stations[idx]+'<br><span style="font-size:18px">停車中</span>';
     return;
   }
 
@@ -239,7 +238,7 @@ function nextStation(){
 /* ===== 非常 ===== */
 function pressEmergency(){
   if(emergency){
-    releaseOverlay.classList.add("active");
+    confirmOverlay.classList.add("active");
     return;
   }
   reasonOverlay.classList.add("active");
@@ -247,6 +246,7 @@ function pressEmergency(){
 
 function selectReason(reason){
   emergency=true;
+
   reasonOverlay.classList.remove("active");
   emergencyOverlay.classList.add("active");
   lockOverlay.classList.add("active");
@@ -255,18 +255,18 @@ function selectReason(reason){
   opStatus.textContent="非常扱い（"+reason+"）";
   opStatus.className="emergency";
 
-  const record={
+  logs.unshift({
     reason,
     start:now(),
     end:null,
-    section:running
+    section: running
       ? stations[idx-1]+" → "+stations[idx]
       : stations[idx],
-    state:running?"走行中":"停車中"
-  };
-  history.unshift(record);
+    state: running ? "走行中" : "停車中"
+  });
   currentEmergencyIndex=0;
-  renderHistory();
+
+  renderLog();
 }
 
 function releaseEmergency(){
@@ -276,27 +276,28 @@ function releaseEmergency(){
   lockOverlay.classList.remove("active");
 
   if(currentEmergencyIndex!==null){
-    history[currentEmergencyIndex].end=now();
+    logs[currentEmergencyIndex].end=now();
     currentEmergencyIndex=null;
   }
 
   opStatus.textContent="平常運転しています";
   opStatus.className="normal";
-  renderHistory();
+
+  renderLog();
 }
 
 /* ===== 履歴 ===== */
-function renderHistory(){
-  historyBox.innerHTML="";
-  history.forEach(h=>{
+function renderLog(){
+  logBox.innerHTML="";
+  logs.forEach(l=>{
     const d=document.createElement("div");
     d.innerHTML=
-      `理由：${h.reason}<br>
-       区間：${h.section}<br>
-       状態：${h.state}<br>
-       発生：${h.start}<br>
-       解除：${h.end??"未解除"}<hr>`;
-    historyBox.appendChild(d);
+      "理由："+l.reason+"<br>"+
+      "区間："+l.section+"<br>"+
+      "状態："+l.state+"<br>"+
+      "発生："+l.start+"<br>"+
+      "解除："+(l.end ?? "未解除")+"<hr>";
+    logBox.appendChild(d);
   });
 }
 
@@ -310,11 +311,11 @@ const opStatus=document.getElementById("opStatus");
 const reasonOverlay=document.getElementById("reasonOverlay");
 const emergencyOverlay=document.getElementById("emergencyOverlay");
 const emergencyDetail=document.getElementById("emergencyDetail");
-const releaseOverlay=document.getElementById("releaseOverlay");
+const confirmOverlay=document.getElementById("confirmOverlay");
 const lockOverlay=document.getElementById("lockOverlay");
-const historyBox=document.getElementById("history");
+const logBox=document.getElementById("logBox");
 
-/* 初期化（重要） */
+/* 初期化 */
 window.onload=()=>{
   emergency=false;
   document.querySelectorAll(".overlay").forEach(o=>o.classList.remove("active"));
