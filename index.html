@@ -1,268 +1,187 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<title>運転支援システム</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>運転画面</title>
 
 <style>
-body{
-  margin:0;
-  background:#000;
-  color:#fff;
-  font-family:sans-serif;
+body {
+  margin: 0;
+  background: black;
+  color: white;
+  font-family: "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
-/* iOS対策：ボタンデザイン固定 */
-button{
-  -webkit-appearance:none;
-  appearance:none;
-  border-radius:6px;
-  border:1px solid #666;
-  background:#111;
-  color:#fff;
-  cursor:pointer;
+.hidden { display: none; }
+
+/* ===== 初期選択 ===== */
+#start {
+  text-align: center;
 }
 
-/* 固定ボタン */
-#homeBtn{
-  position:fixed;
-  top:10px;
-  right:10px;
-  z-index:1000;
-  padding:12px 20px;
-  font-size:18px;
+.start-btn {
+  width: 220px;
+  padding: 18px;
+  margin: 12px;
+  font-size: 22px;
+  border-radius: 14px;
+  border: none;
+  background: #e6e6e6;
+  color: #007aff;
+  font-weight: bold;
 }
 
-/* 画面 */
-.screen{
-  display:none;
-  height:100vh;
-  justify-content:center;
-  align-items:center;
-  flex-direction:column;
-}
-.screen.active{display:flex;}
-
-/* 路線表示 */
-#route{
-  font-size:26px;
-  margin-bottom:12px;
+/* ===== メイン表示 ===== */
+#main {
+  text-align: center;
 }
 
-/* 次駅 */
-#nextStation{
-  font-size:40px;
-  margin:16px;
-  transition:opacity .1s;
+#line {
+  margin-bottom: 18px;
+  font-size: 16px;
 }
 
-/* 3駅表示 */
-#stationList{
-  font-size:22px;
-  line-height:1.6;
+#stations {
+  margin: 20px 0;
 }
 
-/* ボタンサイズ */
-.startBtn{
-  font-size:30px;
-  padding:26px 56px;
-  margin:12px;
+.station {
+  font-size: 22px;
+  margin: 8px 0;
+  color: white;
 }
 
-.bigBtn{
-  font-size:26px;
-  padding:20px 42px;
-  margin:10px;
+.next {
+  color: #2da3ff;
 }
 
-/* 色 */
-.red{background:#c00;}
-.yellow{background:#ffd800;color:#000;}
-.blue{color:#4aa3ff;}
-
-/* 非常 */
-.overlay{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.9);
-  display:none;
-  justify-content:center;
-  align-items:center;
-  z-index:500;
-}
-.overlay.active{display:flex;}
-
-.box{
-  border:2px solid red;
-  padding:30px;
-  text-align:center;
+.next::before {
+  content: "次 ";
+  margin-right: 6px;
 }
 
-.redText{
-  color:red;
-  font-size:26px;
+.current {
+  font-size: 28px;
+  color: #ffd400;
+}
+
+/* 一瞬消す用 */
+.fade {
+  visibility: hidden;
+}
+
+/* ===== ボタン ===== */
+#nextBtn {
+  margin-top: 16px;
+  width: 160px;
+  padding: 14px;
+  font-size: 20px;
+  border-radius: 10px;
+  border: none;
+  background: #e6e6e6;
+  color: #007aff;
+  font-weight: bold;
+}
+
+#emergency {
+  margin-top: 16px;
+  width: 160px;
+  padding: 16px;
+  font-size: 20px;
+  border-radius: 6px;
+  border: none;
+  background: red;
+  color: white;
 }
 </style>
 </head>
 
 <body>
 
-<button id="homeBtn" onclick="goHome()">初期選択</button>
-
 <!-- 初期選択 -->
-<div id="initial" class="screen active">
-  <h2>初期選択</h2>
-  <button class="startBtn" onclick="enterMain()">運転士</button>
-  <button class="startBtn" onclick="enterMain()">車掌</button>
-  <button class="startBtn" onclick="enterMain()">ワンマン</button>
+<div id="start">
+  <div style="margin-bottom:16px;">初期選択</div>
+  <button class="start-btn" onclick="start()">運転士</button>
+  <button class="start-btn" onclick="start()">車掌</button>
+  <button class="start-btn" onclick="start()">ワンマン</button>
 </div>
 
-<!-- メイン -->
-<div id="main" class="screen">
-  <div id="route">内房線・総武快速線（君津 → 東京）</div>
+<!-- メイン画面 -->
+<div id="main" class="hidden">
+  <div id="line">内房線・総武快速線（君津 → 東京）</div>
 
-  <div id="nextStation"></div>
-  <div id="stationList"></div>
-
-  <button class="bigBtn" onclick="nextStation()">次駅</button>
-  <button class="bigBtn red" onclick="openReason()">非常</button>
-</div>
-
-<!-- 非常理由 -->
-<div id="reason" class="overlay">
-  <div class="box">
-    <p class="redText">非常理由を選択</p>
-    <button class="bigBtn" onclick="startEmergency('人身事故')">人身事故</button>
-    <button class="bigBtn" onclick="startEmergency('地震')">地震</button>
-    <button class="bigBtn" onclick="startEmergency('線路内侵入')">線路内侵入</button>
-    <button class="bigBtn" onclick="startEmergency('火災')">火災</button>
+  <div id="stations">
+    <!-- JSで描画 -->
   </div>
-</div>
 
-<!-- 非常中 -->
-<div id="emergency" class="overlay">
-  <div class="box">
-    <p id="emText" class="redText"></p>
-    <button class="bigBtn yellow" onclick="releaseEmergency()">非常解除</button>
-  </div>
+  <button id="nextBtn" onclick="nextStation()">次駅</button><br>
+  <button id="emergency">非常</button>
 </div>
 
 <script>
-/* 駅データ */
+/* ===== 駅データ（固定） ===== */
 const stations = [
- {n:"君津",s:true},
- {n:"木更津",s:true},
- {n:"巌根",s:false},
- {n:"袖ヶ浦",s:true},
- {n:"長浦",s:true},
- {n:"姉ヶ崎",s:true},
- {n:"五井",s:true},
- {n:"八幡宿",s:true},
- {n:"浜野",s:true},
- {n:"蘇我",s:true},
- {n:"本千葉",s:true},
- {n:"千葉",s:true},
- {n:"津田沼",s:true},
- {n:"船橋",s:true},
- {n:"市川",s:true},
- {n:"新小岩",s:true},
- {n:"馬喰町",s:true},
- {n:"錦糸町",s:true},
- {n:"新日本橋",s:true},
- {n:"東京",s:true}
+  "君津",
+  "木更津",
+  "巌根",
+  "袖ケ浦",
+  "五井",
+  "蘇我",
+  "千葉",
+  "東京"
 ];
 
-let idx = 0;
-let phase = 0;
-let emergency = false;
+let index = 0;
 
-render();
+/* ===== 初期開始 ===== */
+function start() {
+  document.getElementById("start").classList.add("hidden");
+  document.getElementById("main").classList.remove("hidden");
+  render();
+}
 
-/* 次駅ボタン */
-function nextStation(){
-  if(emergency || idx >= stations.length) return;
+/* ===== 駅描画 ===== */
+function render() {
+  const area = document.getElementById("stations");
+  area.innerHTML = "";
 
-  blink();
+  const current = document.createElement("div");
+  current.className = "station current";
+  current.textContent = stations[index];
+  area.appendChild(current);
 
-  const st = stations[idx];
-
-  if(!st.s){
-    setTimeout(()=>{
-      show(st.n + "（通過）");
-      idx++;
-      render();
-    },120);
-    return;
+  if (index + 1 < stations.length) {
+    const next = document.createElement("div");
+    next.className = "station next";
+    next.textContent = stations[index + 1];
+    area.appendChild(next);
   }
 
-  if(phase === 0){
-    setTimeout(()=>{
-      show(st.n);
-      phase = 1;
-    },120);
-  }else{
-    setTimeout(()=>{
-      show("停車中");
-      idx++;
-      phase = 0;
-      render();
-    },120);
+  if (index + 2 < stations.length) {
+    const after = document.createElement("div");
+    after.className = "station";
+    after.textContent = stations[index + 2];
+    area.appendChild(after);
   }
 }
 
-/* 表示更新 */
-function render(){
-  const a = stations[idx]?.n || "終点";
-  const b = stations[idx+1]?.n || "";
-  const c = stations[idx+2]?.n || "";
+/* ===== 次駅処理 ===== */
+function nextStation() {
+  if (index + 1 >= stations.length) return;
 
-  show(a);
-  document.getElementById("stationList").innerHTML =
-    `<div>${a}</div><div>${b}</div><div>${c}</div>`;
-}
+  const area = document.getElementById("stations");
+  area.classList.add("fade");
 
-/* 次駅表示（確定仕様） */
-function show(stationName){
-  const e = document.getElementById("nextStation");
-  e.textContent = "次　" + stationName;
-
-  if(stationName.includes("巌根")){
-    e.style.color = "#4aa3ff"; // 巌根だけ青
-  }else{
-    e.style.color = "#ffffff"; // それ以外は白
-  }
-}
-
-function blink(){
-  const e = document.getElementById("nextStation");
-  e.style.opacity = 0;
-  setTimeout(()=>e.style.opacity = 1,80);
-}
-
-/* 画面遷移 */
-function enterMain(){
-  document.getElementById("initial").classList.remove("active");
-  document.getElementById("main").classList.add("active");
-}
-function goHome(){
-  if(emergency) return;
-  document.getElementById("main").classList.remove("active");
-  document.getElementById("initial").classList.add("active");
-}
-
-/* 非常 */
-function openReason(){
-  if(!emergency) document.getElementById("reason").classList.add("active");
-}
-function startEmergency(r){
-  emergency = true;
-  document.getElementById("reason").classList.remove("active");
-  document.getElementById("emergency").classList.add("active");
-  document.getElementById("emText").textContent = r;
-}
-function releaseEmergency(){
-  emergency = false;
-  document.getElementById("emergency").classList.remove("active");
+  setTimeout(() => {
+    index++;
+    render();
+    area.classList.remove("fade");
+  }, 150);
 }
 </script>
 
