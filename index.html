@@ -12,21 +12,17 @@ body{
   font-family:sans-serif;
 }
 
-button{
-  background:#111;
-  color:#fff;
-  border:1px solid #555;
-  padding:14px 22px;
-  font-size:18px;
-}
-
+/* 固定ボタン */
 #homeBtn{
   position:fixed;
   top:10px;
   right:10px;
   z-index:1000;
+  padding:12px 20px;
+  font-size:18px;
 }
 
+/* 画面 */
 .screen{
   display:none;
   height:100vh;
@@ -36,24 +32,45 @@ button{
 }
 .screen.active{display:flex;}
 
-.box{
-  border:1px solid #555;
-  padding:20px;
-  text-align:center;
+/* 表示 */
+#route{
+  font-size:26px;
+  margin-bottom:10px;
+}
+#nextStation{
+  font-size:40px;
+  margin:15px;
+  color:yellow;
+  transition:opacity .1s;
+}
+#stationList{
+  font-size:22px;
+  color:#fff;
+  line-height:1.6;
 }
 
-#status{color:#0f0; font-size:20px; margin-bottom:20px;}
+/* ボタン */
+button{
+  cursor:pointer;
+  margin:10px;
+}
 
-.redBtn{
-  background:#c00;
-  font-size:24px;
+.bigBtn{
+  font-size:26px;
   padding:20px 40px;
 }
 
-.yellowText{color:#ff0;}
-.whiteText{color:#fff;}
-.blueText{color:#4af;}
+.red{
+  background:#c00;
+  color:#fff;
+}
 
+.yellow{
+  background:#ffd800;
+  color:#000;
+}
+
+/* 非常 */
 .overlay{
   position:fixed;
   inset:0;
@@ -65,21 +82,24 @@ button{
 }
 .overlay.active{display:flex;}
 
+.box{
+  border:2px solid red;
+  padding:30px;
+  max-width:600px;
+  text-align:center;
+}
+
 .reasonBtn{
-  font-size:22px;
-  padding:18px 30px;
+  font-size:24px;
+  padding:16px 30px;
   margin:8px;
 }
 
-.bigVertical{
-  width:120px;
-  height:120px;
-  font-size:22px;
+.redText{
+  color:red;
+  font-size:26px;
 }
-
-.fade{
-  opacity:0;
-}
+.blue{color:#4aa3ff;}
 </style>
 </head>
 
@@ -90,40 +110,26 @@ button{
 <!-- 初期 -->
 <div id="initial" class="screen active">
   <h2>初期選択</h2>
-  <button onclick="enterMain('driver')">運転士</button>
-  <button onclick="enterMain('conductor')">車掌</button>
-  <button onclick="enterMain('one')">ワンマン</button>
+  <button class="bigBtn" onclick="enterMain()">運転士</button>
+  <button class="bigBtn" onclick="enterMain()">車掌</button>
+  <button class="bigBtn" onclick="enterMain()">ワンマン</button>
 </div>
 
 <!-- メイン -->
 <div id="main" class="screen">
-  <div class="box">
-    <div>路線：内房線・総武快速線</div>
-    <div>区間：君津 → 東京</div>
-    <div>種別：快速</div>
-    <div id="status">平常運転</div>
-  </div>
+  <div id="route">内房線・総武快速線（君津 → 東京）</div>
 
-  <div id="nextArea" style="margin-top:20px;">
-    <div id="nextStation" class="yellowText" style="font-size:22px;"></div>
-    <div id="threeStations" class="whiteText" style="margin-top:10px;"></div>
-    <div id="tempStatus"></div>
-  </div>
+  <div id="nextStation"></div>
+  <div id="stationList"></div>
 
-  <button onclick="nextStation()" style="margin-top:20px;">次駅</button>
-
-  <div style="margin-top:20px;">
-    <button class="bigVertical" onclick="semiOn()">半自動入</button>
-    <button class="bigVertical" onclick="semiOff()">半自動切</button>
-    <div id="semiState" style="margin-top:10px;color:#0f0;">半自動 OFF</div>
-  </div>
-
-  <button class="redBtn" style="margin-top:30px;" onclick="openReason()">非常</button>
+  <button class="bigBtn" onclick="nextStation()">次駅</button>
+  <button class="bigBtn red" onclick="openReason()">非常</button>
 </div>
 
 <!-- 非常理由 -->
-<div id="reasonOverlay" class="overlay">
+<div id="reason" class="overlay">
   <div class="box">
+    <p class="redText">非常理由を選択</p>
     <button class="reasonBtn" onclick="startEmergency('人身事故')">人身事故</button><br>
     <button class="reasonBtn" onclick="startEmergency('地震')">地震</button><br>
     <button class="reasonBtn" onclick="startEmergency('線路内侵入')">線路内侵入</button><br>
@@ -132,117 +138,131 @@ button{
 </div>
 
 <!-- 非常表示 -->
-<div id="emergencyOverlay" class="overlay">
+<div id="emergency" class="overlay">
   <div class="box">
-    <div id="emText" style="color:red;font-size:22px;"></div>
-    <button style="background:#ffd800;color:#000;font-size:22px;margin-top:20px;"
-      onclick="confirmRelease()">非常解除</button>
+    <p id="emText" class="redText"></p>
+    <button class="bigBtn yellow" onclick="releaseEmergency()">非常解除</button>
   </div>
 </div>
 
 <script>
-let role="";
-let emergency=false;
-let confirm=false;
-
-const stations=[
-  "君津","木更津","巌根","袖ヶ浦","長浦","姉ヶ崎",
-  "五井","八幡宿","浜野","蘇我","本千葉","千葉",
-  "津田沼","船橋","市川","新小岩","馬喰町",
-  "錦糸町","新日本橋","東京"
+/* ===== 駅データ ===== */
+const stations = [
+ {n:"君津",s:true},
+ {n:"木更津",s:true},
+ {n:"巌根",s:false},
+ {n:"袖ヶ浦",s:true},
+ {n:"長浦",s:true},
+ {n:"姉ヶ崎",s:true},
+ {n:"五井",s:true},
+ {n:"八幡宿",s:true},
+ {n:"浜野",s:true},
+ {n:"蘇我",s:true},
+ {n:"本千葉",s:true},
+ {n:"千葉",s:true},
+ {n:"津田沼",s:true},
+ {n:"船橋",s:true},
+ {n:"市川",s:true},
+ {n:"新小岩",s:true},
+ {n:"馬喰町",s:true},
+ {n:"錦糸町",s:true},
+ {n:"新日本橋",s:true},
+ {n:"東京",s:true}
 ];
 
-let index=0;
-let press=0;
+let i = 0;
+let phase = 0;
+let emergency = false;
 
-function enterMain(r){
-  role=r;
-  initial.classList.remove("active");
-  main.classList.add("active");
-  updateDisplay();
-}
+/* 初期表示 */
+update();
 
-function goHome(){
-  if(emergency) return;
-  main.classList.remove("active");
-  initial.classList.add("active");
-}
-
+/* 次駅 */
 function nextStation(){
-  press++;
-  fadeUpdate(()=>{
-    if(stations[index]==="巌根" && press===1){
-      show("次駅：巌根（通過）",true);
-    }else{
-      if(press>=2){
-        showStop();
-        index++;
-        press=0;
-      }
-    }
-  });
+ if(emergency) return;
+ if(i >= stations.length) return;
+
+ const st = stations[i];
+ blink();
+
+ if(!st.s){
+   setTimeout(()=>{
+     show(st.n+"（通過）","blue");
+     i++;
+     update();
+   },200);
+   return;
+ }
+
+ if(phase===0){
+   setTimeout(()=>{
+     show(st.n,"yellow");
+     phase=1;
+   },200);
+ }else{
+   setTimeout(()=>{
+     show("停車中","#fff");
+     i++;
+     phase=0;
+     update();
+   },200);
+ }
 }
 
-function showStop(){
-  tempStatus.textContent="停車中";
-  setTimeout(()=>tempStatus.textContent="",800);
-  updateDisplay();
+/* 表示更新 */
+function update(){
+ const a = stations[i]?.n || "終点";
+ const b = stations[i+1]?.n || "";
+ const c = stations[i+2]?.n || "";
+ document.getElementById("nextStation").textContent = a;
+ document.getElementById("stationList").innerHTML =
+   `<div>${a}</div><div>${b}</div><div>${c}</div>`;
 }
 
-function updateDisplay(){
-  const next=stations[index]||"";
-  nextStationDiv.innerHTML="";
-  nextStationDiv.textContent="次駅："+next;
-  threeStations.textContent=
-    (stations[index]||"")+" / "+
-    (stations[index+1]||"")+" / "+
-    (stations[index+2]||"");
-  if(next==="巌根"){
-    nextStationDiv.innerHTML="次駅：<span class='blueText'>巌根（通過）</span>";
-  }
+/* 表示系 */
+function show(t,c){
+ const e=document.getElementById("nextStation");
+ e.textContent=t;
+ e.style.color=c;
+}
+function blink(){
+ const e=document.getElementById("nextStation");
+ e.style.opacity=0;
+ setTimeout(()=>e.style.opacity=1,80);
 }
 
-function fadeUpdate(fn){
-  nextArea.classList.add("fade");
-  setTimeout(()=>{
-    fn();
-    nextArea.classList.remove("fade");
-  },200);
+/* 画面遷移 */
+function enterMain(){
+ document.getElementById("initial").classList.remove("active");
+ document.getElementById("main").classList.add("active");
+}
+function goHome(){
+ if(emergency) return;
+ document.getElementById("main").classList.remove("active");
+ document.getElementById("initial").classList.add("active");
 }
 
-function semiOn(){
-  semiState.textContent="半自動 ON";
-  semiState.style.color="#0f0";
-}
-function semiOff(){
-  semiState.textContent="半自動 OFF";
-  semiState.style.color="#0f0";
-}
-
+/* 非常 */
 function openReason(){
-  if(emergency) return;
-  reasonOverlay.classList.add("active");
+ if(emergency) return;
+ document.getElementById("reason").classList.add("active");
 }
-
 function startEmergency(r){
-  emergency=true;
-  reasonOverlay.classList.remove("active");
-  emText.textContent=message(r);
-  emergencyOverlay.classList.add("active");
+ emergency=true;
+ document.getElementById("reason").classList.remove("active");
+ document.getElementById("emergency").classList.add("active");
+ document.getElementById("emText").textContent =
+   r+"："+
+   ({
+     "人身事故":"直ちに消防・警察・車掌に連絡",
+     "地震":"高台へ避難、車掌・指令と連携",
+     "線路内侵入":"他列車・警察に連絡",
+     "火災":"窓を閉め避難、トンネル内停車回避"
+   })[r];
 }
-
-function confirmRelease(){
-  emergency=false;
-  emergencyOverlay.classList.remove("active");
-}
-
-function message(r){
-  return {
-    "人身事故":"直ちに消防・警察・車掌に連絡",
-    "地震":"高台避難・指令に報告",
-    "線路内侵入":"他列車・警察に連絡",
-    "火災":"窓閉鎖・乗客避難・トンネル停車回避"
-  }[r];
+function releaseEmergency(){
+ emergency=false;
+ document.getElementById("emergency").classList.remove("active");
 }
 </script>
 
