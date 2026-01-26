@@ -2,201 +2,141 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>運転支援システム</title>
-
+<title>運転情報表示（完成版）</title>
 <style>
-body{
-  margin:0;
-  background:#000;
-  color:#fff;
-  font-family:sans-serif;
-  letter-spacing:0.02em;
+body {
+  margin: 0;
+  background: #000;
+  color: #fff;
+  font-family: "Meiryo", sans-serif;
 }
 
-button{
-  cursor:pointer;
-  border:none;
-  border-radius:6px;
+#top {
+  background: #111;
+  padding: 12px;
+  font-size: 26px;
+  text-align: center;
+  border-bottom: 3px solid #333;
 }
 
-.hidden{display:none;}
-
-#homeBtn{
-  position:fixed;
-  top:10px;
-  right:10px;
-  z-index:500;
-  padding:12px 18px;
-  font-size:16px;
+#route {
+  font-size: 18px;
+  color: #aaa;
 }
 
-.screen{
-  display:none;
-  height:100vh;
-  justify-content:center;
-  align-items:center;
-  flex-direction:column;
-}
-.screen.active{display:flex;}
-
-.initial-btn{
-  width:260px;
-  padding:20px;
-  font-size:22px;
-  margin:12px;
+#main {
+  padding: 20px;
 }
 
-#status{
-  font-size:26px;
-  margin:20px;
-}
-.normal{color:#0f0;}
-.emergency{color:red;font-weight:bold;}
-
-.red{
-  background:#c00;
-  color:#fff;
-  font-size:26px;
-  padding:22px 40px;
+#nextBox {
+  border: 3px solid #ff0;
+  padding: 15px;
+  font-size: 32px;
+  margin-bottom: 20px;
 }
 
-.overlay{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.9);
-  display:none;
-  align-items:center;
-  justify-content:center;
-  z-index:300;
-}
-.overlay.active{display:flex;}
-
-.box{
-  border:3px solid red;
-  padding:30px;
-  width:520px;
-  background:#000;
-  text-align:center;
-  font-size:22px;
+#nextLabel {
+  color: #ff0;
+  margin-right: 10px;
 }
 
-.reason-btn{
-  width:100%;
-  padding:18px;
-  font-size:22px;
-  margin:10px 0;
+#stations {
+  border: 2px solid #444;
+  padding: 10px;
+  height: 120px;
+  overflow: hidden;
+  font-size: 22px;
 }
 
-.yellow{
-  background:#ffd800;
-  color:#000;
-  font-size:24px;
-  padding:20px 40px;
-  margin-top:30px;
+.station {
+  padding: 4px 0;
 }
 
-.blink{
-  animation:blink 1s infinite;
+#buttons {
+  margin-top: 20px;
+  display: flex;
+  gap: 20px;
 }
-@keyframes blink{
-  0%{opacity:1;}
-  50%{opacity:0;}
-  100%{opacity:1;}
+
+button {
+  flex: 1;
+  font-size: 24px;
+  padding: 20px;
+  border: none;
+  cursor: pointer;
+}
+
+#nextBtn {
+  background: #222;
+  color: #fff;
+}
+
+#emergencyBtn {
+  background: red;
+  color: white;
 }
 </style>
 </head>
-
 <body>
 
-<button id="homeBtn" onclick="goHome()">初期選択</button>
-
-<div id="initialScreen" class="screen active">
-  <h2>初期選択</h2>
-  <button class="initial-btn" onclick="enterMain()">運転士</button>
-  <button class="initial-btn" onclick="enterMain()">車掌</button>
-  <button class="initial-btn" onclick="enterMain()">ワンマン</button>
+<div id="top">
+  内房線・総武快速線（ワンマン）
+  <div id="route">君津 → 東京</div>
 </div>
 
-<div id="mainScreen" class="screen">
-  <div id="status" class="normal">平常運転しています</div>
-  <button class="red" onclick="openReason()">非常</button>
-</div>
-
-<div id="reasonOverlay" class="overlay">
-  <div class="box">
-    <p>非常理由を選択</p>
-    <button class="reason-btn" onclick="startEmergency('人身事故')">人身事故</button>
-    <button class="reason-btn" onclick="startEmergency('地震')">地震</button>
-    <button class="reason-btn" onclick="startEmergency('線路内侵入')">線路内侵入</button>
-    <button class="reason-btn" onclick="startEmergency('火災')">火災</button>
+<div id="main">
+  <div id="nextBox">
+    <span id="nextLabel">次</span>
+    <span id="nextStation">君津</span>
   </div>
-</div>
 
-<div id="messageOverlay" class="overlay">
-  <div class="box">
-    <p id="emergencyText" class="blink"></p>
-    <button class="yellow" onclick="releaseEmergency()">非常解除</button>
+  <div id="stations"></div>
+
+  <div id="buttons">
+    <button id="nextBtn">次駅</button>
+    <button id="emergencyBtn">非常</button>
   </div>
 </div>
 
 <script>
-let emergency=false;
+const stations = [
+  "君津","木更津","袖ヶ浦","長浦","姉ヶ崎","五井",
+  "八幡宿","浜野","蘇我","本千葉","千葉",
+  "津田沼","船橋","市川","新小岩",
+  "馬喰町","錦糸町","新日本橋","東京"
+];
 
-function hideAll(){
-  document.querySelectorAll('.overlay')
-    .forEach(o=>o.classList.remove('active'));
+let index = 0;
+
+const nextStationEl = document.getElementById("nextStation");
+const stationsEl = document.getElementById("stations");
+
+function renderStations() {
+  stationsEl.innerHTML = "";
+  for (let i = index; i < index + 3 && i < stations.length; i++) {
+    const div = document.createElement("div");
+    div.className = "station";
+    div.textContent = stations[i];
+    stationsEl.appendChild(div);
+  }
 }
 
-function enterMain(){
-  document.getElementById("initialScreen").classList.remove("active");
-  document.getElementById("mainScreen").classList.add("active");
-}
+document.getElementById("nextBtn").onclick = () => {
+  if (index < stations.length - 1) {
+    index++;
+    nextStationEl.textContent = stations[index];
+    renderStations();
+  } else {
+    nextStationEl.textContent = "終点 東京";
+    document.getElementById("nextBtn").disabled = true;
+  }
+};
 
-function goHome(){
-  if(emergency) return;
-  document.getElementById("mainScreen").classList.remove("active");
-  document.getElementById("initialScreen").classList.add("active");
-}
+document.getElementById("emergencyBtn").onclick = () => {
+  alert("非常ブレーキ作動");
+};
 
-function openReason(){
-  if(emergency) return;
-  hideAll();
-  document.getElementById("reasonOverlay").classList.add("active");
-}
-
-function startEmergency(reason){
-  emergency=true;
-  hideAll();
-  document.getElementById("homeBtn").classList.add("hidden");
-
-  const status=document.getElementById("status");
-  status.textContent="非常モードです。安全を確認してください";
-  status.className="emergency";
-
-  document.getElementById("emergencyText").textContent=
-    reason+"：\n"+messageFor(reason);
-
-  document.getElementById("messageOverlay").classList.add("active");
-}
-
-function releaseEmergency(){
-  emergency=false;
-  hideAll();
-  document.getElementById("homeBtn").classList.remove("hidden");
-
-  const status=document.getElementById("status");
-  status.textContent="平常運転しています";
-  status.className="normal";
-}
-
-function messageFor(r){
-  return {
-    "人身事故":"直ちに警察・消防・指令に連絡",
-    "地震":"安全確認後、指令に報告",
-    "線路内侵入":"列車防護を実施",
-    "火災":"乗客を安全な場所へ誘導"
-  }[r];
-}
+renderStations();
 </script>
 
 </body>
