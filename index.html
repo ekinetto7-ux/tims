@@ -18,8 +18,8 @@ body{
   top:10px;
   right:10px;
   z-index:1000;
-  padding:12px 20px;
-  font-size:18px;
+  padding:14px 22px;
+  font-size:20px;
 }
 
 /* 画面 */
@@ -32,39 +32,50 @@ body{
 }
 .screen.active{display:flex;}
 
-/* 表示 */
+/* 路線表示 */
 #route{
-  font-size:26px;
-  margin-bottom:10px;
-}
-#nextStation{
-  font-size:40px;
-  margin:15px;
-  color:yellow;
-  transition:opacity .1s;
-}
-#stationList{
-  font-size:22px;
-  color:#fff;
-  line-height:1.6;
+  font-size:28px;
+  margin-bottom:15px;
 }
 
-/* ボタン */
+/* 次駅 */
+#nextStation{
+  font-size:44px;
+  margin:20px;
+  color:yellow;
+  transition:opacity .15s;
+}
+
+/* 3駅表示 */
+#stationList{
+  font-size:24px;
+  line-height:1.7;
+  color:#fff;
+  margin-bottom:20px;
+}
+
+/* ボタン共通 */
 button{
   cursor:pointer;
   margin:10px;
 }
 
+/* 初期選択（特大） */
+.startBtn{
+  font-size:32px;
+  padding:28px 60px;
+}
+
+/* 通常大 */
 .bigBtn{
   font-size:26px;
-  padding:20px 40px;
+  padding:22px 44px;
 }
 
 .red{
   background:#c00;
   color:#fff;
 }
-
 .yellow{
   background:#ffd800;
   color:#000;
@@ -90,9 +101,9 @@ button{
 }
 
 .reasonBtn{
-  font-size:24px;
-  padding:16px 30px;
-  margin:8px;
+  font-size:26px;
+  padding:18px 36px;
+  margin:10px;
 }
 
 .redText{
@@ -107,12 +118,12 @@ button{
 
 <button id="homeBtn" onclick="goHome()">初期選択</button>
 
-<!-- 初期 -->
+<!-- 初期画面 -->
 <div id="initial" class="screen active">
   <h2>初期選択</h2>
-  <button class="bigBtn" onclick="enterMain()">運転士</button>
-  <button class="bigBtn" onclick="enterMain()">車掌</button>
-  <button class="bigBtn" onclick="enterMain()">ワンマン</button>
+  <button class="startBtn" onclick="enterMain()">運転士</button>
+  <button class="startBtn" onclick="enterMain()">車掌</button>
+  <button class="startBtn" onclick="enterMain()">ワンマン</button>
 </div>
 
 <!-- メイン -->
@@ -130,14 +141,14 @@ button{
 <div id="reason" class="overlay">
   <div class="box">
     <p class="redText">非常理由を選択</p>
-    <button class="reasonBtn" onclick="startEmergency('人身事故')">人身事故</button><br>
-    <button class="reasonBtn" onclick="startEmergency('地震')">地震</button><br>
-    <button class="reasonBtn" onclick="startEmergency('線路内侵入')">線路内侵入</button><br>
+    <button class="reasonBtn" onclick="startEmergency('人身事故')">人身事故</button>
+    <button class="reasonBtn" onclick="startEmergency('地震')">地震</button>
+    <button class="reasonBtn" onclick="startEmergency('線路内侵入')">線路内侵入</button>
     <button class="reasonBtn" onclick="startEmergency('火災')">火災</button>
   </div>
 </div>
 
-<!-- 非常表示 -->
+<!-- 非常中 -->
 <div id="emergency" class="overlay">
   <div class="box">
     <p id="emText" class="redText"></p>
@@ -146,7 +157,7 @@ button{
 </div>
 
 <script>
-/* ===== 駅データ ===== */
+/* 駅データ */
 const stations = [
  {n:"君津",s:true},
  {n:"木更津",s:true},
@@ -170,57 +181,60 @@ const stations = [
  {n:"東京",s:true}
 ];
 
-let i = 0;
+let idx = 0;
 let phase = 0;
 let emergency = false;
 
 /* 初期表示 */
-update();
+renderStations();
 
-/* 次駅 */
+/* 次駅ボタン */
 function nextStation(){
- if(emergency) return;
- if(i >= stations.length) return;
+ if(emergency || idx >= stations.length) return;
 
- const st = stations[i];
  blink();
+
+ const st = stations[idx];
 
  if(!st.s){
    setTimeout(()=>{
-     show(st.n+"（通過）","blue");
-     i++;
-     update();
-   },200);
+     showNext(st.n+"（通過）","blue");
+     idx++;
+     renderStations();
+   },150);
    return;
  }
 
  if(phase===0){
    setTimeout(()=>{
-     show(st.n,"yellow");
+     showNext(st.n,"yellow");
      phase=1;
-   },200);
+   },150);
  }else{
    setTimeout(()=>{
-     show("停車中","#fff");
-     i++;
+     showNext("停車中","#fff");
+     idx++;
      phase=0;
-     update();
-   },200);
+     renderStations();
+   },150);
  }
 }
 
-/* 表示更新 */
-function update(){
- const a = stations[i]?.n || "終点";
- const b = stations[i+1]?.n || "";
- const c = stations[i+2]?.n || "";
+/* 表示更新（★ここが直った） */
+function renderStations(){
+ const a = stations[idx]?.n || "終点";
+ const b = stations[idx+1]?.n || "";
+ const c = stations[idx+2]?.n || "";
+
  document.getElementById("nextStation").textContent = a;
+ document.getElementById("nextStation").style.color = "yellow";
+
  document.getElementById("stationList").innerHTML =
    `<div>${a}</div><div>${b}</div><div>${c}</div>`;
 }
 
-/* 表示系 */
-function show(t,c){
+/* 表示補助 */
+function showNext(t,c){
  const e=document.getElementById("nextStation");
  e.textContent=t;
  e.style.color=c;
