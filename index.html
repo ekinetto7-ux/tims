@@ -2,73 +2,80 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>運転情報表示（完成版）</title>
+<title>運転情報表示 完成</title>
+
 <style>
 body {
   margin: 0;
   background: #000;
   color: #fff;
-  font-family: "Meiryo", sans-serif;
+  font-family: Meiryo, sans-serif;
 }
 
-#top {
+/* 上部 */
+#header {
   background: #111;
   padding: 12px;
-  font-size: 26px;
   text-align: center;
-  border-bottom: 3px solid #333;
+  font-size: 26px;
+  border-bottom: 3px solid #444;
 }
 
-#route {
+#line {
   font-size: 18px;
-  color: #aaa;
+  color: #ccc;
 }
 
-#main {
+/* メイン */
+#container {
   padding: 20px;
 }
 
-#nextBox {
-  border: 3px solid #ff0;
-  padding: 15px;
-  font-size: 32px;
+/* 次駅 */
+#nextArea {
+  border: 4px solid yellow;
+  padding: 16px;
+  font-size: 34px;
   margin-bottom: 20px;
 }
 
-#nextLabel {
-  color: #ff0;
-  margin-right: 10px;
+#nextMark {
+  color: yellow;
+  margin-right: 12px;
 }
 
-#stations {
-  border: 2px solid #444;
+/* 停車駅 */
+#stationList {
+  border: 3px solid #666;
   padding: 10px;
-  height: 120px;
-  overflow: hidden;
-  font-size: 22px;
+  height: 140px;
+  font-size: 24px;
+  background: #111;
 }
 
 .station {
+  color: white;
   padding: 4px 0;
 }
 
+/* ボタン */
 #buttons {
-  margin-top: 20px;
   display: flex;
   gap: 20px;
+  margin-top: 25px;
 }
 
 button {
   flex: 1;
-  font-size: 24px;
-  padding: 20px;
-  border: none;
+  font-size: 26px;
+  padding: 22px;
   cursor: pointer;
+  border: none;
 }
 
 #nextBtn {
   background: #222;
-  color: #fff;
+  color: white;
 }
 
 #emergencyBtn {
@@ -77,25 +84,28 @@ button {
 }
 </style>
 </head>
+
 <body>
 
-<div id="top">
+<div id="header">
   内房線・総武快速線（ワンマン）
-  <div id="route">君津 → 東京</div>
+  <div id="line">君津 → 東京</div>
 </div>
 
-<div id="main">
-  <div id="nextBox">
-    <span id="nextLabel">次</span>
-    <span id="nextStation">君津</span>
+<div id="container">
+
+  <div id="nextArea">
+    <span id="nextMark">次</span>
+    <span id="nextStation"></span>
   </div>
 
-  <div id="stations"></div>
+  <div id="stationList"></div>
 
   <div id="buttons">
     <button id="nextBtn">次駅</button>
     <button id="emergencyBtn">非常</button>
   </div>
+
 </div>
 
 <script>
@@ -106,37 +116,43 @@ const stations = [
   "馬喰町","錦糸町","新日本橋","東京"
 ];
 
-let index = 0;
+let current = 0;
 
 const nextStationEl = document.getElementById("nextStation");
-const stationsEl = document.getElementById("stations");
+const stationListEl = document.getElementById("stationList");
+const nextBtn = document.getElementById("nextBtn");
 
-function renderStations() {
-  stationsEl.innerHTML = "";
-  for (let i = index; i < index + 3 && i < stations.length; i++) {
+/* 初期表示 */
+function render() {
+  nextStationEl.textContent = stations[current];
+
+  stationListEl.innerHTML = "";
+  for (let i = current; i < current + 3 && i < stations.length; i++) {
     const div = document.createElement("div");
     div.className = "station";
     div.textContent = stations[i];
-    stationsEl.appendChild(div);
+    stationListEl.appendChild(div);
   }
 }
 
-document.getElementById("nextBtn").onclick = () => {
-  if (index < stations.length - 1) {
-    index++;
-    nextStationEl.textContent = stations[index];
-    renderStations();
+/* 次駅ボタン */
+nextBtn.onclick = () => {
+  if (current < stations.length - 1) {
+    current++;
+    render();
   } else {
     nextStationEl.textContent = "終点 東京";
-    document.getElementById("nextBtn").disabled = true;
+    nextBtn.disabled = true;
   }
 };
 
+/* 非常 */
 document.getElementById("emergencyBtn").onclick = () => {
   alert("非常ブレーキ作動");
 };
 
-renderStations();
+/* 確実に初期描画 */
+render();
 </script>
 
 </body>
