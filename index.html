@@ -11,17 +11,13 @@ body{
   color:#fff;
   font-family:sans-serif;
 }
-
 .hidden{display:none;}
 
 button{
   cursor:pointer;
-  border:none;
-  border-radius:6px;
   font-family:sans-serif;
 }
 
-/* 共通画面 */
 .screen{
   display:none;
   height:100vh;
@@ -31,18 +27,6 @@ button{
 }
 .screen.active{display:flex;}
 
-/* 初期選択 */
-#initialScreen button{
-  width:220px;
-  height:100px;
-  font-size:26px;
-  background:#111;
-  color:#fff;
-  border:2px solid #666;
-  margin:12px;
-}
-
-/* 右上固定 */
 #homeBtn{
   position:fixed;
   top:10px;
@@ -55,17 +39,28 @@ button{
   border:2px solid #666;
 }
 
-/* 運転情報 */
+/* 初期選択 */
+#initialScreen button{
+  width:220px;
+  height:100px;
+  font-size:26px;
+  background:#111;
+  color:#fff;
+  border:2px solid #666;
+  margin:12px;
+}
+
+/* 情報表示 */
 #infoBox{
   border:2px solid #444;
   padding:30px 50px;
   margin-bottom:30px;
   text-align:center;
 }
-
 .normal{color:#0f0;}
 .emergency{color:red;font-weight:bold;}
 
+/* ボタン */
 .red{
   background:#c00;
   color:#fff;
@@ -73,7 +68,6 @@ button{
   padding:20px 50px;
   border:2px solid #ff6666;
 }
-
 .yellow{
   background:#ffd800;
   color:#000;
@@ -89,7 +83,6 @@ button{
   gap:40px;
   margin-top:20px;
 }
-
 .semiBtn{
   width:120px;
   height:160px;
@@ -98,18 +91,18 @@ button{
   color:#fff;
   border:2px solid #666;
 }
+#semiAutoIndicator{margin-top:20px;}
+.lamp{font-size:20px;color:#666;}
+.lamp.active{color:#0f0;font-weight:bold;}
 
-#semiAutoIndicator{
-  margin-top:20px;
-}
-
-.lamp{
-  font-size:20px;
-  color:#666;
-}
-.lamp.active{
-  color:#0f0;
-  font-weight:bold;
+/* ドア */
+.doorBtn{
+  width:200px;
+  height:100px;
+  font-size:28px;
+  background:#111;
+  color:#fff;
+  border:2px solid #666;
 }
 
 /* オーバーレイ */
@@ -123,7 +116,6 @@ button{
   z-index:300;
 }
 .overlay.active{display:flex;}
-
 .box{
   border:2px solid red;
   padding:30px;
@@ -131,26 +123,14 @@ button{
   background:#000;
   text-align:center;
 }
-
 .blink{
-  animation: blink 1s infinite;
+  animation:blink 1s infinite;
 }
 @keyframes blink{
   0%{opacity:1;}
   50%{opacity:0;}
   100%{opacity:1;}
 }
-
-/* ドア */
-.doorBtn{
-  width:200px;
-  height:100px;
-  font-size:28px;
-  background:#111;
-  color:#fff;
-  border:2px solid #666;
-}
-.doorDisabled{opacity:0.4;}
 </style>
 </head>
 
@@ -200,7 +180,7 @@ button{
   <button class="red" onclick="pressEmergency()">非常</button>
 </div>
 
-<!-- ドアメニュー -->
+<!-- ドア画面 -->
 <div id="doorMenuScreen" class="screen">
   <div id="doorStatus">ドア：閉</div><br>
   <button class="doorBtn" onclick="doorOpen()">ドア開</button><br><br>
@@ -233,13 +213,24 @@ let emergency=false;
 let semiAuto=false;
 let doorState="closed";
 
-function hideAll(){
-  document.querySelectorAll('.overlay').forEach(o=>o.classList.remove("active"));
+/* ★ 表示ズレ防止の要 ★ */
+function updateStatus(text, cls){
+  if(role==="oneMan"){
+    statusOneMan.textContent=text;
+    statusOneMan.className=cls;
+  }else{
+    status.textContent=text;
+    status.className=cls;
+  }
+}
+
+function hideOverlays(){
+  document.querySelectorAll(".overlay").forEach(o=>o.classList.remove("active"));
 }
 
 function enterMain(r){
   role=r;
-  document.getElementById("initialScreen").classList.remove("active");
+  initialScreen.classList.remove("active");
   (r==="oneMan"?oneManScreen:mainScreen).classList.add("active");
 }
 
@@ -254,24 +245,17 @@ function goHome(){
 function pressEmergency(){
   if(emergency){
     messageOverlay.classList.add("active");
-    return;
+  }else{
+    reasonOverlay.classList.add("active");
   }
-  reasonOverlay.classList.add("active");
 }
 
 function startEmergency(reason){
   emergency=true;
-  hideAll();
+  hideOverlays();
   homeBtn.classList.add("hidden");
 
-  if(role==="oneMan"){
-    statusOneMan.textContent="状態：非常";
-    statusOneMan.className="emergency";
-  }else{
-    status.textContent="状態：非常";
-    status.className="emergency";
-  }
-
+  updateStatus("状態：非常","emergency");
   emergencyText.textContent = reason + "：対応を行ってください";
   messageOverlay.classList.add("active");
 
@@ -281,16 +265,9 @@ function startEmergency(reason){
 
 function releaseEmergency(){
   emergency=false;
-  hideAll();
+  hideOverlays();
   homeBtn.classList.remove("hidden");
-
-  if(role==="oneMan"){
-    statusOneMan.textContent="状態：平常運転";
-    statusOneMan.className="normal";
-  }else{
-    status.textContent="状態：平常運転";
-    status.className="normal";
-  }
+  updateStatus("状態：平常運転","normal");
 }
 
 function semiAutoOn(){ if(!emergency){semiAuto=true;updateSemi();}}
@@ -306,7 +283,6 @@ function openDoorMenu(){
   oneManScreen.classList.remove("active");
   doorMenuScreen.classList.add("active");
 }
-
 function backToOneMan(){
   doorMenuScreen.classList.remove("active");
   oneManScreen.classList.add("active");
