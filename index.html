@@ -2,281 +2,229 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>運転情報システム</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>運転支援システム</title>
 
 <style>
-body{margin:0;font-family:sans-serif;background:#000;color:#fff}
-.screen{display:none;padding:20px}
-.screen.active{display:block}
-
-button{border:none;border-radius:6px;cursor:pointer}
-.btn{background:#333;color:#fff;padding:12px 18px;margin:6px}
-.btn.big{font-size:18px;padding:16px 22px}
-.btn.yellow{background:#facc15;color:#000;font-weight:800}
-.btn.red{background:red;color:#fff}
-
-/* 初期選択固定 */
-.fixed-home-btn{
-  position:fixed;
-  top:10px;
-  right:10px;
-  z-index:3000;
+body {
+  margin: 0;
+  font-family: sans-serif;
+  background: #000;
+  color: #0f0;
 }
 
-/* 運転情報 */
-.op-status{font-size:18px;margin-bottom:10px}
-.op-status.normal{color:#0f0}
-.op-status.emergency{color:red;font-weight:900}
-
-/* 次駅・走行 */
-#nextStation{font-size:26px;color:#facc15;font-weight:800;display:none}
-#runningSection{font-size:22px;color:#facc15;display:none}
-#runningArrow{font-size:28px;color:#facc15;display:none}
-.blink-arrow{animation:blink 1s step-start infinite}
-@keyframes blink{50%{opacity:0}}
-
-#stopDisplay{
-  font-size:28px;
-  color:#facc15;
-  font-weight:800;
+button {
+  font-size: 16px;
+  padding: 10px;
+  margin: 5px;
 }
 
-/* overlay */
-.overlay{
-  position:fixed;inset:0;
-  background:rgba(0,0,0,.85);
-  display:none;
-  z-index:2000;
-  align-items:center;
-  justify-content:center;
+.top-fixed {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 100;
 }
-.overlay.active{display:flex}
-.overlay-box{text-align:center}
+
+.screen {
+  padding: 60px 10px 80px;
+}
+
+.hidden {
+  display: none;
+}
 
 /* 非常表示 */
-#emergencyOverlayText{
-  color:red;
-  font-size:26px;
-  font-weight:900;
-  animation:blink 1s step-start infinite;
-}
-#emergencyDetailText{
-  color:red;
-  font-size:22px;
-  font-weight:800;
-  margin-top:20px;
-  line-height:1.6;
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.95);
+  color: red;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  z-index: 999;
+  flex-direction: column;
 }
 
-/* ロック */
-#lockOverlay{
-  position:fixed;inset:0;
-  display:none;z-index:2500;
+.overlay.active {
+  display: flex;
 }
-#lockOverlay.active{display:block;pointer-events:all}
 
-/* 非常履歴 */
-#logBox{
-  margin-top:20px;
-  border-top:1px solid #555;
-  padding-top:10px;
-  font-size:14px;
+.big {
+  font-size: 22px;
+  margin-bottom: 20px;
 }
-.log-item{margin-bottom:10px}
+
+.yellow {
+  background: yellow;
+  color: black;
+  font-size: 18px;
+  padding: 15px 25px;
+}
+
+/* 操作ロック */
+#lockOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  display: none;
+}
+
+#lockOverlay.active {
+  display: block;
+}
 </style>
 </head>
 
 <body>
 
-<!-- 固定 初期選択 -->
-<div class="fixed-home-btn">
-  <button class="btn" onclick="goHome()">初期選択</button>
+<!-- 初期選択 -->
+<div class="screen" id="initScreen">
+  <h2>初期選択</h2>
+  <button onclick="openMode('driver')">運転士</button>
+  <button onclick="openMode('conductor')">車掌</button>
+  <button onclick="openMode('oneMan')">ワンマン</button>
 </div>
 
-<!-- 初期選択 -->
-<div id="home" class="screen active">
-  <h2>初期選択</h2>
-  <button class="btn big" onclick="openOp()">運転士</button>
-  <button class="btn big" onclick="openOp()">車掌</button>
-  <button class="btn big" onclick="openOp()">ワンマン</button>
+<!-- 右上固定 -->
+<div class="top-fixed hidden" id="homeBtn">
+  <button onclick="goHome()">初期選択</button>
+</div>
+
+<!-- ワンマン画面 -->
+<div class="screen hidden" id="oneManScreen">
+  <h3>ワンマン運用</h3>
+  <button onclick="showDriveInfo()">運転情報</button>
+  <button onclick="showDoor()">ドア開閉</button>
+  <button onclick="pressEmergency()">非常</button>
 </div>
 
 <!-- 運転情報 -->
-<div id="op" class="screen">
-  <div id="opStatus" class="op-status normal">
-    平常運転しています
-  </div>
+<div class="screen hidden" id="driveInfo">
+  <h3>運転情報</h3>
+  <div id="statusText">平常運転しています</div>
+  <div id="nextInfo">次駅：君津</div>
+  <button onclick="nextStation()">次駅</button>
+  <button onclick="showDoor()">ドア開閉</button>
+</div>
 
-  <div id="stopDisplay">君津<br><span style="font-size:20px">停車中</span></div>
-  <div id="nextStation"></div>
-  <div id="runningSection"></div>
-  <div id="runningArrow">▶▶▶</div>
+<!-- ドア -->
+<div class="screen hidden" id="doorScreen">
+  <h3>ドア操作</h3>
+  <button onclick="setDoor('open')">ドア開</button>
+  <button onclick="setDoor('close')">ドア閉</button>
+</div>
 
-  <div style="position:absolute;bottom:20px;right:20px">
-    <button class="btn big" onclick="nextStation()">次駅</button>
-    <button class="btn red big" onclick="emergencyPress()">非常</button>
-  </div>
-
-  <div id="logBox"></div>
+<!-- 非常メイン -->
+<div class="overlay" id="emergencyOverlay">
+  <div class="big">非常モードです。<br>安全を確認してください</div>
 </div>
 
 <!-- 非常理由 -->
-<div id="emergencyReasonOverlay" class="overlay">
-  <div class="overlay-box">
-    <h2 style="color:red">非常理由を選択してください</h2>
-    <button class="btn big red" onclick="selectEmergencyReason('人身事故')">人身事故</button>
-    <button class="btn big red" onclick="selectEmergencyReason('地震')">地震</button>
-    <button class="btn big red" onclick="selectEmergencyReason('線路内立ち入り')">線路内立ち入り</button>
-    <button class="btn big red" onclick="selectEmergencyReason('火災')">火災</button>
-  </div>
+<div class="overlay" id="reasonOverlay">
+  <div class="big">非常理由を選択</div>
+  <button onclick="selectReason('人身事故')">人身事故</button>
+  <button onclick="selectReason('地震')">地震</button>
+  <button onclick="selectReason('線路内侵入')">線路内侵入</button>
+  <button onclick="selectReason('火災')">火災</button>
 </div>
 
-<!-- 非常中 -->
-<div id="emergencyOverlay" class="overlay">
-  <div class="overlay-box">
-    <div id="emergencyOverlayText">
-      非常モードです。<br>安全を確認してください
-    </div>
-    <div id="emergencyDetailText"></div>
-  </div>
-</div>
-
-<!-- 非常解除 -->
-<div id="confirmOverlay" class="overlay">
-  <div class="overlay-box">
-    <div>非常を解除します。よろしいですか</div>
-    <button class="btn yellow big" onclick="releaseEmergency()">非常解除</button>
-  </div>
+<!-- 指示表示 -->
+<div class="overlay" id="instructionOverlay">
+  <div class="big" id="instructionText"></div>
+  <button onclick="confirmRelease()" class="yellow">非常解除</button>
 </div>
 
 <div id="lockOverlay"></div>
 
 <script>
-const stations=[
-  "君津","木更津","袖ヶ浦","長浦","姉ヶ崎",
-  "五井","八幡宿","浜野","蘇我","本千葉",
-  "千葉","津田沼","船橋","市川","新小岩",
+const stations = [
+  "君津","木更津","袖ヶ浦","長浦","姉ヶ崎","五井",
+  "八幡宿","浜野","蘇我","本千葉","千葉",
+  "津田沼","船橋","市川","新小岩",
   "馬喰町","新日本橋","東京"
 ];
 
-let stationIndex=0;   // 出発：君津
-let running=false;
-let emergency=false;
-let logs=[];
+let index = 0;
+let emergency = false;
 
-function now(){
-  const d=new Date();
-  return d.getHours().toString().padStart(2,'0')+":"+
-         d.getMinutes().toString().padStart(2,'0');
+const instructionMap = {
+  "人身事故":"直ちに、消防、警察、車掌に連絡すること",
+  "地震":"直ちに高台に避難すること。車掌と連携し指令に報告",
+  "線路内侵入":"直ちに他の列車に連絡。警察にも連絡",
+  "火災":"窓を全て閉め、乗客を安全な場所へ避難。トンネル内停車を避ける"
+};
+
+function openMode(mode){
+  hideAll();
+  document.getElementById("homeBtn").classList.remove("hidden");
+  if(mode==="oneMan") oneManScreen.classList.remove("hidden");
 }
 
-function openOp(){
-  home.classList.remove('active');
-  op.classList.add('active');
-}
 function goHome(){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  home.classList.add('active');
+  hideAll();
+  initScreen.classList.remove("hidden");
+  homeBtn.classList.add("hidden");
+}
+
+function hideAll(){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.add("hidden"));
+}
+
+function showDriveInfo(){
+  hideAll();
+  driveInfo.classList.remove("hidden");
+}
+
+function showDoor(){
+  hideAll();
+  doorScreen.classList.remove("hidden");
 }
 
 function nextStation(){
-  if(emergency) return;
-
-  if(running){
-    running=false;
-    runningSection.style.display='none';
-    runningArrow.style.display='none';
-    stopDisplay.style.display='block';
-    stopDisplay.innerHTML=
-      stations[stationIndex]+'<br><span style="font-size:20px">停車中</span>';
-    return;
-  }
-
-  if(stationIndex < stations.length-1){
-    stopDisplay.style.display='none';
-    running=true;
-    nextStationDiv.style.display='block';
-    nextStationDiv.textContent='次は　'+stations[stationIndex+1];
-    runningSection.style.display='block';
-    runningSection.textContent=
-      stations[stationIndex]+' → '+stations[stationIndex+1];
-    runningArrow.style.display='block';
-    runningArrow.className='blink-arrow';
-    stationIndex++;
+  if(index < stations.length-1){
+    index++;
+    document.getElementById("nextInfo").textContent =
+      index < stations.length-1
+      ? "次駅：" + stations[index]
+      : "終点：東京";
   }
 }
 
-function emergencyPress(){
-  if(emergency){
-    confirmOverlay.classList.add('active');
-    return;
-  }
-  emergencyReasonOverlay.classList.add('active');
+function setDoor(state){
+  alert("ドア：" + (state==="open"?"開":"閉"));
 }
 
-function selectEmergencyReason(reason){
-  emergency=true;
-  emergencyReasonOverlay.classList.remove('active');
-  emergencyOverlay.classList.add('active');
-  lockOverlay.classList.add('active');
-
-  const messages={
-    "人身事故":"直ちに、消防、警察、車掌に連絡すること",
-    "地震":"直ちに高台に避難すること<br>車掌と連携すること<br>指令に報告",
-    "線路内立ち入り":"直ちに、他の列車に連絡<br>警察にも連絡",
-    "火災":"直ちに、閉められる窓は全て閉める<br>乗客を安全なところに避難させる<br>トンネル内停車を避けること"
-  };
-  emergencyDetailText.innerHTML=messages[reason];
-
-  logs.unshift({
-    time:now(),
-    reason,
-    section:stations[stationIndex],
-    state:running?"走行中":"停車中"
-  });
-
-  opStatus.textContent="非常扱い（"+reason+"）";
-  opStatus.className="op-status emergency";
-  renderLog();
+function pressEmergency(){
+  emergency = true;
+  emergencyOverlay.classList.add("active");
+  reasonOverlay.classList.add("active");
+  lockOverlay.classList.add("active");
+  document.getElementById("statusText").textContent = "非常扱い";
 }
 
-function releaseEmergency(){
-  emergency=false;
-  confirmOverlay.classList.remove('active');
-  emergencyOverlay.classList.remove('active');
-  lockOverlay.classList.remove('active');
-  emergencyDetailText.innerHTML="";
-  opStatus.textContent="平常運転しています";
-  opStatus.className="op-status normal";
+function selectReason(r){
+  reasonOverlay.classList.remove("active");
+  instructionText.textContent = instructionMap[r];
+  instructionOverlay.classList.add("active");
 }
 
-function renderLog(){
-  logBox.innerHTML="";
-  logs.forEach(l=>{
-    const d=document.createElement("div");
-    d.className="log-item";
-    d.innerHTML=
-      l.time+" 非常発生（"+l.reason+"）<br>"+
-      "駅："+l.section+"<br>"+
-      "状態："+l.state;
-    logBox.appendChild(d);
-  });
+function confirmRelease(){
+  emergency = false;
+  emergencyOverlay.classList.remove("active");
+  instructionOverlay.classList.remove("active");
+  lockOverlay.classList.remove("active");
+  document.getElementById("statusText").textContent = "平常運転しています";
 }
 
-/* DOM */
-const home=document.getElementById("home");
-const op=document.getElementById("op");
-const nextStationDiv=document.getElementById("nextStation");
-const runningSection=document.getElementById("runningSection");
-const runningArrow=document.getElementById("runningArrow");
-const stopDisplay=document.getElementById("stopDisplay");
-const emergencyReasonOverlay=document.getElementById("emergencyReasonOverlay");
-const emergencyOverlay=document.getElementById("emergencyOverlay");
-const confirmOverlay=document.getElementById("confirmOverlay");
-const lockOverlay=document.getElementById("lockOverlay");
-const opStatus=document.getElementById("opStatus");
-const logBox=document.getElementById("logBox");
-const emergencyDetailText=document.getElementById("emergencyDetailText");
+/* ★ 初期化（重要） */
+window.onload = ()=>{
+  emergency = false;
+  document.querySelectorAll(".overlay").forEach(o=>o.classList.remove("active"));
+  lockOverlay.classList.remove("active");
+};
 </script>
 
 </body>
