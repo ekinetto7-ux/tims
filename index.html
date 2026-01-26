@@ -1,238 +1,245 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>TIMS 模擬</title>
+<meta charset="UTF-8">
+<title>運転情報システム</title>
 <style>
-  body {
-    margin: 0;
-    font-family: system-ui, -apple-system, "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
-    background: #0b0f14;
-    color: #eaeaea;
-  }
-  .screen { display: none; padding: 16px; }
-  .screen.active { display: block; }
+body{margin:0;font-family:sans-serif;background:#000;color:#fff}
+.screen{display:none;padding:20px}
+.screen.active{display:block}
+button{border:none;border-radius:6px;cursor:pointer}
+.btn{background:#333;color:#fff;padding:12px 18px;margin:6px}
+.btn.big{font-size:18px;padding:16px 22px}
+.btn.yellow{background:#facc15;color:#000;font-weight:800}
+.btn.red{background:red;color:#fff}
+.top-right{position:absolute;top:10px;right:10px}
+.bottom-right{position:absolute;bottom:20px;right:20px}
 
-  h1 { margin: 0 0 12px; font-size: 20px; }
-  .menu {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
-  .btn {
-    padding: 14px;
-    font-size: 16px;
-    border-radius: 8px;
-    border: none;
-    background: #2a2f3a;
-    color: #fff;
-  }
-  .btn.primary { background: #3b82f6; }
-  .btn.warn { background: #ef4444; }
-  .btn.yellow { background: #f59e0b; color: #000; }
-  .btn.big { font-size: 20px; padding: 20px; }
+/* 運転情報 */
+.op-status{font-size:18px;margin-bottom:10px}
+.op-status.emergency{color:red;font-weight:800}
+.op-status.normal{color:#0f0}
 
-  .top-right {
-    position: fixed; top: 10px; right: 10px;
-  }
-  .bottom-right {
-    position: fixed; bottom: 10px; right: 10px;
-  }
-  .bottom-center {
-    position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%);
-  }
+/* 次駅・走行表示 */
+#nextStation{font-size:26px;color:#facc15;font-weight:800;display:none}
+#runningSection{font-size:22px;color:#facc15;display:none}
+#runningArrow{font-size:28px;color:#facc15;display:none}
+.blink-arrow{animation:blink 1s step-start infinite}
+@keyframes blink{50%{opacity:0}}
+#stopDisplay{display:none;font-size:28px;color:#facc15;font-weight:800}
 
-  /* 非常表示 */
-  .overlay {
-    position: fixed; inset: 0;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    pointer-events: none;
-  }
-  .overlay.active { display: flex; }
-  .emergency-text {
-    text-align: center;
-    font-size: 28px;
-    font-weight: 800;
-    color: red;
-    animation: blink 1s step-start infinite;
-  }
-  @keyframes blink { 50% { opacity: 0; } }
+/* overlay */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;z-index:1000;align-items:center;justify-content:center}
+.overlay.active{display:flex}
+.overlay-box{text-align:center}
 
-  .confirm {
-    position: fixed; inset: 0;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 1100;
-    background: rgba(0,0,0,.6);
-  }
-  .confirm.active { display: flex; }
-  .confirm-box {
-    background: #111827;
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-    width: min(90%, 360px);
-  }
-  .confirm-box p {
-    color: #f59e0b;
-    font-weight: 700;
-    font-size: 18px;
-    margin-bottom: 16px;
-  }
+/* 非常表示 */
+#emergencyOverlayText{color:red;font-size:26px;font-weight:900;animation:blink 1s step-start infinite}
 
-  .status { margin: 8px 0; }
-  .status.ok { color: #22c55e; }
-  .list { line-height: 1.8; }
+/* 操作ロック */
+#lockOverlay{position:fixed;inset:0;display:none;z-index:900}
+#lockOverlay.active{display:block;pointer-events:all}
 
-  .log-item { margin-bottom: 8px; }
-  .log-time { color: #9ca3af; font-size: 12px; }
-
+/* 非常履歴 */
+#logBox{margin-top:20px;border-top:1px solid #555;padding-top:10px;font-size:14px}
+.log-item{margin-bottom:10px}
 </style>
 </head>
+
 <body>
-
-<!-- 非常オーバーレイ -->
-<div id="emergencyOverlay" class="overlay">
-  <div class="emergency-text">
-    非常モードです。<br/>安全を確認してください
-  </div>
-</div>
-
-<!-- 非常解除確認 -->
-<div id="confirmOverlay" class="confirm">
-  <div class="confirm-box">
-    <p>非常を解除しますか</p>
-    <button class="btn warn big" onclick="releaseEmergency()">非常解除</button>
-  </div>
-</div>
 
 <!-- 初期選択 -->
 <div id="home" class="screen active">
-  <h1>初期選択</h1>
-  <div class="menu">
-    <button class="btn primary" onclick="go('driverMenu')">運転士</button>
-    <button class="btn primary" onclick="go('conductorMenu')">車掌</button>
-    <button class="btn primary" onclick="go('oneManMenu')">ワンマン</button>
+  <h2>初期選択</h2>
+  <button class="btn big" onclick="openOp()">運転士</button>
+  <button class="btn big" onclick="openOp()">車掌</button>
+  <button class="btn big" onclick="openOp()">ワンマン</button>
+</div>
+
+<!-- 運転情報画面 -->
+<div id="op" class="screen">
+  <div class="top-right">
+    <button class="btn" onclick="goHome()">初期</button>
+  </div>
+
+  <div id="opStatus" class="op-status normal">平常運転しています</div>
+
+  <div id="nextStation"></div>
+  <div id="runningSection"></div>
+  <div id="runningArrow">▶▶▶</div>
+  <div id="stopDisplay"></div>
+
+  <div class="bottom-right">
+    <button class="btn big" onclick="nextStation()">次駅</button>
+    <button class="btn red big" onclick="emergencyPress()">非常</button>
+  </div>
+
+  <!-- 非常履歴 -->
+  <div id="logBox"></div>
+</div>
+
+<!-- 非常理由選択 -->
+<div id="emergencyReasonOverlay" class="overlay">
+  <div class="overlay-box">
+    <h2 style="color:red">非常理由を選択してください</h2>
+    <button class="btn big red" onclick="selectEmergencyReason('人身事故')">人身事故</button>
+    <button class="btn big red" onclick="selectEmergencyReason('線路内立ち入り')">線路内立ち入り</button>
+    <button class="btn big red" onclick="selectEmergencyReason('地震')">地震</button>
+    <button class="btn big red" onclick="selectEmergencyReason('火災')">火災</button>
   </div>
 </div>
 
-<!-- 運転士メニュー -->
-<div id="driverMenu" class="screen">
-  <h1>運転士メニュー</h1>
-  <div class="menu">
-    <button class="btn" onclick="go('operationInfo')">運転情報</button>
-    <button class="btn" onclick="go('log')">非常履歴</button>
+<!-- 非常表示 -->
+<div id="emergencyOverlay" class="overlay">
+  <div id="emergencyOverlayText">
+    非常モードです。<br>安全を確認してください
   </div>
 </div>
 
-<!-- 車掌メニュー -->
-<div id="conductorMenu" class="screen">
-  <h1>車掌メニュー</h1>
-  <div class="menu">
-    <button class="btn" onclick="go('operationInfo')">運転情報</button>
-    <button class="btn" onclick="go('log')">非常履歴</button>
+<!-- 非常解除 -->
+<div id="confirmOverlay" class="overlay">
+  <div class="overlay-box">
+    <div style="margin-bottom:10px">非常を解除します。よろしいですか</div>
+    <button class="btn yellow big" onclick="releaseEmergency()">非常解除</button>
   </div>
 </div>
 
-<!-- ワンマンメニュー -->
-<div id="oneManMenu" class="screen">
-  <h1>ワンマンメニュー</h1>
-  <div class="menu">
-    <button class="btn" onclick="go('oneManDoor')">ドア開閉</button>
-    <button class="btn" onclick="go('operationInfo')">運転情報</button>
-    <button class="btn" onclick="go('log')">非常履歴</button>
-  </div>
-</div>
-
-<!-- ワンマン ドア -->
-<div id="oneManDoor" class="screen">
-  <h1>ドア開閉</h1>
-  <div class="menu">
-    <button class="btn big" onclick="alert('ドア開')">ドア開</button>
-    <button class="btn big" onclick="alert('ドア閉')">ドア閉</button>
-  </div>
-</div>
-
-<!-- 運転情報 -->
-<div id="operationInfo" class="screen">
-  <h1>運転情報</h1>
-  <div id="opStatus" class="status ok">平常運転しています</div>
-  <div class="list">
-    停車駅：<br/>
-    君津 → 木更津 → 袖ヶ浦 → 長浦 → 姉ヶ崎 → 五井 → 八幡宿 → 浜野 → 蘇我 →
-    本千葉 → 千葉 → 津田沼 → 船橋 → 市川 → 新小岩 → 馬喰町 → 新日本橋 → 東京
-  </div>
-</div>
-
-<!-- 非常履歴 -->
-<div id="log" class="screen">
-  <h1>非常履歴</h1>
-  <div id="logList"></div>
-</div>
-
-<!-- 共通ボタン -->
-<div class="top-right">
-  <button class="btn" onclick="go('home')">初期選択</button>
-</div>
-<div class="bottom-right">
-  <button class="btn warn big" onclick="emergencyPress()">非常</button>
-</div>
-<div class="bottom-center">
-  <button class="btn" onclick="go('oneManDoor')">ドア操作へ</button>
-</div>
+<div id="lockOverlay"></div>
 
 <script>
-  let emergency = false;
-  let logs = [];
+const stations=[
+  "君津","木更津","袖ヶ浦","長浦","姉ヶ崎",
+  "五井","八幡宿","浜野","蘇我","本千葉",
+  "千葉","津田沼","船橋","市川","新小岩",
+  "馬喰町","新日本橋","東京"
+];
 
-  function go(id){
-    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
+let stationIndex=-1;
+let running=false;
+let emergency=false;
+let logs=[];
+
+function now(){
+  const d=new Date();
+  return d.getHours().toString().padStart(2,'0')+':'+
+         d.getMinutes().toString().padStart(2,'0');
+}
+
+function openOp(){
+  home.classList.remove('active');
+  op.classList.add('active');
+}
+function goHome(){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  home.classList.add('active');
+}
+
+function nextStation(){
+  if(emergency) return;
+
+  const next=nextStationDiv;
+  const sec=runningSection;
+  const arr=runningArrow;
+  const stop=stopDisplay;
+
+  if(running){
+    running=false;
+    sec.style.display='none';
+    arr.style.display='none';
+    stop.style.display='block';
+    stop.innerHTML=stations[stationIndex]+'<br><span style="font-size:20px">停車中</span>';
+    return;
   }
 
-  function now(){
-    const d = new Date();
-    return d.toLocaleTimeString();
+  if(stationIndex<stations.length-1) stationIndex++;
+  running=true;
+
+  stop.style.display='none';
+  next.style.display='block';
+  next.textContent='次は　'+stations[stationIndex];
+
+  if(stationIndex<stations.length-1){
+    sec.style.display='block';
+    sec.textContent=stations[stationIndex]+' → '+stations[stationIndex+1];
+    arr.style.display='block';
+    arr.className='blink-arrow';
+  }
+}
+
+function emergencyPress(){
+  if(emergency){
+    confirmOverlay.classList.add('active');
+    return;
+  }
+  emergencyReasonOverlay.classList.add('active');
+}
+
+function selectEmergencyReason(reason){
+  emergency=true;
+  emergencyReasonOverlay.classList.remove('active');
+  emergencyOverlay.classList.add('active');
+  lockOverlay.classList.add('active');
+
+  let section,state;
+  if(stationIndex===-1){
+    section='発車前';
+    state='停車中';
+  }else if(running && stationIndex<stations.length-1){
+    section=stations[stationIndex]+' → '+stations[stationIndex+1];
+    state='走行中';
+  }else{
+    section=stations[stationIndex]+'（停車中）';
+    state='停車中';
   }
 
-  function emergencyPress(){
-    if(!emergency){
-      emergency = true;
-      logs.push({type:'発生', time: now()});
-      document.getElementById('emergencyOverlay').classList.add('active');
-      document.getElementById('opStatus').textContent = '非常扱い';
-      document.getElementById('opStatus').className = 'status';
-      document.getElementById('opStatus').style.color = 'red';
-    } else {
-      document.getElementById('confirmOverlay').classList.add('active');
-    }
-  }
+  logs.unshift({
+    time:now(),
+    reason,
+    section,
+    state
+  });
 
-  function releaseEmergency(){
-    emergency = false;
-    logs.push({type:'解除', time: now()});
-    document.getElementById('confirmOverlay').classList.remove('active');
-    document.getElementById('emergencyOverlay').classList.remove('active');
-    document.getElementById('opStatus').textContent = '平常運転しています';
-    document.getElementById('opStatus').className = 'status ok';
-    renderLog();
-  }
+  opStatus.textContent='非常扱い（'+reason+'）';
+  opStatus.className='op-status emergency';
+  renderLog();
+}
 
-  function renderLog(){
-    const box = document.getElementById('logList');
-    box.innerHTML = '';
-    logs.forEach(l=>{
-      const d = document.createElement('div');
-      d.className = 'log-item';
-      d.innerHTML = `・非常${l.type}<div class="log-time">時刻：${l.time}</div>`;
-      box.appendChild(d);
-    });
-  }
+function releaseEmergency(){
+  emergency=false;
+  confirmOverlay.classList.remove('active');
+  emergencyOverlay.classList.remove('active');
+  lockOverlay.classList.remove('active');
+
+  opStatus.textContent='平常運転しています';
+  opStatus.className='op-status normal';
+}
+
+function renderLog(){
+  logBox.innerHTML='';
+  logs.forEach(l=>{
+    const d=document.createElement('div');
+    d.className='log-item';
+    d.innerHTML=
+      l.time+' 非常発生（'+l.reason+'）<br>'+
+      '区間：'+l.section+'<br>'+
+      '状態：'+l.state;
+    logBox.appendChild(d);
+  });
+}
+
+/* DOM shortcut */
+const home=document.getElementById('home');
+const op=document.getElementById('op');
+const nextStationDiv=document.getElementById('nextStation');
+const runningSection=document.getElementById('runningSection');
+const runningArrow=document.getElementById('runningArrow');
+const stopDisplay=document.getElementById('stopDisplay');
+const emergencyReasonOverlay=document.getElementById('emergencyReasonOverlay');
+const emergencyOverlay=document.getElementById('emergencyOverlay');
+const confirmOverlay=document.getElementById('confirmOverlay');
+const lockOverlay=document.getElementById('lockOverlay');
+const opStatus=document.getElementById('opStatus');
+const logBox=document.getElementById('logBox');
 </script>
 </body>
 </html>
