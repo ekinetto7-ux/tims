@@ -2,157 +2,99 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>運転台</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<title>列車シミュレーター</title>
 <style>
-  body { background:#000; color:#fff; font-family: system-ui, -apple-system, sans-serif; }
-  .top { display:flex; justify-content:space-between; align-items:center; padding:8px 12px; font-size:18px; }
-  .role { opacity:.9 }
-  .state { color:#ff3b3b; font-weight:700 }
-
-  .panel { padding:12px }
-  .next { font-size:22px; margin:8px 0 }
-  .next .label { color:#ffd400; margin-right:6px }
-
-  .stations { display:flex; gap:14px; font-size:18px }
-  .stations span { color:#fff }
-
-  .controls { display:flex; gap:12px; margin-top:16px }
-  button {
-    font-size:20px; padding:14px 18px; border-radius:10px; border:none;
-    background:#222; color:#fff;
-  }
-  button:active { transform:scale(.98) }
-  .emg { background:#b00020; }
-
-  .overlay {
-    position:fixed; inset:0; background:rgba(0,0,0,.75);
-    display:none; align-items:center; justify-content:center;
-  }
-  .emgBox {
-    background:#111; border:2px solid #b00020; border-radius:12px;
-    padding:16px; width:min(92vw,420px);
-  }
-  .emgTitle { color:#ff3b3b; font-size:22px; margin-bottom:10px; }
-  .emgBtns { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-  .emgBtns button { background:#2a0000 }
-
-  .emgText {
-    margin-top:12px; color:#ff3b3b; font-size:20px; font-weight:700;
-    white-space:pre-line;
-  }
+body{margin:0;background:#000;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.top{padding:8px 16px;border-bottom:2px solid #222}
+.line{font-size:14px;color:#9ad}
+.next{display:flex;align-items:center;font-size:28px;margin-top:6px}
+.next .label{color:#ffd400;margin-right:8px}
+.next .station{color:#fff}
+.stations{margin-top:10px;white-space:nowrap;overflow:hidden}
+.stations span{display:inline-block;margin-right:16px;color:#fff;font-size:18px}
+.controls{position:fixed;bottom:16px;left:0;right:0;display:flex;justify-content:space-around}
+button{font-size:22px;padding:16px 24px;border:none;border-radius:8px}
+#nextBtn{background:#333;color:#fff}
+#emergencyBtn{background:#c00;color:#fff}
+#overlay{position:fixed;inset:0;background:rgba(0,0,0,.9);display:none;flex-direction:column;justify-content:center;align-items:center}
+#overlay button{margin:8px}
+.role{font-size:12px;color:#aaa;margin-top:4px}
 </style>
 </head>
 <body>
 
 <div class="top">
-  <div class="role">👨‍✈️ 運転士</div>
-  <div id="trainState" class="state">走行中</div>
-  <div class="role">🚪 車掌</div>
-</div>
-
-<div class="panel">
+  <div class="line">内房線・総武快速線</div>
   <div class="next">
     <span class="label">次</span>
-    <span id="nextStation">木更津</span>
+    <span id="nextStation" class="station"></span>
   </div>
-
-  <div class="stations" id="stationRow"></div>
-
-  <div class="controls">
-    <button id="nextBtn">次駅</button>
-    <button id="emgBtn" class="emg">非常</button>
-  </div>
-
-  <div id="emgMessage" class="emgText" style="display:none;"></div>
+  <div class="role">運転士／車掌</div>
+  <div class="stations" id="stationList"></div>
 </div>
 
-<div id="overlay" class="overlay">
-  <div class="emgBox">
-    <div class="emgTitle">非常理由を選択</div>
-    <div class="emgBtns">
-      <button data-reason="地震発生。\n直ちに高台へ避難。\n車掌と連携。">地震</button>
-      <button data-reason="火災発生。\nドアは閉める。\nすべての窓を閉めること。\nトンネル内停車を避けること。">火災</button>
-      <button data-reason="人身事故発生。\nただちに最寄りの運転士・車掌・指令へ連絡。\n警察・消防へ連絡すること。">人身事故</button>
-    </div>
-  </div>
+<div class="controls">
+  <button id="nextBtn">次駅</button>
+  <button id="emergencyBtn">非常</button>
+</div>
+
+<div id="overlay">
+  <button onclick="triggerEmergency('地震')">地震</button>
+  <button onclick="triggerEmergency('火災')">火災</button>
+  <button onclick="triggerEmergency('人身事故')">人身事故</button>
 </div>
 
 <script>
-  const stations = [
-    "君津","木更津","袖ヶ浦","長浦","姉ヶ崎","五井",
-    "八幡宿","浜野","蘇我","本千葉","千葉","津田沼",
-    "船橋","市川","新小岩","馬喰町","錦糸町","新日本橋","東京"
-  ];
+const stations=[
+"君津","木更津","袖ヶ浦","長浦","姉ヶ崎","五井","八幡宿","浜野",
+"蘇我","本千葉","千葉","津田沼","船橋","市川","新小岩","馬喰町",
+"錦糸町","新日本橋","東京"
+];
+let index=0;
+let passToggle=false;
+const nextEl=document.getElementById("nextStation");
+const listEl=document.getElementById("stationList");
 
-  let idx = 1;
-  let emergency = false;
-
-  const nextStationEl = document.getElementById("nextStation");
-  const rowEl = document.getElementById("stationRow");
-  const stateEl = document.getElementById("trainState");
-  const nextBtn = document.getElementById("nextBtn");
-  const emgBtn  = document.getElementById("emgBtn");
-  const overlay = document.getElementById("overlay");
-  const emgMsg  = document.getElementById("emgMessage");
-
-  function renderStations() {
-    rowEl.innerHTML = "";
-    for (let i = idx; i < Math.min(idx+3, stations.length); i++) {
-      const s = document.createElement("span");
-      s.textContent = stations[i];
-      rowEl.appendChild(s);
-    }
+function render(){
+  nextEl.textContent=stations[index]||"終点";
+  listEl.innerHTML="";
+  for(let i=index;i<index+3 && i<stations.length;i++){
+    const s=document.createElement("span");
+    s.textContent=stations[i];
+    listEl.appendChild(s);
   }
+}
+render();
 
-  function renderNext() {
-    nextStationEl.textContent = stations[idx] ?? "—";
+document.getElementById("nextBtn").onclick=()=>{
+  if(passToggle){
+    index++;
+    passToggle=false;
+  }else{
+    passToggle=true;
   }
+  render();
+};
 
-  function setEmergency(on, message="") {
-    emergency = on;
-    if (on) {
-      stateEl.textContent = "非常停止中";
-      nextBtn.disabled = true;
-      emgMsg.textContent = message;
-      emgMsg.style.display = "block";
-    } else {
-      stateEl.textContent = "走行中";
-      nextBtn.disabled = false;
-      emgMsg.style.display = "none";
-    }
+document.getElementById("emergencyBtn").onclick=()=>{
+  document.getElementById("overlay").style.display="flex";
+};
+
+function triggerEmergency(type){
+  let text="";
+  if(type==="地震"){
+    text="直ちに高台に避難、車掌と連携";
   }
-
-  nextBtn.onclick = () => {
-    if (emergency) return;
-    if (idx < stations.length - 1) {
-      idx++;
-      renderNext();
-      renderStations();
-    }
-  };
-
-  emgBtn.onclick = () => {
-    if (!emergency) {
-      overlay.style.display = "flex";
-    } else {
-      setEmergency(false);
-    }
-  };
-
-  overlay.onclick = (e) => {
-    if (e.target === overlay) overlay.style.display = "none";
-  };
-
-  document.querySelectorAll(".emgBtns button").forEach(btn=>{
-    btn.onclick = () => {
-      overlay.style.display = "none";
-      setEmergency(true, btn.dataset.reason);
-    };
-  });
-
-  renderNext();
-  renderStations();
+  if(type==="火災"){
+    text="すべての窓を閉めること。トンネル内停車を避けること";
+  }
+  if(type==="人身事故"){
+    text="ただちに運転士・車掌・指令・警察・消防に連絡すること";
+  }
+  alert("非常："+type+"\n"+text);
+  document.getElementById("overlay").style.display="none";
+}
 </script>
 </body>
 </html>
