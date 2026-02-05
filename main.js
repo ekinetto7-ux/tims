@@ -139,6 +139,7 @@ function setText(id, text) {
 function setColor(id, color) {
     const el = document.getElementById(id);
     if (el) el.style.color = color;
+   
 }
 
 function setTransfer(id, list) {
@@ -164,3 +165,18 @@ window.TrainAPI = {
     config: TrainConfig,
     state: TrainState
 };
+// ===== UI同期 =====
+window.addEventListener("storage", ()=>{
+    const saved = localStorage.getItem("tv-config");
+    if(saved){
+        TrainConfig.stations = JSON.parse(saved);
+    }
+   // ===== UI同期 =====
+window.addEventListener("storage", ()=>{
+    const saved = localStorage.getItem("tv-config");
+    if(saved){
+        TrainConfig.stations = JSON.parse(saved);
+    }
+    render();
+});
+ 
