@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>Train Vision Simulator</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- ===== メインモニター ===== -->
+<div id="monitor">
+
+    <!-- 上部バー -->
+    <div id="top-bar">
+        <div id="service-type">各駅停車 Local</div>
+        <div id="destination">行き先 / For Destination</div>
+    </div>
+
+    <!-- 次駅表示 -->
+    <div id="next-area">
+        <div id="next-label">つぎは / Next</div>
+
+        <div id="next-main">
+            <div id="next-jp" class="next-jp">次駅</div>
+            <div id="next-hira" class="next-hira">えきめい</div>
+            <div id="next-en" class="next-en">Station Name</div>
+        </div>
+
+        <div id="next-number" class="next-number">JA-01</div>
+
+        <!-- 乗換路線 -->
+        <div id="transfer" class="transfer"></div>
+    </div>
+
+    <!-- 停車駅表示 -->
+    <div id="station-line-area">
+        <div id="station-list"></div>
+    </div>
+
+    <!-- 状態表示 -->
+    <div id="status-area">
+        <span id="train-status">停車中</span>
+    </div>
+
+</div>
+
+<!-- ===== 操作パネル（公開用簡易操作） ===== -->
+<div id="control-panel">
+    <button onclick="TrainAPI.stop()">停車</button>
+    <button onclick="TrainAPI.depart()">発車</button>
+    <button onclick="TrainAPI.prev()">前駅</button>
+    <button onclick="TrainAPI.next()">次駅</button>
+</div>
+
+<!-- ===== JS ===== -->
+<script src="main.js"></script>
+
+<script>
+/* ===== 仮データ（あとでconfig.jsに分離） ===== */
+const stations = [
+    {
+        jp: "一駅目",
+        hira: "いちえきめ",
+        en: "Sta-01",
+        numbering: "JA-01",
+        numberColor: "#00aa66",
+        transfer: ["JR線", "地下鉄線"]
+    },
+    {
+        jp: "二駅目",
+        hira: "にえきめ",
+        en: "Sta-02",
+        numbering: "JA-02",
+        numberColor: "#00aa66",
+        transfer: ["私鉄線"]
+    },
+    {
+        jp: "三駅目",
+        hira: "さんえきめ",
+        en: "Sta-03",
+        numbering: "JA-03",
+        numberColor: "#00aa66",
+        transfer: []
+    },
+    {
+        jp: "四駅目",
+        hira: "よんえきめ",
+        en: "Sta-04",
+        numbering: "JA-04",
+        numberColor: "#00aa66",
+        transfer: []
+    },
+    {
+        jp: "五駅目",
+        hira: "ごえきめ",
+        en: "Sta-05",
+        numbering: "JA-05",
+        numberColor: "#00aa66",
+        transfer: []
+    },
+    {
+        jp: "六駅目",
+        hira: "ろくえきめ",
+        en: "Sta-06",
+        numbering: "JA-06",
+        numberColor: "#00aa66",
+        transfer: []
+    },
+    {
+        jp: "七駅目",
+        hira: "ななえきめ",
+        en: "Sta-07",
+        numbering: "JA-07",
+        numberColor: "#00aa66",
+        transfer: []
+    },
+    {
+        jp: "八駅目",
+        hira: "はちえきめ",
+        en: "Sta-08",
+        numbering: "JA-08",
+        numberColor: "#00aa66",
+        transfer: []
+    }
+];
+
+TrainAPI.init(stations);
+</script>
+
+</body>
+</html>
