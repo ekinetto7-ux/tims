@@ -179,4 +179,8 @@ window.addEventListener("storage", ()=>{
     }
     render();
 });
- 
+ function saveIndex(){
+    localStorage.setItem("tv-index", TrainState.currentIndex);
+}
+saveIndex();
+
