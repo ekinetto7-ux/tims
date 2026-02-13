@@ -26,3 +26,14 @@ button{
 <button onclick="location.href='kimitsu.html'">内房線</button>
 </body>
 </html>
+<audio id="sound" src="bell.mp3"></audio>
+
+<button class="blue" onclick="playSound()">
+発車
+</button>
+
+<script>
+function playSound(){
+  document.getElementById("sound").play();
+}
+</script>
