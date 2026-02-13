@@ -6,39 +6,27 @@
 <title>君津駅 3番線</title>
 
 <style>
-body{
-  margin:0;
-  background:#0f172a;
-  color:white;
-  font-family:sans-serif;
-  text-align:center;
-}
-h1{
-  margin-top:40px;
-  font-size:32px;
-}
+body{margin:0;background:#0f172a;color:white;font-family:sans-serif;text-align:center;}
+h1{margin-top:40px;font-size:32px;}
 .control{
-  width:220px;
-  padding:16px;
+  width:240px;
+  padding:18px;
   margin:20px;
   font-size:22px;
   border:none;
-  border-radius:14px;
+  border-radius:16px;
 }
-.on{ background:#22c55e; color:black; }
-.off{ background:#ef4444; color:white; }
+.on{background:#22c55e;color:black;}
+.off{background:#ef4444;color:white;}
 </style>
 </head>
 
 <body>
-
 <h1>君津駅 3番線</h1>
-
 <button class="control on" onclick="playKimitsu()">ON</button>
 <button class="control off" onclick="stopMelody()">OFF</button>
 
 <audio id="melody"></audio>
 <script src="main.js"></script>
-
 </body>
 </html>
