@@ -22,8 +22,12 @@ button{
 </head>
 
 <body>
-<h1>駅選択</h1>
-<button onclick="location.href='kimitsu2.html'">君津駅 2番線</button>
-<button onclick="location.href='kimitsu3.html'">君津駅 3番線</button>
+  <h1>君津駅 番線選択</h1>
+
+  <button onclick="playKimitsu()">2番線</button>
+  <button onclick="playKimitsu2()">3番線</button>
+  <button onclick="stopMelody()">停止</button>
+
+  <audio id="melody"></audio>
+  <script src="main.js"></script>
 </body>
-</html>
