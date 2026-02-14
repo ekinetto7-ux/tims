@@ -1,18 +1,17 @@
-const melody = document.getElementById("melody");
-
 function playKimitsu(){
-  melody.src = "Verde_Rayo_endless.mp3";
-  melody.currentTime = 10;
-  melody.play().catch(()=>{});
+  const audio = document.getElementById("melody");
+  audio.src = "kimitsu2.mp3";
+  audio.play();
 }
 
 function playKimitsu2(){
-  melody.src = "Verde_Rayo.mp3";
-  melody.currentTime = 0;
-  melody.play().catch(()=>{});
+  const audio = document.getElementById("melody");
+  audio.src = "kimitsu3.mp3";
+  audio.play();
 }
 
 function stopMelody(){
-  melody.pause();
-  melody.currentTime = 0;
+  const audio = document.getElementById("melody");
+  audio.pause();
+  audio.currentTime = 0;
 }
