@@ -2,12 +2,11 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>駅選択</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>番線選択</title>
 <style>
-body{margin:0;background:#0f172a;color:white;font-family:sans-serif;text-align:center;}
-h1{margin-top:40px;font-size:32px;}
+body{margin:0;background:#0f172a;color:white;text-align:center;}
+h1{margin-top:40px;font-size:34px;}
 button{
   width:280px;
   padding:20px;
@@ -15,19 +14,21 @@ button{
   font-size:22px;
   border:none;
   border-radius:16px;
-  background:#f59e0b;
-  color:black;
+  background:#ef4444;
+  color:white;
 }
 </style>
 </head>
-
 <body>
-  <h1>君津駅 番線選択</h1>
 
-  <button onclick="playKimitsu()">2番線</button>
-  <button onclick="playKimitsu2()">3番線</button>
-  <button onclick="stopMelody()">停止</button>
+<h1>君津駅 番線選択</h1>
 
-  <audio id="melody"></audio>
-  <script src="main.js"></script>
+<button onclick="playKimitsu()">2番線</button>
+<button onclick="playKimitsu2()">3番線</button>
+<button onclick="stopMelody()">停止</button>
+
+<audio id="melody"></audio>
+<script src="main.js"></script>
+
 </body>
+</html>
