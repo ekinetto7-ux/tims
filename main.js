@@ -9,9 +9,3 @@ function playKimitsu2(){
   audio.src = "kimitsu3.mp3";
   audio.play();
 }
-
-function stopMelody(){
-  const audio = document.getElementById("melody");
-  audio.pause();
-  audio.currentTime = 0;
-}
