@@ -12,7 +12,7 @@ body{
   text-align:center;
 }
 
-/* ===== 番線選択画面 ===== */
+/* 番線選択画面 */
 #selectScreen{
   background:#0f172a;
   color:white;
@@ -32,7 +32,7 @@ body{
   color:white;
 }
 
-/* ===== 発車画面 ===== */
+/* 発車画面 */
 #departureScreen{
   display:none;
   background:black;
@@ -47,26 +47,24 @@ body{
   margin:20px 0;
 }
 
-/* ONボタン */
 .onBtn{
-  padding:20px 50px;
-  font-size:24px;
+  padding:20px 40px;
+  font-size:22px;
   border:none;
   border-radius:15px;
-  background:#22c55e;
+  background:green;
   color:white;
-  margin:20px;
+  margin:10px;
 }
 
-/* OFFボタン */
 .offBtn{
-  padding:20px 50px;
-  font-size:24px;
+  padding:20px 40px;
+  font-size:22px;
   border:none;
   border-radius:15px;
-  background:#ef4444;
+  background:red;
   color:white;
-  margin:20px;
+  margin:10px;
 }
 </style>
 </head>
@@ -76,6 +74,7 @@ body{
 <!-- 番線選択 -->
 <div id="selectScreen">
   <h1>君津駅 番線選択</h1>
+  <button class="platformBtn" onclick="startDeparture(1)">1番線</button>
   <button class="platformBtn" onclick="startDeparture(2)">2番線</button>
   <button class="platformBtn" onclick="startDeparture(3)">3番線</button>
 </div>
@@ -83,7 +82,7 @@ body{
 <!-- 発車画面 -->
 <div id="departureScreen">
   <h2>君津駅</h2>
-  <div id="platformNumber">2番線</div>
+  <div id="platformNumber">1番線</div>
 
   <button class="onBtn" onclick="playMelody()">ON</button>
   <button class="offBtn" onclick="stopMelody()">OFF</button>
