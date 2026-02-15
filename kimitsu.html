@@ -3,27 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>番線選択</title>
+<title>発車システム</title>
 
 <style>
 body{
   margin:0;
-  background:linear-gradient(to bottom,#0f172a,#1e293b);
-  color:white;
-  text-align:center;
   font-family:sans-serif;
+  text-align:center;
+  background:#0f172a;
+  color:white;
 }
 
-h1{
-  margin-top:50px;
-  font-size:32px;
+/* 番線選択画面 */
+#selectScreen{
+  padding-top:80px;
 }
 
-.button-area{
-  margin-top:40px;
-}
-
-.platform-btn{
+.selectBtn{
   display:block;
   width:280px;
   margin:20px auto;
@@ -31,27 +27,76 @@ h1{
   font-size:22px;
   border:none;
   border-radius:20px;
-  background:linear-gradient(145deg,#ef4444,#b91c1c);
+  background:#22c55e;
   color:white;
-  box-shadow:0 6px 15px rgba(0,0,0,0.4);
-  transition:0.2s;
 }
 
-.platform-btn:active{
-  transform:scale(0.95);
-  box-shadow:0 3px 8px rgba(0,0,0,0.6);
+/* 発車画面 */
+#departureScreen{
+  display:none;
+  background:black;
+  color:lime;
+  height:100vh;
+  padding-top:100px;
+  font-family:monospace;
+}
+
+#melodyBtn{
+  margin-top:40px;
+  padding:15px 40px;
+  font-size:22px;
+  border:none;
+  border-radius:15px;
+  background:lime;
+  color:black;
 }
 </style>
 </head>
 
 <body>
 
-<h1>君津駅 番線選択</h1>
-
-<div class="button-area">
-  <button class="platform-btn" onclick="alert('2番線')">2番線</button>
-  <button class="platform-btn" onclick="alert('3番線')">3番線</button>
+<!-- 番線選択 -->
+<div id="selectScreen">
+  <h1>君津駅 番線選択</h1>
+  <button class="selectBtn" onclick="startDeparture(2)">2番線</button>
+  <button class="selectBtn" onclick="startDeparture(3)">3番線</button>
 </div>
+
+<!-- 発車画面 -->
+<div id="departureScreen">
+  <h2 id="stationName">君津駅</h2>
+  <h1 id="platformNumber">2番線</h1>
+
+  <button id="melodyBtn" onclick="toggleMelody()">ON</button>
+</div>
+
+<audio id="melody" src="melody.mp3"></audio>
+
+<script>
+let melody = document.getElementById("melody");
+let melodyBtn = document.getElementById("melodyBtn");
+
+function startDeparture(platform){
+  document.getElementById("selectScreen").style.display="none";
+  document.getElementById("departureScreen").style.display="block";
+
+  document.getElementById("platformNumber").innerText = platform + "番線";
+
+  melody.play();
+  melodyBtn.innerText="ON";
+}
+
+function toggleMelody(){
+  if(melody.paused){
+    melody.play();
+    melodyBtn.innerText="ON";
+  }else{
+    melody.pause();
+    melody.currentTime=0;
+    melodyBtn.innerText="OFF";
+  }
+}
+</script>
 
 </body>
 </html>
