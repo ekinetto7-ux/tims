@@ -1,21 +1,57 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>番線選択</title>
+
+<style>
+body{
+  margin:0;
+  background:linear-gradient(to bottom,#0f172a,#1e293b);
+  color:white;
+  text-align:center;
+  font-family:sans-serif;
+}
+
+h1{
+  margin-top:50px;
+  font-size:32px;
+}
+
+.button-area{
+  margin-top:40px;
+}
+
+.platform-btn{
+  display:block;
+  width:280px;
+  margin:20px auto;
+  padding:20px;
+  font-size:22px;
+  border:none;
+  border-radius:20px;
+  background:linear-gradient(145deg,#ef4444,#b91c1c);
+  color:white;
+  box-shadow:0 6px 15px rgba(0,0,0,0.4);
+  transition:0.2s;
+}
+
+.platform-btn:active{
+  transform:scale(0.95);
+  box-shadow:0 3px 8px rgba(0,0,0,0.6);
+}
+</style>
 </head>
 
-<body style="background:#0f172a; color:white; text-align:center;">
+<body>
 
 <h1>君津駅 番線選択</h1>
 
-<button onclick="alert('押せてます！')">
-2番線
-</button>
-
-<button onclick="alert('押せてます！')">
-3番線
-</button>
+<div class="button-area">
+  <button class="platform-btn" onclick="alert('2番線')">2番線</button>
+  <button class="platform-btn" onclick="alert('3番線')">3番線</button>
+</div>
 
 </body>
 </html>
