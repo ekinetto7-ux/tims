@@ -2,124 +2,47 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>どこでも発車ベル</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>君津駅</title>
 <style>
-body{font-family:sans-serif;background:#e6eef5;text-align:center;padding:30px}
-.screen{display:none}
-.active{display:block}
-.btn{padding:15px 25px;margin:10px;font-size:18px;border:none;border-radius:12px;cursor:pointer}
-.company-btn{width:280px;height:240px;font-size:22px;border-radius:20px;display:flex;flex-direction:column;justify-content:flex-end;background:#fff;box-shadow:0 10px 20px rgba(0,0,0,0.3)}
-.company-btn img{width:100%;height:180px;object-fit:cover;border-radius:20px 20px 0 0}
-.station-btn{width:300px;padding:15px;margin:10px;font-size:20px;border-radius:12px;border:none;cursor:pointer;background:#fff;box-shadow:0 5px 12px rgba(0,0,0,0.3)}
+body{
+  text-align:center;
+  font-family:sans-serif;
+  background:#f2f2f2;
+}
+h1{ margin-top:40px; }
+.big{
+  font-size:60px;
+  margin:40px 0;
+}
+button{
+  padding:10px 20px;
+  margin:5px;
+  border:none;
+  border-radius:20px;
+  background:#ddd;
+  font-size:16px;
+}
+button:active{
+  background:#aaa;
+}
 </style>
 </head>
 <body>
-<!-- 共通ヘッダー -->
-<div id="appHeader" onclick="goHome()" style="position:fixed;top:0;left:0;width:100%;height:60px;background:#000;display:flex;align-items:center;padding:0 15px;box-sizing:border-box;z-index:1000;cursor:pointer;">
-  <img src="IMG_0660.jpeg" style="height:45px;width:70px;object-fit:cover;border-radius:6px;">
-  <div style="color:#ff8c00;font-size:20px;font-weight:bold;margin-left:10px;">どこでも発車ベル</div>
-</div>
-</div>
 
-<div style="height:70px;"></div>
+<h1>君津駅</h1>
+<div class="big" id="display">番線未選択</div>
 
-<!-- 会社選択画面 -->
-<div id="companyScreen" class="screen active">
-<!-- お知らせバー（スクロール表示） -->
-<div style="background:#000;border-radius:10px;margin-bottom:20px;padding:14px;overflow:hidden;">
-  <div style="color:#ff8c00;font-size:18px;font-weight:bold;">📢 お知らせ</div>
-  <div style="position:relative;width:100%;overflow:hidden;height:22px;margin-top:6px;">
-    <div style="position:absolute;white-space:nowrap;color:#ffb347;font-size:15px;animation:scrollText 15s linear infinite;">
-      現在、りんかい線は利用できません。これから色々な路線を追加します。
-    </div>
-  </div>
-</div>
-<h1>会社選択</h1>
-<div style="display:flex;justify-content:center;gap:30px;flex-wrap:wrap;">
-<button class="company-btn" onclick="selectCompany('jr')">
-<img src="IMG_0660.jpeg">
-<div>JR東日本</div>
-</button>
-<button class="company-btn" onclick="selectCompany('rinkai')">
-<img src="IMG_0661.jpeg">
-<div>東京臨海高速鉄道（りんかい線）</div>
-</button>
-</div>
-</div>
-
-<!-- JR東日本 路線選択画面 -->
-<div id="jrLineScreen" class="screen">
-<h1>🚆 JR東日本 路線選択</h1>
-<div style="display:flex;justify-content:center;gap:30px;flex-wrap:wrap;">
-
-<!-- 内房線 -->
-<button class="company-btn" onclick="show('uchiboStationScreen')">
-<img src="A_pair_of_logo_designs_representing_the_Uchibō_Lin.png" alt="内房線ロゴ">
-<div>内房線</div>
-</button>
-
-<!-- 追加予定路線（ダミー表示） -->
-<button class="company-btn" disabled style="opacity:0.4;cursor:not-allowed;">
-<img src="" alt="追加予定">
-<div>追加予定</div>
-</button>
-
-<button class="company-btn" disabled style="opacity:0.4;cursor:not-allowed;">
-<img src="" alt="追加予定">
-<div>追加予定</div>
-</button>
-
-</div>
-<p style="margin-top:20px;font-size:18px;color:#555;font-weight:bold;">※ 現在実装中：内房線のみ</p>
-</div>
-
-<!-- 内房線 駅選択画面 -->
-<div id="uchiboStationScreen" class="screen">
-<h1>🚉 内房線 駅選択</h1>
-<div style="display:flex;flex-direction:column;align-items:center;max-height:60vh;overflow-y:auto;">
-
-<!-- メロディ無し区間（まとめて表示） -->
-<div style="background:#ddd;border-radius:10px;padding:10px 20px;margin:10px 0;width:320px;">
-  <div style="font-weight:bold;">青堀 〜 那古船形</div>
-  <div style="font-size:13px;color:#555;">（メロディ無し区間）</div>
-</div>
-
-<button class="station-btn" onclick="show('kimitsuScreen')">君津</button>
-<button class="station-btn">木更津</button>
-<button class="station-btn">巌根</button>
-<button class="station-btn">袖ヶ浦</button>
-<button class="station-btn">長浦</button>
-<button class="station-btn">姉ヶ崎</button>
-<button class="station-btn">五井</button>
-<button class="station-btn">八幡宿</button>
-<button class="station-btn">浜野</button>
-<button class="station-btn">蘇我</button>
-<button class="station-btn">本千葉</button>
-<button class="station-btn">千葉</button>
-</div>
-<p style="margin-top:15px;font-size:14px;color:#666;">※ 現在実装中：君津駅のみ操作可能</p>
-</div>
-<p style="margin-top:15px;font-size:14px;color:#666;">※ 現在実装中：君津駅のみ操作可能</p>
-</div>
-<p style="margin-top:15px;font-size:14px;color:#666;">※ 現在実装中：君津駅のみ操作可能</p>
-</div>
-
-<!-- 君津駅 ホーム選択画面 -->
-<div id="kimitsuScreen" class="screen">
-<h1>🚉 君津駅 ホーム選択</h1>
-<div style="display:flex;justify-content:center;gap:20px;flex-wrap:wrap;">
 <button onclick="playTrack(1)">1番線</button>
 <button onclick="playTrack(2)">2番線</button>
 <button onclick="playTrack(3)">3番線</button>
 <button onclick="stopAndDoor()">OFF</button>
-</div>
-</div>
 
-<audio id="melody" src="melody.mp3"></audio>
-<audio id="door" src="door.mp3"></audio>
+<audio id="melody" src="kimitsu123.mp4"></audio>
 
 <script>
 const melody = document.getElementById("melody");
+const display = document.getElementById("display");
 let loopCheck = null;
 let currentTrack = 0;
 
@@ -138,15 +61,16 @@ function playSection(start,end){
 
 function playTrack(track){
   currentTrack = track;
+  display.textContent = track + "番線";
 
   if(track === 1){
-    playSection(29,39); // 1番線メロディー
+    playSection(29,39);
   }
   if(track === 2){
-    playSection(46,71); // 2番線メロディー
+    playSection(46,71);
   }
   if(track === 3){
-    playSection(175,216); // 3番線メロディー
+    playSection(175,216);
   }
 }
 
@@ -158,13 +82,13 @@ function stopAndDoor(){
   let end = 0;
 
   if(currentTrack === 1){
-    start = 29; end = 39; // 1番線ドア
+    start = 29; end = 39;
   }
   if(currentTrack === 2){
-    start = 155; end = 167; // 2番線ドア
+    start = 155; end = 167;
   }
   if(currentTrack === 3){
-    start = 225; end = 235; // 3番線ドア
+    start = 225; end = 235;
   }
 
   melody.currentTime = start;
@@ -176,40 +100,6 @@ function stopAndDoor(){
       clearInterval(doorEndCheck);
     }
   },100);
-}
-</script>
-
-<!-- りんかい線 駅選択画面 -->
-<div id="rinkaiStationScreen" class="screen">
-<h1>🚆 りんかい線 駅選択</h1>
-<button class="station-btn">R01 新木場</button>
-<button class="station-btn">R02 東雲</button>
-<button class="station-btn">R03 国際展示場（有明）</button>
-<button class="station-btn">R04 東京テレポート</button>
-<button class="station-btn">R05 天王洲アイル</button>
-<button class="station-btn">R06 品川シーサイド</button>
-<button class="station-btn">R07 大井町</button>
-<button class="station-btn">R08 大崎</button>
-<p style="margin-top:20px;font-size:18px;color:#555;font-weight:bold;">※ 現在この路線は未実施（駅選択のみ表示）</p>
-</div>
-
-<script>
-function show(id){
- document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
- document.getElementById(id).classList.add('active');
-}
-
-function selectCompany(c){
- if(c==='jr'){
-   show('jrLineScreen');
- }
- if(c==='rinkai'){
-   show('rinkaiStationScreen');
- }
-}
- if(c==='rinkai'){
-   show('rinkaiStationScreen');
- }
 }
 </script>
 
