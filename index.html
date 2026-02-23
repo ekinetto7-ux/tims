@@ -1,78 +1,150 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>駅システム</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>駅発車システム</title>
+
 <style>
 body{
   text-align:center;
   font-family:sans-serif;
   background:#f2f2f2;
+  margin-top:40px;
+}
+
+h1{
+  font-size:28px;
 }
 
 select, button{
-  margin:10px;
+  margin:6px;
   padding:8px 15px;
-  border-radius:15px;
+  border-radius:20px;
   border:none;
+  background:#ddd;
+  font-size:14px;
+}
+
+button{
+  cursor:pointer;
 }
 
 .big{
-  font-size:40px;
+  font-size:48px;
   margin:30px;
 }
 </style>
 </head>
+
 <body>
 
-<h1>駅システム</h1>
+<h1>駅発車メロディー</h1>
 
-<!-- 会社選択 -->
-<select id="company" onchange="updateStations()">
-  <option value="">会社選択</option>
-  <option value="jr">JR東日本</option>
-  <option value="keikyu">京急</option>
+<!-- 会社 -->
+<select id="company" onchange="updateLine()">
+<option value="">会社選択</option>
+<option value="jr">JR東日本</option>
 </select>
 
-<!-- 駅選択 -->
-<select id="station">
-  <option value="">駅選択</option>
+<!-- 路線 -->
+<select id="line" onchange="updateStation()" disabled>
+<option value="">路線選択</option>
+</select>
+
+<!-- 駅 -->
+<select id="station" disabled>
+<option value="">駅選択</option>
 </select>
 
 <div class="big" id="display">未選択</div>
 
-<button onclick="selectTrack(1)">1番線</button>
-<button onclick="selectTrack(2)">2番線</button>
-<button onclick="selectTrack(3)">3番線</button>
+<br>
+
+<button onclick="playTrack(1)">1番線</button>
+<button onclick="playTrack(2)">2番線</button>
+<button onclick="playTrack(3)">3番線</button>
+<button onclick="stopSound()">OFF</button>
+
+<audio id="melody" src="kimitsu123.mp4"></audio>
 
 <script>
+const lineSelect = document.getElementById("line");
 const stationSelect = document.getElementById("station");
 const display = document.getElementById("display");
+const melody = document.getElementById("melody");
 
-function updateStations(){
+let currentTrack = 0;
+let loop;
+
+// 会社→路線
+function updateLine(){
   const company = document.getElementById("company").value;
+
+  lineSelect.innerHTML = "<option value=''>路線選択</option>";
   stationSelect.innerHTML = "<option value=''>駅選択</option>";
 
-  if(company === "jr"){
-    stationSelect.innerHTML += "<option value='君津'>君津駅</option>";
-    stationSelect.innerHTML += "<option value='木更津'>木更津駅</option>";
-  }
+  stationSelect.disabled = true;
 
-  if(company === "keikyu"){
-    stationSelect.innerHTML += "<option value='品川'>品川駅</option>";
+  if(company === "jr"){
+    lineSelect.disabled = false;
+    lineSelect.innerHTML += "<option value='uchibo'>内房線</option>";
+  }else{
+    lineSelect.disabled = true;
   }
 }
 
-function selectTrack(track){
+// 路線→駅
+function updateStation(){
+  const line = lineSelect.value;
+
+  stationSelect.innerHTML = "<option value=''>駅選択</option>";
+
+  if(line === "uchibo"){
+    stationSelect.disabled = false;
+    stationSelect.innerHTML += "<option value='kimitsu'>君津駅</option>";
+  }else{
+    stationSelect.disabled = true;
+  }
+}
+
+// 音ループ
+function playSection(start,end){
+  clearInterval(loop);
+  melody.currentTime = start;
+  melody.play();
+
+  loop = setInterval(()=>{
+    if(melody.currentTime >= end){
+      melody.currentTime = start;
+    }
+  },100);
+}
+
+// 番線再生
+function playTrack(track){
+
   const company = document.getElementById("company").value;
+  const line = lineSelect.value;
   const station = stationSelect.value;
 
-  if(company === "" || station === ""){
-    alert("会社と駅を選択してください");
+  if(!company || !line || !station){
+    alert("会社→路線→駅を選択してください");
     return;
   }
 
-  display.textContent = company + " " + station + " " + track + "番線";
+  currentTrack = track;
+  display.textContent = track + "番線";
+
+  if(track===1){ playSection(0,28); }
+  if(track===2){ playSection(46,71); }
+  if(track===3){ playSection(175,216); }
+}
+
+// 停止
+function stopSound(){
+  clearInterval(loop);
+  melody.pause();
 }
 </script>
 
