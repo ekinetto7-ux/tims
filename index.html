@@ -4,18 +4,24 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>君津駅</title>
+
 <style>
 body{
   text-align:center;
   font-family:sans-serif;
   background:#f2f2f2;
 }
-h1{ margin-top:40px; }
+
+h1{
+  margin-top:40px;
+}
+
 .big{
   font-size:60px;
   margin:40px 0;
 }
-button{
+
+.track-btn{
   padding:10px 20px;
   margin:5px;
   border:none;
@@ -23,20 +29,34 @@ button{
   background:#ddd;
   font-size:16px;
 }
-button:active{
-  background:#aaa;
+
+.track-btn.active{
+  background:#007aff;
+  color:white;
+}
+
+.off-btn{
+  padding:10px 20px;
+  margin-top:20px;
+  border:none;
+  border-radius:20px;
+  background:#ff3b30;
+  color:white;
 }
 </style>
 </head>
+
 <body>
 
 <h1>君津駅</h1>
 <div class="big" id="display">番線未選択</div>
 
-<button onclick="playTrack(1)">1番線</button>
-<button onclick="playTrack(2)">2番線</button>
-<button onclick="playTrack(3)">3番線</button>
-<button onclick="stopAndDoor()">OFF</button>
+<button class="track-btn" onclick="playTrack(1)">1番線</button>
+<button class="track-btn" onclick="playTrack(2)">2番線</button>
+<button class="track-btn" onclick="playTrack(3)">3番線</button>
+
+<br>
+<button class="off-btn" onclick="stopAndDoor()">OFF</button>
 
 <audio id="melody" src="kimitsu123.mp4"></audio>
 
@@ -62,6 +82,11 @@ function playSection(start,end){
 function playTrack(track){
   currentTrack = track;
   display.textContent = track + "番線";
+
+  // ボタンの色変更
+  const buttons = document.querySelectorAll(".track-btn");
+  buttons.forEach(btn => btn.classList.remove("active"));
+  buttons[track-1].classList.add("active");
 
   if(track === 1){
     playSection(29,39);
