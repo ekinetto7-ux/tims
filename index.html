@@ -1,18 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>君津駅</title>
+</head>
+<body style="text-align:center; font-family:sans-serif;">
+
+<h1>君津駅</h1>
+<h2 id="display">番線未選択</h2>
+
+<button onclick="playTrack(1)">1番線</button>
+<button onclick="playTrack(2)">2番線</button>
+<button onclick="playTrack(3)">3番線</button>
+<button onclick="stopAndDoor()">OFF</button>
+
+<audio id="melody" src="kimitsu123.mp4"></audio>
+
 <script>
 const melody = document.getElementById("melody");
 const display = document.getElementById("display");
-let loopCheck = null;
 let currentTrack = 0;
+let loop;
 
 function playSection(start,end){
-  clearInterval(loopCheck);
+  clearInterval(loop);
   melody.currentTime = start;
   melody.play();
 
-  loopCheck = setInterval(function(){
+  loop = setInterval(function(){
     if(melody.currentTime >= end){
       melody.currentTime = start;
-      melody.play();
     }
   },100);
 }
@@ -21,46 +38,22 @@ function playTrack(track){
   currentTrack = track;
   display.textContent = track + "番線";
 
-  const buttons = document.querySelectorAll(".track-btn");
-  buttons.forEach(btn => btn.classList.remove("active"));
-  buttons[track-1].classList.add("active");
-
-  if(track === 1){
-    playSection(0,28);   // ← 1番線メロディー
-  }
-  if(track === 2){
-    playSection(46,71);
-  }
-  if(track === 3){
-    playSection(175,216);
-  }
+  if(track==1){ playSection(0,28); }
+  if(track==2){ playSection(46,71); }
+  if(track==3){ playSection(175,216); }
 }
 
 function stopAndDoor(){
+  clearInterval(loop);
   melody.pause();
-  clearInterval(loopCheck);
 
-  let start = 0;
-  let end = 0;
-
-  if(currentTrack === 1){
-    start = 29; end = 39;   // ← 1番線ドア
+  if(currentTrack==1){
+    melody.currentTime=29;
+    melody.play();
+    setTimeout(()=>melody.pause(),10000);
   }
-  if(currentTrack === 2){
-    start = 155; end = 167;
-  }
-  if(currentTrack === 3){
-    start = 225; end = 235;
-  }
-
-  melody.currentTime = start;
-  melody.play();
-
-  const doorEndCheck = setInterval(function(){
-    if(melody.currentTime >= end){
-      melody.pause();
-      clearInterval(doorEndCheck);
-    }
-  },100);
 }
 </script>
+
+</body>
+</html>
