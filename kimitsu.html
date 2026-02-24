@@ -5,17 +5,19 @@
 <title>1番線</title>
 </head>
 
-<body style="text-align:center;background:black;color:white;margin-top:100px;font-family:sans-serif;">
+<body style="margin:0;background:black;color:white;font-family:sans-serif;text-align:center;display:flex;justify-content:center;align-items:center;height:100vh;flex-direction:column;">
 
-<h1>1番線</h1>
+<h1 style="font-size:40px;margin-bottom:40px;">1番線</h1>
 
-<button onclick="startSound()" style="padding:12px 25px;margin:15px;border:none;border-radius:25px;background:#666;color:white;">
+<div>
+<button onclick="startSound()" style="padding:15px 40px;margin:10px;border:none;border-radius:30px;font-size:18px;background:#666;color:white;">
 ON
 </button>
 
-<button onclick="stopSound()" style="padding:12px 25px;margin:15px;border:none;border-radius:25px;background:#444;color:white;">
+<button onclick="stopSound()" style="padding:15px 40px;margin:10px;border:none;border-radius:30px;font-size:18px;background:#444;color:white;">
 OFF
 </button>
+</div>
 
 <audio id="melody" src="kimitsu123.mp4"></audio>
 
