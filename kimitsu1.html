@@ -4,27 +4,42 @@
 <meta charset="UTF-8">
 <title>1番線 再生中</title>
 </head>
-<body style="text-align:center;background:black;color:white;margin-top:40px;font-family:sans-serif;">
 
-<img src="IMG_1106.jpeg" style="width:90%;max-width:600px;">
+<body style="text-align:center;background:black;color:white;margin-top:80px;font-family:sans-serif;">
 
 <h1>1番線 再生中</h1>
+
+<button onclick="startSound()" 
+style="padding:10px 20px;margin:15px;border:none;border-radius:20px;background:#666;color:white;">
+ON
+</button>
+
+<button onclick="stopSound()" 
+style="padding:10px 20px;margin:15px;border:none;border-radius:20px;background:#444;color:white;">
+OFF
+</button>
 
 <audio id="melody" src="kimitsu123.mp4"></audio>
 
 <script>
-const melody=document.getElementById("melody");
+const melody = document.getElementById("melody");
+let loop;
 
-function loop(){
-  melody.currentTime=6;
+function startSound(){
+  melody.currentTime = 6;
   melody.play();
-  setInterval(()=>{
-    if(melody.currentTime>=28){
-      melody.currentTime=6;
+
+  loop = setInterval(()=>{
+    if(melody.currentTime >= 28){
+      melody.currentTime = 6;
     }
   },100);
 }
-loop();
+
+function stopSound(){
+  clearInterval(loop);
+  melody.pause();
+}
 </script>
 
 </body>
