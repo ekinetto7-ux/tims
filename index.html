@@ -1,116 +1,37 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>駅発車システム</title>
-
+<title>君津駅 番線選択</title>
 <style>
 body{
   text-align:center;
   font-family:sans-serif;
   background:#f2f2f2;
-  margin-top:60px;
+  margin-top:80px;
 }
-
-.screen{
-  display:none;
-}
-
-.active{
-  display:block;
-}
-
 button{
-  padding:10px 20px;
-  margin:10px;
+  padding:12px 25px;
+  margin:15px;
   border:none;
-  border-radius:20px;
+  border-radius:25px;
   background:#ddd;
-  font-size:16px;
-}
-
-.big{
-  font-size:40px;
-  margin:30px;
+  font-size:18px;
 }
 </style>
 </head>
-
 <body>
 
-<h1>駅発車メロディー</h1>
+<h1>君津駅</h1>
+<h2>番線選択</h2>
 
-<!-- ①会社 -->
-<div id="screen1" class="screen active">
-  <h2>会社選択</h2>
-  <button onclick="selectCompany('jr')">JR東日本</button>
-</div>
-
-<!-- ②路線 -->
-<div id="screen2" class="screen">
-  <h2>路線選択</h2>
-  <button onclick="selectLine('uchibo')">内房線</button>
-</div>
-
-<!-- ③駅 -->
-<div id="screen3" class="screen">
-  <h2>駅選択</h2>
-  <button onclick="selectStation('kimitsu')">君津駅</button>
-</div>
-
-<!-- ④番線 -->
-<div id="screen4" class="screen">
-  <h2>番線選択</h2>
-  <div class="big" id="display">番線未選択</div>
-  <button onclick="playTrack(1)">1番線</button>
-  <button onclick="playTrack(2)">2番線</button>
-  <button onclick="playTrack(3)">3番線</button>
-</div>
-
-<audio id="melody" src="kimitsu123.mp4"></audio>
+<button onclick="go(1)">1番線</button>
+<button onclick="go(2)">2番線</button>
+<button onclick="go(3)">3番線</button>
 
 <script>
-let currentTrack=0;
-let loop;
-const melody=document.getElementById("melody");
-const display=document.getElementById("display");
-
-function changeScreen(next){
-  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
-  document.getElementById(next).classList.add("active");
-}
-
-function selectCompany(){
-  changeScreen("screen2");
-}
-
-function selectLine(){
-  changeScreen("screen3");
-}
-
-function selectStation(){
-  changeScreen("screen4");
-}
-
-function playSection(start,end){
-  clearInterval(loop);
-  melody.currentTime=start;
-  melody.play();
-  loop=setInterval(()=>{
-    if(melody.currentTime>=end){
-      melody.currentTime=start;
-    }
-  },100);
-}
-
-function playTrack(track){
-  currentTrack=track;
-  display.textContent=track+"番線";
-
-  if(track===1){ playSection(6,28); }
-  if(track===2){ playSection(46,71); }
-  if(track===3){ playSection(175,216); }
+function go(track){
+  window.location.href = "kimitsu" + track + ".html";
 }
 </script>
 
