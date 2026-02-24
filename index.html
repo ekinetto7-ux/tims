@@ -10,28 +10,28 @@ body{
   text-align:center;
   font-family:sans-serif;
   background:#f2f2f2;
-  margin-top:40px;
+  margin-top:60px;
 }
 
-h1{
-  font-size:28px;
+.screen{
+  display:none;
 }
 
-select, button{
-  margin:6px;
-  padding:8px 15px;
-  border-radius:20px;
-  border:none;
-  background:#ddd;
-  font-size:14px;
+.active{
+  display:block;
 }
 
 button{
-  cursor:pointer;
+  padding:10px 20px;
+  margin:10px;
+  border:none;
+  border-radius:20px;
+  background:#ddd;
+  font-size:16px;
 }
 
 .big{
-  font-size:48px;
+  font-size:40px;
   margin:30px;
 }
 </style>
@@ -41,110 +41,76 @@ button{
 
 <h1>駅発車メロディー</h1>
 
-<!-- 会社 -->
-<select id="company" onchange="updateLine()">
-<option value="">会社選択</option>
-<option value="jr">JR東日本</option>
-</select>
+<!-- ①会社 -->
+<div id="screen1" class="screen active">
+  <h2>会社選択</h2>
+  <button onclick="selectCompany('jr')">JR東日本</button>
+</div>
 
-<!-- 路線 -->
-<select id="line" onchange="updateStation()" disabled>
-<option value="">路線選択</option>
-</select>
+<!-- ②路線 -->
+<div id="screen2" class="screen">
+  <h2>路線選択</h2>
+  <button onclick="selectLine('uchibo')">内房線</button>
+</div>
 
-<!-- 駅 -->
-<select id="station" disabled>
-<option value="">駅選択</option>
-</select>
+<!-- ③駅 -->
+<div id="screen3" class="screen">
+  <h2>駅選択</h2>
+  <button onclick="selectStation('kimitsu')">君津駅</button>
+</div>
 
-<div class="big" id="display">未選択</div>
-
-<br>
-
-<button onclick="playTrack(1)">1番線</button>
-<button onclick="playTrack(2)">2番線</button>
-<button onclick="playTrack(3)">3番線</button>
-<button onclick="stopSound()">OFF</button>
+<!-- ④番線 -->
+<div id="screen4" class="screen">
+  <h2>番線選択</h2>
+  <div class="big" id="display">番線未選択</div>
+  <button onclick="playTrack(1)">1番線</button>
+  <button onclick="playTrack(2)">2番線</button>
+  <button onclick="playTrack(3)">3番線</button>
+</div>
 
 <audio id="melody" src="kimitsu123.mp4"></audio>
 
 <script>
-const lineSelect = document.getElementById("line");
-const stationSelect = document.getElementById("station");
-const display = document.getElementById("display");
-const melody = document.getElementById("melody");
-
-let currentTrack = 0;
+let currentTrack=0;
 let loop;
+const melody=document.getElementById("melody");
+const display=document.getElementById("display");
 
-// 会社→路線
-function updateLine(){
-  const company = document.getElementById("company").value;
-
-  lineSelect.innerHTML = "<option value=''>路線選択</option>";
-  stationSelect.innerHTML = "<option value=''>駅選択</option>";
-
-  stationSelect.disabled = true;
-
-  if(company === "jr"){
-    lineSelect.disabled = false;
-    lineSelect.innerHTML += "<option value='uchibo'>内房線</option>";
-  }else{
-    lineSelect.disabled = true;
-  }
+function changeScreen(next){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  document.getElementById(next).classList.add("active");
 }
 
-// 路線→駅
-function updateStation(){
-  const line = lineSelect.value;
-
-  stationSelect.innerHTML = "<option value=''>駅選択</option>";
-
-  if(line === "uchibo"){
-    stationSelect.disabled = false;
-    stationSelect.innerHTML += "<option value='kimitsu'>君津駅</option>";
-  }else{
-    stationSelect.disabled = true;
-  }
+function selectCompany(){
+  changeScreen("screen2");
 }
 
-// 音ループ
+function selectLine(){
+  changeScreen("screen3");
+}
+
+function selectStation(){
+  changeScreen("screen4");
+}
+
 function playSection(start,end){
   clearInterval(loop);
-  melody.currentTime = start;
+  melody.currentTime=start;
   melody.play();
-
-  loop = setInterval(()=>{
-    if(melody.currentTime >= end){
-      melody.currentTime = start;
+  loop=setInterval(()=>{
+    if(melody.currentTime>=end){
+      melody.currentTime=start;
     }
   },100);
 }
 
-// 番線再生
 function playTrack(track){
+  currentTrack=track;
+  display.textContent=track+"番線";
 
-  const company = document.getElementById("company").value;
-  const line = lineSelect.value;
-  const station = stationSelect.value;
-
-  if(!company || !line || !station){
-    alert("会社→路線→駅を選択してください");
-    return;
-  }
-
-  currentTrack = track;
-  display.textContent = track + "番線";
-
-  if(track===1){ playSection(0,28); }
+  if(track===1){ playSection(6,28); }
   if(track===2){ playSection(46,71); }
   if(track===3){ playSection(175,216); }
-}
-
-// 停止
-function stopSound(){
-  clearInterval(loop);
-  melody.pause();
 }
 </script>
 
