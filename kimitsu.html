@@ -2,22 +2,48 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>1番線</title>
+<title>君津駅 1番線</title>
 </head>
 
-<body style="margin:0;background:black;color:white;font-family:sans-serif;text-align:center;display:flex;justify-content:center;align-items:center;height:100vh;flex-direction:column;">
+<body style="margin:0;
+background:#0b1633;
+font-family:sans-serif;
+text-align:center;
+color:white;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+height:100vh;">
 
-<h1 style="font-size:40px;margin-bottom:40px;">1番線</h1>
+<h1 style="font-size:32px;margin-bottom:60px;">
+君津駅 1番線
+</h1>
 
-<div>
-<button onclick="startSound()" style="padding:15px 40px;margin:10px;border:none;border-radius:30px;font-size:18px;background:#666;color:white;">
+<button onclick="startSound()" 
+style="width:70%;
+max-width:400px;
+padding:20px;
+font-size:22px;
+border:none;
+border-radius:25px;
+background:#2ecc71;
+color:black;
+margin-bottom:40px;">
 ON
 </button>
 
-<button onclick="stopSound()" style="padding:15px 40px;margin:10px;border:none;border-radius:30px;font-size:18px;background:#444;color:white;">
+<button onclick="stopSound()" 
+style="width:70%;
+max-width:400px;
+padding:20px;
+font-size:22px;
+border:none;
+border-radius:25px;
+background:#e74c3c;
+color:white;">
 OFF
 </button>
-</div>
 
 <audio id="melody" src="kimitsu123.mp4"></audio>
 
