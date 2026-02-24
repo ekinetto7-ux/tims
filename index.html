@@ -2,17 +2,22 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>会社選択</title>
+<title>君津駅 番線選択</title>
 </head>
 <body style="text-align:center;margin-top:80px;font-family:sans-serif;">
-<h1>会社選択</h1>
+<h1>君津駅 番線選択</h1>
 
-<button onclick="go()">JR東日本</button>
+<button onclick="go(1)">1番線</button>
+<button onclick="go(2)">2番線</button>
+<button onclick="go(3)">3番線</button>
 
 <script>
-function go(){
-  window.location.href="line.html";
+function go(num){
+  if(num===1){ window.location.href="kimitsu.html"; }
+  if(num===2){ window.location.href="kimitsu2.html"; }
+  if(num===3){ window.location.href="kimitsu3.html"; }
 }
 </script>
+
 </body>
 </html>
