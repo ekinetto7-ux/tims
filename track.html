@@ -4,17 +4,30 @@
 <meta charset="UTF-8">
 <title>番線選択</title>
 </head>
-<body style="text-align:center;margin-top:80px;font-family:sans-serif;">
+
+<body style="background:#0b1633;color:white;text-align:center;font-family:sans-serif;display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;margin:0;">
+
 <h1>君津駅 番線選択</h1>
 
-<button onclick="go(1)">1番線</button>
-<button onclick="go(2)">2番線</button>
-<button onclick="go(3)">3番線</button>
+<button onclick="go(1)" style="margin:15px;padding:20px 40px;font-size:20px;border:none;border-radius:20px;background:#3498db;color:white;">
+1番線
+</button>
+
+<button onclick="go(2)" style="margin:15px;padding:20px 40px;font-size:20px;border:none;border-radius:20px;background:#3498db;color:white;">
+2番線
+</button>
+
+<button onclick="go(3)" style="margin:15px;padding:20px 40px;font-size:20px;border:none;border-radius:20px;background:#3498db;color:white;">
+3番線
+</button>
 
 <script>
 function go(num){
-  window.location.href="kimitsu"+num+".html";
+  if(num===1){window.location.href="kimitsu.html";}
+  if(num===2){window.location.href="kimitsu2.html";}
+  if(num===3){window.location.href="kimitsu3.html";}
 }
 </script>
+
 </body>
 </html>
