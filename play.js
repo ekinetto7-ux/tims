@@ -8,9 +8,9 @@ document.getElementById("info").innerText = `${company} / ${line} / ${station} /
 let audio = null;
 
 function play(){
-  if(audio){ audio.pause(); audio.currentTime=0; } // 以前の音をリセット
+  if(audio){ audio.pause(); audio.currentTime=0; }
   audio = new Audio(`sounds/${company}/${line}/${station}/${track}.mp3`);
-  audio.loop = true; // ループON
+  audio.loop = true;
   audio.play();
 
   // 簡易再生エフェクト
