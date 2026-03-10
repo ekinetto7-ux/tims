@@ -2,18 +2,32 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta charset="UTF-8">
 <title>発車メロディ再生</title>
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<header><h1>発車メロディ再生</h1></header>
+<header>
+<h1>発車メロディ再生</h1>
+<div class="step-bar">
+  <div class="step" id="step1"></div>
+  <div class="step" id="step2"></div>
+  <div class="step" id="step3"></div>
+  <div class="step" id="step4"></div>
+  <div class="step" id="step5"></div>
+</div>
+</header>
 <main>
 <p id="info"></p>
-<button onclick="play()">▶ 再生</button>
-<button onclick="stop()">⏹ 停止</button>
-<button onclick="favorite()">⭐ お気に入り</button>
+<div class="player-box">
+  <button onclick="play()">▶ 再生</button>
+  <button onclick="stop()">⏹ 停止</button>
+  <button onclick="favorite()">⭐ お気に入り</button>
+</div>
 <script src="js/play.js"></script>
+<script src="js/animation.js"></script>
+<script>
+  setStep(5); // 最終ステップ
+</script>
 </main>
 </body>
 </html>
