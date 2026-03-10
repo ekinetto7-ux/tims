@@ -1,0 +1,51 @@
+body {
+  background:#111;
+  color:white;
+  font-family:"Segoe UI",sans-serif;
+  margin:0;
+  padding:0;
+  text-align:center;
+}
+header{
+  background:#0a662e;
+  padding:20px;
+}
+header h1{
+  margin:0;
+  font-size:24px;
+  color:white;
+}
+nav a{
+  color:white;
+  margin:0 10px;
+  text-decoration:none;
+}
+select,button,input,textarea{
+  margin:10px 0;
+  padding:12px;
+  border-radius:8px;
+  width:80%;
+  max-width:400px;
+  font-size:16px;
+  border:none;
+}
+button{
+  background:#00cc66;
+  color:white;
+  cursor:pointer;
+  transition:0.3s;
+}
+button:hover{
+  background:#00ff88;
+}
+main{
+  padding:20px;
+}
+.player-box, .contact-box{
+  background:#222;
+  margin:20px auto;
+  padding:20px;
+  border-radius:12px;
+  width:90%;
+  max-width:500px;
+}
