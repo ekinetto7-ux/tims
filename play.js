@@ -12,23 +12,18 @@ function play(){
   audio = new Audio(`sounds/${company}/${line}/${station}/${track}.mp3`);
   audio.loop = true;
   audio.play();
-
-  // 簡易再生エフェクト
-  let btn = document.querySelector("button");
-  btn.style.transform="scale(1.2)";
-  setTimeout(()=>{ btn.style.transform="scale(1)"; }, 500);
 }
 
 function stop(){
   if(audio){
     audio.pause();
-    audio.currentTime = 0;
+    audio.currentTime=0;
   }
 }
 
 function favorite(){
   let user = localStorage.getItem("loginUser");
-  if(!user){ alert("お気に入り登録はログインが必要です"); return; }
+  if(!user){ alert("ログインしてください"); return; }
   let list = JSON.parse(localStorage.getItem(user+"_fav")||"[]");
   let id = `${company}_${line}_${station}_${track}`;
   if(!list.includes(id)) list.push(id);
