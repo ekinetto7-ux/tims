@@ -6,20 +6,11 @@ let track = localStorage.getItem("selectedTrack");
 document.getElementById("info").innerText = `${company} / ${line} / ${station} / ${track}番線`;
 
 function play(){
-  let path = `sounds/${company}/${line}/${station}/${track}.mp3`;
-  let audio = new Audio(path);
+  let audio = new Audio(`sounds/${company}/${line}/${station}/${track}.mp3`);
   audio.play();
-}
 
-function favorite(){
-  let user = localStorage.getItem("loginUser");
-  if(!user){
-    alert("お気に入り登録はログインが必要です");
-    return;
-  }
-  let list = JSON.parse(localStorage.getItem(user+"_fav")||"[]");
-  let id = `${company}_${line}_${station}_${track}`;
-  if(!list.includes(id)) list.push(id);
-  localStorage.setItem(user+"_fav", JSON.stringify(list));
-  alert("お気に入り登録しました");
+  // 簡易波形アニメーション
+  let btn = document.querySelector("button");
+  btn.style.transform="scale(1.2)";
+  setTimeout(()=>{ btn.style.transform="scale(1)"; }, 500);
 }
