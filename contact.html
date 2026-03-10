@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>メロディ作成依頼</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header><h1>発車メロディ作成依頼</h1></header>
+<main>
+<div class="contact-box">
+  <input type="text" id="email" placeholder="メールアドレス">
+  <input type="text" id="nickname" placeholder="ニックネーム">
+  <textarea id="message" placeholder="作成依頼内容"></textarea>
+  <input type="text" id="robotCheck" placeholder="ロボット確認: 209 231 255 235 217 257">
+  <br>
+  <button onclick="send()">送信</button>
+</div>
+<script src="js/contact.js"></script>
+</main>
+</body>
+</html>
