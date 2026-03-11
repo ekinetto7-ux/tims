@@ -131,6 +131,11 @@ body.dark .history-box {
   color:white;
 }
 
+#shelter-map {
+  border-radius:12px;
+  box-shadow:0 6px 15px rgba(0,0,0,0.15);
+}
+
 @keyframes fadein { from{opacity:0;} to{opacity:1;} }
 
 @media(max-width:600px){
