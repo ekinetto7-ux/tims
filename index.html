@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>防災ナビ 4.1 リアル完全版</title>
+<title>防災ナビ 4.1 完全版</title>
 <link rel="stylesheet" href="style.css">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
@@ -55,6 +55,7 @@
 <div id="tsunami" class="page">
 <button class="back" onclick="home()">戻る</button>
 <h2>津波情報（色分け）</h2>
+
 <div id="tsunami-map">
   <span class="map-region" id="hokkaido">北海道</span>
   <span class="map-region" id="tohoku">東北</span>
@@ -65,6 +66,13 @@
   <span class="map-region" id="shikoku">四国</span>
   <span class="map-region" id="kyushu">九州</span>
   <span class="map-region" id="okinawa">沖縄</span>
+</div>
+
+<div id="tsunami-legend">
+<h3>凡例</h3>
+<p><span class="legend-box yellow"></span> 注意（小規模）</p>
+<p><span class="legend-box red"></span> 警報（中規模）</p>
+<p><span class="legend-box purple"></span> 大津波警報（大規模・避難必須）</p>
 </div>
 </div>
 
@@ -106,34 +114,34 @@
 <!-- 管理者モード -->
 <div id="admin" class="page admin">
 <button class="back" onclick="home()">戻る</button>
-<h2>管理者モード</h2>
+<h2>管理者モード（全設定）</h2>
 
-<p>トップ案内設定</p>
+<!-- トップお知らせ -->
+<p>トップお知らせ</p>
 <textarea id="adminText"></textarea><br>
 <button onclick="setNotice()">更新 & 通知</button>
-<button onclick="resetHistory()">履歴リセット</button>
-
-<h3>履歴</h3>
-<div id="history"></div>
+<button onclick="resetAll()">全履歴リセット</button>
 
 <hr>
-<p>地震情報設定</p>
-<label>震源：</label><input id="quake-loc"><br>
-<label>震度：</label><input id="quake-shindo"><br>
-<label>マグニチュード：</label><input id="quake-mag"><br>
-<label>津波危険度：</label>
+
+<!-- 地震設定 -->
+<h3>地震情報設定</h3>
+<input id="quake-loc" placeholder="震源">
+<input id="quake-shindo" placeholder="震度">
+<input id="quake-mag" placeholder="マグニチュード">
 <select id="quake-tsunami">
 <option value="なし">なし</option>
 <option value="注意">注意</option>
 <option value="警報">警報</option>
-</select><br>
-<button onclick="setQuake()">地震更新 & 通知</button>
-
+</select>
+<button onclick="setQuake()">更新 & 通知</button>
 <h3>地震履歴</h3>
 <div id="quake-history"></div>
 
 <hr>
-<p>津波色設定</p>
+
+<!-- 津波設定 -->
+<h3>津波情報設定</h3>
 <select id="region-select">
 <option value="hokkaido">北海道</option>
 <option value="tohoku">東北</option>
@@ -150,7 +158,24 @@
 <option value="red">警報</option>
 <option value="purple">大津波警報</option>
 </select>
-<button onclick="setTsunamiColor()">色設定</button>
+<button onclick="setTsunami()">更新 & 通知</button>
+<h3>津波履歴</h3>
+<div id="tsunami-history"></div>
+
+<hr>
+
+<!-- 火山設定 -->
+<h3>火山情報設定</h3>
+<textarea id="volcano-text" placeholder="火山情報を入力"></textarea><br>
+<button onclick="setVolcano()">更新 & 通知</button>
+
+<hr>
+
+<!-- 避難所設定 -->
+<h3>避難所マップ更新</h3>
+<textarea id="shelter-text" placeholder="避難所データをJSON形式で入力"></textarea><br>
+<button onclick="setShelter()">更新 & 反映</button>
+</div>
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script src="script.js"></script>
