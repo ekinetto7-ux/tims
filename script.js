@@ -25,8 +25,14 @@ function home(){openPage('home');}
 // --- 管理者モード ---
 function checkAdmin(){
   const pass = document.getElementById('adminPass').value;
-  if(pass===adminPass){openPage('admin');document.getElementById('admin-msg').innerText='';loadHistory();loadQuakeHistory();}
-  else{document.getElementById('admin-msg').innerText='パスワードが違います';}
+  if(pass===adminPass){
+    openPage('admin');
+    document.getElementById('admin-msg').innerText='';
+    loadHistory();
+    loadQuakeHistory();
+  } else {
+    document.getElementById('admin-msg').innerText='パスワードが違います';
+  }
 }
 
 function setNotice(){
@@ -70,7 +76,9 @@ function loginUser(){
   const pass=document.getElementById('regPass').value;
   if(users[email] && users[email]===pass){
     document.getElementById('account-msg').innerText='ログイン成功';
-  }else{document.getElementById('account-msg').innerText='メールまたはパスワードが違います';}
+  }else{
+    document.getElementById('account-msg').innerText='メールまたはパスワードが違います';
+  }
 }
 
 // --- 通知 ---
@@ -89,12 +97,14 @@ function getWeather(){
   });
 }
 getWeather();
+setInterval(getWeather,300000); // 5分更新
 
 // --- 雨雲レーダー ---
 function updateRadar(){
   document.getElementById('radar-img').src=`https://tile.openweathermap.org/map/precipitation_new/0/0/0.png?appid=${API_KEY}`;
 }
 updateRadar();
+setInterval(updateRadar,300000);
 
 // --- 津波色設定 ---
 function setTsunamiColor(){
@@ -110,34 +120,4 @@ function updateTsunamiMap(){
     el.className='map-region '+tsunamiColors[region];
   }
 }
-updateTsunamiMap();
-
-// --- 地震設定 ---
-function setQuake(){
-  const loc=document.getElementById('quake-loc').value;
-  const shindo=document.getElementById('quake-shindo').value;
-  const mag=document.getElementById('quake-mag').value;
-  const tsunami=document.getElementById('quake-tsunami').value;
-  const q={loc,shindo,mag,tsunami,date:new Date().toLocaleString()};
-  quakeHistory.push(q);
-  localStorage.setItem('quakeHistory',JSON.stringify(quakeHistory));
-  notifyAll(`[地震情報] ${loc} 震度:${shindo} M:${mag} 津波:${tsunami}`);
-  loadQuakeHistory();
-}
-function loadQuakeHistory(){
-  const h = document.getElementById('quake-history'); h.innerHTML='';
-  quakeHistory.forEach(q=>{
-    const div=document.createElement('div'); div.className='history-box';
-    div.innerText=`[${q.date}] ${q.loc} 震度:${q.shindo} M:${q.mag} 津波:${q.tsunami}`;
-    h.appendChild(div);
-  });
-}
-loadQuakeHistory();
-
-// --- 火山情報取得（デモ） ---
-document.getElementById('volcano-info').innerText='現在噴火情報なし（デモ表示）';
-
-// --- 避難所マップ（デモ） ---
-const shelterMap = document.getElementById('shelter-map');
-shelterMap.innerText = '地図表示（デモ）';
-// LeafletやGoogleMaps APIと連携可能
+updateTsun
