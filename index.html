@@ -3,14 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>防災ナビ 神サイト 4.0</title>
+<title>防災ナビ 4.1 リアル完全版</title>
 <link rel="stylesheet" href="style.css">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 </head>
 <body>
 
 <header>
-  防災ナビ 神サイト 4.0 <button id="darkModeToggle">🌙</button>
+  防災ナビ 4.1 <button id="darkModeToggle">🌙</button>
 </header>
 
 <div id="notice">📢 現在お知らせはありません</div>
@@ -29,7 +30,7 @@
 </div>
 </div>
 
-<!-- 天気ページ -->
+<!-- 天気 -->
 <div id="weather" class="page">
 <button class="back" onclick="home()">戻る</button>
 <h2>天気</h2>
@@ -71,14 +72,14 @@
 <div id="volcano" class="page">
 <button class="back" onclick="home()">戻る</button>
 <h2>火山情報</h2>
-<p id="volcano-info">リアルタイム情報取得中...</p>
+<p id="volcano-info">取得中...</p>
 </div>
 
-<!-- 避難所 -->
+<!-- 避難所マップ -->
 <div id="shelter" class="page">
 <button class="back" onclick="home()">戻る</button>
 <h2>避難所マップ</h2>
-<div id="shelter-map" style="height:400px;width:100%;background:#eee;">地図表示（デモ）</div>
+<div id="shelter-map" style="height:400px;"></div>
 </div>
 
 <!-- アカウント -->
@@ -151,8 +152,7 @@
 </select>
 <button onclick="setTsunamiColor()">色設定</button>
 
-</div>
-
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script src="script.js"></script>
 </body>
 </html>
