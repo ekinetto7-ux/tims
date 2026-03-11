@@ -1,11 +1,13 @@
-// --- 設定 ---
+// --- 初期設定 ---
 const API_KEY = 'ここにOpenWeatherMapのAPIキー';
 let users = JSON.parse(localStorage.getItem('users')) || {};
 let adminPass = '20201002Mana';
 let noticeHistory = JSON.parse(localStorage.getItem('noticeHistory')) || [];
 let quakeHistory = JSON.parse(localStorage.getItem('quakeHistory')) || [];
+let tsunamiHistory = JSON.parse(localStorage.getItem('tsunamiHistory')) || [];
 let tsunamiColors = JSON.parse(localStorage.getItem('tsunamiColors')) || {};
 let darkMode = localStorage.getItem('darkMode')==='true';
+let volcanoText = '現在火山情報はありません';
 
 // --- ダークモード ---
 const body = document.body;
@@ -22,36 +24,34 @@ function openPage(id){
 }
 function home(){openPage('home');}
 
+// --- 通知 ---
+function notifyAll(msg){
+  if(Notification.permission==='granted'){
+    new Notification('防災ナビ通知', {body:msg});
+  }else{Notification.requestPermission();}
+}
+
 // --- 管理者モード ---
 function checkAdmin(){
   const pass = document.getElementById('adminPass').value;
   if(pass===adminPass){
     openPage('admin');
     document.getElementById('admin-msg').innerText='';
-    loadHistory();
-    loadQuakeHistory();
+    loadHistory(); loadQuakeHistory(); loadTsunamiHistory();
   } else {
     document.getElementById('admin-msg').innerText='パスワードが違います';
   }
 }
 
+// --- お知らせ ---
 function setNotice(){
   const text = document.getElementById('adminText').value;
-  document.getElementById('notice').innerText=text;
+  document.getElementById('notice').innerText = text;
   noticeHistory.push({text,date:new Date().toLocaleString()});
-  localStorage.setItem('noticeHistory',JSON.stringify(noticeHistory));
+  localStorage.setItem('noticeHistory', JSON.stringify(noticeHistory));
   notifyAll(text);
   loadHistory();
 }
-
-function resetHistory(){
-  noticeHistory=[]; quakeHistory=[];
-  localStorage.setItem('noticeHistory',JSON.stringify(noticeHistory));
-  localStorage.setItem('quakeHistory',JSON.stringify(quakeHistory));
-  loadHistory();
-  loadQuakeHistory();
-}
-
 function loadHistory(){
   const h = document.getElementById('history'); h.innerHTML='';
   noticeHistory.forEach(n=>{
@@ -81,11 +81,13 @@ function loginUser(){
   }
 }
 
-// --- 通知 ---
-function notifyAll(msg){
-  if(Notification.permission==='granted'){
-    new Notification('防災ナビ通知', {body:msg});
-  }else{Notification.requestPermission();}
+// --- 全履歴リセット ---
+function resetAll(){
+  noticeHistory=[]; quakeHistory=[]; tsunamiHistory=[];
+  localStorage.setItem('noticeHistory',JSON.stringify(noticeHistory));
+  localStorage.setItem('quakeHistory',JSON.stringify(quakeHistory));
+  localStorage.setItem('tsunamiHistory',JSON.stringify(tsunamiHistory));
+  loadHistory(); loadQuakeHistory(); loadTsunamiHistory();
 }
 
 // --- 天気 ---
@@ -93,31 +95,4 @@ function getWeather(){
   fetch(`https://api.openweathermap.org/data/2.5/weather?q=Tokyo,jp&appid=${API_KEY}&lang=ja&units=metric`)
   .then(r=>r.json())
   .then(data=>{
-    document.getElementById('weather-text').innerText=`東京: ${data.weather[0].description}, ${data.main.temp}℃`;
-  });
-}
-getWeather();
-setInterval(getWeather,300000); // 5分更新
-
-// --- 雨雲レーダー ---
-function updateRadar(){
-  document.getElementById('radar-img').src=`https://tile.openweathermap.org/map/precipitation_new/0/0/0.png?appid=${API_KEY}`;
-}
-updateRadar();
-setInterval(updateRadar,300000);
-
-// --- 津波色設定 ---
-function setTsunamiColor(){
-  const region = document.getElementById('region-select').value;
-  const color = document.getElementById('color-select').value;
-  tsunamiColors[region]=color;
-  localStorage.setItem('tsunamiColors',JSON.stringify(tsunamiColors));
-  updateTsunamiMap();
-}
-function updateTsunamiMap(){
-  for(const region in tsunamiColors){
-    const el = document.getElementById(region);
-    el.className='map-region '+tsunamiColors[region];
-  }
-}
-updateTsun
+    document
