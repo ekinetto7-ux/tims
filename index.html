@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>防災ナビ 神サイト 4.0</title>
+<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<header>
+  防災ナビ 神サイト 4.0 <button id="darkModeToggle">🌙</button>
+</header>
+
+<div id="notice">📢 現在お知らせはありません</div>
+
+<!-- ホーム画面 -->
+<div id="home" class="page active">
+<div class="grid">
+  <div class="card" onclick="openPage('weather')">☀️ 天気</div>
+  <div class="card" onclick="openPage('rain')">🌧 雨雲レーダー</div>
+  <div class="card" onclick="openPage('earthquake')">🌍 地震</div>
+  <div class="card" onclick="openPage('tsunami')">🌊 津波</div>
+  <div class="card" onclick="openPage('volcano')">🌋 火山</div>
+  <div class="card" onclick="openPage('shelter')">🏠 避難所</div>
+  <div class="card" onclick="openPage('login')">👤 ログイン</div>
+  <div class="card" onclick="openPage('admin-login')">🛠 管理者</div>
+</div>
+</div>
+
+<!-- 天気ページ -->
+<div id="weather" class="page">
+<button class="back" onclick="home()">戻る</button>
+<h2>天気</h2>
+<p id="weather-text">取得中...</p>
+</div>
+
+<!-- 雨雲レーダー -->
+<div id="rain" class="page">
+<button class="back" onclick="home()">戻る</button>
+<h2>雨雲レーダー</h2>
+<img id="radar-img" width="100%">
+</div>
+
+<!-- 地震 -->
+<div id="earthquake" class="page">
+<button class="back" onclick="home()">戻る</button>
+<h2>最新地震情報</h2>
+<ul id="quake-list"></ul>
+</div>
+
+<!-- 津波 -->
+<div id="tsunami" class="page">
+<button class="back" onclick="home()">戻る</button>
+<h2>津波情報（色分け）</h2>
+<div id="tsunami-map">
+  <span class="map-region" id="hokkaido">北海道</span>
+  <span class="map-region" id="tohoku">東北</span>
+  <span class="map-region" id="kanto">関東</span>
+  <span class="map-region" id="chubu">中部</span>
+  <span class="map-region" id="kinki">近畿</span>
+  <span class="map-region" id="chugoku">中国</span>
+  <span class="map-region" id="shikoku">四国</span>
+  <span class="map-region" id="kyushu">九州</span>
+  <span class="map-region" id="okinawa">沖縄</span>
+</div>
+</div>
+
+<!-- 火山 -->
+<div id="volcano" class="page">
+<button class="back" onclick="home()">戻る</button>
+<h2>火山情報</h2>
+<p id="volcano-info">リアルタイム情報取得中...</p>
+</div>
+
+<!-- 避難所 -->
+<div id="shelter" class="page">
+<button class="back" onclick="home()">戻る</button>
+<h2>避難所マップ</h2>
+<div id="shelter-map" style="height:400px;width:100%;background:#eee;">地図表示（デモ）</div>
+</div>
+
+<!-- アカウント -->
+<div id="login" class="page account">
+<button class="back" onclick="home()">戻る</button>
+<h2>アカウント</h2>
+<input type="email" id="regEmail" placeholder="メール">
+<input type="password" id="regPass" placeholder="パスワード">
+<button onclick="registerUser()">登録</button>
+<button onclick="loginUser()">ログイン</button>
+<p id="account-msg" style="color:red;"></p>
+</div>
+
+<!-- 管理者ログイン -->
+<div id="admin-login" class="page">
+<button class="back" onclick="home()">戻る</button>
+<h2>管理者ログイン</h2>
+<input type="password" id="adminPass" placeholder="管理者パスワード">
+<br>
+<button onclick="checkAdmin()">ログイン</button>
+<p id="admin-msg" style="color:red;"></p>
+</div>
+
+<!-- 管理者モード -->
+<div id="admin" class="page admin">
+<button class="back" onclick="home()">戻る</button>
+<h2>管理者モード</h2>
+
+<p>トップ案内設定</p>
+<textarea id="adminText"></textarea><br>
+<button onclick="setNotice()">更新 & 通知</button>
+<button onclick="resetHistory()">履歴リセット</button>
+
+<h3>履歴</h3>
+<div id="history"></div>
+
+<hr>
+<p>地震情報設定</p>
+<label>震源：</label><input id="quake-loc"><br>
+<label>震度：</label><input id="quake-shindo"><br>
+<label>マグニチュード：</label><input id="quake-mag"><br>
+<label>津波危険度：</label>
+<select id="quake-tsunami">
+<option value="なし">なし</option>
+<option value="注意">注意</option>
+<option value="警報">警報</option>
+</select><br>
+<button onclick="setQuake()">地震更新 & 通知</button>
+
+<h3>地震履歴</h3>
+<div id="quake-history"></div>
+
+<hr>
+<p>津波色設定</p>
+<select id="region-select">
+<option value="hokkaido">北海道</option>
+<option value="tohoku">東北</option>
+<option value="kanto">関東</option>
+<option value="chubu">中部</option>
+<option value="kinki">近畿</option>
+<option value="chugoku">中国</option>
+<option value="shikoku">四国</option>
+<option value="kyushu">九州</option>
+<option value="okinawa">沖縄</option>
+</select>
+<select id="color-select">
+<option value="yellow">注意</option>
+<option value="red">警報</option>
+<option value="purple">大津波警報</option>
+</select>
+<button onclick="setTsunamiColor()">色設定</button>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
