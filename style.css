@@ -1,0 +1,138 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap');
+
+/* 基本スタイル */
+body {
+  margin:0;
+  font-family:'Noto Sans JP', sans-serif;
+  background: linear-gradient(to bottom,#eef3ff,#cfe0fc);
+  transition: background 0.3s, color 0.3s;
+}
+
+body.dark {
+  background: linear-gradient(to bottom,#1a1a1a,#333);
+  color:white;
+}
+
+header {
+  background:#1e90ff;
+  color:white;
+  text-align:center;
+  padding:15px;
+  font-size:26px;
+  font-weight:bold;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  display:flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#darkModeToggle {
+  font-size:20px;
+  background:transparent;
+  border:none;
+  cursor:pointer;
+  color:white;
+}
+
+#notice {
+  background:#ff3b3b;
+  color:white;
+  text-align:center;
+  padding:10px;
+  font-weight:bold;
+  animation:fadein 1s;
+}
+
+.grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:15px;
+  padding:20px;
+}
+
+.card {
+  background:white;
+  border-radius:12px;
+  padding:25px;
+  text-align:center;
+  font-size:18px;
+  box-shadow:0 6px 15px rgba(0,0,0,0.15);
+  cursor:pointer;
+  transition:0.3s, transform 0.3s;
+}
+
+body.dark .card {
+  background:#444;
+  color:white;
+}
+
+.card:hover {
+  transform:scale(1.08);
+  box-shadow:0 12px 25px rgba(0,0,0,0.35);
+}
+
+.page { display:none; padding:20px; }
+.active { display:block; }
+
+.back {
+  margin-bottom:20px;
+  padding:10px;
+  background:#1e90ff;
+  color:white;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+  transition:0.2s;
+}
+.back:hover { background:#187bcd; }
+
+textarea, input, select, button {
+  padding:8px;
+  margin:5px 0;
+  border-radius:4px;
+  border:1px solid #ccc;
+}
+
+body.dark textarea, body.dark input, body.dark select {
+  background:#555;
+  color:white;
+  border:1px solid #888;
+}
+
+.map-region {
+  padding:5px;
+  margin:3px;
+  border-radius:4px;
+  color:white;
+  display:inline-block;
+  cursor:pointer;
+  transition:0.2s, transform 0.2s;
+}
+
+.map-region:hover {
+  transform: scale(1.1);
+  opacity:0.9;
+}
+
+.yellow { background:orange; }
+.red { background:red; }
+.purple { background:purple; }
+
+.history-box {
+  background:#f0f0f0;
+  padding:10px;
+  margin:10px 0;
+  border-radius:6px;
+  transition:0.2s;
+}
+
+body.dark .history-box {
+  background:#555;
+  color:white;
+}
+
+@keyframes fadein { from{opacity:0;} to{opacity:1;} }
+
+@media(max-width:600px){
+  .grid { grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); }
+}
