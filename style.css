@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap');
 
-/* 基本スタイル */
 body {
   margin:0;
   font-family:'Noto Sans JP', sans-serif;
@@ -135,6 +134,26 @@ body.dark .history-box {
   border-radius:12px;
   box-shadow:0 6px 15px rgba(0,0,0,0.15);
 }
+
+#tsunami-legend {
+  margin-top:15px;
+  background:#f0f0f0;
+  padding:10px;
+  border-radius:8px;
+}
+body.dark #tsunami-legend { background:#555; color:white; }
+
+.legend-box {
+  display:inline-block;
+  width:20px;
+  height:20px;
+  margin-right:8px;
+  vertical-align:middle;
+  border-radius:4px;
+}
+.legend-box.yellow { background:orange; }
+.legend-box.red { background:red; }
+.legend-box.purple { background:purple; }
 
 @keyframes fadein { from{opacity:0;} to{opacity:1;} }
 
