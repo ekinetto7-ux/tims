@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COMMAND CENTER 01 - KIMISU</title>
+    <style>
+        /* 司令官のコンソールデザイン */
+        body { background: #000; color: #fff; font-family: sans-serif; margin: 0; padding: 10px; }
+        .emergency-banner { background: #ff3e3e; color: #fff; padding: 15px; text-align: center; font-weight: bold; font-size: 1.2em; border-radius: 5px; margin-bottom: 10px; }
+        .grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        .panel { border: 1px solid #444; padding: 10px; background: #111; border-radius: 5px; }
+        h3 { margin-top: 0; color: #aaa; font-size: 0.9em; }
+        iframe { width: 100%; height: 250px; border: none; border-radius: 3px; }
+        
+        /* 管理者操作エリア */
+        .admin-area { border: 1px dashed #00ff41; padding: 10px; margin-bottom: 20px; }
+        input { width: 70%; padding: 8px; }
+        button { padding: 8px 15px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <div class="emergency-banner" id="status">
+        【情報待機中】最新情報を確認してください
+    </div>
+
+    <div class="admin-area">
+        <input type="text" id="userInput" placeholder="避難情報を入力...">
+        <button onclick="updateStatus()">送信</button>
+    </div>
+
+    <div class="grid">
+        <div class="panel">
+            <h3>河川水位（小糸川・小櫃川など）</h3>
+            <iframe src="https://www.river.go.jp/"></iframe>
+        </div>
+        <div class="panel">
+            <h3>交通状況（JR内房線）</h3>
+            <iframe src="https://www.traininfo.jreast.co.jp/train_info/kanto.aspx"></iframe>
+        </div>
+        <div class="panel">
+            <h3>雨雲レーダー（気象庁）</h3>
+            <iframe src="https://www.jma.go.jp/bosai/nowc/"></iframe>
+        </div>
+    </div>
+
+    <script>
+        function updateStatus() {
+            const input = document.getElementById('userInput').value;
+            document.getElementById('status').innerText = input;
+        }
+    </script>
+</body>
+</html>
