@@ -2,36 +2,32 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>試聴 - 生物交通チャンネル</title>
+    <title>楽曲試聴 - 生物交通チャンネル</title>
     <style>
-        body { font-family: sans-serif; background-color: #f0f4f8; text-align: center; padding: 40px; color: #333; }
-        .player-card { background: white; max-width: 500px; margin: 0 auto; padding: 40px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
-        h2 { margin-bottom: 20px; }
-        .song-title { font-weight: bold; margin-bottom: 10px; text-align: left; }
-        audio { margin-bottom: 30px; width: 100%; }
-        .divider { border: 0; border-top: 1px solid #eee; margin: 20px 0; }
-        .back-btn { display: inline-block; margin-top: 20px; padding: 10px 20px; background-color: #718096; color: white; text-decoration: none; border-radius: 50px; font-weight: bold; }
+        body { font-family: sans-serif; background-color: #f7f9fc; padding: 20px; text-align: center; }
+        .card { background: white; max-width: 600px; margin: 0 auto; padding: 40px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        h2 { margin-bottom: 30px; }
+        .song-item { margin-bottom: 30px; text-align: left; }
+        .back-btn { display: inline-block; margin-top: 30px; padding: 12px 25px; background-color: #718096; color: white; text-decoration: none; border-radius: 50px; }
     </style>
 </head>
 <body>
-    <div class="player-card">
+
+    <div class="card">
         <h2>楽曲試聴</h2>
-        
-        <p class="song-title">1. 水槽の特急列車</p>
-        <audio controls>
-            <source src="Suisou.mp3" type="audio/mpeg">
-        </audio>
-        
-        <hr class="divider">
-        
-        <p class="song-title">2. miracel2 ハートのジュエル</p>
-        <audio controls>
-            <source src="miracel2.mp3" type="audio/mpeg">
-        </audio>
-        
-        <div>
-            <a href="index.html" class="back-btn">← ホームに戻る</a>
+
+        <div class="song-item">
+            <p>1. 水槽の特急列車</p>
+            <audio controls src="suisou.mp3"></audio>
         </div>
+
+        <div class="song-item">
+            <p>2. miracel2 ハートのジュエル</p>
+            <audio controls src="miracel2.mp3"></audio>
+        </div>
+
+        <a href="songs.html" class="back-btn">← 楽曲リストに戻る</a>
     </div>
+
 </body>
 </html>
