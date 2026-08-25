@@ -19,13 +19,13 @@
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        /* モードによる見た目の変化 */
-        body.train-mode {
-            background-color: #e3f2fd; /* 訓練中は爽やかな青系 */
-        }
-        body.train-mode .container {
-            border: 2px dashed #2196f3;
-        }
+        /* モードごとの背景色の変化 */
+        body.mode-train { background-color: #e3f2fd; }
+        body.mode-jishin { background-color: #fff3e0; }
+        body.mode-tsunami { background-color: #e0f7fa; }
+        body.mode-ooame { background-color: #e8eaf6; }
+        body.mode-jishintsunami { background-color: #fbe9e7; }
+
         h1 { font-size: 1.4rem; color: #333; }
         .mode-banner {
             padding: 10px;
@@ -34,8 +34,8 @@
             font-weight: bold;
             border-radius: 4px;
         }
-        .banner-real { background-color: #ffebee; color: #c62828; }
-        .banner-train { background-color: #e1f5fe; color: #0277bd; }
+        .banner-train { background-color: #b3e5fc; color: #01579b; }
+        .banner-alert { background-color: #ffebee; color: #c62828; }
         
         .form-group { margin-bottom: 15px; }
         label { display: block; margin-bottom: 5px; font-weight: bold; }
@@ -61,26 +61,29 @@
         }
     </style>
 </head>
-<body id="bodyElement">
+<body id="bodyElement" class="mode-train">
 
 <div class="container">
     <!-- モード表示バナー -->
-    <div id="modeBanner" class="mode-banner banner-train">現在のモード：訓練モード</div>
+    <div id="modeBanner" class="mode-banner banner-train">現在のモード：訓練</div>
 
     <h1>災害時 家族の安否確認</h1>
 
-    <!-- モードチェンジ用スイッチ -->
+    <!-- モード（種類）切り替え -->
     <div class="form-group">
-        <label>モード切り替え：</label>
+        <label>モード・災害の選択：</label>
         <select id="modeSelect">
-            <option value="train" selected>訓練モード（練習用）</option>
-            <option value="real">🚨 本番モード（実際の災害用）</option>
+            <option value="訓練" selected>🛡️ 訓練（練習用）</option>
+            <option value="地震">🔴 地震</option>
+            <option value="津波">🌊 津波</option>
+            <option value="大雨">🌧️ 大雨</option>
+            <option value="地震津波">🚨 地震津波</option>
         </select>
     </div>
 
     <hr>
 
-    <!-- 1. 送信先の家族を選ぶ -->
+    <!-- 送信先の家族を選ぶ -->
     <div class="form-group">
         <label>送信する家族：</label>
         <select id="familySelect">
@@ -91,19 +94,7 @@
         </select>
     </div>
 
-    <!-- 2. 災害の種類を選ぶ -->
-    <div class="form-group">
-        <label>災害の種類：</label>
-        <select id="disasterSelect">
-            <option value="地震">地震</option>
-            <option value="津波">津波</option>
-            <option value="大雨">大雨</option>
-            <option value="地震津波">地震津波</option>
-            <option value="訓練">訓練</option>
-        </select>
-    </div>
-
-    <!-- 3. メッセージを入力 -->
+    <!-- メッセージを入力 -->
     <div class="form-group">
         <label>今の状況・メッセージ：</label>
         <input type="text" id="messageInput" placeholder="例：無事です。避難所にいます。">
@@ -124,26 +115,26 @@
     const bodyElement = document.getElementById('bodyElement');
     const modeBanner = document.getElementById('modeBanner');
 
-    // モードが切り替わったときの見た目の変更処理
+    // モード（災害）が選ばれたときの見た目の変更
     modeSelect.addEventListener('change', () => {
-        if (modeSelect.value === 'real') {
-            bodyElement.classList.add('real-mode');
-            bodyElement.classList.remove('train-mode');
-            modeBanner.textContent = '🚨 【本番モード】 実際の災害情報を送信します';
-            modeBanner.className = 'mode-banner banner-real';
-        } else {
-            bodyElement.classList.add('train-mode');
-            bodyElement.classList.remove('real-mode');
-            modeBanner.textContent = '🛡️ 【訓練モード】 これは訓練・テスト送信です';
+        const val = modeSelect.value;
+        bodyElement.className = ''; // 一回クラスをリセット
+        
+        if (val === '訓練') {
+            bodyElement.classList.add('mode-train');
+            modeBanner.textContent = '🛡️ 【訓練モード】 練習用です';
             modeBanner.className = 'mode-banner banner-train';
+        } else {
+            bodyElement.classList.add('mode-' + (val === '地震津波' ? 'jishintsunami' : val === '地震' ? 'jishin' : val === '津波' ? 'tsunami' : 'ooame'));
+            modeBanner.textContent = `🚨 【緊急本番】 ${val} の発生情報です`;
+            modeBanner.className = 'mode-banner banner-alert';
         }
     });
 
     // 送信ボタンを押したときの処理
     document.getElementById('sendButton').addEventListener('click', () => {
-        const currentMode = modeSelect.value === 'real' ? '【本番】' : '【訓練】';
+        const selectedMode = modeSelect.value;
         const family = document.getElementById('familySelect').value;
-        const disaster = document.getElementById('disasterSelect').value;
         const message = document.getElementById('messageInput').value;
 
         if (!message) {
@@ -151,21 +142,22 @@
             return;
         }
 
-        // 本番か訓練かでメールの件名を分かりやすく変える
-        const subject = encodeURIComponent(`${currentMode} 災害連絡: ${disaster} (${family}へ)`);
-        const body = encodeURIComponent(`[モード: ${currentMode}]\n宛先: ${family}\n災害: ${disaster}\n\nメッセージ:\n${message}`);
+        const isTrain = selectedMode === '訓練';
+        const prefix = isTrain ? '【訓練】' : '【🚨本番】';
 
-        // 画面の履歴リストに追加する
+        const subject = encodeURIComponent(`${prefix} ${selectedMode}連絡 (${family}へ)`);
+        const body = encodeURIComponent(`宛先: ${family}\n種類: ${selectedMode}\n\nメッセージ:\n${message}`);
+
+        // 履歴に追加
         const historyList = document.getElementById('historyList');
         const div = document.createElement('div');
         div.className = 'history-item';
-        div.textContent = `${currentMode} [${family}] 【${disaster}】 ${message}`;
+        div.textContent = `${prefix} [${family}] 【${selectedMode}】 ${message}`;
         historyList.prepend(div);
 
-        // 入力欄をクリア
         document.getElementById('messageInput').value = '';
 
-        // メールアプリを起動して送信
+        // メールアプリ起動
         window.location.href = `mailto:?subject=${subject}&body=${body}`;
     });
 </script>
