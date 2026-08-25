@@ -67,7 +67,7 @@
     <!-- モード表示バナー -->
     <div id="modeBanner" class="mode-banner banner-train">現在のモード：訓練</div>
 
-    <h1>災害時 家族の安否確認</h1>
+    <h1>災害時 家族の安否確認（SMS送信）</h1>
 
     <!-- モード（種類）切り替え -->
     <div class="form-group">
@@ -87,10 +87,11 @@
     <div class="form-group">
         <label>送信する家族：</label>
         <select id="familySelect">
-            <option value="お父さん">お父さん</option>
-            <option value="お母さん">お母さん</option>
-            <option value="子どもたち">子どもたち</option>
-            <option value="全員一斉">全員一斉</option>
+            <!-- valueのところに実際の電話番号を入れることもできます（例: value="09012345678"） -->
+            <option value="">お父さん（番号未登録）</option>
+            <option value="">お母さん（番号未登録）</option>
+            <option value="">子どもたち（番号未登録）</option>
+            <option value="">全員一斉</option>
         </select>
     </div>
 
@@ -101,7 +102,7 @@
     </div>
 
     <!-- 送信ボタン -->
-    <button id="sendButton">メッセージを作成・送信する</button>
+    <button id="sendButton">SMSメッセージを作成・送信する</button>
 
     <hr>
 
@@ -118,7 +119,7 @@
     // モード（災害）が選ばれたときの見た目の変更
     modeSelect.addEventListener('change', () => {
         const val = modeSelect.value;
-        bodyElement.className = ''; // 一回クラスをリセット
+        bodyElement.className = ''; 
         
         if (val === '訓練') {
             bodyElement.classList.add('mode-train');
@@ -131,10 +132,12 @@
         }
     });
 
-    // 送信ボタンを押したときの処理
+    // 送信ボタンを押したときの処理（SMS起動）
     document.getElementById('sendButton').addEventListener('click', () => {
         const selectedMode = modeSelect.value;
-        const family = document.getElementById('familySelect').value;
+        const familySelect = document.getElementById('familySelect');
+        const familyName = familySelect.options[familySelect.selectedIndex].text.split('（')[0];
+        const phoneNumber = familySelect.value; // 電話番号
         const message = document.getElementById('messageInput').value;
 
         if (!message) {
@@ -145,20 +148,20 @@
         const isTrain = selectedMode === '訓練';
         const prefix = isTrain ? '【訓練】' : '【🚨本番】';
 
-        const subject = encodeURIComponent(`${prefix} ${selectedMode}連絡 (${family}へ)`);
-        const body = encodeURIComponent(`宛先: ${family}\n種類: ${selectedMode}\n\nメッセージ:\n${message}`);
+        // SMS本文の作成
+        const smsBody = encodeURIComponent(`${prefix} ${selectedMode} (${familyName}へ)\n${message}`);
 
         // 履歴に追加
         const historyList = document.getElementById('historyList');
         const div = document.createElement('div');
         div.className = 'history-item';
-        div.textContent = `${prefix} [${family}] 【${selectedMode}】 ${message}`;
+        div.textContent = `${prefix} [${familyName}] 【${selectedMode}】 ${message}`;
         historyList.prepend(div);
 
         document.getElementById('messageInput').value = '';
 
-        // メールアプリ起動
-        window.location.href = `mailto:?subject=${subject}&body=${body}`;
+        // スマホのSMS（メッセージアプリ）を起動する（電話番号が空なら宛先なしで起動）
+        window.location.href = `sms:${phoneNumber}?body=${smsBody}`;
     });
 </script>
 
