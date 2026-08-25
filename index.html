@@ -39,7 +39,7 @@
         
         .form-group { margin-bottom: 15px; }
         label { display: block; margin-bottom: 5px; font-weight: bold; }
-        select, input { width: 100%; padding: 8px; box-sizing: border-box; font-size: 1rem; }
+        select, input { width: 100%; padding: 8px; box-sizing: border-box; font-size: 1.0rem; }
         button {
             width: 100%;
             padding: 10px;
@@ -87,11 +87,10 @@
     <div class="form-group">
         <label>送信する家族：</label>
         <select id="familySelect">
-            <!-- valueのところに実際の電話番号を入れることもできます（例: value="09012345678"） -->
             <option value="">お父さん（番号未登録）</option>
             <option value="">お母さん（番号未登録）</option>
-            <option value="">子どもたち（番号未登録）</option>
-            <option value="">全員一斉</option>
+            <option value="08022696418">子どもたち（080-2269-6418）</option>
+            <option value="">全員一斉（個別送信してください）</option>
         </select>
     </div>
 
@@ -160,7 +159,7 @@
 
         document.getElementById('messageInput').value = '';
 
-        // スマホのSMS（メッセージアプリ）を起動する（電話番号が空なら宛先なしで起動）
+        // スマホのSMS（メッセージアプリ）を起動する
         window.location.href = `sms:${phoneNumber}?body=${smsBody}`;
     });
 </script>
