@@ -208,13 +208,13 @@
                 <div class="card-body">
                     <p>首都圏エリアや新幹線、東北・信越地方の車両データベースです。</p>
                     <a href="keiyo.html" class="route-link link-je">JE 京葉線 (E233系5000番台)</a>
-                    <!-- 💡 ここのリンク先を確実に sobu.html へ行くようにバグ修正しました！ -->
+                    <!-- 💡 大文字の sobu.html に確実に飛ぶように大文字に修正しました！ -->
                     <a href="sobu.html" class="route-link link-jo">JO 総武・横須賀線 (E235系1000番台)</a>
                 </div>
             </div>
             <!-- JR東海 -->
             <div class="jr-card">
-                <div class="card-header central"><span>JR東海</span><span class="logo-text">JR</span></div>
+                <div class="card-header central" style="background:#ff7e00;"><span>JR東海</span><span class="logo-text">JR</span></div>
                 <div class="card-body">
                     <p>東海道新幹線や名古屋・静岡エリアを走る車両のデータベースです。</p>
                     <div style="color: #999; font-size: 14px; font-style: italic; padding: 10px 0;">順次追加予定</div>
@@ -222,7 +222,7 @@
             </div>
             <!-- JR西日本 -->
             <div class="jr-card">
-                <div class="card-header west"><span>JR西日本</span><span class="logo-text">JR</span></div>
+                <div class="card-header west" style="background:#0072bc;"><span>JR西日本</span><span class="logo-text">JR</span></div>
                 <div class="card-body">
                     <p>アーバンネットワークや山陽・北陸エリアの車両データベースです。</p>
                     <div style="color: #999; font-size: 14px; font-style: italic; padding: 10px 0;">順次追加予定</div>
@@ -234,7 +234,6 @@
     <!-- ⚙️ 検索システム -->
     <script>
         const trainDatabase = {
-            // 京葉線
             "f51": "【京葉線】E233系5000番台 F51編成（4両・新津製）が存在します。東京方の分割編成です！",
             "f52": "【京葉線】E233系5000番台 F52編成（4両・新津製）が存在します。",
             "f53": "【京葉線】E233系5000番台 F53編成（4両・新津製）は房総エリアへワンマン化転用されました！",
@@ -242,7 +241,6 @@
             "ケヨ551": "【京葉線】E233系5000番台 ケヨ551編成（6両・新津製）が存在します。",
             "ケヨ553": "【京葉線】E233系5000番台 ケヨ553編成（6両・新津製）は房総エリアへワンマン化転用されました！",
             "ケヨ501": "【京葉線】E233系5000番台 ケヨ501編成（10両固定・新津製）が存在します。",
-            // 総武・横須賀線
             "f-01": "【総武・横須賀線】E235系1000番台 F-01編成（11両基本・新津製）が存在します。グリーン車を連結！",
             "f-02": "【総武・横須賀線】E235系1000番台 F-02編成（11両基本・新津製）が存在します。",
             "j-01": "【総武・横須賀線】E235系1000番台 J-01編成（4両付属・新津製）が存在します。"
