@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>京葉線 E233系5000番台 貫通編成表</title>
+    <style>
+        :root { --keiyo-color: #c9222b; --niitsu-color: #0066cc; --jtrec-color: #009944; }
+        body { font-family: sans-serif; background-color: #f4f5f7; margin: 0; padding: 0; color: #333; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .header-station { background: #ffffff; border: 4px solid #737373; padding: 25px; border-radius: 8px; text-align: center; margin-bottom: 20px; }
+        .route-badge { background: var(--keiyo-color); color: #ffffff; width: 60px; height: 60px; display: inline-flex; flex-direction: column; justify-content: center; align-items: center; border-radius: 6px; font-weight: bold; margin-bottom: 10px; }
+        .route-badge .jr { font-size: 11px; line-height: 1; }
+        .route-badge .je { font-size: 28px; font-weight: 900; line-height: 1; }
+        .header-station h1 { font-size: 28px; margin: 5px 0 10px 0; }
+        .line-bar { background: var(--keiyo-color); height: 12px; width: 100%; border-radius: 2px; }
+        .back-btn { display: inline-block; background-color: #ffffff; border: 1px solid #ccc; padding: 10px 20px; border-radius: 6px; text-decoration: none; color: #333; font-weight: bold; margin-bottom: 25px; }
+        .legend-box { background: #ffffff; border: 1px solid #e0e0e0; padding: 12px 15px; border-radius: 6px; margin-bottom: 25px; font-size: 14px; }
+        .mfr-badge { color: #ffffff; padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 11px; display: inline-block; }
+        .bg-niitsu { background-color: var(--niitsu-color); }
+        .bg-jtrec { background-color: var(--jtrec-color); }
+        h2 { font-size: 22px; padding-left: 12px; border-left: 6px solid var(--keiyo-color); margin-top: 35px; margin-bottom: 15px; }
+        .table-container { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; background: #ffffff; border-radius: 6px; border: 1px solid #e0e0e0; }
+        table { width: 100%; border-collapse: collapse; white-space: nowrap; }
+        th, td { padding: 12px 15px; text-align: center; border-bottom: 1px solid #eeeeee; font-size: 13px; }
+        th { background-color: #f1f3f5; color: #495057; font-weight: bold; }
+        .th-title { background-color: #e9ecef; font-weight: bold; position: sticky; left: 0; z-index: 2; }
+        tr:hover { background-color: #f8f9fa; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header-station">
+        <div class="route-badge"><span class="jr">JR</span><span class="je">JE</span></div>
+        <h1>京葉線 車両編成データベース</h1>
+        <div class="line-bar"></div>
+    </div>
+    <a href="keiyo.html" class="back-btn">⬅ 京葉線メニューへ戻る</a>
+    <div class="legend-box"><strong>⚙️ 製造メーカー識別：</strong><span class="mfr-badge bg-niitsu">新津</span> 新津車両製作所 ／ <span class="mfr-badge bg-jtrec">横浜</span> 総合車両製作所</div>
+    <h2>🟦 1. 貫通編成（10両固定編成 / 全24編成）</h2>
+    <div class="table-container">
+        <table>
+            <thead><tr><th class="th-title">編成</th><th>製造</th><th>10号車</th><th>9号車</th><th>8号車</th><th>7号車</th><th>6号車</th><th>5号車</th><th>4号車</th><th>3号車</th><th>2号車</th><th>1号車</th></tr></thead>
+            <tbody>
+                <tr><td class="th-title"><strong>ケヨ501</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5001</td><td>サハE233-5001</td><td>モハE233-5401</td><td>モハE232-5401</td><td>サハE233-5501</td><td>モハE233-5201</td><td>モハE232-5201</td><td>モハE233-5001</td><td>モハE232-5001</td><td>クハE232-5001</td></tr>
+                <tr><td class="th-title"><strong>ケヨ502</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5002</td><td>サハE233-5002</td><td>モハE233-5402</td><td>モハE232-5402</td><td>サハE233-5502</td><td>モハE233-5202</td><td>モハE232-5202</td><td>モハE233-5002</td><td>モハE232-5002</td><td>クハE232-5002</td></tr>
+                <tr><td class="th-title"><strong>ケヨ503</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5003</td><td>サハE233-5003</td><td>モハE233-5403</td><td>モハE232-5403</td><td>サハE233-5503</td><td>モハE233-5203</td><td>モハE232-5203</td><td>モハE233-5003</td><td>モハE232-5003</td><td>クハE232-5003</td></tr>
+                <tr><td class="th-title"><strong>ケヨ504</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5004</td><td>サハE233-5004</td><td>モハE233-5404</td><td>モハE232-5404</td><td>サハE233-5504</td><td>モハE233-5204</td><td>モハE232-5204</td><td>モハE233-5004</td><td>モハE232-5004</td><td>クハE232-5004</td></tr>
+                <tr><td class="th-title"><strong>ケヨ505</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5005</td><td>サハE233-5005</td><td>モハE233-5405</td><td>モハE232-5405</td><td>サハE233-5505</td><td>モハE233-5205</td><td>モハE232-5205</td><td>モハE233-5005</td><td>モハE232-5005</td><td>クハE232-5005</td></tr>
+                <tr><td class="th-title"><strong>ケヨ506</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5006</td><td>サハE233-5006</td><td>モハE233-5406</td><td>モハE232-5406</td><td>サハE233-5506</td><td>モハE233-5206</td><td>モハE232-5206</td><td>モハE233-5006</td><td>モハE232-5006</td><td>クハE232-5006</td></tr>
+                <tr><td class="th-title"><strong>ケヨ507</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5007</td><td>サハE233-5007</td><td>モハE233-5407</td><td>モハE232-5407</td><td>サハE233-5507</td><td>モハE233-5207</td><td>モハE232-5207</td><td>モハE233-5007</td><td>モハE232-5007</td><td>クハE232-5007</td></tr>
+                <tr><td class="th-title"><strong>ケヨ508</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5008</td><td>サハE233-5008</td><td>モハE233-5408</td><td>モハE232-5408</td><td>サハE233-5508</td><td>モハE233-5208</td><td>モハE232-5208</td><td>モハE233-5008</td><td>モハE232-5008</td><td>クハE232-5008</td></tr>
+                <tr><td class="th-title"><strong>ケヨ509</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5009</td><td>サハE233-5009</td><td>モハE233-5409</td><td>モハE232-5409</td><td>サハE233-5509</td><td>モハE233-5209</td><td>モハE232-5209</td><td>モハE233-5009</td><td>モハE232-5009</td><td>クハE232-5009</td></tr>
+                <tr><td class="th-title"><strong>ケヨ510</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5010</td><td>サハE233-5010</td><td>モハE233-5410</td><td>モハE232-5410</td><td>サハE233-5510</td><td>モハE233-5210</td><td>モハE232-5210</td><td>モハE233-5010</td><td>モハE232-5010</td><td>クハE232-5010</td></tr>
+                <tr><td class="th-title"><strong>ケヨ511</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5011</td><td>サハE233-5011</td><td>モハE233-5411</td><td>モハE232-5411</td><td>サハE233-5511</td><td>モハE233-5211</td><td>モハE232-5211</td><td>モハE233-5011</td><td>モハE232-5011</td><td>クハE232-5011</td></tr>
+                <tr><td class="th-title"><strong>ケヨ512</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5012</td><td>サハE233-5012</td><td>モハE233-5412</td><td>モハE232-5412</td><td>サハE233-5512</td><td>モハE233-5212</td><td>モハE232-5212</td><td>モハE233-5012</td><td>モハE232-5012</td><td>クハE232-5012</td></tr>
+                <tr><td class="th-title"><strong>ケヨ513</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5013</td><td>サハE233-5013</td><td>モハE233-5413</td><td>モハE232-5413</td><td>サハE233-5513</td><td>モハE233-5213</td><td>モハE232-5213</td><td>モハE233-5013</td><td>モハE232-5013</td><td>クハE232-5013</td></tr>
+                <tr><td class="th-title"><strong>ケヨ514</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5014</td><td>サハE233-5014</td><td>モハE233-5414</td><td>モハE232-5414</td><td>サハE233-5514</td><td>モハE233-5214</td><td>モハE232-5214</td><td>モハE233-5014</td><td>モハE232-5014</td><td>クハE232-5014</td></tr>
+                <tr><td class="th-title"><strong>ケヨ515</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5015</td><td>サハE233-5015</td><td>モハE233-5415</td><td>モハE232-5415</td><td>サハE233-5515</td><td>モハE233-5215</td><td>モハE232-5215</td><td>モハE233-5015</td><td>モハE232-5015</td><td>クハE232-5015</td></tr>
+                <tr><td class="th-title"><strong>ケヨ516</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5016</td><td>サハE233-5016</td><td>モハE233-5416</td><td>モハE232-5416</td><td>サハE233-5516</td><td>モハE233-5216</td><td>モハE232-5216</td><td>モハE233-5016</td><td>モハE232-5016</td><td>クハE232-5016</td></tr>
+                <tr><td class="th-title"><strong>ケヨ517</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5017</td><td>サハE233-5017</td><td>モハE233-5417</td><td>モハE232-5417</td><td>サハE233-5517</td><td>モハE233-5217</td><td>モハE232-5217</td><td>モハE233-5017</td><td>モハE232-5017</td><td>クハE232-5017</td></tr>
+                <tr><td class="th-title"><strong>ケヨ518</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5018</td><td>サハE233-5018</td><td>モハE233-5418</td><td>モハE232-5418</td><td>サハE233-5518</td><td>モハE233-5218</td><td>モハE232-5218</td><td>モハE233-5018</td><td>モハE232-5018</td><td>クハE232-5018</td></tr>
+                <tr><td class="th-title"><strong>ケヨ519</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5019</td><td>サハE233-5019</td><td>モハE233-5419</td><td>モハE232-5419</td><td>サハE233-5519</td><td>モハE233-5219</td><td>モハE232-5219</td><td>モハE233-5019</td><td>モハE232-5019</td><td>クハE232-5019</td></tr>
+                <tr><td class="th-title"><strong>ケヨ520</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5020</td><td>サハE233-5020</td><td>モハE233-5420</td><td>モハE232-5420</td><td>サハE233-5520</td><td>モハE233-5220</td><td>モハE232-5220</td><td>モハE233-5020</td><td>モハE232-5020</td><td>クハE232-5020</td></tr>
