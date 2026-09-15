@@ -1,4 +1,4 @@
-     <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
@@ -49,7 +49,7 @@
             padding: 0 20px;
         }
 
-        /* 🔍 電車検索機能のシステムデザイン */
+        /* 🔍 電車検索機能 */
         .search-section {
             background: #ffffff;
             padding: 25px;
@@ -80,9 +80,7 @@
             outline: none;
             transition: border-color 0.2s;
         }
-        .search-input:focus {
-            border-color: var(--jr-east);
-        }
+        .search-input:focus { border-color: var(--jr-east); }
         .search-btn {
             background-color: var(--dark-bg);
             color: white;
@@ -94,65 +92,25 @@
             cursor: pointer;
             transition: background-color 0.2s;
         }
-        .search-btn:hover {
-            background-color: #333333;
-        }
+        .search-btn:hover { background-color: #333333; }
         
-        /* 検索結果の表示エリア */
         .search-result-box {
             margin-top: 20px;
             padding: 15px 20px;
             border-radius: 6px;
-            display: none; /* 初期状態は非表示 */
+            display: none;
             font-size: 15px;
             font-weight: bold;
         }
-        .result-success {
-            background-color: #e6f4ea;
-            color: #137333;
-            border-left: 5px solid #1e8e3e;
-        }
-        .result-fail {
-            background-color: #fce8e6;
-            color: #c5221f;
-            border-left: 5px solid #d93025;
-        }
+        .result-success { background-color: #e6f4ea; color: #137333; border-left: 5px solid #1e8e3e; }
+        .result-fail { background-color: #fce8e6; color: #c5221f; border-left: 5px solid #d93025; }
 
         /* 会社別メニューの配置 */
-        .section-title {
-            font-size: 20px;
-            font-weight: bold;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #ccc;
-            padding-bottom: 5px;
-        }
-        .jr-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-        }
-        .jr-card {
-            background: #ffffff;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            transition: transform 0.2s, box-shadow 0.2s;
-            display: flex;
-            flex-direction: column;
-        }
-        .jr-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-        }
-        .card-header {
-            padding: 15px 20px;
-            color: #ffffff;
-            font-weight: bold;
-            font-size: 18px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+        .section-title { font-size: 20px; font-weight: bold; margin-bottom: 20px; border-bottom: 2px solid #ccc; padding-bottom: 5px; }
+        .jr-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
+        .jr-card { background: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: transform 0.2s, box-shadow 0.2s; display: flex; flex-direction: column; }
+        .jr-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+        .card-header { padding: 15px 20px; color: #ffffff; font-weight: bold; font-size: 18px; display: flex; justify-content: space-between; align-items: center; }
         .card-header .logo-text { font-size: 24px; font-weight: 900; font-style: italic; }
         .east { background-color: var(--jr-east); }
         .central { background-color: var(--jr-central); }
@@ -161,24 +119,9 @@
         .card-body p { margin: 0 0 15px 0; font-size: 14px; color: #666; }
         
         .route-link {
-            display: block;
-            background: #f8f9fa;
-            border: 1px solid #e0e0e0;
-            padding: 12px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-            text-decoration: none;
-            color: #333;
-            font-weight: bold;
-            font-size: 14px;
-            transition: all 0.2s;
-            border-left: 5px solid #737373;
+            display: block; background: #f8f9fa; border: 1px solid #e0e0e0; padding: 12px; margin-bottom: 10px; border-radius: 5px; text-decoration: none; color: #333; font-weight: bold; font-size: 14px; transition: all 0.2s; border-left: 5px solid var(--keiyo-color);
         }
         .route-link:hover { background: #f1f3f5; padding-left: 18px; }
-        .link-je { border-left-color: var(--keiyo-color); }
-        .link-jm { border-left-color: #f15a22; }
-        .link-ca { border-left-color: #ff7e00; }
-        .link-a  { border-left-color: #0072bc; }
     </style>
 </head>
 <body>
@@ -198,7 +141,6 @@
                 <input type="text" id="trainInput" class="search-input" placeholder="編成番号を入力...">
                 <button onclick="searchTrain()" class="search-btn">検索</button>
             </div>
-            <!-- 結果を表示する隠しボックス -->
             <div id="searchResult" class="search-result-box"></div>
         </div>
 
@@ -209,8 +151,8 @@
                 <div class="card-header east"><span>JR東日本</span><span class="logo-text">JR</span></div>
                 <div class="card-body">
                     <p>首都圏エリアや新幹線、東北・信越地方の車両データベースです。</p>
-                    <a href="keiyo.html" class="route-link link-je">JE 京葉線 (E233系5000番台)</a>
-                    <a href="musashino.html" class="route-link link-jm">JM 武蔵野線 (E231系/209系)</a>
+                    <!-- 💡 新しく作る keiyo.html にジャンプするように設定 -->
+                    <a href="keiyo.html" class="route-link">JE 京葉線 (E233系5000番台)</a>
                 </div>
             </div>
             <!-- JR東海 -->
@@ -218,7 +160,7 @@
                 <div class="card-header central"><span>JR東海</span><span class="logo-text">JR</span></div>
                 <div class="card-body">
                     <p>東海道新幹線や名古屋・静岡エリアを走る車両のデータベースです。</p>
-                    <a href="#central-tokaido" class="route-link link-ca">CA 東海道本線 (313系/315系)</a>
+                    <div style="color: #999; font-size: 14px; font-style: italic; padding: 10px 0;">順次追加予定</div>
                 </div>
             </div>
             <!-- JR西日本 -->
@@ -226,26 +168,19 @@
                 <div class="card-header west"><span>JR西日本</span><span class="logo-text">JR</span></div>
                 <div class="card-body">
                     <p>アーバンネットワークや山陽・北陸エリアの車両データベースです。</p>
-                    <a href="#west-hokuriku" class="route-link link-a">A 北陸本線 (521系)</a>
+                    <div style="color: #999; font-size: 14px; font-style: italic; padding: 10px 0;">順次追加予定</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- ⚙️ 検索システムを動かすプログラム -->
     <script>
-        // データベースに登録されている電車のデータ（ここにどんどん追加できます）
+        // 🔍 検索機能
         const trainDatabase = {
-            // 京葉線 分割編成
             "f51": "【京葉線】E233系5000番台 F51編成（4両・新津車両製作所製）が存在します。東京方の分割編成です！",
-            "f52": "【京葉線】E233系5000番台 F52編成（4両・新津車両製作所製）が存在します。",
-            "f53": "【京葉線】E233系5000番台 F53編成（4両・新津車両製作所製）が存在します。",
             "f54": "【京葉線】E233系5000番台 F54編成（4両・新津車両製作所製）が存在します。",
             "ケヨ551": "【京葉線】E233系5000番台 ケヨ551編成（6両・新津車両製作所製）が存在します。F51編成とペアを組みます。",
-            "ケヨ552": "【京葉線】E233系5000番台 ケヨ552編成（6両・新津車両製作所製）が存在します。F52編成とペアを組みます。",
-            "ケヨ553": "【京葉線】E233系5000番台 ケヨ553編成（6両・新津車両製作所製）が存在します。F53編成とペアを組みます。",
             "ケヨ554": "【京葉線】E233系5000番台 ケヨ554編成（6両・新津車両製作所製）が存在します。F54編成とペアを組みます。",
-            // 京葉線 貫通編成（サンプルで一部登録、ケヨ501〜ケヨ524まで自由に追加可能）
             "ケヨ501": "【京葉線】E233系5000番台 ケヨ501編成（10両固定・新津車両製作所製）が存在します。トップナンバー編成です。",
             "ケヨ521": "【京葉線】E233系5000番台 ケヨ521編成（10両固定・総合車両製作所横浜事業所製）が存在します。"
         };
@@ -254,7 +189,6 @@
             const input = document.getElementById("trainInput").value.trim().toLowerCase();
             const resultBox = document.getElementById("searchResult");
             
-            // 入力が空っぽの場合
             if (input === "") {
                 resultBox.style.display = "block";
                 resultBox.className = "search-result-box result-fail";
@@ -262,24 +196,19 @@
                 return;
             }
 
-            // データベースにデータがあるか探す
             if (trainDatabase[input]) {
                 resultBox.style.display = "block";
                 resultBox.className = "search-result-box result-success";
                 resultBox.innerHTML = "✅ " + trainDatabase[input];
             } else {
-                // ❌ データがなかった場合
                 resultBox.style.display = "block";
                 resultBox.className = "search-result-box result-fail";
                 resultBox.innerHTML = "❌ その編成は登録されていません。";
             }
         }
 
-        // Enterキーでも検索できるようにする設定
         document.getElementById("trainInput").addEventListener("keypress", function(event) {
-            if (event.key === "Enter") {
-                searchTrain();
-            }
+            if (event.key === "Enter") { searchTrain(); }
         });
     </script>
 </body>
