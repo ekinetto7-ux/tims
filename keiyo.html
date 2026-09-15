@@ -84,10 +84,10 @@
         h2 { font-size: 22px; padding-left: 12px; border-left: 6px solid var(--keiyo-color); margin-top: 35px; margin-bottom: 15px; color: #111; }
         h3 { font-size: 16px; margin-top: 20px; color: #555; }
 
-        /* 💡 ここが超重要：画面からはみ出た部分を指で横スクロールできるようにする魔法の箱 */
+        /* スマホ用横スクロール機能 */
         .table-container {
             width: 100%;
-            overflow-x: auto; /* 横スクロールを強制的にONにする */
+            overflow-x: auto;
             -webkit-overflow-scrolling: touch;
             background: #ffffff;
             border-radius: 6px;
@@ -98,11 +98,11 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            white-space: nowrap; /* 文字が途中で勝手に改行されるのを防ぐ */
+            white-space: nowrap;
         }
         th, td { padding: 12px 15px; text-align: center; border-bottom: 1px solid #eeeeee; font-size: 13px; }
         th { background-color: #f1f3f5; color: #495057; font-weight: bold; }
-        .th-title { background-color: #e9ecef; font-weight: bold; position: sticky; left: 0; z-index: 2; }
+        .th-title { background-color: #e9ecef; font-weight: bold; }
         tr:hover { background-color: #f8f9fa; }
         .highlight-f51 { background-color: #fff9f9; font-weight: bold; }
     </style>
@@ -125,27 +125,75 @@
         <span class="mfr-badge bg-jtrec">横浜</span> 総合車両製作所・東急車輛
     </div>
 
+    <!-- 🟦 1. 貫通編成（スマートに全網羅） -->
     <h2>🟦 1. 貫通編成（10両固定編成 / 全24編成）</h2>
     <div class="table-container">
         <table>
             <thead>
                 <tr>
-                    <th class="th-title">編成</th><th>製造</th><th>10号車</th><th>9号車</th><th>8号車</th><th>7号車</th><th>6号車</th><th>5号車</th><th>4号車</th><th>3号車</th><th>2号車</th><th>1号車</th>
+                    <th class="th-title">編成番号</th>
+                    <th>製造元</th>
+                    <th>10〜1号車の車両番号（枝番）のルール</th>
                 </tr>
             </thead>
             <tbody>
-                <tr><td class="th-title"><strong>ケヨ501</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5001</td><td>サハE233-5001</td><td>モハE233-5401</td><td>モハE232-5401</td><td>サハE233-5501</td><td>モハE233-5201</td><td>モハE232-5201</td><td>モハE233-5001</td><td>モハE232-5001</td><td>クハE232-5001</td></tr>
-                <tr><td class="th-title"><strong>ケヨ502</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5002</td><td>サハE233-5002</td><td>モハE233-5402</td><td>モハE232-5402</td><td>サハE233-5502</td><td>モハE233-5202</td><td>モハE232-5202</td><td>モハE233-5002</td><td>モハE232-5002</td><td>クハE232-5002</td></tr>
-                <tr><td class="th-title"><strong>ケヨ503</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5003</td><td>サハE233-5003</td><td>モハE233-5403</td><td>モハE232-5403</td><td>サハE233-5503</td><td>モハE233-5203</td><td>モハE232-5203</td><td>モハE233-5003</td><td>モハE232-5003</td><td>クハE232-5003</td></tr>
-                <tr><td class="th-title"><strong>ケヨ504</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5004</td><td>サハE233-5004</td><td>モハE233-5404</td><td>モハE232-5404</td><td>サハE233-5504</td><td>モハE233-5204</td><td>モハE232-5204</td><td>モハE233-5004</td><td>モハE232-5004</td><td>クハE232-5004</td></tr>
-                <tr><td class="th-title"><strong>ケヨ505</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5005</td><td>サハE233-5005</td><td>モハE233-5405</td><td>モハE232-5405</td><td>サハE233-5505</td><td>モハE233-5205</td><td>モハE232-5205</td><td>モハE233-5005</td><td>モハE232-5005</td><td>クハE232-5005</td></tr>
-                <tr><td class="th-title"><strong>ケヨ506</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5006</td><td>サハE233-5006</td><td>モハE233-5406</td><td>モハE232-5406</td><td>サハE233-5506</td><td>モハE233-5206</td><td>モハE232-5206</td><td>モハE233-5006</td><td>モハE232-5006</td><td>クハE232-5006</td></tr>
-                <tr><td class="th-title"><strong>ケヨ507</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5007</td><td>サハE233-5007</td><td>モハE233-5407</td><td>モハE232-5407</td><td>サハE233-5507</td><td>モハE233-5207</td><td>モハE232-5207</td><td>モハE233-5007</td><td>モハE232-5007</td><td>クハE232-5007</td></tr>
-                <tr><td class="th-title"><strong>ケヨ508</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5008</td><td>サハE233-5008</td><td>モハE233-5408</td><td>モハE232-5408</td><td>サハE233-5508</td><td>モハE233-5208</td><td>モハE232-5208</td><td>モハE233-5008</td><td>モハE232-5008</td><td>クハE232-5008</td></tr>
-                <tr><td class="th-title"><strong>ケヨ509</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5009</td><td>サハE233-5009</td><td>モハE233-5409</td><td>モハE232-5409</td><td>サハE233-5509</td><td>モハE233-5209</td><td>モハE232-5209</td><td>モハE233-5009</td><td>モハE232-5009</td><td>クハE232-5009</td></tr>
-                <tr><td class="th-title"><strong>ケヨ510</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5010</td><td>サハE233-5010</td><td>モハE233-5410</td><td>モハE232-5410</td><td>サハE233-5510</td><td>モハE233-5210</td><td>モハE232-5210</td><td>モハE233-5010</td><td>モハE232-5010</td><td>クハE232-5010</td></tr>
-                <tr><td class="th-title"><strong>ケヨ511</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5011</td><td>サハE233-5011</td><td>モハE233-5411</td><td>モハE232-5411</td><td>サハE233-5511</td><td>モハE233-5211</td><td>モハE232-5211</td><td>モハE233-5011</td><td>モハE232-5011</td><td>クハE232-5011</td></tr>
-                <tr><td class="th-title"><strong>ケヨ512</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5012</td><td>サハE233-5012</td><td>モハE233-5412</td><td>モハE232-5412</td><td>サハE233-5512</td><td>モハE233-5212</td><td>モハE232-5212</td><td>モハE233-5012</td><td>モハE232-5012</td><td>クハE232-5012</td></tr>
-                <tr><td class="th-title"><strong>ケヨ513</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5013</td><td>サハE233-5013</td><td>モハE233-5413</td><td>モハE232-5413</td><td>サハE233-5513</td><td>モハE233-5213</td><td>モハE232-5213</td><td>モハE233-5013</td><td>モハE232-5013</td><td>クハE232-5013</td></tr>
-                <tr><td class="th-title"><strong>ケヨ514</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5014</td><td>サハE233-5014</td><td>モハE233-5414</td><td>モハE232-5414</td><td>サハE233-5514</td><td>モハE233-5214</td><td>モハE232-5214</td><td>モハE233-5014</td><td>モハE232-5014</td><td>クハE232-5014</td></tr>
-                <tr><td class="th-title"><strong>ケヨ515</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5015</td><td>サハE233-5015</td><td>モハE233-5415</td><td>モハE232-5415</td><td>サハE233-5515</td><td>モハE233-5215</td><td>モハE232-5215</td><td>モハE233-5015</td><td>モハE232-5015</td><td>クハE232-5015</td></tr>
+                <tr>
+                    <td class="th-title"><strong>ケヨ501 〜 ケヨ520</strong><br>(計20編成)</td>
+                    <td><span class="mfr-badge bg-niitsu">新津</span></td>
+                    <td>
+                        クハE233-5001〜5020 ／ サハE233-5001〜5020 ／ モハE233-5401〜5420 ／ モハE232-5401〜5420<br>
+                        サハE233-5501〜5520 ／ モハE233-5201〜5220 ／ モハE232-5201〜5220 ／ モハE233-5001〜5020<br>
+                        モハE232-5001〜5020 ／ クハE232-5001〜5020
+                    </td>
+                </tr>
+                <tr>
+                    <td class="th-title"><strong>ケヨ521 〜 ケヨ524</strong><br>(計4編成)</td>
+                    <td><span class="mfr-badge bg-jtrec">横浜</span></td>
+                    <td>
+                        クハE233-5025〜5028 ／ サハE233-5021〜5024 ／ モハE233-5421〜5424 ／ モハE232-5421〜5424<br>
+                        サハE233-5521〜5524 ／ モハE233-5221〜5224 ／ モハE232-5221〜5224 ／ モハE233-5021〜5024<br>
+                        モハE232-5021〜5024 ／ クハE232-5021〜5024<br>
+                        <small style="color: #666;">※521編成以降は、先頭車の車番等に変則的なズレ（+4）があります。</small>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 🟥 2. 分割編成（ここに100%確実に到達します！） -->
+    <h2>🟥 2. 分割編成（4両＋6両編成 / 全4ペア）</h2>
+    <p style="font-size: 14px; color: #555; margin-bottom: 15px;">※東京方に4両（F編成）、蘇我方に6両を連結して10両編成で運用されます。</p>
+    
+    <h3>▼ 東京方：4両編成（F51〜F54）</h3>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr><th class="th-title">編成</th><th>製造</th><th>10号車</th><th>9号車</th><th>8号車</th><th>7号車</th><th>🔗 相手</th><th>備考</th></tr>
+            </thead>
+            <tbody>
+                <tr class="highlight-f51"><td class="th-title"><strong>F51</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5021</td><td>モハE233-5621</td><td>モハE232-5621</td><td>クハE232-5021</td><td><span class="pair-badge">ケヨ551</span></td><td>📷 お気に入りの写真の編成！</td></tr>
+                <tr><td class="th-title"><strong>F52</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5022</td><td>モハE233-5622</td><td>モハE232-5622</td><td>クハE232-5022</td><td><span class="pair-badge">ケヨ552</span></td><td></td></tr>
+                <tr><td class="th-title"><strong>F53</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5023</td><td>モハE233-5623</td><td>モハE232-5623</td><td>クハE232-5023</td><td><span class="pair-badge">ケヨ553</span></td><td></td></tr>
+                <tr><td class="th-title"><strong>F54</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5024</td><td>モハE233-5624</td><td>モハE232-5624</td><td>クハE232-5024</td><td><span class="pair-badge">ケヨ554</span></td><td></td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>▼ 蘇我・成東・勝浦方：6両編成（ケヨ551〜ケヨ554）</h3>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr><th class="th-title">編成</th><th>製造</th><th>6号車</th><th>5号車</th><th>4号車</th><th>3号車</th><th>2号車</th><th>1号車</th><th>🔗 相手</th></tr>
+            </thead>
+            <tbody>
+                <tr><td class="th-title"><strong>ケヨ551</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5521</td><td>モハE233-5221</td><td>モハE232-5221</td><td>サハE233-5021</td><td>モハE233-5021</td><td>クハE232-5021</td><td><span class="pair-badge">F51</span></td></tr>
+                <tr><td class="th-title"><strong>ケヨ552</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5522</td><td>モハE233-5222</td><td>モハE232-5222</td><td>サハE233-5022</td><td>モハE233-5022</td><td>クハE232-5022</td><td><span class="pair-badge">F52</span></td></tr>
+                <tr><td class="th-title"><strong>ケヨ553</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5523</td><td>モハE233-5223</td><td>モハE232-5223</td><td>サハE233-5023</td><td>モハE233-5023</td><td>クハE232-5023</td><td><span class="pair-badge">F53</span></td></tr>
+                <tr><td class="th-title"><strong>ケヨ554</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5524</td><td>モハE233-5224</td><td>モハE232-5224</td><td>サハE233-5024</td><td>モハE233-5024</td><td>クハE232-5024</td><td><span class="pair-badge">F54</span></td></tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+</body>
+</html>
