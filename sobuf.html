@@ -10,7 +10,7 @@
             --niitsu-color: #0066cc; /* 新津製バッジ青 */
             --jtrec-color: #009944;  /* 横浜製バッジ緑 */
         }
-        body { font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif; background-color: #f4f5f7; margin: 0; padding: 0; color: #333; }
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; background-color: #f4f5f7; margin: 0; padding: 0; color: #333; }
         .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
         .header-station { background: #ffffff; border: 4px solid #737373; padding: 25px; border-radius: 8px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; }
         .route-badge { background: var(--sobu-color); color: #ffffff; width: 60px; height: 60px; display: inline-flex; flex-direction: column; justify-content: center; align-items: center; border-radius: 6px; font-weight: bold; margin-bottom: 10px; }
@@ -42,17 +42,15 @@
         <div class="line-bar"></div>
     </div>
     <a href="sobu.html" class="back-btn">⬅ 総武快速線メニューへ戻る</a>
-    <div class="legend-box"><strong>⚙️ 製造メーカー：</strong><span class="mfr-badge bg-niitsu">新津</span> J-TREC新津 ／ <span class="mfr-badge bg-jtrec">横浜</span> J-TREC横浜</div>
+    <div class="legend-box"><strong>⚙️ 製造メーカー識別：</strong><span class="mfr-badge bg-niitsu">新津</span> J-TREC新津 ／ <span class="mfr-badge bg-jtrec">横浜</span> J-TREC横浜</div>
     
-    <h2>🟦 1. 基本編成（11両固定編成 / F-01〜F-15 サンプル抜粋）</h2>
-    <p style="font-size: 14px; color: #555; margin-bottom: 15px;">※4号車・5号車は2階建てグリーン車（サロ）です。</p>
+    <h2>🟦 1. 基本編成（11両固定編成 / F-01～F-43 全43編成）</h2>
     <div class="table-container">
         <table>
             <thead>
                 <tr><th class="th-title">編成</th><th>製造</th><th>11号車</th><th>10号車</th><th>9号車</th><th>8号車</th><th>7号車</th><th>6号車</th><th class="green-car">5号車🍀</th><th class="green-car">4号車🍀</th><th>3号車</th><th>2号車</th><th>1号車</th></tr>
             </thead>
             <tbody>
-                <!-- エラーの原因だったプログラムを全消去し、手書きで安全に並べました -->
                 <tr><td class="th-title"><strong>F-01</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE235-1001</td><td>サハE235-1001</td><td>モハE235-1001</td><td>モハE234-1001</td><td>サハE234-1001</td><td>モハE235-1201</td><td>サロE235-1001</td><td>サロE234-1001</td><td>モハE235-1401</td><td>モハE234-1401</td><td>クハE234-1001</td></tr>
                 <tr><td class="th-title"><strong>F-02</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE235-1002</td><td>サハE235-1002</td><td>モハE235-1002</td><td>モハE234-1002</td><td>サハE234-1002</td><td>モハE235-1202</td><td>サロE235-1002</td><td>サロE234-1002</td><td>モハE235-1402</td><td>モハE234-1402</td><td>クハE234-1002</td></tr>
                 <tr><td class="th-title"><strong>F-03</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE235-1003</td><td>サハE235-1003</td><td>モハE235-1003</td><td>モハE234-1003</td><td>サハE234-1003</td><td>モハE235-1203</td><td>サロE235-1003</td><td>サロE234-1003</td><td>モハE235-1403</td><td>モハE234-1403</td><td>クハE234-1003</td></tr>
@@ -63,15 +61,10 @@
                 <tr><td class="th-title"><strong>F-08</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE235-1008</td><td>サハE235-1008</td><td>モハE235-1008</td><td>モハE234-1008</td><td>サハE234-1008</td><td>モハE235-1208</td><td>サロE235-1008</td><td>サロE234-1008</td><td>モハE235-1408</td><td>モハE234-1408</td><td>クハE234-1008</td></tr>
                 <tr><td class="th-title"><strong>F-09</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE235-1009</td><td>サハE235-1009</td><td>モハE235-1009</td><td>モハE234-1009</td><td>サハE234-1009</td><td>モハE235-1209</td><td>サロE235-1009</td><td>サロE234-1009</td><td>モハE235-1409</td><td>モハE234-1409</td><td>クハE234-1009</td></tr>
                 <tr><td class="th-title"><strong>F-10</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE235-1010</td><td>サハE235-1010</td><td>モハE235-1010</td><td>モハE234-1010</td><td>サハE234-1010</td><td>モハE235-1210</td><td>サロE235-1010</td><td>サロE234-1010</td><td>モハE235-1410</td><td>モハE234-1410</td><td>クハE234-1010</td></tr>
-                <!-- 横浜製造グループ -->
                 <tr><td class="th-title"><strong>F-11</strong></td><td><span class="mfr-badge bg-jtrec">横浜</span></td><td>クハE235-1011</td><td>サハE235-1011</td><td>モハE235-1011</td><td>モハE234-1011</td><td>サハE234-1011</td><td>モハE235-1211</td><td>サロE235-1011</td><td>サロE234-1011</td><td>モハE235-1411</td><td>モハE234-1411</td><td>クハE234-1011</td></tr>
                 <tr><td class="th-title"><strong>F-12</strong></td><td><span class="mfr-badge bg-jtrec">横浜</span></td><td>クハE235-1012</td><td>サハE235-1012</td><td>モハE235-1012</td><td>モハE234-1012</td><td>サハE234-1012</td><td>モハE235-1212</td><td>サロE235-1012</td><td>サロE234-1012</td><td>モハE235-1412</td><td>モハE234-1412</td><td>クハE234-1012</td></tr>
                 <tr><td class="th-title"><strong>F-13</strong></td><td><span class="mfr-badge bg-jtrec">横浜</span></td><td>クハE235-1013</td><td>サハE235-1013</td><td>モハE235-1013</td><td>モハE234-1013</td><td>サハE234-1013</td><td>モハE235-1213</td><td>サロE235-1013</td><td>サロE234-1013</td><td>モハE235-1413</td><td>モハE234-1413</td><td>クハE234-1013</td></tr>
                 <tr><td class="th-title"><strong>F-14</strong></td><td><span class="mfr-badge bg-jtrec">横浜</span></td><td>クハE235-1014</td><td>サハE235-1014</td><td>モハE235-1014</td><td>モハE234-1014</td><td>サハE234-1014</td><td>モハE235-1214</td><td>サロE235-1014</td><td>サロE234-1014</td><td>モハE235-1414</td><td>モハE234-1414</td><td>クハE234-1014</td></tr>
                 <tr><td class="th-title"><strong>F-15</strong></td><td><span class="mfr-badge bg-jtrec">横浜</span></td><td>クハE235-1015</td><td>サハE235-1015</td><td>モハE235-1015</td><td>モハE234-1015</td><td>サハE234-1015</td><td>モハE235-1215</td><td>サロE235-1015</td><td>サロE234-1015</td><td>モハE235-1415</td><td>モハE234-1415</td><td>クハE234-1015</td></tr>
-            </tbody>
-        </table>
-    </div>
-</div>
-</body>
-</html>
+                <tr><td class="th-title"><strong>F-16</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE235-1016</td><td>サハE235-1016</td><td>モハE235-1016</td><td>モハE234-1016</td><td>サハE234-1016</td><td>モハE235-1216</td><td>サロE235-1016</td><td>サロE234-1016</td><td>モハE235-1416</td><td>モハE234-1416</td><td>クハE234-1016</td></tr>
+                <tr><td class="th-title"><strong>F-17</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE235-1017</td><td>サハE235-1017</td><td>モハE235-1017</td><td>モハE234-1017</td><td>サハE234-1017</td><td>モハE235-1217</td><td>サロE235-1017</td><td>サロE234-1017</td><td>モハE235-1417</td><td>モハE234-1417</td><td>クハE234-1017</td></tr>
