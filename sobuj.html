@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>総武・横須賀線 E235系1000番台 J編成表</title>
+    <style>
+        :root {
+            --sobu-color: #003399; /* 総武快速線スカ色ブルー */
+            --niitsu-color: #0066cc; /* 新津製バッジ青 */
+        }
+        body { font-family: sans-serif; background-color: #f4f5f7; margin: 0; padding: 0; color: #333; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .header-station { background: #ffffff; border: 4px solid #737373; padding: 25px; border-radius: 8px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .route-badge { background: var(--sobu-color); color: #ffffff; width: 60px; height: 60px; display: inline-flex; flex-direction: column; justify-content: center; align-items: center; border-radius: 6px; font-weight: bold; margin-bottom: 10px; }
+        .route-badge .jr { font-size: 11px; line-height: 1; }
+        .route-badge .je { font-size: 28px; font-weight: 900; line-height: 1; }
+        .header-station h1 { color: #222; font-size: 28px; margin: 5px 0 10px 0; font-weight: 900; }
+        .line-bar { background: var(--sobu-color); height: 12px; width: 100%; border-radius: 2px; }
+        .back-btn { display: inline-block; background-color: #ffffff; border: 1px solid #ccc; padding: 10px 20px; border-radius: 6px; text-decoration: none; color: #333; font-weight: bold; font-size: 14px; margin-bottom: 25px; }
+        .mfr-badge { color: #ffffff; padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 11px; display: inline-block; background-color: var(--niitsu-color); }
+        h2 { font-size: 22px; padding-left: 12px; border-left: 6px solid var(--sobu-color); margin-top: 35px; margin-bottom: 15px; color: #111; }
+        .table-container { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; background: #ffffff; border-radius: 6px; border: 1px solid #e0e0e0; }
+        table { width: 100%; border-collapse: collapse; white-space: nowrap; }
+        th, td { padding: 12px 15px; text-align: center; border-bottom: 1px solid #eeeeee; font-size: 13px; }
+        th { background-color: #f1f3f5; color: #495057; font-weight: bold; }
+        .th-title { background-color: #e9ecef; font-weight: bold; position: sticky; left: 0; z-index: 2; }
+        tr:hover { background-color: #f8f9fa; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header-station">
+        <div class="route-badge"><span class="jr">JR</span><span class="je">JO</span></div>
+        <h1>総武・横須賀線 車両編成データベース</h1>
+        <div class="line-bar"></div>
+    </div>
+    <a href="sobu.html" class="back-btn">⬅ 総武快速線メニューへ戻る</a>
+    <div class="legend-box" style="background:#fff; border:1px solid #e0e0e0; padding:12px 15px; border-radius:6px; margin-bottom:25px; font-size:14px;"><strong>⚙️ 製造メーカー識別：</strong><span class="mfr-badge">新津</span> J-TREC新津（付属編成は全車新津製）</div>
+    
+    <h2>🟥 2. 付属編成（4両固定編成 / J-01～J-39 全39編成）</h2>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr><th class="th-title">編成</th><th>製造</th><th>増4号車</th><th>増3号車</th><th>増2号車</th><th>増1号車</th></tr>
+            </thead>
+            <tbody>
+                <!-- J-01〜J-39までの車番を完全出力 -->
+                <script>
+                    for (let j = 1; j <= 39; j++) {
+                        let numJ = String(j).padStart(2, '0');
+                        document.write(`
+                            <tr>
+                                <td class="th-title"><strong>J-${numJ}</strong></td>
+                                <td><span class="mfr-badge">新津</span></td>
+                                <td>クハE235-11${numJ}</td>
+                                <td>モハE235-11${numJ}</td>
+                                <td>モハE234-11${numJ}</td>
+                                <td>クハE234-11${numJ}</td>
+                            </tr>
+                        `);
+                    }
+                </script>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
