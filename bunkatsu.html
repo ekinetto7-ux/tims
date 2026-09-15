@@ -8,6 +8,8 @@
         :root {
             --keiyo-color: #c9222b; /* 京葉線ワインレッド */
             --niitsu-color: #0066cc; /* 新津製バッジ青 */
+            --boso-color: #ffcc00;   /* 房総エリアのイメージイエロー */
+            --boso-blue: #003399;    /* 房総エリアのイメージブルー */
         }
         body {
             font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
@@ -77,6 +79,7 @@
         }
         .mfr-badge { color: #ffffff; padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 11px; display: inline-block; background-color: var(--niitsu-color); }
         .pair-badge { background-color: #666666; color: #ffffff; padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 11px; display: inline-block; }
+        .transfer-badge { background-color: #dc3545; color: #ffffff; padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 11px; display: inline-block; }
 
         h2 { font-size: 22px; padding-left: 12px; border-left: 6px solid var(--keiyo-color); margin-top: 35px; margin-bottom: 15px; color: #111; }
         h3 { font-size: 16px; margin-top: 25px; color: #555; }
@@ -89,6 +92,38 @@
         .th-title { background-color: #e9ecef; font-weight: bold; position: sticky; left: 0; z-index: 2; }
         tr:hover { background-color: #f8f9fa; }
         .highlight-f51 { background-color: #fff9f9; font-weight: bold; }
+        .highlight-transfer { background-color: #fffde6; font-weight: bold; } /* 転用車両用の黄色ハイライト */
+
+        /* 転用考察コラムのスタイル */
+        .column-box {
+            background-color: #ffffff;
+            border: 2px solid #e0e0e0;
+            border-top: 6px solid var(--boso-color);
+            padding: 25px;
+            border-radius: 8px;
+            margin-top: 40px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+        }
+        .column-box h2 {
+            border-left: 6px solid var(--boso-color);
+            margin-top: 0;
+            font-size: 20px;
+        }
+        .column-box p {
+            font-size: 14px;
+            line-height: 1.7;
+            color: #444;
+            margin-bottom: 15px;
+        }
+        .column-box ul {
+            padding-left: 20px;
+            margin: 10px 0;
+        }
+        .column-box li {
+            font-size: 14px;
+            color: #444;
+            margin-bottom: 8px;
+        }
     </style>
 </head>
 <body>
@@ -101,7 +136,6 @@
         <div class="line-bar"></div>
     </div>
 
-    <!-- 💡 メニュー（keiyo.html）に戻るリンク -->
     <a href="keiyo.html" class="back-btn">⬅ 京葉線メニュー画面へ戻る</a>
 
     <div class="legend-box">
@@ -116,13 +150,14 @@
     <div class="table-container">
         <table>
             <thead>
-                <tr><th class="th-title">編成</th><th>製造</th><th>10号車</th><th>9号車</th><th>8号車</th><th>7号車(連結面)</th><th>🔗 相手</th><th>備考</th></tr>
+                <tr><th class="th-title">編成</th><th>製造</th><th>10号車</th><th>9号車</th><th>8号車</th><th>7号車(連結面)</th><th>🔗 相手</th><th>備考・参考</th></tr>
             </thead>
             <tbody>
-                <tr class="highlight-f51"><td class="th-title"><strong>F51</strong></td><td><span class="mfr-badge">新津</span></td><td>クハE233-5021</td><td>モハE233-5621</td><td>モハE232-5621</td><td>クハE232-5021</td><td><span class="pair-badge">ケヨ551</span></td><td></td></tr>
-                <tr><td class="th-title"><strong>F52</strong></td><td><span class="mfr-badge">新津</span></td><td>クハE233-5022</td><td>モハE233-5622</td><td>モハE232-5622</td><td>クハE232-5022</td><td><span class="pair-badge">ケヨ552</span></td><td></td></tr>
-                <tr><td class="th-title"><strong>F53</strong></td><td><span class="mfr-badge">新津</span></td><td>クハE233-5023</td><td>モハE233-5623</td><td>モハE232-5623</td><td>クハE232-5023</td><td><span class="pair-badge">ケヨ553</span></td><td></td></tr>
-                <tr><td class="th-title"><strong>F54</strong></td><td><span class="mfr-badge">新津</span></td><td>クハE233-5024</td><td>モハE233-5624</td><td>モハE232-5624</td><td>クハE232-5024</td><td><span class="pair-badge">ケヨ554</span></td><td></td></tr>
+                <tr class="highlight-f51"><td class="th-title"><strong>F51</strong></td><td><span class="mfr-badge">新津</span></td><td>クハE233-5021</td><td>モハE233-5621</td><td>モハE232-5621</td><td>クハE232-5021</td><td><span class="pair-badge">ケヨ551</span></td><td>📷 お気に入りの写真の編成！ 京葉線残留</td></tr>
+                <tr><td class="th-title"><strong>F52</strong></td><td><span class="mfr-badge">新津</span></td><td>クハE233-5022</td><td>モハE233-5622</td><td>モハE232-5622</td><td>クハE232-5022</td><td><span class="pair-badge">ケヨ552</span></td><td>京葉線残留</td></tr>
+                <!-- 💡 F53編成に転用情報を反映 -->
+                <tr class="highlight-transfer"><td class="th-title"><strong>F53</strong></td><td><span class="mfr-badge">新津</span></td><td>クハE233-5023</td><td>モハE233-5623</td><td>モハE232-5623</td><td>クハE232-5023</td><td><span class="pair-badge">ケヨ553</span></td><td><span class="transfer-badge">房総転用</span> 改造入場を経て幕張車両センターへ転属</td></tr>
+                <tr><td class="th-title"><strong>F54</strong></td><td><span class="mfr-badge">新津</span></td><td>クハE233-5024</td><td>モハE233-5624</td><td>モハE232-5624</td><td>クハE232-5024</td><td><span class="pair-badge">ケヨ554</span></td><td>京葉線残留</td></tr>
             </tbody>
         </table>
     </div>
@@ -131,15 +166,33 @@
     <div class="table-container">
         <table>
             <thead>
-                <tr><th class="th-title">編成</th><th>製造</th><th>6号車(連結面)</th><th>5号車</th><th>4号車</th><th>3号車</th><th>2号車</th><th>1号車</th><th>🔗 相手</th></tr>
+                <tr><th class="th-title">編成</th><th>製造</th><th>6号車(連結面)</th><th>5号車</th><th>4号車</th><th>3号車</th><th>2号車</th><th>1号車</th><th>🔗 相手</th><th>備考・参考</th></tr>
             </thead>
             <tbody>
-                <tr><td class="th-title"><strong>ケヨ551</strong></td><td><span class="mfr-badge">新津</span></td><td>クハE233-5521</td><td>モハE233-5221</td><td>モハE232-5221</td><td>サハE233-5021</td><td>モハE233-5021</td><td>クハE232-5021</td><td><span class="pair-badge">F51</span></td></tr>
-                <tr><td class="th-title"><strong>ケヨ552</strong></td><td><span class="mfr-badge">新津</span></td><td>クハE233-5522</td><td>モハE233-5222</td><td>モハE232-5222</td><td>サハE233-5022</td><td>モハE233-5022</td><td>クハE232-5022</td><td><span class="pair-badge">F52</span></td></tr>
-                <tr><td class="th-title"><strong>ケヨ553</strong></td><td><span class="mfr-badge">新津</span></td><td>クハE233-5523</td><td>モハE233-5223</td><td>モハE232-5223</td><td>サハE233-5023</td><td>モハE233-5023</td><td>クハE232-5023</td><td><span class="pair-badge">F53</span></td></tr>
-                <tr><td class="th-title"><strong>ケヨ554</strong></td><td><span class="mfr-badge">新津</span></td><td>クハE233-5524</td><td>モハE233-5224</td><td>モハE232-5224</td><td>サハE233-5024</td><td>モハE233-5024</td><td>クハE232-5024</td><td><span class="pair-badge">F54</span></td></tr>
+                <tr><td class="th-title"><strong>ケヨ551</strong></td><td><span class="mfr-badge">新津</span></td><td>クハE233-5521</td><td>モハE233-5221</td><td>モハE232-5221</td><td>サハE233-5021</td><td>モハE233-5021</td><td>クハE232-5021</td><td><span class="pair-badge">F51</span></td><td>京葉線残留</td></tr>
+                <tr><td class="th-title"><strong>ケヨ552</strong></td><td><span class="mfr-badge">新津</span></td><td>クハE233-5522</td><td>モハE233-5222</td><td>モハE232-5222</td><td>サハE233-5022</td><td>モハE233-5022</td><td>クハE232-5022</td><td><span class="pair-badge">F52</span></td><td>京葉線残留</td></tr>
+                <!-- 💡 ケヨ553編成に転用情報を反映 -->
+                <tr class="highlight-transfer"><td class="th-title"><strong>ケヨ553</strong></td><td><span class="mfr-badge">新津</span></td><td>クハE233-5523</td><td>モハE233-5223</td><td>モハE232-5223</td><td>サハE233-5023</td><td>モハE233-5023</td><td>クハE232-5023</td><td><span class="pair-badge">F53</span></td><td><span class="transfer-badge">房総転用</span> ワンマン化改造、幕張車両センターへ転属</td></tr>
+                <tr><td class="th-title"><strong>ケヨ554</strong></td><td><span class="mfr-badge">新津</span></td><td>クハE233-5524</td><td>モハE233-5224</td><td>モハE232-5224</td><td>サハE233-5024</td><td>モハE233-5024</td><td>クハE232-5024</td><td><span class="pair-badge">F54</span></td><td>京葉線残留</td></tr>
             </tbody>
         </table>
+    </div>
+
+    <!-- 転用考察コラムの修正 -->
+    <div class="column-box">
+        <h2>🐟 鉄道ファン大注目：E233系5000番台 房総エリア転用プロジェクトの進捗</h2>
+        <p>
+            房総エリア（内房線・外房線・鹿島線など）の209系置き換え計画において、京葉線の4両＋6両の分割編成がワンマン改造を施されて幕張車両センター（千マリ）へ転用される動向が現実のものとなりました。
+        </p>
+        <p>
+            実際に<strong>ケヨ553編成＋F53編成</strong>が改造工事を経て房総エリアへ転属となり、新型のワンマン対応車両として新しい歴史を歩み始めています。
+        </p>
+        <strong>📌 主な特徴と今後のポイント：</strong>
+        <ul>
+            <li><strong>一部編成の転用：</strong> F53・ケヨ553ペアが先陣を切って転用されましたが、他のF51、F52、F54編成グループについては、現時点で引き続きワインレッド帯のまま京葉線および外房・東金線直通運用（成東・勝浦行き）の任務に就いています。</li>
+            <li><strong>ワンマン化改造の施工：</strong> 転用にあたっては、房総のローカル運用に最適化された安全確認カメラやワンマン対応機器、各種保安装置のアップデートが施工されています。</li>
+            <li><strong>データベースとしての価値：</strong> 京葉線生え抜きの純粋な新津製車両から、房総の次世代を担う転用車が生まれた歴史的瞬間を記録する貴重なデータとなっています。</li>
+        </ul>
     </div>
 
 </div>
