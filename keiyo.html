@@ -3,12 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>京葉線 E233系5000番台 編成表</title>
+    <title>京葉線 E233系5000番台 メニュー</title>
     <style>
         :root {
             --keiyo-color: #c9222b; /* 京葉線ワインレッド */
-            --niitsu-color: #0066cc; /* 新津製バッジ青 */
-            --jtrec-color: #009944;  /* 横浜製バッジ緑 */
         }
         body {
             font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
@@ -18,7 +16,7 @@
             color: #333;
         }
         .container {
-            max-width: 1200px;
+            max-width: 600px;
             margin: 0 auto;
             padding: 20px;
         }
@@ -67,120 +65,70 @@
         }
         .back-btn:hover { background-color: #e9ecef; }
 
-        /* 製造元凡例 */
-        .legend-box {
-            background: #ffffff;
-            border: 1px solid #e0e0e0;
-            padding: 12px 15px;
-            border-radius: 6px;
-            margin-bottom: 25px;
-            font-size: 14px;
+        .menu-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 30px 0 15px 0;
+            text-align: center;
         }
-        .mfr-badge { color: #ffffff; padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 11px; display: inline-block; }
-        .pair-badge { background-color: #666666; color: #ffffff; padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 11px; }
-        .bg-niitsu { background-color: var(--niitsu-color); }
-        .bg-jtrec { background-color: var(--jtrec-color); }
 
-        h2 { font-size: 22px; padding-left: 12px; border-left: 6px solid var(--keiyo-color); margin-top: 35px; margin-bottom: 15px; color: #111; }
-        h3 { font-size: 16px; margin-top: 20px; color: #555; }
-
-        /* 横スクロール対応テーブル */
-        .table-container { width: 100%; overflow-x: auto; background: #ffffff; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 25px; border: 1px solid #e0e0e0; }
-        table { width: 100%; border-collapse: collapse; white-space: nowrap; }
-        th, td { padding: 12px 15px; text-align: center; border-bottom: 1px solid #eeeeee; font-size: 13px; }
-        th { background-color: #f1f3f5; color: #495057; font-weight: bold; }
-        .th-title { background-color: #e9ecef; font-weight: bold; }
-        tr:hover { background-color: #f8f9fa; }
-        .highlight-f51 { background-color: #fff9f9; font-weight: bold; }
+        /* 選択ボタンのデザイン */
+        .select-link {
+            display: block;
+            background: #ffffff;
+            border: 2px solid #e0e0e0;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            font-size: 16px;
+            transition: all 0.2s;
+            border-left: 8px solid var(--keiyo-color);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        }
+        .select-link:hover {
+            background: #fdf8f8;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.05);
+        }
+        .select-link span {
+            display: block;
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+            font-weight: normal;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
 
+    <!-- ヘッダー -->
     <div class="header-station">
         <div class="route-badge"><span class="jr">JR</span><span class="je">JE</span></div>
-        <h1>京葉線 車両編成データベース</h1>
+        <h1>京葉線 E233系5000番台</h1>
         <div class="line-bar"></div>
     </div>
 
     <a href="index.html" class="back-btn">⬅ 総合ホーム画面へ戻る</a>
 
-    <div class="legend-box">
-        <strong>⚙️ 製造メーカー識別：</strong>
-        <span class="mfr-badge bg-niitsu">新津</span> 新津車両製作所 ／ 
-        <span class="mfr-badge bg-jtrec">横浜</span> 総合車両製作所・東急車輛
-    </div>
+    <div class="menu-title">📋 見たい編成表のタイプを選択してください</div>
 
-    <!-- 🟦 1. 貫通編成（スマートにまとめて超軽量化！） -->
-    <h2>🟦 1. 貫通編成（10両固定編成 / 全24編成）</h2>
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th class="th-title">編成番号</th>
-                    <th>製造元</th>
-                    <th>車両番号（枝番）の構成ルール</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td class="th-title"><strong>ケヨ501 〜 ケヨ520</strong><br>(計20編成)</td>
-                    <td><span class="mfr-badge bg-niitsu">新津</span></td>
-                    <td>
-                        クハE233-5001〜5020 ／ サハE233-5001〜5020 ／ モハE233-5401〜5420 ／ モハE232-5401〜5420<br>
-                        サハE233-5501〜5520 ／ モハE233-5201〜5220 ／ モハE232-5201〜5220 ／ モハE233-5001〜5020<br>
-                        モハE232-5001〜5020 ／ クハE232-5001〜5020
-                    </td>
-                </tr>
-                <tr>
-                    <td class="th-title"><strong>ケヨ521 〜 ケヨ524</strong><br>(計4編成)</td>
-                    <td><span class="mfr-badge bg-jtrec">横浜</span></td>
-                    <td>
-                        クハE233-5025〜5028 ／ サハE233-5021〜5024 ／ モハE233-5421〜5424 ／ モハE232-5421〜5424<br>
-                        サハE233-5521〜5524 ／ モハE233-5221〜5224 ／ モハE232-5221〜5224 ／ モハE233-5021〜5024<br>
-                        モハE232-5021〜5024 ／ クハE232-5021〜5024<br>
-                        <small style="color: #666;">※521編成以降は、先頭車の車番等に変則的なズレ（+4）があります。</small>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+    <!-- 💡 ここで貫通と分割を選ばせます！ -->
+    <a href="keiyo-kantsu.html" class="select-link">
+        🟦 1. 貫通編成（10両固定編成）
+        <span>ケヨ501〜ケヨ524編成（全24本）の車両番号を調べる</span>
+    </a>
 
-    <!-- 🟥 2. 分割編成（軽量化されたので、絶対にここまで表示されます！） -->
-    <h2>🟥 2. 分割編成（4両＋6両編成 / 全4ペア）</h2>
-    <p style="font-size: 14px; color: #555; margin-bottom: 15px;">※東京方に4両（F編成）、蘇我・成東・勝浦方に6両（ケヨ550番台）を連結して10両編成で運用されます。</p>
-    
-    <h3>▼ 東京方：4両編成（F51〜F54）</h3>
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr><th class="th-title">編成</th><th>製造</th><th>10号車</th><th>9号車</th><th>8号車</th><th>7号車(連結面)</th><th>🔗 相手</th><th>備考</th></tr>
-            </thead>
-            <tbody>
-                <tr class="highlight-f51"><td><strong>F51</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5021</td><td>モハE233-5621</td><td>モハE232-5621</td><td>クハE232-5021</td><td><span class="pair-badge">ケヨ551</span></td><td>📷 お気に入りの写真の編成！</td></tr>
-                <tr><td><strong>F52</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5022</td><td>モハE233-5622</td><td>モハE232-5622</td><td>クハE232-5022</td><td><span class="pair-badge">ケヨ552</span></td><td></td></tr>
-                <tr><td><strong>F53</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5023</td><td>モハE233-5623</td><td>モハE232-5623</td><td>クハE232-5023</td><td><span class="pair-badge">ケヨ553</span></td><td></td></tr>
-                <tr><td><strong>F54</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5024</td><td>モハE233-5624</td><td>モハE232-5624</td><td>クハE232-5024</td><td><span class="pair-badge">ケヨ554</span></td><td></td></tr>
-            </tbody>
-        </table>
-    </div>
-
-    <h3>▼ 蘇我・成東・勝浦方：6両編成（ケヨ551〜ケヨ554）</h3>
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr><th class="th-title">編成</th><th>製造</th><th>6号車(連結面)</th><th>5号車</th><th>4号車</th><th>3号車</th><th>2号車</th><th>1号車</th><th>🔗 相手</th></tr>
-            </thead>
-            <tbody>
-                <tr><td><strong>ケヨ551</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5521</td><td>モハE233-5221</td><td>モハE232-5221</td><td>サハE233-5021</td><td>モハE233-5021</td><td>クハE232-5021</td><td><span class="pair-badge">F51</span></td></tr>
-                <tr><td><strong>ケヨ552</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5522</td><td>モハE233-5222</td><td>モハE232-5222</td><td>サハE233-5022</td><td>モハE233-5022</td><td>クハE232-5022</td><td><span class="pair-badge">F52</span></td></tr>
-                <tr><td><strong>ケヨ553</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5523</td><td>モハE233-5223</td><td>モハE232-5223</td><td>サハE233-5023</td><td>モハE233-5023</td><td>クハE232-5023</td><td><span class="pair-badge">F53</span></td></tr>
-                <tr><td><strong>ケヨ554</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5524</td><td>モハE233-5224</td><td>モハE232-5224</td><td>サハE233-5024</td><td>モハE233-5024</td><td>クハE232-5024</td><td><span class="pair-badge">F54</span></td></tr>
-            </tbody>
-        </table>
-    </div>
+    <a href="keiyo-bunkatsu.html" class="select-link">
+        🟥 2. 分割編成（4両＋6両編成）
+        <span>外房・東金線直通のF51〜F54編成・ケヨ551〜554編成（全4ペア）を調べる</span>
+    </a>
 
 </div>
+
 </body>
 </html>
