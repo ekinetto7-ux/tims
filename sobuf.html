@@ -50,9 +50,8 @@
                 <tr><th class="th-title">編成</th><th>製造</th><th>11号車</th><th>10号車</th><th>9号車</th><th>8号車</th><th>7号車</th><th>6号車</th><th class="green-car">5号車🍀</th><th class="green-car">4号車🍀</th><th>3号車</th><th>2号車</th><th>1号車</th></tr>
             </thead>
             <tbody>
-                <!-- F-01〜F-43までの車番規則に基づき完全自動出力 -->
                 <script>
-                    const fTREC = { 11: "横浜", 12: "横浜", 13: "横浜", 14: "横浜", 15: "横浜" }; // 横浜事業所落成
+                    const fTREC = { 11: "横浜", 12: "横浜", 13: "横浜", 14: "横浜", 15: "横浜" };
                     for (let i = 1; i <= 43; i++) {
                         let num = String(i).padStart(2, '0');
                         let mfr = fTREC[i] ? "横浜" : "新津";
