@@ -1,256 +1,196 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>京葉線 E233系 編成データベース</title>
+    <title>JR車両編成総合データベース</title>
     <style>
-        /* 全体の設定 */
+        /* JR各社のコーポレートカラー設定 */
         :root {
-            --keiyo-color: #c9222b; /* 京葉線ワインレッド */
-            --niitsu-color: #0066cc; /* 新津製バッジ青 */
-            --jtrec-color: #009944; /* 横浜・東急製バッジ緑 */
+            --jr-east: #22ac38;   /* JR東日本：グリーン */
+            --jr-central: #ff7e00;/* JR東海：オレンジ */
+            --jr-west: #0072bc;   /* JR西日本：ブルー */
+            --dark-bg: #1a1a1a;
         }
+
         body {
             font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background-color: #f4f5f7;
+            background-color: #f0f2f5;
             margin: 0;
             padding: 0;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
+            color: #333;
         }
 
-        /* 路線マーク＆ナンバリング風ヘッダー */
-        .header-station {
-            background: #ffffff;
-            border: 4px solid #737373;
-            padding: 25px;
-            border-radius: 8px;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            margin-bottom: 30px;
-        }
-        .route-badge {
-            background: var(--keiyo-color);
+        /* 鉄道ネットワークを意識したクールなポータルヘッダー */
+        .portal-header {
+            background-color: var(--dark-bg);
             color: #ffffff;
-            width: 60px;
-            height: 60px;
-            display: inline-flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            border-radius: 6px;
-            font-weight: bold;
-            margin-bottom: 10px;
+            padding: 40px 20px;
+            text-align: center;
+            border-bottom: 5px solid #737373;
         }
-        .route-badge .jr { font-size: 11px; line-height: 1; opacity: 0.9; }
-        .route-badge .je { font-size: 28px; font-weight: 900; line-height: 1; }
-        .header-station span.en {
-            display: block;
-            color: var(--keiyo-color);
-            font-size: 13px;
+        .portal-header h1 {
+            margin: 0;
+            font-size: 32px;
             font-weight: bold;
+            letter-spacing: 2px;
+        }
+        .portal-header p {
+            margin: 10px 0 0 0;
+            font-size: 14px;
+            color: #aaa;
             letter-spacing: 4px;
         }
-        .header-station h1 {
-            color: #222;
-            font-size: 32px;
-            margin: 5px 0 10px 0;
-            font-weight: 900;
-        }
-        .line-bar {
-            background: var(--keiyo-color);
-            height: 12px;
-            width: 100%;
-            border-radius: 2px;
+
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
         }
 
-        /* 凡例（メーカーカラー）のスタイル */
-        .legend-box {
+        .section-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ccc;
+            padding-bottom: 5px;
+        }
+
+        /* 会社別メニューカードの配置（グリッドレイアウト） */
+        .jr-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        /* 会社別デザインの共通ベース */
+        .jr-card {
             background: #ffffff;
-            border: 1px solid #e0e0e0;
-            padding: 15px;
-            border-radius: 6px;
-            margin-bottom: 25px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
             display: flex;
-            gap: 20px;
-            align-items: center;
-            font-size: 14px;
+            flex-direction: column;
         }
-        .mfr-badge {
+        .jr-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        /* 各社ごとのヘッダーカラー */
+        .card-header {
+            padding: 15px 20px;
             color: #ffffff;
-            padding: 3px 8px;
-            border-radius: 4px;
             font-weight: bold;
-            font-size: 12px;
-            display: inline-block;
+            font-size: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        .bg-niitsu { background-color: var(--niitsu-color); }
-        .bg-jtrec { background-color: var(--jtrec-color); }
+        .card-header .logo-text {
+            font-size: 24px;
+            font-weight: 900;
+            font-style: italic;
+        }
+        
+        .east { background-color: var(--jr-east); }
+        .central { background-color: var(--jr-central); }
+        .west { background-color: var(--jr-west); }
 
-        /* セクション見出し */
-        h2 {
-            font-size: 22px;
-            padding-left: 12px;
-            border-left: 6px solid var(--keiyo-color);
-            margin-top: 40px;
-            margin-bottom: 15px;
-            color: #111;
+        .card-body {
+            padding: 20px;
+            flex-grow: 1;
         }
-
-        /* 横スクロール対応の編成表 */
-        .table-container {
-            width: 100%;
-            overflow-x: auto;
-            background: #ffffff;
-            border-radius: 6px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            margin-bottom: 25px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            white-space: nowrap;
-        }
-        th, td {
-            padding: 12px 15px;
-            text-align: center;
-            border-bottom: 1px solid #eeeeee;
+        .card-body p {
+            margin: 0 0 15px 0;
             font-size: 14px;
+            color: #666;
         }
-        th {
-            background-color: #f1f3f5;
-            color: #495057;
+
+        /* 各路線へのリンクボタン */
+        .route-link {
+            display: block;
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #333;
             font-weight: bold;
+            font-size: 14px;
+            transition: all 0.2s;
+            border-left: 5px solid #737373;
         }
-        .th-title {
-            background-color: #e9ecef;
-            font-weight: bold;
-        }
-        tr:hover {
-            background-color: #f8f9fa;
-        }
-        .highlight-f51 {
-            background-color: #fff9f9;
-            font-weight: bold;
+        .route-link:last-child { margin-bottom: 0; }
+        
+        /* 路線ごとの左ラインカラー */
+        .link-je { border-left-color: #c9222b; } /* 京葉線（ワインレッド） */
+        .link-jm { border-left-color: #f15a22; } /* 武蔵野線（オレンジ） */
+        .link-ca { border-left-color: #ff7e00; } /* 東海道線東海（オレンジ） */
+        .link-a  { border-left-color: #0072bc; } /* 北陸線（ブルー） */
+
+        .route-link:hover {
+            background: #f1f3f5;
+            padding-left: 18px;
         }
     </style>
 </head>
 <body>
 
-<div class="container">
+    <!-- 総合トップヘッダー -->
+    <div class="portal-header">
+        <h1>🚉 JR車両編成 総合データベース</h1>
+        <p>JAPAN RAILWAYS ROSTER PORTAL</p>
+    </div>
 
-    <!-- ナンバリング風ロゴヘッダー -->
-    <div class="header-station">
-        <div class="route-badge">
-            <span class="jr">JR</span>
-            <span class="je">JE</span>
+    <div class="container">
+        <div class="section-title">🏢 鉄道会社を選択</div>
+        
+        <div class="jr-grid">
+            
+            <!-- JR東日本グループ -->
+            <div class="jr-card">
+                <div class="card-header east">
+                    <span>JR東日本</span>
+                    <span class="logo-text">JR</span>
+                </div>
+                <div class="card-body">
+                    <p>首都圏エリアや新幹線、東北・信越地方の車両データベースです。</p>
+                    <!-- 作成した京葉線データベースのファイル名(例: keiyo.html)に合わせてリンク先を変更できます -->
+                    <a href="index.html" class="route-link link-je">JE 京葉線 (E233系5000番台)</a>
+                    <a href="musashino.html" class="route-link link-jm">JM 武蔵野線 (E231系/209系)</a>
+                </div>
+            </div>
+
+            <!-- JR東海グループ -->
+            <div class="jr-card">
+                <div class="card-header central">
+                    <span>JR東海</span>
+                    <span class="logo-text">JR</span>
+                </div>
+                <div class="card-body">
+                    <p>東海道新幹線や名古屋エリア、静岡エリアを走る車両のデータベースです。</p>
+                    <a href="#central-tokaido" class="route-link link-ca">CA 東海道本線 (313系/315系)</a>
+                </div>
+            </div>
+
+            <!-- JR西日本グループ -->
+            <div class="jr-card">
+                <div class="card-header west">
+                    <span>JR西日本</span>
+                    <span class="logo-text">JR</span>
+                </div>
+                <div class="card-body">
+                    <p>アーバンネットワーク（関西圏）や山陽・北陸エリアの車両データベースです。</p>
+                    <a href="#west-hokuriku" class="route-link link-a">A 北陸本線 (521系)</a>
+                </div>
+            </div>
+
         </div>
-        <span class="en">KEIYO LINE E233-5000 SERIES</span>
-        <h1>京葉線 車両編成データベース</h1>
-        <div class="line-bar"></div>
     </div>
-
-    <!-- 製造会社別のデザイン凡例 -->
-    <div class="legend-box">
-        <strong>⚙️ 製造メーカー識別：</strong>
-        <div><span class="mfr-badge bg-niitsu">新津製</span> 新津車両製作所（自社工場製）</div>
-        <div><span class="mfr-badge bg-jtrec">横浜製</span> 総合車両製作所 / 東急車輛製造（外注・転入製）</div>
-    </div>
-
-    <!-- 1. 貫通編成セクション -->
-    <h2>🟦 1. 貫通編成（10両固定編成 / ケヨ501〜ケヨ524）</h2>
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th class="th-title">編成番号</th>
-                    <th>製造元</th>
-                    <th>10号車 (東京)</th>
-                    <th>9号車</th>
-                    <th>8号車</th>
-                    <th>7号車</th>
-                    <th>6号車</th>
-                    <th>5号車</th>
-                    <th>4号車</th>
-                    <th>3号車</th>
-                    <th>2号車</th>
-                    <th>1号車 (蘇我)</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- ケヨ501〜520は新津製 -->
-                <tr><td><strong>ケヨ501</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5001</td><td>サハE233-5001</td><td>モハE233-5401</td><td>モハE232-5401</td><td>サハE233-5501</td><td>モハE233-5201</td><td>モハE232-5201</td><td>モハE233-5001</td><td>モハE232-5001</td><td>クハE232-5001</td></tr>
-                <tr><td><strong>ケヨ502</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5002</td><td>サハE233-5002</td><td>モハE233-5402</td><td>モハE232-5402</td><td>サハE233-5502</td><td>モハE233-5202</td><td>モハE232-5202</td><td>モハE233-5002</td><td>モハE232-5002</td><td>クハE232-5002</td></tr>
-                <tr><td><strong>ケヨ510</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5010</td><td>サハE233-5010</td><td>モハE233-5410</td><td>モハE232-5410</td><td>サハE233-5510</td><td>モハE233-5210</td><td>モハE232-5210</td><td>モハE233-5010</td><td>モハE232-5010</td><td>クハE232-5010</td></tr>
-                <tr><td><strong>ケヨ520</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5020</td><td>サハE233-5020</td><td>モハE233-5420</td><td>モハE232-5420</td><td>サハE233-5520</td><td>モハE233-5220</td><td>モハE232-5220</td><td>モハE233-5020</td><td>モハE232-5020</td><td>クハE232-5020</td></tr>
-                <!-- ケヨ521〜524は東急車輛/J-TREC製 -->
-                <tr><td><strong>ケヨ521</strong></td><td><span class="mfr-badge bg-jtrec">横浜</span></td><td>クハE233-5025</td><td>サハE233-5021</td><td>モハE233-5421</td><td>モハE232-5421</td><td>サハE233-5521</td><td>モハE233-5221</td><td>モハE232-5221</td><td>モハE233-5021</td><td>モハE232-5021</td><td>クハE232-5021</td></tr>
-                <tr><td><strong>ケヨ524</strong></td><td><span class="mfr-badge bg-jtrec">横浜</span></td><td>クハE233-5028</td><td>サハE233-5024</td><td>モハE233-5424</td><td>モハE232-5424</td><td>サハE233-5524</td><td>モハE233-5224</td><td>モハE232-5224</td><td>モハE233-5024</td><td>モハE232-5024</td><td>クハE232-5024</td></tr>
-            </tbody>
-        </table>
-    </div>
-
-    <!-- 2. 分割編成セクション -->
-    <h2>🟥 2. 分割編成（6両＋4両編成 / F編成 ＋ ケヨ550番台）</h2>
-    
-    <h3>▼ 東京方：4両編成（F51〜F54 / 全車新津製）</h3>
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th class="th-title">編成番号</th>
-                    <th>製造元</th>
-                    <th>10号車 (東京)</th>
-                    <th>9号車</th>
-                    <th>8号車</th>
-                    <th>7号車 (連結面)</th>
-                    <th>備考</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr class="highlight-f51">
-                    <td><strong>F51</strong></td>
-                    <td><span class="mfr-badge bg-niitsu">新津</span></td>
-                    <td>クハE233-5021</td>
-                    <td>モハE232-5221</td>
-                    <td>モハE233-5221</td>
-                    <td>サハE233-5521</td>
-                    <td>📷 送ってもらった画像の分割編成！</td>
-                </tr>
-                <tr><td><strong>F54</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE233-5024</td><td>モハE232-5224</td><td>モハE233-5224</td><td>サハE233-5524</td><td></td></tr>
-            </tbody>
-        </table>
-    </div>
-
-    <h3>▼ 蘇我方：6両編成（ケヨ551〜ケヨ554 / 全車新津製）</h3>
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th class="th-title">編成番号</th>
-                    <th>製造元</th>
-                    <th>6号車 (連結面)</th>
-                    <th>5号車</th>
-                    <th>4号車</th>
-                    <th>3号車</th>
-                    <th>2号車</th>
-                    <th>1号車 (蘇我)</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr><td><strong>ケヨ551</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE232-5021</td><td>モハE232-5021</td><td>モハE233-5021</td><td>サハE233-5021</td><td>モハE232-5421</td><td>クハE232-5521</td></tr>
-                <tr><td><strong>ケヨ554</strong></td><td><span class="mfr-badge bg-niitsu">新津</span></td><td>クハE232-5024</td><td>モハE232-5024</td><td>モハE233-5024</td><td>サハE233-5024</td><td>モハE232-5424</td><td>クハE232-5524</td></tr>
-            </tbody>
-        </table>
-    </div>
-
-</div>
 
 </body>
 </html>
+           
