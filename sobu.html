@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>総武・横須賀線 E235系1000番台 メニュー</title>
+    <style>
+        :root { --sobu-color: #003399; }
+        body { font-family: sans-serif; background-color: #f4f5f7; margin: 0; padding: 0; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header-station { background: #ffffff; border: 4px solid #737373; padding: 25px; border-radius: 8px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .route-badge { background: var(--sobu-color); color: #ffffff; width: 60px; height: 60px; display: inline-flex; flex-direction: column; justify-content: center; align-items: center; border-radius: 6px; font-weight: bold; margin-bottom: 10px; }
+        .route-badge .jr { font-size: 11px; line-height: 1; }
+        .route-badge .je { font-size: 28px; font-weight: 900; line-height: 1; }
+        .header-station h1 { color: #222; font-size: 28px; margin: 5px 0 10px 0; font-weight: 900; border: none; }
+        .line-bar { background: var(--sobu-color); height: 12px; width: 100%; border-radius: 2px; margin-bottom: 0; }
+        .back-btn { display: inline-block; background-color: #ffffff; border: 1px solid #ccc; padding: 10px 20px; border-radius: 6px; text-decoration: none; color: #333; font-weight: bold; font-size: 14px; margin-bottom: 25px; transition: background-color 0.2s; }
+        .back-btn:hover { background-color: #e9ecef; }
+        .menu-title { font-size: 18px; font-weight: bold; margin: 30px 0 15px 0; text-align: center; }
+        .select-link { display: block; background: #ffffff; border: 2px solid #e0e0e0; padding: 20px; margin-bottom: 15px; border-radius: 8px; text-decoration: none; color: #333; font-weight: bold; font-size: 16px; border-left: 8px solid var(--sobu-color); box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .select-link:hover { background: #f8faff; transform: translateY(-2px); }
+        .select-link span { display: block; font-size: 12px; color: #666; margin-top: 4px; font-weight: normal; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header-station">
+        <div class="route-badge"><span class="jr">JR</span><span class="je">JO</span></div>
+        <h1>総武・横須賀線 E235系</h1>
+        <div class="line-bar"></div>
+    </div>
+    <!-- 💡 ボタンのジャンプ先を大文字の index.html に確実に修正しました！ -->
+    <a href="index.html" class="back-btn">⬅ 総合ホーム画面へ戻る</a>
+    <div class="menu-title">📋 見たい編成表のタイプを選択してください</div>
+    
+    <a href="sobuf.html" class="select-link">
+        🟦 1. 基本編成（11両固定編成 / F編成）
+        <span>F-01編成などのグリーン車付き11両を調べる</span>
+    </a>
+
+    <a href="sobuj.html" class="select-link">
+        🟥 2. 付属編成（4両固定編成 / J編成）
+        <span>J-01編成などの増結用4両を調べる</span>
+    </a>
+</div>
+</body>
+</html>
