@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>総武・横須賀線 E235系1000番台 F編成表</title>
+    <style>
+        :root {
+            --sobu-color: #003399; /* 総武快速線スカ色ブルー */
+            --niitsu-color: #0066cc; /* 新津製バッジ青 */
+            --jtrec-color: #009944;  /* 横浜製バッジ緑 */
+        }
+        body { font-family: sans-serif; background-color: #f4f5f7; margin: 0; padding: 0; color: #333; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .header-station { background: #ffffff; border: 4px solid #737373; padding: 25px; border-radius: 8px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .route-badge { background: var(--sobu-color); color: #ffffff; width: 60px; height: 60px; display: inline-flex; flex-direction: column; justify-content: center; align-items: center; border-radius: 6px; font-weight: bold; margin-bottom: 10px; }
+        .route-badge .jr { font-size: 11px; line-height: 1; }
+        .route-badge .je { font-size: 28px; font-weight: 900; line-height: 1; }
+        .header-station h1 { color: #222; font-size: 28px; margin: 5px 0 10px 0; font-weight: 900; }
+        .line-bar { background: var(--sobu-color); height: 12px; width: 100%; border-radius: 2px; }
+        .back-btn { display: inline-block; background-color: #ffffff; border: 1px solid #ccc; padding: 10px 20px; border-radius: 6px; text-decoration: none; color: #333; font-weight: bold; font-size: 14px; margin-bottom: 25px; }
+        .legend-box { background: #ffffff; border: 1px solid #e0e0e0; padding: 12px 15px; border-radius: 6px; margin-bottom: 25px; font-size: 14px; }
+        .mfr-badge { color: #ffffff; padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 11px; display: inline-block; }
+        .bg-niitsu { background-color: var(--niitsu-color); }
+        .bg-jtrec { background-color: var(--jtrec-color); }
+        .green-car { color: #22ac38; font-weight: bold; }
+        h2 { font-size: 22px; padding-left: 12px; border-left: 6px solid var(--sobu-color); margin-top: 35px; margin-bottom: 15px; color: #111; }
+        .table-container { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; background: #ffffff; border-radius: 6px; border: 1px solid #e0e0e0; }
+        table { width: 100%; border-collapse: collapse; white-space: nowrap; }
+        th, td { padding: 12px 15px; text-align: center; border-bottom: 1px solid #eeeeee; font-size: 13px; }
+        th { background-color: #f1f3f5; color: #495057; font-weight: bold; }
+        .th-title { background-color: #e9ecef; font-weight: bold; position: sticky; left: 0; z-index: 2; }
+        tr:hover { background-color: #f8f9fa; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header-station">
+        <div class="route-badge"><span class="jr">JR</span><span class="je">JO</span></div>
+        <h1>総武・横須賀線 車両編成データベース</h1>
+        <div class="line-bar"></div>
+    </div>
+    <a href="sobu.html" class="back-btn">⬅ 総武快速線メニューへ戻る</a>
+    <div class="legend-box"><strong>⚙️ 製造メーカー識別：</strong><span class="mfr-badge bg-niitsu">新津</span> J-TREC新津（自社工場製） ／ <span class="mfr-badge bg-jtrec">横浜</span> J-TREC横浜（外注製）</div>
+    
+    <h2>🟦 1. 基本編成（11両固定編成 / F-01～F-43 全43編成）</h2>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr><th class="th-title">編成</th><th>製造</th><th>11号車</th><th>10号車</th><th>9号車</th><th>8号車</th><th>7号車</th><th>6号車</th><th class="green-car">5号車🍀</th><th class="green-car">4号車🍀</th><th>3号車</th><th>2号車</th><th>1号車</th></tr>
+            </thead>
+            <tbody>
+                <!-- F-01〜F-43までの車番規則に基づき完全自動出力 -->
+                <script>
+                    const fTREC = { 11: "横浜", 12: "横浜", 13: "横浜", 14: "横浜", 15: "横浜" }; // 横浜事業所落成
+                    for (let i = 1; i <= 43; i++) {
+                        let num = String(i).padStart(2, '0');
+                        let mfr = fTREC[i] ? "横浜" : "新津";
+                        let bg = fTREC[i] ? "bg-jtrec" : "bg-niitsu";
+                        document.write(`
+                            <tr>
+                                <td class="th-title"><strong>F-${num}</strong></td>
+                                <td><span class="mfr-badge ${bg}">${mfr}</span></td>
+                                <td>クハE235-10${num}</td>
+                                <td>サハE235-10${num}</td>
+                                <td>モハE235-10${num}</td>
+                                <td>モハE234-10${num}</td>
+                                <td>サハE234-10${num}</td>
+                                <td>モハE235-12${num}</td>
+                                <td>サロE235-10${num}</td>
+                                <td>サロE234-10${num}</td>
+                                <td>モハE235-14${num}</td>
+                                <td>モハE234-14${num}</td>
+                                <td>クハE234-10${num}</td>
+                            </tr>
+                        `);
+                    }
+                </script>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
