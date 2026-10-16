@@ -12,6 +12,7 @@
             --dark-bg: #1a1a1a;
             --keiyo-color: #c9222b;
             --sobu-color: #003399;
+            --mc-color: #4a7227; /* マイクラ風の深緑を追加 */
         }
         body {
             font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
@@ -106,12 +107,14 @@
         .east { background-color: var(--jr-east); }
         .central { background-color: var(--jr-central); }
         .west { background-color: var(--jr-west); }
+        .minecraft { background-color: var(--mc-color); } /* マイクラ研究所用カラー */
         .card-body { padding: 20px; flex-grow: 1; }
         .card-body p { margin: 0 0 15px 0; font-size: 14px; color: #666; }
         .route-link { display: block; background: #f8f9fa; border: 1px solid #e0e0e0; padding: 12px; margin-bottom: 10px; border-radius: 5px; text-decoration: none; color: #333; font-weight: bold; font-size: 14px; transition: all 0.2s; border-left: 5px solid #737373; }
         .route-link:hover { background: #f1f3f5; padding-left: 18px; }
         .link-je { border-left-color: var(--keiyo-color); }
         .link-jo { border-left-color: var(--sobu-color); }
+        .link-mc { border-left-color: var(--mc-color); }
     </style>
 </head>
 <body>
@@ -129,8 +132,9 @@
             </div>
             <div id="searchResult" class="search-result-box"></div>
         </div>
-        <div class="section-title">🏢 鉄道会社を選択</div>
+        <div class="section-title">🏢 鉄道会社・研究機関を選択</div>
         <div class="jr-grid">
+            <!-- JR東日本 -->
             <div class="jr-card">
                 <div class="card-header east"><span>JR東日本</span><span class="logo-text">JR</span></div>
                 <div class="card-body">
@@ -139,8 +143,30 @@
                     <a href="sobu.html" class="route-link link-jo">JO 総武・横須賀線 (E235系1000番台)</a>
                 </div>
             </div>
-            <div class="jr-card"><div class="card-header central"><span>JR東海</span><span class="logo-text">JR</span></div><div class="card-body"><p>東海道新幹線や名古屋・静岡エリアを走る車両のデータベースです。</p><div style="color: #999; font-size: 14px; font-style: italic; padding: 10px 0;">順次追加予定</div></div></div>
-            <div class="jr-card"><div class="card-header west"><span>JR西日本</span><span class="logo-text">JR</span></div><div class="card-body"><p>アーバンネットワークや山陽・北陸エリアの車両データベースです。</p><div style="color: #999; font-size: 14px; font-style: italic; padding: 10px 0;">順次追加予定</div></div></div>
+            <!-- JR東海 -->
+            <div class="jr-card">
+                <div class="card-header central"><span>JR東海</span><span class="logo-text">JR</span></div>
+                <div class="card-body">
+                    <p>東海道新幹線や名古屋・静岡エリアを走る車両のデータベースです。</p>
+                    <div style="color: #999; font-size: 14px; font-style: italic; padding: 10px 0;">順次追加予定</div>
+                </div>
+            </div>
+            <!-- JR西日本 -->
+            <div class="jr-card">
+                <div class="card-header west"><span>JR西日本</span><span class="logo-text">JR</span></div>
+                <div class="card-body">
+                    <p>アーバンネットワークや山陽・北陸エリアの車両データベースです。</p>
+                    <div style="color: #999; font-size: 14px; font-style: italic; padding: 10px 0;">順次追加予定</div>
+                </div>
+            </div>
+            <!-- Minecraft 鉄道研究所（ここに追加しました！） -->
+            <div class="jr-card">
+                <div class="card-header minecraft"><span>Minecraft 鉄道研究所</span><span class="logo-text">MC</span></div>
+                <div class="card-body">
+                    <p>マインクラフトの世界で展開される、Kainoラボによる鉄道再現や技術検証の特設サイトです。</p>
+                    <a href="https://github.io" class="route-link link-mc">🌐 Minecraft-Kaino-lab へ移動する</a>
+                </div>
+            </div>
         </div>
     </div>
     <script>
