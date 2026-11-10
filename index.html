@@ -462,6 +462,9 @@
             if (!audioCtx) {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
         }
 
         function playSound(type) {
@@ -998,4 +1001,3 @@
     </script>
 </body>
 </html>
-                                player.            remainingWords =                 if (combo > 0 
