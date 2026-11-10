@@ -301,7 +301,7 @@
     </audio>
 
     <div class="game-container" id="main-container">
-        <!-- 1. ログイン / 登録 -->
+        <!-- 1. ログイン / 登録 (ここでは曲は流れない) -->
         <div id="login-screen" class="screen active">
             <h1>機捜210 - ULTIMATE SOLO</h1>
             <div class="auth-tab">
@@ -320,7 +320,7 @@
             </div>
         </div>
 
-        <!-- 2. メニュー -->
+        <!-- 2. メニュー (ここから曲が再生開始) -->
         <div id="menu-screen" class="screen">
             <h1 id="user-display">捜査員待機中</h1>
             <canvas id="menu-canvas" width="900" height="240"></canvas>
@@ -478,6 +478,11 @@
             }
         }
 
+        function stopBGM() {
+            bgmAudio.pause();
+            bgmAudio.currentTime = 0;
+        }
+
         function toggleBGM() {
             isBgmEnabled = !isBgmEnabled;
             if (isBgmEnabled) {
@@ -499,7 +504,6 @@
             if (audioCtx.state === 'suspended') {
                 audioCtx.resume();
             }
-            playBGM();
         }
 
         function playSound(type) {
@@ -658,10 +662,15 @@
         function onAuthSuccess() {
             document.getElementById("user-display").innerText = `捜査員: ${player.name} (Lv.${player.level})`;
             showScreen("menu-screen");
+            playBGM(); // 💡 ログイン成功してメニュー画面に入ったタイミングでBGM開始
             startCanvasAnimation("menu-canvas");
         }
 
-        function logout() { player = null; showScreen("login-screen"); }
+        function logout() { 
+            player = null; 
+            stopBGM(); // 💡 ログアウトしたらBGMを停止
+            showScreen("login-screen"); 
+        }
 
         function showScreen(id) {
             if (animId) cancelAnimationFrame(animId);
@@ -674,6 +683,7 @@
             initAudio();
             window.removeEventListener("keydown", onKeyPress);
             showScreen("menu-screen");
+            playBGM(); // 💡 メニューに戻った時もBGMを流す
             startCanvasAnimation("menu-canvas");
         }
 
@@ -774,6 +784,7 @@
 
             updateBars();
             showScreen("game-screen");
+            playBGM();
             startCanvasAnimation("game-canvas");
             nextWord();
 
