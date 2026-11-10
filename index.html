@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>タイピングコロシアム</title>
+<style>
+  body { font-family: 'Segoe UI', sans-serif; background: #121212; color: #fff; text-align: center; margin: 0; padding: 20px; }
+  .box { max-width: 700px; margin: 20px auto; background: #1e1e2e; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+  h1 { color: #ff4757; margin-top: 0; letter-spacing: 2px; }
+  button { background: #ff4757; color: #fff; border: none; padding: 12px 24px; font-size: 16px; border-radius: 6px; cursor: pointer; margin: 8px; font-weight: bold; }
+  button:hover { background: #ff6b81; }
+  button.sub { background: #2f3542; }
+  button.sub:hover { background: #57606f; }
+  input, select { padding: 10px; font-size: 16px; border-radius: 6px; border: none; margin: 8px; }
+  .hidden { display: none; }
+  .stats { display: flex; justify-content: space-around; background: #2f3542; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+  .gauge-wrap { background: #333; height: 24px; border-radius: 12px; overflow: hidden; margin: 10px 0; position: relative; }
+  .gauge-bar { height: 100%; width: 0%; transition: width 0.1s; }
+  #player-bar { background: #2ed573; }
+  #ai-bar { background: #ff4757; }
+  .word-jp { font-size: 28px; font-weight: bold; margin-top: 20px; }
+  .word-ro { font-size: 24px; letter-spacing: 3px; margin: 10px 0 25px; font-family: monospace; }
+  .typed { color: #2ed573; }
+  .untyped { color: #a4b0be; }
+  .miss { background: #ff4757; color: #fff; }
+  textarea { width: 90%; height: 60px; margin-top: 10px; border-radius: 6px; padding: 8px; }
+</style>
+</head>
+<body>
+
+<div class="box">
+  <h1>⚔️ タイピングコロシアム ⚔️</h1>
+
+  <!-- 1. 初回登録画面 -->
+  <div id="screen-register" class="hidden">
+    <h2>プレイヤー登録</h2>
+    <p>コロシアムに参加する名前を入力してください</p>
+    <input type="text" id="reg-name" placeholder="プレイヤー名" maxlength="12">
+    <br>
+    <button onclick="registerUser()">登録して始める</button>
+    <hr style="border-color:#333; margin:20px 0;">
+    <p style="font-size:14px; color:#aaa;">以前のデータを復元する（引き継ぎコード）</p>
+    <input type="text" id="import-code" placeholder="コードを貼り付け">
+    <button class="sub" onclick="importData()">復元</button>
+  </div>
+
+  <!-- 2. ホーム（マイページ）画面 -->
+  <div id="screen-home" class="hidden">
+    <div class="stats">
+      <div>プレイヤー: <strong id="disp-name"></strong></div>
+      <div>レート: <strong id="disp-rate"></strong></div>
+      <div>AI戦績: <strong id="disp-record"></strong></div>
+    </div>
+
+    <div style="margin-bottom: 20px;">
+      <label>🎵 BGM選択: </label>
+      <select id="bgm-select">
+        <option value="0">BGM 1：バトル・ビート</option>
+        <option value="1">BGM 2：サイバー・コロシアム</option>
+        <option value="2">BGM 3：緊迫の決戦</option>
+        <option value="-1">BGMなし（効果音のみ）</option>
+      </select>
+    </div>
+
+    <h3>モードを選択</h3>
+    <button onclick="startGame('normal')">🎯 普通のタイピング（練習）</button>
+    <br>
+    <div style="margin-top:10px;">
+      <select id="ai-level">
+        <option value="1200">AIレベル：初級（ゆっくり）</option>
+        <option value="700" selected>AIレベル：中級（ふつう）</option>
+        <option value="400">AIレベル：上級（はやい）</option>
+      </select>
+      <button onclick="startGame('ai')">🔥 AIと対戦する</button>
+    </div>
+
+    <div style="margin-top: 30px;">
+      <button class="sub" onclick="toggleBackup()">💾 引き継ぎコード表示</button>
+      <button class="sub" onclick="resetData()">⚠️ データ初期化</button>
+      <div id="backup-area" class="hidden">
+        <p style="font-size:12px; color:#aaa;">このコードをメモしておけば、別のブラウザでもデータを復元できます。</p>
+        <textarea id="export-code" readonly></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. ゲームプレイ画面 -->
+  <div id="screen-game" class="hidden">
+    <div id="ai-area">
+      <div>🤖 AIの進捗 (<span id="ai-score-text">0</span> / 10問)</div>
+      <div class="gauge-wrap"><div id="ai-bar" class="gauge-bar"></div></div>
+    </div>
+
+    <div>👤 あなたの進捗 (<span id="player-score-text">0</span> / 10問)</div>
+    <div class="gauge-wrap"><div id="player-bar" class="gauge-bar"></div></div>
+
+    <div class="word-jp" id="word-jp">準備中...</div>
+    <div class="word-ro" id="word-ro"></div>
+    <p style="color:#888; font-size:14px;">キーボードで直接入力してください（大文字・小文字は自動判定）</p>
+    <button class="sub" onclick="quitGame()">中断して戻る</button>
+  </div>
+
+  <!-- 4. リザルト画面 -->
+  <div id="screen-result" class="hidden">
+    <h2 id="result-title">結果発表</h2>
+    <p id="result-detail" style="font-size:18px;"></p>
+    <button onclick="showHome()">ホームへ戻る</button>
+  </div>
+</div>
+
+<script>
+// --- データ管理（LocalStorage） ---
+const STORAGE_KEY = 'typing_colosseum_save_v1';
+let userData = null;
+
+function loadUser() {
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (saved) {
+    userData = JSON.parse(saved);
+    showHome();
+  } else {
+    showScreen('screen-register');
+  }
+}
+
+function saveUser() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(userData));
+}
+
+function registerUser() {
+  const name = document.getElementById('reg-name').value.trim();
+  if (!name) return alert('名前を入力してください');
+  userData = { name: name, rate: 1000, wins: 0, losses: 0 };
+  saveUser();
+  playTone(880, 0.1);
+  showHome();
+}
+
+function toggleBackup() {
+  const area = document.getElementById('backup-area');
+  area.classList.toggle('hidden');
+  document.getElementById('export-code').value = btoa(encodeURIComponent(JSON.stringify(userData)));
+}
+
+function importData() {
+  try {
+    const code = document.getElementById('import-code').value.trim();
+    const decoded = JSON.parse(decodeURIComponent(atob(code)));
+    if (decoded && decoded.name) {
+      userData = decoded;
+      saveUser();
+      alert('データを復元しました！');
+      showHome();
+    }
+  } catch (e) {
+    alert('コードが正しくありません');
+  }
+}
+
+function resetData() {
+  if (confirm('本当にデータを消去して最初からやり直しますか？')) {
+    localStorage.removeItem(STORAGE_KEY);
+    location.reload();
+  }
+}
+
+// --- 画面切り替え ---
+function showScreen(id) {
+  ['screen-register', 'screen-home', 'screen-game', 'screen-result'].forEach(s => {
+    document.getElementById(s).classList.add('hidden');
+  });
+  document.getElementById(id).classList.remove('hidden');
+}
+
+function showHome() {
+  stopBGM();
+  document.getElementById('disp-name').textContent = userData.name;
+  document.getElementById('disp-rate').textContent = userData.rate;
+  document.getElementById('disp-record').textContent = `${userData.wins}勝 ${userData.losses}敗`;
+  showScreen('screen-home');
+}
+
+// --- 音声システム（ファイル不要のシンセ音） ---
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+let bgmTimer = null;
+
+function playTone(freq, duration, type = 'sine', vol = 0.1) {
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = type;
+  osc.frequency.value = freq;
+  gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.start();
+  osc.stop(audioCtx.currentTime + duration);
+}
+
+function startBGM(type) {
+  stopBGM();
+  if (type < 0) return;
+  const patterns = [, // BGM 1, // BGM 2
+    [196, 233, 261, 293, 311, 349]  // BGM 3
+  ];
+  const notes = patterns[type];
+  let step = 0;
+  bgmTimer = setInterval(() => {
+    playTone(notes[step % notes.length], 0.18, 'triangle', 0.04);
+    step++;
+  }, 250);
+}
+
+function stopBGM() {
+  if (bgmTimer) { clearInterval(bgmTimer); bgmTimer = null; }
+}
+
+// --- ゲームロジック ---
+const WORDS = [
+  { jp: 'タイピングコロシアム', ro: 'taipingukorosiamu' },
+  { jp: '電光石火の一撃', ro: 'denkousekkanoitigeki' },
+  { jp: '勝利の栄冠', ro: 'syourinoeikan' },
+  { jp: '限界突破', ro: 'genkaitoppa' },
+  { jp: '完全燃焼', ro: 'kannzennnensyou' },
+  { jp: '高速打鍵', ro: 'kousokudakenn' },
+  { jp: '百戦錬磨', ro: 'hyakusennrenma' },
+  { jp: '一撃必殺', ro: 'itigekihissatu' },
+  { jp: '天下無双', ro: 'tenkamusou' },
+  { jp: '起死回生', ro: 'kisikaisei' },
+  { jp: '疾風迅雷', ro: 'sippuuzinnrai' },
+  { jp: '明鏡止水', ro: 'meikyousisui' }
+];
+
+let gameMode = 'normal';
+let isPlaying = false;
+let targetCount = 10;
+let playerScore = 0;
+let aiScore = 0;
+let aiProgress = 0;
+let currentWord = null;
+let charIndex = 0;
+let aiTimer = null;
+let startTime = 0;
+
+function startGame(mode) {
+  gameMode = mode;
+  isPlaying = true;
+  playerScore = 0;
+  aiScore = 0;
+  aiProgress = 0;
+  startTime = Date.now();
+
+  document.getElementById('ai-area').classList.toggle('hidden', mode !== 'ai');
+  updateGauges();
+  nextWord();
+  showScreen('screen-game');
+
+  const bgmChoice = parseInt(document.getElementById('bgm-select').value);
+  startBGM(bgmChoice);
+
+  if (mode === 'ai') {
+    const speed = parseInt(document.getElementById('ai-level').value);
+    aiTimer = setInterval(() => {
+      if (!isPlaying) return;
+      aiProgress += 1;
+      if (aiProgress >= 12) { // 12文字分で1問クリア扱い
+        aiProgress = 0;
+        aiScore++;
+        updateGauges();
+        if (aiScore >= targetCount) endGame(false);
+      }
+    }, speed);
+  }
+}
+
+function nextWord() {
+  currentWord = WORDS[Math.floor(Math.random() * WORDS.length)];
+  charIndex = 0;
+  renderWord();
+}
+
+function renderWord(isMiss = false) {
+  document.getElementById('word-jp').textContent = currentWord.jp;
+  const typed = currentWord.ro.slice(0, charIndex);
+  const current = currentWord.ro[charIndex] || '';
+  const rest = currentWord.ro.slice(charIndex + 1);
+  document.getElementById('word-ro').innerHTML =
+    `<span class="typed">${typed}</span><span class="${isMiss ? 'miss' : 'untyped'}">${current}</span><span class="untyped">${rest}</span>`;
+}
+
+function updateGauges() {
+  document.getElementById('player-score-text').textContent = playerScore;
+  document.getElementById('ai-score-text').textContent = aiScore;
+  document.getElementById('player-bar').style.width = (playerScore / targetCount * 100) + '%';
