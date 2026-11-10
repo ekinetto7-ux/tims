@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>機捜210 - ULTIMATE BATTLE CHASE</title>
+    <title>機捜210 - ULTIMATE SOLO CHASE</title>
     <style>
         :root {
             --bg-color: #030712;
@@ -39,7 +39,7 @@
             max-width: 1020px;
             background: var(--panel-bg);
             border: 2px solid var(--neon-cyan);
-            box-shadow: 0 0 40px rgba(0, 243, 255, 0.3), inset 0 0 20px rgba(0, 243, 255, 0.1);
+            box-shadow: 0 0 40px rgba(0, 243, 255, 0.35), inset 0 0 20px rgba(0, 243, 255, 0.1);
             border-radius: 16px;
             padding: 24px;
             text-align: center;
@@ -50,7 +50,7 @@
             color: var(--neon-cyan);
             text-shadow: 0 0 20px var(--neon-cyan);
             font-size: 2.3rem;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             letter-spacing: 3px;
             font-weight: 900;
         }
@@ -160,7 +160,7 @@
             background: #000;
             border-radius: 12px;
             border: 1px solid rgba(0, 243, 255, 0.5);
-            margin: 12px 0;
+            margin: 10px 0;
             pointer-events: none;
             box-shadow: inset 0 0 25px rgba(0,0,0,0.8);
         }
@@ -169,11 +169,11 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.85);
             padding: 10px 16px;
             border-radius: 10px;
             border: 1px solid var(--neon-cyan);
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             font-size: 0.95rem;
         }
 
@@ -197,30 +197,33 @@
             text-shadow: 0 0 10px var(--neon-yellow);
         }
 
-        .police-banner {
-            background: rgba(255, 0, 85, 0.18);
+        .police-radio-ticker {
+            background: rgba(255, 0, 85, 0.15);
             border: 1px solid var(--neon-red);
             color: var(--neon-yellow);
-            padding: 6px;
+            padding: 6px 12px;
             border-radius: 6px;
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: bold;
-            margin-bottom: 10px;
-            letter-spacing: 2px;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
             text-shadow: 0 0 8px rgba(255,0,85,0.6);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .word-display-box {
             background: rgba(0, 0, 0, 0.85);
-            padding: 16px;
+            padding: 14px;
             border-radius: 10px;
             border: 1px solid rgba(255, 230, 0, 0.5);
-            margin: 10px 0;
+            margin: 8px 0;
             box-shadow: 0 0 15px rgba(255, 230, 0, 0.1);
         }
 
         .target-word {
-            font-size: 2.6rem;
+            font-size: 2.5rem;
             color: var(--neon-yellow);
             letter-spacing: 6px;
             text-shadow: 0 0 20px rgba(255, 230, 0, 0.8);
@@ -228,14 +231,14 @@
         }
 
         .typed-char { color: var(--neon-cyan); text-shadow: 0 0 12px var(--neon-cyan); }
-        .roma-hint { color: #aaa; font-size: 1.3rem; margin-bottom: 4px; font-weight: 600; }
+        .roma-hint { color: #aaa; font-size: 1.25rem; margin-bottom: 4px; font-weight: 600; }
 
         .shop-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
             gap: 12px;
             margin: 14px 0;
-            max-height: 350px;
+            max-height: 330px;
             overflow-y: auto;
             padding-right: 6px;
         }
@@ -255,23 +258,17 @@
             background: rgba(0, 0, 0, 0.85);
             border: 1px solid var(--neon-purple);
             border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 15px;
+            padding: 14px;
+            margin-bottom: 12px;
             text-align: left;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            font-size: 0.95rem;
+            gap: 8px;
+            font-size: 0.9rem;
         }
 
-        .profile-item {
-            color: #ddd;
-        }
-
-        .profile-item span {
-            color: var(--neon-cyan);
-            font-weight: bold;
-        }
+        .profile-item { color: #ddd; }
+        .profile-item span { color: var(--neon-cyan); font-weight: bold; }
 
         .modal-box {
             background: rgba(0,0,0,0.9);
@@ -301,7 +298,7 @@
     <div class="game-container" id="main-container">
         <!-- 1. ログイン / 登録 -->
         <div id="login-screen" class="screen active">
-            <h1>機捜210 - BATTLE CHASE</h1>
+            <h1>機捜210 - ULTIMATE SOLO</h1>
             <div class="auth-tab">
                 <button class="tab-btn active" id="tab-login-btn" onclick="switchTab('login')">認証ログイン</button>
                 <button class="tab-btn" id="tab-register-btn" onclick="switchTab('register')">新規署員登録</button>
@@ -324,33 +321,32 @@
             <h1 id="user-display">捜査員待機中</h1>
             <canvas id="menu-canvas" width="900" height="240"></canvas>
             <div class="btn-group">
-                <button class="green" onclick="startMode('free')">🟢 自由走行</button>
-                <button class="red" onclick="startMode('mission')">🔴 メインミッション (全20問)</button>
-                <button class="yellow" onclick="startMode('ghost')">⚡ ゴーストタイムアタック</button>
-                <button class="purple" onclick="openOnlineModal()">🌐 オンライン対戦ルーム</button>
-                <button class="cyan" onclick="openShop()" style="color:var(--neon-cyan); border-color:var(--neon-cyan);">🛒 ガレージ / 設定</button>
+                <button class="green" onclick="startMode('free')">🟢 自由パトロール</button>
+                <button class="red" onclick="openDifficultyModal()">🔴 メインミッション出動</button>
+                <button class="yellow" onclick="startMode('timeattack')">⚡ タイムアタック</button>
+                <button class="cyan" onclick="openShop()" style="color:var(--neon-cyan); border-color:var(--neon-cyan);">🛒 機捜ガレージ / 設定</button>
                 <button style="border-color: #777; color: #aaa;" onclick="logout()">ログアウト</button>
             </div>
         </div>
 
-        <!-- 3. オンライン対戦コード入力ルーム -->
-        <div id="online-screen" class="screen">
-            <h1>フレンドオンライン対戦</h1>
+        <!-- 3. 難易度選択モーダル -->
+        <div id="difficulty-screen" class="screen">
+            <h1>ミッション難易度選択</h1>
             <div class="modal-box">
-                <p style="color:var(--neon-cyan); margin-bottom:12px; font-size:1.1rem;">友達の【4桁の対戦コード】を入力してガチ対戦！</p>
-                <input type="text" id="battle-code-input" placeholder="例: 4821" maxlength="4" style="letter-spacing: 8px; font-size: 1.8rem; margin-bottom: 15px;">
-                <div class="btn-group">
-                    <button class="purple" onclick="startOnlineBattle()">⚡ リアルタイム対戦出動</button>
-                    <button onclick="toMenu()">メニューに戻る</button>
+                <p style="color:var(--neon-cyan); margin-bottom:15px; font-size:1.1rem;">挑む難易度を選択せよ！難度が高いほど報酬Gが増加する。</p>
+                <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;">
+                    <button class="green" onclick="startMissionWithDiff('normal')" style="padding: 14px;">🟢 NORMAL (標準チェイス / 報酬 50G)</button>
+                    <button class="yellow" onclick="startMissionWithDiff('hard')" style="padding: 14px;">🟡 HARD (被ダメ増加・高速 / 報酬 120G)</button>
+                    <button class="red" onclick="startMissionWithDiff('extreme')" style="padding: 14px;">🔴 EXTREME (極悪容疑車・超高速 / 報酬 300G)</button>
                 </div>
+                <button onclick="toMenu()">メニューに戻る</button>
             </div>
         </div>
 
-        <!-- 4. ショップ & 設定（ガレージ） -->
+        <!-- 4. ショップ & ガレージ設定 -->
         <div id="shop-screen" class="screen">
-            <h1>機捜ガレージ・設定データ</h1>
+            <h1>機捜ガレージ・装備カスタマイズ</h1>
             
-            <!-- 設定から全部見えるプレイヤー情報カード -->
             <div class="profile-card" id="profile-card-view">
                 <div class="profile-item">コールサイン: <span id="pf-name">---</span></div>
                 <div class="profile-item">階級/Lv: <span id="pf-level">1</span></div>
@@ -359,7 +355,7 @@
                 <div class="profile-item">エンジンLv: <span id="pf-engine">1</span></div>
                 <div class="profile-item">PITバンパーLv: <span id="pf-bumper">1</span></div>
                 <div class="profile-item">装甲シャーシLv: <span id="pf-armor">1</span></div>
-                <div class="profile-item">サイレンLv: <span id="pf-siren">1</span></div>
+                <div class="profile-item">パトランプLv: <span id="pf-lamp">1</span></div>
                 <div class="profile-item" style="grid-column: span 2;">愛車カラー: <span id="pf-color">白黒クラウン</span></div>
             </div>
 
@@ -376,7 +372,7 @@
                 </div>
                 <div class="shop-card">
                     <h3>PITバンパー</h3>
-                    <p>ブーストダメUP<br>(Lv.<span id="bumper-lv">1</span>)</p>
+                    <p>ブースト威力UP<br>(Lv.<span id="bumper-lv">1</span>)</p>
                     <button class="yellow" onclick="buyUpgrade('bumper')">強化 (<span id="bumper-cost">150</span> G)</button>
                 </div>
                 <div class="shop-card">
@@ -385,9 +381,9 @@
                     <button class="yellow" onclick="buyUpgrade('armor')">強化 (<span id="armor-cost">120</span> G)</button>
                 </div>
                 <div class="shop-card">
-                    <h3>ハイパーサイレン</h3>
-                    <p>ブースト速度UP<br>(Lv.<span id="siren-lv">1</span>)</p>
-                    <button class="yellow" onclick="buyUpgrade('siren')">強化 (<span id="siren-cost">140</span> G)</button>
+                    <h3>高輝度パトランプ</h3>
+                    <p>ブースト回復UP<br>(Lv.<span id="lamp-lv">1</span>)</p>
+                    <button class="yellow" onclick="buyUpgrade('lamp')">強化 (<span id="lamp-cost">140</span> G)</button>
                 </div>
                 <div class="shop-card">
                     <h3>車体カラー</h3>
@@ -395,12 +391,12 @@
                     <button onclick="toggleCarColor()">塗装変更</button>
                 </div>
             </div>
-            <button onclick="toMenu()" style="margin-top: 10px;">メニューに戻る</button>
+            <button onclick="toMenu()" style="margin-top: 8px;">メニューに戻る</button>
         </div>
 
         <!-- 5. ゲーム画面 -->
         <div id="game-screen" class="screen">
-            <div class="police-banner" id="police-banner">🚨 警告: 容疑車両を発見！20問クリアして確保せよ！ 🚨</div>
+            <div class="police-radio-ticker" id="police-radio">📡 [機捜無線] 捜査車両210、首都高エリアにて不審車両の追尾を開始せよ。</div>
             
             <div class="status-bar">
                 <div style="display: flex; align-items: center; gap: 6px;">
@@ -412,7 +408,7 @@
                     <div class="hp-container"><div class="boost-bar" id="boost-bar"></div></div>
                 </div>
                 <div id="enemy-hp-box" style="display: flex; align-items: center; gap: 6px;">
-                    <span style="color: var(--neon-red);" id="progress-label">残り:</span>
+                    <span style="color: var(--neon-red);">進捗:</span>
                     <div class="hp-container"><div class="hp-bar-enemy" id="hp-bar-enemy"></div></div>
                 </div>
                 <div class="speed-gauge" id="speed-display">0 km/h</div>
@@ -426,10 +422,10 @@
                 <div class="target-word">
                     <span class="typed-char" id="typed-part"></span><span id="remain-part">keisatsu</span>
                 </div>
-                <p style="color: var(--neon-cyan); font-size: 0.85rem; margin-top: 6px;">[SPACEキー] BOOST満タンで進捗カット！ | (5コンボごとにHP少量回復！)</p>
+                <p style="color: var(--neon-cyan); font-size: 0.85rem; margin-top: 4px;">[SPACEキー] BOOST満タンで一気に追撃！ | (5コンボごとにHP少量回復！)</p>
             </div>
 
-            <button onclick="toMenu()" style="padding: 6px 16px; font-size: 0.9rem;">一時停止 / メニュー</button>
+            <button onclick="toMenu()" style="padding: 6px 16px; font-size: 0.9rem;">一時停止 / メニューに戻る</button>
         </div>
 
         <!-- 6. リザルト -->
@@ -437,10 +433,6 @@
             <h1 id="result-title" style="color: var(--neon-green);">ミッション完了！</h1>
             <div class="modal-box" style="border-color: var(--neon-cyan);">
                 <p id="result-detail" style="margin: 15px 0; font-size: 1.25rem; line-height: 1.8;"></p>
-                <div id="room-code-display" style="background:rgba(0,0,0,0.7); padding:10px; border-radius:8px; border:1px dashed var(--neon-yellow); margin-bottom:15px; display:none;">
-                    <p style="font-size:0.9rem; color:#aaa;">友達への対戦コード (4桁):</p>
-                    <span id="generated-code" style="font-size:2rem; color:var(--neon-yellow); font-weight:bold; letter-spacing:4px;">----</span>
-                </div>
                 <button class="green" onclick="toMenu()">メニューに戻る</button>
             </div>
         </div>
@@ -449,6 +441,7 @@
     <script>
         let player = null;
         let currentMode = "mission";
+        let currentDiff = "normal";
         let score = 0;
         let combo = 0;
         let typedIdx = 0;
@@ -460,11 +453,9 @@
         let remainingWords = 20;
 
         let boostGau = 0;
-        let rivalProgress = 0; // 💡 ライバル（対戦相手）の進行度
         let damageTimer = null;
         let particles = [];
         let screenShake = 0;
-        let currentRoomCode = "";
 
         const prefixes = ["きんきゅう", "こうそく", "きどう", "ついせき", "たいほ", "めんきょ", "さいれん", "ぱとかー", "ふくめん", "けいさつ", "そうさ", "しゅうけき", "へり", "ぶろっく", "えんじん", "ないす", "すぴーど", "びーこん", "あくせる", "ぶれーき", "どりふと", "ちぇいす"];
         const middles = ["そうこう", "とりしまり", "ていし", "めいれい", "しれい", "つうほう", "ばとる", "あたっく", "ばーすと", "すぱーく", "がーど", "らんく", "こーど", "ゆにっと", "みっしょん", "がれーじ", "ちゅーにんぐ", "ぶーすと"];
@@ -507,11 +498,11 @@
         let animId = null;
         let roadOffset = 0;
 
-        const policeBannerTexts = [
-            "🚨 警告: 容疑車両を発見！20問クリアして追撃せよ！ 🚨",
-            "📢 「前方の容疑車、直ちに左側に寄せて停止しなさい！」 📢",
-            "🚨 機捜210より各局、高速道路上でチェイス継続中！ 🚨",
-            "📢 「PITマニューバ承認！体当たりで阻止せよ！」 📢"
+        const radioMessages = [
+            "📡 [機捜無線] 前方の容疑車が蛇行運転中！慎重に距離を詰めろ！",
+            "📢 [本部司令] 「210号、PITマニューバの準備よし。確実にとらえろ！」",
+            "🚨 [緊急警報] 高速道路上で容疑車両がさらに加速！タイピングを急げ！",
+            "💬 [同乗相棒] 「先輩、ナイスタイピングっす！このまま追い詰けましょう！」"
         ];
 
         function switchTab(type) {
@@ -529,19 +520,19 @@
         }
 
         function getUsersDB() {
-            const db = localStorage.getItem("kisou210_ultimate_db");
+            const db = localStorage.getItem("kisou210_solo_ultimate_db");
             return db ? JSON.parse(db) : {};
         }
 
         function saveUsersDB(db) {
-            localStorage.setItem("kisou210_ultimate_db", JSON.stringify(db));
+            localStorage.setItem("kisou210_solo_ultimate_db", JSON.stringify(db));
         }
 
         function handleRegister() {
             const name = document.getElementById("reg-username").value.trim();
             const pass = document.getElementById("reg-password").value.trim();
             const invite = document.getElementById("reg-invite").value.trim();
-            if (!name || !pass) return alert("名前とパスワードを入力してください！");
+            if (!name || !pass) return alert("コールサインとパスワードを入力してください！");
 
             const db = getUsersDB();
             if (db[name]) return alert("既に登録されているコールサインです！");
@@ -551,7 +542,7 @@
             db[name] = {
                 name: name, password: pass,
                 score: 0, level: 1, money: bonusMoney,
-                engineLv: 1, bumperLv: 1, armorLv: 1, sirenLv: 1, carColor: "police"
+                engineLv: 1, bumperLv: 1, armorLv: 1, lampLv: 1, carColor: "police"
             };
             saveUsersDB(db);
             player = db[name];
@@ -562,7 +553,7 @@
         function handleLogin() {
             const name = document.getElementById("login-username").value.trim();
             const pass = document.getElementById("login-password").value.trim();
-            if (!name || !pass) return alert("名前とパスワードを入力してください！");
+            if (!name || !pass) return alert("コールサインとパスワードを入力してください！");
 
             const db = getUsersDB();
             if (!db[name] || db[name].password !== pass) return alert("名前または暗号パスワードが違います！");
@@ -593,20 +584,16 @@
             startCanvasAnimation("menu-canvas");
         }
 
-        function openOnlineModal() {
-            document.getElementById("battle-code-input").value = "";
-            showScreen("online-screen");
+        function openDifficultyModal() {
+            showScreen("difficulty-screen");
         }
 
-        function startOnlineBattle() {
-            let code = document.getElementById("battle-code-input").value.trim();
-            if (code.length !== 4) return alert("4桁の対戦コードを入力してください！");
-            currentRoomCode = code;
-            startMode('online');
+        function startMissionWithDiff(diff) {
+            currentDiff = diff;
+            startMode('mission');
         }
 
         function openShop() {
-            // 💡 設定・ガレージ画面でプレイヤー情報をすべて表示更新
             document.getElementById("pf-name").innerText = player.name;
             document.getElementById("pf-level").innerText = player.level;
             document.getElementById("pf-score").innerText = player.score;
@@ -614,7 +601,7 @@
             document.getElementById("pf-engine").innerText = player.engineLv;
             document.getElementById("pf-bumper").innerText = player.bumperLv;
             document.getElementById("pf-armor").innerText = player.armorLv;
-            document.getElementById("pf-siren").innerText = player.sirenLv;
+            document.getElementById("pf-lamp").innerText = player.lampLv;
 
             const colorNames = { police: "白黒クラウン", black: "覆面ブラック", gold: "ハイパーゴールド", cyan: "ネオンブルー" };
             document.getElementById("pf-color").innerText = colorNames[player.carColor] || "白黒クラウン";
@@ -626,8 +613,8 @@
             document.getElementById("bumper-cost").innerText = player.bumperLv * 150;
             document.getElementById("armor-lv").innerText = player.armorLv;
             document.getElementById("armor-cost").innerText = player.armorLv * 120;
-            document.getElementById("siren-lv").innerText = player.sirenLv;
-            document.getElementById("siren-cost").innerText = player.sirenLv * 140;
+            document.getElementById("lamp-lv").innerText = player.lampLv;
+            document.getElementById("lamp-cost").innerText = player.lampLv * 140;
             document.getElementById("car-color-name").innerText = colorNames[player.carColor] || "白黒クラウン";
 
             showScreen("shop-screen");
@@ -645,7 +632,7 @@
         }
 
         function buyUpgrade(type) {
-            const costs = { engine: player.engineLv * 100, bumper: player.bumperLv * 150, armor: player.armorLv * 120, siren: player.sirenLv * 140 };
+            const costs = { engine: player.engineLv * 100, bumper: player.bumperLv * 150, armor: player.armorLv * 120, lamp: player.lampLv * 140 };
             if (player.money >= costs[type]) {
                 player.money -= costs[type];
                 player[type + 'Lv']++;
@@ -678,32 +665,29 @@
             
             remainingWords = 20;
             boostGau = 0;
-            rivalProgress = 0;
             particles = [];
 
-            if (mode === 'online') {
-                currentRoomCode = Math.floor(1000 + Math.random() * 9000).toString();
-            }
-
             document.getElementById("enemy-hp-box").style.display = (mode === "free") ? "none" : "flex";
-            document.getElementById("progress-label").innerText = (mode === "ghost" || mode === "online") ? "対戦相手:" : "残り:";
 
             updateBars();
             showScreen("game-screen");
             startCanvasAnimation("game-canvas");
             nextWord();
 
-            if (mode === "mission" || mode === "online") {
+            if (mode === "mission") {
+                let intervalTime = currentDiff === "extreme" ? 2500 : (currentDiff === "hard" ? 3200 : 4200);
+                let dmgAmount = currentDiff === "extreme" ? 14 : (currentDiff === "hard" ? 10 : 8);
+
                 damageTimer = setInterval(() => {
-                    playerHp -= 8;
-                    screenShake = 8;
+                    playerHp -= dmgAmount;
+                    screenShake = 10;
                     updateBars();
                     const container = document.getElementById("main-container");
                     container.classList.remove("damage-flash");
                     void container.offsetWidth;
                     container.classList.add("damage-flash");
                     if (playerHp <= 0) endGame(false, "💥 パトカー大破...！ 💥\n任務失敗！");
-                }, 4000);
+                }, intervalTime);
             }
 
             window.addEventListener("keydown", onKeyPress);
@@ -720,13 +704,13 @@
 
         function nextWord() {
             if (currentMode !== "free" && remainingWords <= 0) {
-                endGame(true, currentMode === "online" ? "🌐 オンライン対戦 勝利！ 🌐" : (currentMode === "mission" ? "🚨 容疑車両のPIT捕獲完了！ 🚨" : "⚡ ゴースト対戦勝利！ ⚡"));
+                endGame(true, "🚨 容疑車両のPIT捕獲完了！任務達成！ 🚨");
                 return;
             }
 
             currentWord = wordPool[Math.floor(Math.random() * wordPool.length)];
             typedIdx = 0;
-            document.getElementById("police-banner").innerText = policeBannerTexts[Math.floor(Math.random() * policeBannerTexts.length)];
+            document.getElementById("police-radio").innerText = radioMessages[Math.floor(Math.random() * radioMessages.length)];
             renderWord();
         }
 
@@ -734,21 +718,18 @@
             if (damageTimer) clearInterval(damageTimer);
             window.removeEventListener("keydown", onKeyPress);
             
-            let reward = 50;
+            let baseReward = 50;
+            if (currentDiff === "hard") baseReward = 120;
+            if (currentDiff === "extreme") baseReward = 300;
+            let reward = (currentMode === "mission") ? baseReward : 30;
+
             player.money += reward;
             player.score += score;
             if (isWin) player.level++;
             savePlayerData();
 
             document.getElementById("result-title").innerText = title;
-            document.getElementById("result-detail").innerText = `獲得スコア: ${score} pt\n獲得賞金: ${reward} G\n捜査員レベル: Lv.${player.level}`;
-
-            if (currentMode === "online" || currentMode === "ghost") {
-                document.getElementById("room-code-display").style.display = "block";
-                document.getElementById("generated-code").innerText = currentRoomCode || "4821";
-            } else {
-                document.getElementById("room-code-display").style.display = "none";
-            }
+            document.getElementById("result-detail").innerText = `獲得スコア: ${score} pt\n獲得賞金: ${reward} G (${currentDiff.toUpperCase()})\n捜査員レベル: Lv.${player.level}`;
 
             showScreen("result-screen");
         }
@@ -779,8 +760,8 @@
                 if (currentMode !== "free") {
                     remainingWords = Math.max(0, remainingWords - (1 + Math.floor(player.bumperLv / 2)));
                 }
-                screenShake = 15;
-                createSparkParticles(620, 150, 40);
+                screenShake = 16;
+                createSparkParticles(620, 150, 45);
                 updateBars();
 
                 const container = document.getElementById("main-container");
@@ -798,7 +779,8 @@
                 score += 10 * mult;
 
                 speedKph = Math.min(320, speedKph + 6);
-                boostGau = Math.min(100, boostGau + (12 + player.sirenLv * 2));
+                let boostAdd = 12 + (player.lampLv * 2.5);
+                boostGau = Math.min(100, boostGau + boostAdd);
 
                 if (combo > 0 && combo % 5 === 0) {
                     playerHp = Math.min(maxPlayerHp, playerHp + 6);
@@ -806,9 +788,6 @@
 
                 if (currentMode !== "free") {
                     createSparkParticles(600, 150, 5);
-                    if (currentMode === "ghost" || currentMode === "online") {
-                        rivalProgress += 4; // 💡 自分のタイピングに合わせて対戦相手もリアルタイムに前進！
-                    }
                 }
 
                 updateBars();
@@ -872,10 +851,7 @@
 
                 drawPatcar(ctx, 80, 145 + Math.sin(frame * 0.2) * 2, frame, player ? player.carColor : "police", player ? player.name : "機捜210");
 
-                if (canvasId === "game-canvas" && (currentMode === "ghost" || currentMode === "online")) {
-                    let rivalX = Math.min(750, 120 + rivalProgress + Math.sin(frame * 0.1) * 5);
-                    drawPatcar(ctx, rivalX, 150, frame, "black", "RIVAL");
-                } else if (canvasId === "game-canvas" && currentMode === "mission") {
+                if (canvasId === "game-canvas" && currentMode === "mission") {
                     drawEnemyCar(ctx, 610 + Math.sin(frame * 0.1) * 10, 150);
                 } else if (canvasId === "menu-canvas") {
                     drawEnemyCar(ctx, 600, 150);
@@ -895,9 +871,10 @@
 
         function drawPatcar(ctx, x, y, frame, colorType, label) {
             ctx.save();
-            let sirenRed = (Math.floor(frame / 5) % 2 === 0);
+            let sirenSpeed = Math.max(2, 6 - (player ? player.lampLv : 1));
+            let sirenRed = (Math.floor(frame / sirenSpeed) % 2 === 0);
 
-            ctx.shadowBlur = 18;
+            ctx.shadowBlur = 22;
             ctx.shadowColor = sirenRed ? "#ff0055" : "#00f3ff";
             ctx.fillStyle = sirenRed ? "#ff0055" : "#00f3ff";
             ctx.fillRect(x + 45, y - 8, 25, 8);
