@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ULTIMATE SOLO CHASE</title>
+    <title>機捜210 - ULTIMATE SOLO CHASE</title>
     <style>
         :root {
             --bg-color: #030712;
@@ -298,7 +298,7 @@
     <div class="game-container" id="main-container">
         <!-- 1. ログイン / 登録 -->
         <div id="login-screen" class="screen active">
-            <h1> ULTIMATE SOLO</h1>
+            <h1>機捜210 - ULTIMATE SOLO</h1>
             <div class="auth-tab">
                 <button class="tab-btn active" id="tab-login-btn" onclick="switchTab('login')">認証ログイン</button>
                 <button class="tab-btn" id="tab-register-btn" onclick="switchTab('register')">新規署員登録</button>
@@ -335,15 +335,15 @@
             <div class="modal-box">
                 <p style="color:var(--neon-cyan); margin-bottom:15px; font-size:1.1rem;">挑む難易度を選択せよ！難度が高いほど報酬Gが増加する。</p>
                 <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;">
-                    <button class="green" onclick="startMissionWithDiff('normal')" style="padding: 14px;">🟢 NORMAL (標準チェイス / 報酬 50G)</button>
-                    <button class="yellow" onclick="startMissionWithDiff('hard')" style="padding: 14px;">🟡 HARD (被ダメ増加・高速 / 報酬 120G)</button>
-                    <button class="red" onclick="startMissionWithDiff('extreme')" style="padding: 14px;">🔴 EXTREME (極悪容疑車・超高速 / 報酬 300G)</button>
+                    <button class="green" onclick="startMissionWithDiff('normal')" style="padding: 14px;">🟢 NORMAL (標準チェイス / 報酬 80G)</button>
+                    <button class="yellow" onclick="startMissionWithDiff('hard')" style="padding: 14px;">🟡 HARD (被ダメ増加・高速 / 報酬 200G)</button>
+                    <button class="red" onclick="startMissionWithDiff('extreme')" style="padding: 14px;">🔴 EXTREME (極悪容疑車・超高速 / 報酬 500G)</button>
                 </div>
                 <button onclick="toMenu()">メニューに戻る</button>
             </div>
         </div>
 
-        <!-- 4. ショップ & ガレージ設定 -->
+        <!-- 4. ショップ & ガレージ設定 (値上げ版) -->
         <div id="shop-screen" class="screen">
             <h1>機捜ガレージ・装備カスタマイズ</h1>
             
@@ -362,28 +362,28 @@
             <div class="shop-grid">
                 <div class="shop-card" style="border-color: var(--neon-green);">
                     <h3>応急修理キット</h3>
-                    <p>自機HPを一気に全回復！<br>(600 G)</p>
-                    <button class="green" onclick="buyRepairKit()">購入 (600 G)</button>
+                    <p>自機HPを一気に全回復！<br>(800 G)</p>
+                    <button class="green" onclick="buyRepairKit()">購入 (800 G)</button>
                 </div>
                 <div class="shop-card">
                     <h3>V8ツインターボ</h3>
                     <p>加速＆ダメUP<br>(Lv.<span id="engine-lv">1</span>)</p>
-                    <button class="yellow" onclick="buyUpgrade('engine')">強化 (<span id="engine-cost">100</span> G)</button>
+                    <button class="yellow" onclick="buyUpgrade('engine')">強化 (<span id="engine-cost">300</span> G)</button>
                 </div>
                 <div class="shop-card">
                     <h3>PITバンパー</h3>
                     <p>ブースト威力UP<br>(Lv.<span id="bumper-lv">1</span>)</p>
-                    <button class="yellow" onclick="buyUpgrade('bumper')">強化 (<span id="bumper-cost">150</span> G)</button>
+                    <button class="yellow" onclick="buyUpgrade('bumper')">強化 (<span id="bumper-cost">450</span> G)</button>
                 </div>
                 <div class="shop-card">
                     <h3>重装甲シャーシ</h3>
                     <p>最大HP増加<br>(Lv.<span id="armor-lv">1</span>)</p>
-                    <button class="yellow" onclick="buyUpgrade('armor')">強化 (<span id="armor-cost">120</span> G)</button>
+                    <button class="yellow" onclick="buyUpgrade('armor')">強化 (<span id="armor-cost">400</span> G)</button>
                 </div>
                 <div class="shop-card">
                     <h3>高輝度パトランプ</h3>
                     <p>ブースト回復UP<br>(Lv.<span id="lamp-lv">1</span>)</p>
-                    <button class="yellow" onclick="buyUpgrade('lamp')">強化 (<span id="lamp-cost">140</span> G)</button>
+                    <button class="yellow" onclick="buyUpgrade('lamp')">強化 (<span id="lamp-cost">420</span> G)</button>
                 </div>
                 <div class="shop-card">
                     <h3>車体カラー</h3>
@@ -458,7 +458,7 @@
         let screenShake = 0;
 
         const prefixes = ["きんきゅう", "こうそく", "きどう", "ついせき", "たいほ", "めんきょ", "さいれん", "ぱとかー", "ふくめん", "けいさつ", "そうさ", "しゅうけき", "へり", "ぶろっく", "えんじん", "ないす", "すぴーど", "びーこん", "あくせる", "ぶれーき", "どりふと", "ちぇいす"];
-        const middles = ["そうこう", "とりしまり", "ていし", "めいれい", "しれい", "つうほう", "ばとる", "あたっく", "ばーすと", "すぱーく", "がーど", "らんく", "こーど", "ゆにっと", "みっしょん", "がれーじ", "ちゅーにんぐ", "ぶーすと"];
+        const middles = ["そうこう", "とりしまり", "ていし", "めいれい", "しれい", "つうほう", "ばとる", "あたっく", "ばーすと", "すぱーく", "がーど", "らんく", "こ-ど", "ゆにっと", "みっしょん", "がれ-じ", "ちゅ-にんぐ", "ぶ-すと"];
 
         function generateMassiveWordList() {
             let list = [
@@ -537,7 +537,7 @@
             const db = getUsersDB();
             if (db[name]) return alert("既に登録されているコールサインです！");
 
-            let bonusMoney = invite ? 200 : 0;
+            let bonusMoney = invite ? 300 : 0;
 
             db[name] = {
                 name: name, password: pass,
@@ -546,7 +546,7 @@
             };
             saveUsersDB(db);
             player = db[name];
-            alert(`新規登録完了: [${name}]${invite ? " 招待ボーナス+200G獲得！" : ""}`);
+            alert(`新規登録完了: [${name}]${invite ? " 招待ボーナス+300G獲得！" : ""}`);
             onAuthSuccess();
         }
 
@@ -608,31 +608,38 @@
 
             document.getElementById("shop-money").innerText = `所持資金: ${player.money} G`;
             document.getElementById("engine-lv").innerText = player.engineLv;
-            document.getElementById("engine-cost").innerText = player.engineLv * 100;
+            document.getElementById("engine-cost").innerText = player.engineLv * 300;
             document.getElementById("bumper-lv").innerText = player.bumperLv;
-            document.getElementById("bumper-cost").innerText = player.bumperLv * 150;
+            document.getElementById("bumper-cost").innerText = player.bumperLv * 450;
             document.getElementById("armor-lv").innerText = player.armorLv;
-            document.getElementById("armor-cost").innerText = player.armorLv * 120;
+            document.getElementById("armor-cost").innerText = player.armorLv * 400;
             document.getElementById("lamp-lv").innerText = player.lampLv;
-            document.getElementById("lamp-cost").innerText = player.lampLv * 140;
+            document.getElementById("lamp-cost").innerText = player.lampLv * 420;
             document.getElementById("car-color-name").innerText = colorNames[player.carColor] || "白黒クラウン";
 
             showScreen("shop-screen");
         }
 
         function buyRepairKit() {
-            if (player.money >= 300) {
-                player.money -= 300;
+            if (player.money >= 800) {
+                player.money -= 800;
+                playerHp = maxPlayerHp; // 💡 購入と同時にHPも全回復する仕様
                 savePlayerData();
                 openShop();
                 alert("応急修理キットを購入・使用しました！自機HPが全回復します！");
             } else {
-                alert("資金が足りません！（300 G必要です）");
+                alert("資金が足りません！（800 G必要です）");
             }
         }
 
         function buyUpgrade(type) {
-            const costs = { engine: player.engineLv * 100, bumper: player.bumperLv * 150, armor: player.armorLv * 120, lamp: player.lampLv * 140 };
+            // 💡 アップグレード費用もすべて値上げ
+            const costs = { 
+                engine: player.engineLv * 300, 
+                bumper: player.bumperLv * 450, 
+                armor: player.armorLv * 400, 
+                lamp: player.lampLv * 420 
+            };
             if (player.money >= costs[type]) {
                 player.money -= costs[type];
                 player[type + 'Lv']++;
@@ -718,10 +725,11 @@
             if (damageTimer) clearInterval(damageTimer);
             window.removeEventListener("keydown", onKeyPress);
             
-            let baseReward = 50;
-            if (currentDiff === "hard") baseReward = 120;
-            if (currentDiff === "extreme") baseReward = 300;
-            let reward = (currentMode === "mission") ? baseReward : 30;
+            // 💡 値上げに伴い報酬も少し調整 (Normal:80G, Hard:200G, Extreme:500G)
+            let baseReward = 80;
+            if (currentDiff === "hard") baseReward = 200;
+            if (currentDiff === "extreme") baseReward = 500;
+            let reward = (currentMode === "mission") ? baseReward : 40;
 
             player.money += reward;
             player.score += score;
