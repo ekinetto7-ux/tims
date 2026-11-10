@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>機捜210 - CYBER CHASE BATTLE</title>
+    <title>機捜210 - ULTIMATE BATTLE CHASE</title>
     <style>
         :root {
             --bg-color: #030712;
-            --panel-bg: rgba(8, 15, 30, 0.95);
+            --panel-bg: rgba(8, 15, 30, 0.96);
             --neon-cyan: #00f3ff;
             --neon-red: #ff0055;
             --neon-yellow: #ffe600;
@@ -39,7 +39,7 @@
             max-width: 1020px;
             background: var(--panel-bg);
             border: 2px solid var(--neon-cyan);
-            box-shadow: 0 0 40px rgba(0, 243, 255, 0.25), inset 0 0 20px rgba(0, 243, 255, 0.1);
+            box-shadow: 0 0 40px rgba(0, 243, 255, 0.3), inset 0 0 20px rgba(0, 243, 255, 0.1);
             border-radius: 16px;
             padding: 24px;
             text-align: center;
@@ -49,9 +49,9 @@
         h1 {
             color: var(--neon-cyan);
             text-shadow: 0 0 20px var(--neon-cyan);
-            font-size: 2.4rem;
+            font-size: 2.3rem;
             margin-bottom: 15px;
-            letter-spacing: 4px;
+            letter-spacing: 3px;
             font-weight: 900;
         }
 
@@ -92,17 +92,17 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 14px;
+            gap: 12px;
         }
 
         input[type="text"], input[type="password"] {
             width: 80%;
             max-width: 380px;
-            padding: 14px;
+            padding: 12px;
             background: rgba(0, 0, 0, 0.8);
             border: 2px solid var(--neon-cyan);
             color: #fff;
-            font-size: 1.15rem;
+            font-size: 1.1rem;
             border-radius: 10px;
             text-align: center;
             outline: none;
@@ -117,9 +117,9 @@
         .btn-group {
             display: flex;
             justify-content: center;
-            gap: 14px;
+            gap: 12px;
             flex-wrap: wrap;
-            margin-top: 18px;
+            margin-top: 16px;
             position: relative;
             z-index: 10;
         }
@@ -128,8 +128,8 @@
             background: rgba(0, 243, 255, 0.12);
             color: var(--neon-cyan);
             border: 2px solid var(--neon-cyan);
-            padding: 12px 26px;
-            font-size: 1.05rem;
+            padding: 11px 24px;
+            font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
             border-radius: 10px;
@@ -232,10 +232,10 @@
 
         .shop-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 14px;
-            margin: 18px 0;
-            max-height: 380px;
+            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+            gap: 12px;
+            margin: 14px 0;
+            max-height: 350px;
             overflow-y: auto;
             padding-right: 6px;
         }
@@ -244,21 +244,43 @@
             background: rgba(0, 0, 0, 0.75);
             border: 1px solid var(--neon-cyan);
             border-radius: 12px;
-            padding: 14px;
+            padding: 12px;
             text-align: center;
         }
 
-        .shop-card h3 { color: var(--neon-yellow); margin-bottom: 6px; font-size: 1.1rem; }
-        .shop-card p { color: #ccc; font-size: 0.85rem; margin-bottom: 10px; }
+        .shop-card h3 { color: var(--neon-yellow); margin-bottom: 4px; font-size: 1.05rem; }
+        .shop-card p { color: #ccc; font-size: 0.8rem; margin-bottom: 8px; }
+
+        .profile-card {
+            background: rgba(0, 0, 0, 0.85);
+            border: 1px solid var(--neon-purple);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 15px;
+            text-align: left;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            font-size: 0.95rem;
+        }
+
+        .profile-item {
+            color: #ddd;
+        }
+
+        .profile-item span {
+            color: var(--neon-cyan);
+            font-weight: bold;
+        }
 
         .modal-box {
             background: rgba(0,0,0,0.9);
             border: 2px solid var(--neon-purple);
             box-shadow: 0 0 30px rgba(204, 0, 255, 0.3);
             border-radius: 14px;
-            padding: 24px;
+            padding: 20px;
             max-width: 480px;
-            margin: 20px auto;
+            margin: 15px auto;
         }
 
         .damage-flash { animation: dmgFlash 0.3s ease-out; }
@@ -279,7 +301,7 @@
     <div class="game-container" id="main-container">
         <!-- 1. ログイン / 登録 -->
         <div id="login-screen" class="screen active">
-            <h1>機捜210 - CYBER CHASE</h1>
+            <h1>機捜210 - BATTLE CHASE</h1>
             <div class="auth-tab">
                 <button class="tab-btn active" id="tab-login-btn" onclick="switchTab('login')">認証ログイン</button>
                 <button class="tab-btn" id="tab-register-btn" onclick="switchTab('register')">新規署員登録</button>
@@ -292,7 +314,8 @@
             <div id="register-form" class="auth-form" style="display: none;">
                 <input type="text" id="reg-username" placeholder="新規コールサイン (名前)">
                 <input type="password" id="reg-password" placeholder="新規暗号パスワード">
-                <button class="yellow" onclick="handleRegister()">新規登録して出動</button>
+                <input type="text" id="reg-invite" placeholder="招待コード (任意 / 例: 2100)">
+                <button class="yellow" onclick="handleRegister()">新規登録して出動 (+200Gボーナス)</button>
             </div>
         </div>
 
@@ -303,9 +326,9 @@
             <div class="btn-group">
                 <button class="green" onclick="startMode('free')">🟢 自由走行</button>
                 <button class="red" onclick="startMode('mission')">🔴 メインミッション (全20問)</button>
-                <button class="yellow" onclick="startMode('ghost')">⚡ ゴースト対戦</button>
+                <button class="yellow" onclick="startMode('ghost')">⚡ ゴーストタイムアタック</button>
                 <button class="purple" onclick="openOnlineModal()">🌐 オンライン対戦ルーム</button>
-                <button class="cyan" onclick="openShop()" style="color:var(--neon-cyan); border-color:var(--neon-cyan);">🛒 ガレージ / ショップ</button>
+                <button class="cyan" onclick="openShop()" style="color:var(--neon-cyan); border-color:var(--neon-cyan);">🛒 ガレージ / 設定</button>
                 <button style="border-color: #777; color: #aaa;" onclick="logout()">ログアウト</button>
             </div>
         </div>
@@ -314,19 +337,31 @@
         <div id="online-screen" class="screen">
             <h1>フレンドオンライン対戦</h1>
             <div class="modal-box">
-                <p style="color:var(--neon-cyan); margin-bottom:12px; font-size:1.1rem;">友達から教わった【4桁の対戦コード】を入力せよ！</p>
+                <p style="color:var(--neon-cyan); margin-bottom:12px; font-size:1.1rem;">友達の【4桁の対戦コード】を入力してガチ対戦！</p>
                 <input type="text" id="battle-code-input" placeholder="例: 4821" maxlength="4" style="letter-spacing: 8px; font-size: 1.8rem; margin-bottom: 15px;">
                 <div class="btn-group">
-                    <button class="purple" onclick="startOnlineBattle()">⚡ コードで対戦出動</button>
+                    <button class="purple" onclick="startOnlineBattle()">⚡ リアルタイム対戦出動</button>
                     <button onclick="toMenu()">メニューに戻る</button>
                 </div>
             </div>
         </div>
 
-        <!-- 4. ショップ -->
+        <!-- 4. ショップ & 設定（ガレージ） -->
         <div id="shop-screen" class="screen">
-            <h1>機捜ガレージ・装備ショップ</h1>
-            <p style="color: var(--neon-yellow); font-size: 1.25rem; margin-bottom: 10px;" id="shop-money">所持資金: 0 G</p>
+            <h1>機捜ガレージ・設定データ</h1>
+            
+            <!-- 設定から全部見えるプレイヤー情報カード -->
+            <div class="profile-card" id="profile-card-view">
+                <div class="profile-item">コールサイン: <span id="pf-name">---</span></div>
+                <div class="profile-item">階級/Lv: <span id="pf-level">1</span></div>
+                <div class="profile-item">累計スコア: <span id="pf-score">0</span> pt</div>
+                <div class="profile-item">所持資金: <span id="pf-money" style="color:var(--neon-yellow);">0</span> G</div>
+                <div class="profile-item">エンジンLv: <span id="pf-engine">1</span></div>
+                <div class="profile-item">PITバンパーLv: <span id="pf-bumper">1</span></div>
+                <div class="profile-item">装甲シャーシLv: <span id="pf-armor">1</span></div>
+                <div class="profile-item">サイレンLv: <span id="pf-siren">1</span></div>
+                <div class="profile-item" style="grid-column: span 2;">愛車カラー: <span id="pf-color">白黒クラウン</span></div>
+            </div>
 
             <div class="shop-grid">
                 <div class="shop-card" style="border-color: var(--neon-green);">
@@ -336,7 +371,7 @@
                 </div>
                 <div class="shop-card">
                     <h3>V8ツインターボ</h3>
-                    <p>打撃ダメ＆加速UP<br>(Lv.<span id="engine-lv">1</span>)</p>
+                    <p>加速＆ダメUP<br>(Lv.<span id="engine-lv">1</span>)</p>
                     <button class="yellow" onclick="buyUpgrade('engine')">強化 (<span id="engine-cost">100</span> G)</button>
                 </div>
                 <div class="shop-card">
@@ -360,7 +395,7 @@
                     <button onclick="toggleCarColor()">塗装変更</button>
                 </div>
             </div>
-            <button onclick="toMenu()">メニューに戻る</button>
+            <button onclick="toMenu()" style="margin-top: 10px;">メニューに戻る</button>
         </div>
 
         <!-- 5. ゲーム画面 -->
@@ -403,7 +438,7 @@
             <div class="modal-box" style="border-color: var(--neon-cyan);">
                 <p id="result-detail" style="margin: 15px 0; font-size: 1.25rem; line-height: 1.8;"></p>
                 <div id="room-code-display" style="background:rgba(0,0,0,0.7); padding:10px; border-radius:8px; border:1px dashed var(--neon-yellow); margin-bottom:15px; display:none;">
-                    <p style="font-size:0.9rem; color:#aaa;">友達への挑戦コード (4桁):</p>
+                    <p style="font-size:0.9rem; color:#aaa;">友達への対戦コード (4桁):</p>
                     <span id="generated-code" style="font-size:2rem; color:var(--neon-yellow); font-weight:bold; letter-spacing:4px;">----</span>
                 </div>
                 <button class="green" onclick="toMenu()">メニューに戻る</button>
@@ -425,7 +460,7 @@
         let remainingWords = 20;
 
         let boostGau = 0;
-        let ghostProgress = 0;
+        let rivalProgress = 0; // 💡 ライバル（対戦相手）の進行度
         let damageTimer = null;
         let particles = [];
         let screenShake = 0;
@@ -494,40 +529,43 @@
         }
 
         function getUsersDB() {
-            const db = localStorage.getItem("kisou210_cyber_db");
+            const db = localStorage.getItem("kisou210_ultimate_db");
             return db ? JSON.parse(db) : {};
         }
 
         function saveUsersDB(db) {
-            localStorage.setItem("kisou210_cyber_db", JSON.stringify(db));
+            localStorage.setItem("kisou210_ultimate_db", JSON.stringify(db));
         }
 
         function handleRegister() {
             const name = document.getElementById("reg-username").value.trim();
             const pass = document.getElementById("reg-password").value.trim();
-            if (!name || !pass) return alert("入力してください！");
+            const invite = document.getElementById("reg-invite").value.trim();
+            if (!name || !pass) return alert("名前とパスワードを入力してください！");
 
             const db = getUsersDB();
-            if (db[name]) return alert("既に登録されている名前です！");
+            if (db[name]) return alert("既に登録されているコールサインです！");
+
+            let bonusMoney = invite ? 200 : 0;
 
             db[name] = {
                 name: name, password: pass,
-                score: 0, level: 1, money: 0,
+                score: 0, level: 1, money: bonusMoney,
                 engineLv: 1, bumperLv: 1, armorLv: 1, sirenLv: 1, carColor: "police"
             };
             saveUsersDB(db);
             player = db[name];
-            alert(`新規登録完了: [${name}]`);
+            alert(`新規登録完了: [${name}]${invite ? " 招待ボーナス+200G獲得！" : ""}`);
             onAuthSuccess();
         }
 
         function handleLogin() {
             const name = document.getElementById("login-username").value.trim();
             const pass = document.getElementById("login-password").value.trim();
-            if (!name || !pass) return alert("入力してください！");
+            if (!name || !pass) return alert("名前とパスワードを入力してください！");
 
             const db = getUsersDB();
-            if (!db[name] || db[name].password !== pass) return alert("名前またはパスワードが違います！");
+            if (!db[name] || db[name].password !== pass) return alert("名前または暗号パスワードが違います！");
 
             player = db[name];
             alert(`おかえりなさい、${name} 捜査員！`);
@@ -568,6 +606,19 @@
         }
 
         function openShop() {
+            // 💡 設定・ガレージ画面でプレイヤー情報をすべて表示更新
+            document.getElementById("pf-name").innerText = player.name;
+            document.getElementById("pf-level").innerText = player.level;
+            document.getElementById("pf-score").innerText = player.score;
+            document.getElementById("pf-money").innerText = player.money;
+            document.getElementById("pf-engine").innerText = player.engineLv;
+            document.getElementById("pf-bumper").innerText = player.bumperLv;
+            document.getElementById("pf-armor").innerText = player.armorLv;
+            document.getElementById("pf-siren").innerText = player.sirenLv;
+
+            const colorNames = { police: "白黒クラウン", black: "覆面ブラック", gold: "ハイパーゴールド", cyan: "ネオンブルー" };
+            document.getElementById("pf-color").innerText = colorNames[player.carColor] || "白黒クラウン";
+
             document.getElementById("shop-money").innerText = `所持資金: ${player.money} G`;
             document.getElementById("engine-lv").innerText = player.engineLv;
             document.getElementById("engine-cost").innerText = player.engineLv * 100;
@@ -577,9 +628,8 @@
             document.getElementById("armor-cost").innerText = player.armorLv * 120;
             document.getElementById("siren-lv").innerText = player.sirenLv;
             document.getElementById("siren-cost").innerText = player.sirenLv * 140;
-
-            const colorNames = { police: "白黒クラウン", black: "覆面ブラック", gold: "ハイパーゴールド", cyan: "ネオンブルー" };
             document.getElementById("car-color-name").innerText = colorNames[player.carColor] || "白黒クラウン";
+
             showScreen("shop-screen");
         }
 
@@ -601,7 +651,7 @@
                 player[type + 'Lv']++;
                 savePlayerData();
                 openShop();
-                alert("強化が完了しました！");
+                alert("装備の強化が完了しました！");
             } else alert("資金が足りません！");
         }
 
@@ -628,7 +678,7 @@
             
             remainingWords = 20;
             boostGau = 0;
-            ghostProgress = 0;
+            rivalProgress = 0;
             particles = [];
 
             if (mode === 'online') {
@@ -756,7 +806,9 @@
 
                 if (currentMode !== "free") {
                     createSparkParticles(600, 150, 5);
-                    if (currentMode === "ghost" || currentMode === "online") ghostProgress += 5;
+                    if (currentMode === "ghost" || currentMode === "online") {
+                        rivalProgress += 4; // 💡 自分のタイピングに合わせて対戦相手もリアルタイムに前進！
+                    }
                 }
 
                 updateBars();
@@ -821,8 +873,8 @@
                 drawPatcar(ctx, 80, 145 + Math.sin(frame * 0.2) * 2, frame, player ? player.carColor : "police", player ? player.name : "機捜210");
 
                 if (canvasId === "game-canvas" && (currentMode === "ghost" || currentMode === "online")) {
-                    let ghostCur = 20 - remainingWords;
-                    drawPatcar(ctx, Math.min(750, 120 + (ghostCur * 30)), 150, frame, "black", "RIVAL");
+                    let rivalX = Math.min(750, 120 + rivalProgress + Math.sin(frame * 0.1) * 5);
+                    drawPatcar(ctx, rivalX, 150, frame, "black", "RIVAL");
                 } else if (canvasId === "game-canvas" && currentMode === "mission") {
                     drawEnemyCar(ctx, 610 + Math.sin(frame * 0.1) * 10, 150);
                 } else if (canvasId === "menu-canvas") {
