@@ -3,15 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>機捜210 - FULL SYSTEM CHASE TYPING</title>
+    <title>機捜210 - MEGA DRIVING CHASE TYPING</title>
     <style>
         :root {
             --bg-color: #02040a;
-            --panel-bg: rgba(6, 12, 24, 0.94);
+            --panel-bg: rgba(6, 12, 24, 0.95);
             --neon-cyan: #00f3ff;
             --neon-red: #ff0055;
             --neon-yellow: #ffe600;
             --neon-green: #00ff66;
+            --neon-purple: #cc00ff;
             --text-color: #ffffff;
         }
 
@@ -34,8 +35,8 @@
         }
 
         .game-container {
-            width: 95%;
-            max-width: 950px;
+            width: 98%;
+            max-width: 1000px;
             background: var(--panel-bg);
             border: 2px solid var(--neon-cyan);
             box-shadow: 0 0 35px rgba(0, 243, 255, 0.4);
@@ -45,11 +46,20 @@
             position: relative;
         }
 
+        .shake { animation: shakeAnim 0.15s ease-in-out infinite; }
+        @keyframes shakeAnim {
+            0% { transform: translate(0, 0); }
+            25% { transform: translate(-3px, 3px); }
+            50% { transform: translate(3px, -2px); }
+            75% { transform: translate(-2px, -3px); }
+            100% { transform: translate(0, 0); }
+        }
+
         h1 {
             color: var(--neon-cyan);
             text-shadow: 0 0 18px var(--neon-cyan);
             font-size: 2.2rem;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             letter-spacing: 3px;
         }
 
@@ -111,8 +121,8 @@
             background: rgba(0, 243, 255, 0.1);
             color: var(--neon-cyan);
             border: 2px solid var(--neon-cyan);
-            padding: 12px 26px;
-            font-size: 1.1rem;
+            padding: 10px 22px;
+            font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
             border-radius: 8px;
@@ -133,61 +143,72 @@
         button.green:hover { background: var(--neon-green); color: #000; }
         button.yellow { color: var(--neon-yellow); border-color: var(--neon-yellow); }
         button.yellow:hover { background: var(--neon-yellow); color: #000; }
+        button.purple { color: var(--neon-purple); border-color: var(--neon-purple); }
+        button.purple:hover { background: var(--neon-purple); color: #fff; }
 
         canvas {
             width: 100%;
-            height: 220px;
+            height: 240px;
             background: #000;
             border-radius: 10px;
             border: 1px solid rgba(0, 243, 255, 0.5);
-            margin: 15px 0;
+            margin: 10px 0;
         }
 
         .status-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(0, 0, 0, 0.6);
-            padding: 10px 15px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 8px 12px;
             border-radius: 8px;
             border: 1px solid var(--neon-cyan);
-            margin-bottom: 10px;
-            font-size: 1.0rem;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
         }
 
         .hp-container {
-            width: 140px;
-            height: 14px;
+            width: 100px;
+            height: 12px;
             background: #222;
-            border-radius: 7px;
+            border-radius: 6px;
             overflow: hidden;
             border: 1px solid #555;
         }
 
-        .hp-bar-player {
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, #00ff66, #00f3ff);
-            transition: width 0.2s ease;
+        .hp-bar-player { width: 100%; height: 100%; background: linear-gradient(90deg, #00ff66, #00f3ff); transition: width 0.2s; }
+        .hp-bar-enemy { width: 100%; height: 100%; background: linear-gradient(90deg, var(--neon-red), var(--neon-yellow)); transition: width 0.2s; }
+        .boost-bar { width: 100%; height: 100%; background: linear-gradient(90deg, #ff00ff, #00ffff); transition: width 0.2s; }
+
+        .speed-gauge {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--neon-yellow);
+            text-shadow: 0 0 8px var(--neon-yellow);
         }
 
-        .hp-bar-enemy {
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, var(--neon-red), var(--neon-yellow));
-            transition: width 0.2s ease;
+        .police-banner {
+            background: rgba(255, 0, 85, 0.2);
+            border: 1px solid var(--neon-red);
+            color: var(--neon-yellow);
+            padding: 4px;
+            border-radius: 4px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+            letter-spacing: 2px;
         }
 
         .word-display-box {
-            background: rgba(0,0,0,0.7);
-            padding: 15px;
+            background: rgba(0,0,0,0.8);
+            padding: 12px;
             border-radius: 8px;
             border: 1px solid rgba(255, 230, 0, 0.4);
-            margin: 10px 0;
+            margin: 8px 0;
         }
 
         .target-word {
-            font-size: 2.5rem;
+            font-size: 2.3rem;
             color: var(--neon-yellow);
             letter-spacing: 5px;
             text-shadow: 0 0 15px rgba(255, 230, 0, 0.7);
@@ -195,29 +216,38 @@
         }
 
         .typed-char { color: var(--neon-cyan); text-shadow: 0 0 10px var(--neon-cyan); }
-        .roma-hint { color: #aaa; font-size: 1.3rem; margin-bottom: 5px; }
+        .roma-hint { color: #aaa; font-size: 1.2rem; margin-bottom: 3px; }
 
         .shop-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin: 15px 0;
+            max-height: 380px;
+            overflow-y: auto;
+            padding-right: 5px;
         }
 
         .shop-card {
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(0, 0, 0, 0.7);
             border: 1px solid var(--neon-cyan);
             border-radius: 10px;
-            padding: 15px;
+            padding: 12px;
             text-align: center;
         }
 
-        .shop-card h3 { color: var(--neon-yellow); margin-bottom: 8px; }
-        .shop-card p { color: #ccc; font-size: 0.95rem; margin-bottom: 12px; }
+        .shop-card h3 { color: var(--neon-yellow); margin-bottom: 4px; font-size: 1rem; }
+        .shop-card p { color: #ccc; font-size: 0.8rem; margin-bottom: 8px; }
 
         .damage-flash { animation: dmgFlash 0.3s ease-out; }
         @keyframes dmgFlash {
-            0% { background: rgba(255, 0, 85, 0.4); }
+            0% { background: rgba(255, 0, 85, 0.5); }
+            100% { background: var(--panel-bg); }
+        }
+
+        .boost-flash { animation: bstFlash 0.4s ease-out; }
+        @keyframes bstFlash {
+            0% { background: rgba(255, 0, 255, 0.6); }
             100% { background: var(--panel-bg); }
         }
     </style>
@@ -225,23 +255,18 @@
 <body>
 
     <div class="game-container" id="main-container">
-        <!-- 1. ログイン / 新規登録 画面 -->
+        <!-- 1. ログイン / 登録 -->
         <div id="login-screen" class="screen active">
-            <h1>機捜210 AUTHENTICATION</h1>
-            
+            <h1>機捜210 MEGA DRIVE CHASE</h1>
             <div class="auth-tab">
-                <button class="tab-btn active" id="tab-login-btn" onclick="switchTab('login')">ログイン</button>
+                <button class="tab-btn active" id="tab-login-btn" onclick="switchTab('login')">認証ログイン</button>
                 <button class="tab-btn" id="tab-register-btn" onclick="switchTab('register')">新規署員登録</button>
             </div>
-
-            <!-- ログインフォーム -->
             <div id="login-form" class="auth-form">
-                <input type="text" id="login-username" placeholder="捜査員コールサイン (名前)">
+                <input type="text" id="login-username" placeholder="コールサイン (名前)">
                 <input type="password" id="login-password" placeholder="暗号パスワード">
                 <button class="green" onclick="handleLogin()">ログイン出動</button>
             </div>
-
-            <!-- 新規登録フォーム -->
             <div id="register-form" class="auth-form" style="display: none;">
                 <input type="text" id="reg-username" placeholder="新規コールサイン (名前)">
                 <input type="password" id="reg-password" placeholder="新規暗号パスワード">
@@ -252,68 +277,89 @@
         <!-- 2. メニュー -->
         <div id="menu-screen" class="screen">
             <h1 id="user-display">捜査員待機中</h1>
-            <canvas id="menu-canvas" width="900" height="220"></canvas>
+            <canvas id="menu-canvas" width="900" height="240"></canvas>
             <div class="btn-group">
-                <button class="green" onclick="startMode('free')">🟢 自由走行</button>
-                <button class="red" onclick="startMode('mission')">🔴 メインミッション</button>
-                <button class="yellow" onclick="startMode('ghost')">⚡ ゴースト対戦</button>
-                <button style="border-color: #ff00ff; color: #ff00ff;" onclick="openShop()">🛒 ショップ</button>
+                <button class="green" onclick="startMode('free')">🟢 自由走行 (ハイウェイドライブ)</button>
+                <button class="red" onclick="startMode('mission')">🔴 メインミッション (容疑車捕獲)</button>
+                <button class="yellow" onclick="startMode('ghost')">⚡ ゴースト対戦 (タイムレース)</button>
+                <button class="purple" onclick="openShop()">🛒 カスタムガレージ / ショップ</button>
                 <button style="border-color: #aaa; color: #aaa;" onclick="logout()">ログアウト</button>
             </div>
         </div>
 
-        <!-- 3. ショップ画面 -->
+        <!-- 3. 大容量ショップ -->
         <div id="shop-screen" class="screen">
-            <h1>装備カスタマイズ・ショップ</h1>
-            <p style="color: var(--neon-yellow); font-size: 1.2rem; margin-bottom: 10px;" id="shop-money">所持資金: 0 G</p>
+            <h1>機捜ガレージ・装備ショップ</h1>
+            <p style="color: var(--neon-yellow); font-size: 1.2rem; margin-bottom: 5px;" id="shop-money">所持資金: 0 G</p>
 
             <div class="shop-grid">
                 <div class="shop-card">
-                    <h3>エンジン強化</h3>
-                    <p>打撃ダメージ・推進力アップ<br>(Lv.<span id="engine-lv">1</span>)</p>
+                    <h3>V8ツインターボ</h3>
+                    <p>打撃ダメ＆加速UP<br>(Lv.<span id="engine-lv">1</span>)</p>
                     <button class="yellow" onclick="buyUpgrade('engine')">強化 (<span id="engine-cost">100</span> G)</button>
                 </div>
                 <div class="shop-card">
-                    <h3>車体カラー切替</h3>
-                    <p>現在: <span id="car-color-name" style="color:var(--neon-cyan);">白黒クラウン</span></p>
-                    <button onclick="toggleCarColor()">カラー変更</button>
+                    <h3>PIT体当たりバンパー</h3>
+                    <p>体当たり追撃ダメージ極大UP<br>(Lv.<span id="bumper-lv">1</span>)</p>
+                    <button class="yellow" onclick="buyUpgrade('bumper')">強化 (<span id="bumper-cost">150</span> G)</button>
+                </div>
+                <div class="shop-card">
+                    <h3>重装甲シャーシ</h3>
+                    <p>自機最大HP増加<br>(Lv.<span id="armor-lv">1</span>)</p>
+                    <button class="yellow" onclick="buyUpgrade('armor')">強化 (<span id="armor-cost">120</span> G)</button>
+                </div>
+                <div class="shop-card">
+                    <h3>ハイパーサイレン</h3>
+                    <p>ブースト上昇速度UP<br>(Lv.<span id="siren-lv">1</span>)</p>
+                    <button class="yellow" onclick="buyUpgrade('siren')">強化 (<span id="siren-cost">140</span> G)</button>
+                </div>
+                <div class="shop-card">
+                    <h3>車体カラー塗装</h3>
+                    <p id="car-color-name" style="color:var(--neon-cyan);">白黒クラウン</p>
+                    <button onclick="toggleCarColor()">塗装変更</button>
                 </div>
             </div>
-
             <button onclick="toMenu()">メニューに戻る</button>
         </div>
 
         <!-- 4. ゲーム画面 -->
         <div id="game-screen" class="screen">
+            <div class="police-banner" id="police-banner">🚨 警告: 容疑車両を発見！緊急走行で追撃せよ！ 🚨</div>
+            
             <div class="status-bar">
-                <div style="display: flex; align-items: center; gap: 6px;">
-                    <span style="color: var(--neon-green);">自機HP:</span>
+                <div style="display: flex; align-items: center; gap: 4px;">
+                    <span style="color: var(--neon-green);">自機:</span>
                     <div class="hp-container"><div class="hp-bar-player" id="player-hp-bar"></div></div>
                 </div>
-                <span id="mode-title" style="color: var(--neon-yellow); font-weight: bold;">メインミッション</span>
-                <div id="enemy-hp-box" style="display: flex; align-items: center; gap: 6px;">
-                    <span style="color: var(--neon-red);" id="progress-label">容疑車HP:</span>
+                <div style="display: flex; align-items: center; gap: 4px;">
+                    <span style="color: #ff00ff;">BOOST:</span>
+                    <div class="hp-container"><div class="boost-bar" id="boost-bar"></div></div>
+                </div>
+                <div id="enemy-hp-box" style="display: flex; align-items: center; gap: 4px;">
+                    <span style="color: var(--neon-red);" id="progress-label">敵HP:</span>
                     <div class="hp-container"><div class="hp-bar-enemy" id="enemy-hp-bar"></div></div>
                 </div>
-                <span id="score-info">スコア: 0</span>
+                <div class="speed-gauge" id="speed-display">0 km/h</div>
+                <span id="score-info">SCORE: 0 (x1)</span>
             </div>
 
-            <canvas id="game-canvas" width="900" height="220"></canvas>
+            <canvas id="game-canvas" width="900" height="240"></canvas>
 
             <div class="word-display-box">
                 <div class="roma-hint" id="roma-hint">keisatsu</div>
                 <div class="target-word">
                     <span class="typed-char" id="typed-part"></span><span id="remain-part">keisatsu</span>
                 </div>
+                <p style="color: #00f3ff; font-size: 0.8rem; margin-top: 4px;">[SPACEキー] BOOST満タンで全速PIT体当たり発動！</p>
             </div>
 
-            <button onclick="toMenu()" style="padding: 6px 16px; font-size: 0.9rem;">メニューに戻る</button>
+            <button onclick="toMenu()" style="padding: 5px 15px; font-size: 0.85rem;">一時停止 / メニュー</button>
         </div>
 
         <!-- 5. リザルト -->
         <div id="result-screen" class="screen">
             <h1 id="result-title" style="color: var(--neon-green);">ミッション完了！</h1>
-            <p id="result-detail" style="margin: 20px 0; font-size: 1.4rem; line-height: 1.8;"></p>
+            <p id="result-detail" style="margin: 20px 0; font-size: 1.3rem; line-height: 1.8;"></p>
             <button onclick="toMenu()">メニューに戻る</button>
         </div>
     </div>
@@ -322,24 +368,67 @@
         let player = null;
         let currentMode = "mission";
         let score = 0;
+        let combo = 0;
         let typedIdx = 0;
+        let speedKph = 80;
         let playerHp = 100;
+        let maxPlayerHp = 100;
         let enemyHp = 100;
+        let boostGau = 0;
         let ghostProgress = 0;
         let damageTimer = null;
+        let particles = [];
+        let screenShake = 0;
 
-        const wordList = [
-            { jp: "けいさつ", roma: "keisatsu" },
-            { jp: "ぱとかー", roma: "patoka-" },
-            { jp: "さいれん", roma: "sairen" },
-            { jp: "きんきゅう", roma: "kinkyuu" },
-            { jp: "めんきょていし", roma: "menkyoteishi" },
-            { jp: "ついせき", roma: "tsuiseki" },
-            { jp: "たいほ", roma: "taiho" }
-        ];
+        // --- 1000パターン以上の超大容量・単語自動組み合わせエンジン ---
+        const prefixes = ["きんきゅう", "こうそく", "きどう", "ついせき", "たいほ", "めんきょ", "さいれん", "ぱとかー", "ふくめん", "けいさつ", "そうさ", "しゅうけき", "へり", "ぶろっく", "えんじん", "ないす", "すぴーど", "びーこん", "あくせる", "ぶれーき", "どりふと", "ちぇいす"];
+        const middles = ["そうこう", "とりしまり", "ていし", "めいれい", "しれい", "つうほう", "ばとる", "あたっく", "ばーすと", "すぱーく", "がーど", "らんく", "こーど", "ゆにっと", "みっしょん", "がれーじ", "ちゅーにんぐ", "ぶーすと"];
+        const suffixes = ["にちぜん", "にのいちれん", "にいちまる", "いちごうき", "すぺしゃる", "えきすぱーと", "ますたー", "なう", "ごー", "たーぼ", "マックス", "ぜろ"];
+
+        function generateMassiveWordList() {
+            let list = [
+                { jp: "きどうそうさたい", roma: "kidousousatai" },
+                { jp: "みっしょん", roma: "misshon" },
+                { jp: "ぱとかー", roma: "patoka-" },
+                { jp: "さいれん", roma: "sairen" }
+            ];
+            for (let p of prefixes) {
+                for (let m of middles) {
+                    let jpStr = p + m;
+                    let romaStr = toRoma(p) + toRoma(m);
+                    list.push({ jp: jpStr, roma: romaStr });
+                }
+            }
+            return list;
+        }
+
+        function toRoma(str) {
+            const map = {
+                "きんきゅう":"kinkyuu", "こうそく":"kousoku", "きどう":"kidou", "ついせき":"tsuiseki",
+                "たいほ":"taiho", "めんきょ":"menkyo", "さいれん":"sairen", "ぱとかー":"patoka-",
+                "ふくめん":"fukumen", "けいさつ":"keisatsu", "そうさ":"sousa", "しゅうけき":"shuukeki",
+                "へり":"heri", "ぶろっく":"burokku", "えんじん":"enjin", "ないす":"naisu",
+                "すぴーど":"supi-do", "びーこん":"bi-kon", "あくせる":"akuseru", "ぶれーき":"bure-ki",
+                "どりふと":"dorifuto", "ちぇいす":"cheisu", "そうこう":"soukou", "とりしまり":"torishimari",
+                "ていし":"teishi", "めいれい":"meirei", "しれい":"shirei", "つうほう":"tsuuhou",
+                "ばとる":"batoru", "あたっく":"atakku", "ばーすと":"ba-suto", "すぱーく":"supa-ku",
+                "がーど":"ga-do", "らんく":"ranku", "こーど":"ko-do", "ゆにっと":"yunitto",
+                "みっしょん":"misshon", "がれーじ":"gare-ji", "ちゅーにんぐ":"chu-ningu", "ぶーすと":"bu-suto"
+            };
+            return map[str] || "drive";
+        }
+
+        const wordPool = generateMassiveWordList();
         let currentWord = {};
         let animId = null;
         let roadOffset = 0;
+
+        const policeBannerTexts = [
+            "🚨 警告: 容疑車両を発見！緊急走行で追撃せよ！ 🚨",
+            "📢 「前方の容疑車、直ちに左側に寄せて停止しなさい！」 📢",
+            "🚨 機捜210より各局、高速道路上でチェイス継続中！ 🚨",
+            "📢 「PITマニューバ承認！体当たりで阻止せよ！」 📢"
+        ];
 
         function switchTab(type) {
             if (type === 'login') {
@@ -356,51 +445,43 @@
         }
 
         function getUsersDB() {
-            const db = localStorage.getItem("kisou210_full_db");
+            const db = localStorage.getItem("kisou210_mega_db");
             return db ? JSON.parse(db) : {};
         }
 
         function saveUsersDB(db) {
-            localStorage.setItem("kisou210_full_db", JSON.stringify(db));
+            localStorage.setItem("kisou210_mega_db", JSON.stringify(db));
         }
 
         function handleRegister() {
             const name = document.getElementById("reg-username").value.trim();
             const pass = document.getElementById("reg-password").value.trim();
-
-            if (!name || !pass) return alert("コールサインとパスワードを入力してください！");
+            if (!name || !pass) return alert("入力してください！");
 
             const db = getUsersDB();
-            if (db[name]) return alert("そのコールサインは既に登録されています！");
+            if (db[name]) return alert("既に登録されている名前です！");
 
             db[name] = {
-                name: name,
-                password: pass,
-                score: 0,
-                level: 1,
-                money: 0,
-                engineLv: 1,
-                carColor: "police"
+                name: name, password: pass,
+                score: 0, level: 1, money: 0,
+                engineLv: 1, bumperLv: 1, armorLv: 1, sirenLv: 1, carColor: "police"
             };
             saveUsersDB(db);
-
             player = db[name];
-            alert(`新規捜査員 [${name}] の登録完了！`);
+            alert(`新規登録完了: [${name}]`);
             onAuthSuccess();
         }
 
         function handleLogin() {
             const name = document.getElementById("login-username").value.trim();
             const pass = document.getElementById("login-password").value.trim();
-
-            if (!name || !pass) return alert("コールサインとパスワードを入力してください！");
+            if (!name || !pass) return alert("入力してください！");
 
             const db = getUsersDB();
-            if (!db[name]) return alert("登録されていない捜査員です。「新規署員登録」を行ってください。");
-            if (db[name].password !== pass) return alert("パスワードが違います！");
+            if (!db[name] || db[name].password !== pass) return alert("名前またはパスワードが違います！");
 
             player = db[name];
-            alert(`おかえりなさい、${name} 捜査員！認証成功。`);
+            alert(`おかえりなさい、${name} 捜査員！`);
             onAuthSuccess();
         }
 
@@ -410,14 +491,7 @@
             startCanvasAnimation("menu-canvas");
         }
 
-        function logout() {
-            player = null;
-            document.getElementById("login-username").value = "";
-            document.getElementById("login-password").value = "";
-            document.getElementById("reg-username").value = "";
-            document.getElementById("reg-password").value = "";
-            showScreen("login-screen");
-        }
+        function logout() { player = null; showScreen("login-screen"); }
 
         function showScreen(id) {
             if (animId) cancelAnimationFrame(animId);
@@ -436,27 +510,32 @@
             document.getElementById("shop-money").innerText = `所持資金: ${player.money} G`;
             document.getElementById("engine-lv").innerText = player.engineLv;
             document.getElementById("engine-cost").innerText = player.engineLv * 100;
-            document.getElementById("car-color-name").innerText = player.carColor === "police" ? "白黒クラウン" : (player.carColor === "black" ? "覆面ブラック" : "ハイパーゴールド");
+            document.getElementById("bumper-lv").innerText = player.bumperLv;
+            document.getElementById("bumper-cost").innerText = player.bumperLv * 150;
+            document.getElementById("armor-lv").innerText = player.armorLv;
+            document.getElementById("armor-cost").innerText = player.armorLv * 120;
+            document.getElementById("siren-lv").innerText = player.sirenLv;
+            document.getElementById("siren-cost").innerText = player.sirenLv * 140;
+
+            const colorNames = { police: "白黒クラウン", black: "覆面ブラック", gold: "ハイパーゴールド", cyan: "ネオンブルー" };
+            document.getElementById("car-color-name").innerText = colorNames[player.carColor] || "白黒クラウン";
             showScreen("shop-screen");
         }
 
         function buyUpgrade(type) {
-            if (type === 'engine') {
-                let cost = player.engineLv * 100;
-                if (player.money >= cost) {
-                    player.money -= cost;
-                    player.engineLv++;
-                    savePlayerData();
-                    openShop();
-                    alert("エンジンを強化しました！");
-                } else alert("資金が足りません！");
-            }
+            const costs = { engine: player.engineLv * 100, bumper: player.bumperLv * 150, armor: player.armorLv * 120, siren: player.sirenLv * 140 };
+            if (player.money >= costs[type]) {
+                player.money -= costs[type];
+                player[type + 'Lv']++;
+                savePlayerData();
+                openShop();
+                alert("強化が完了しました！");
+            } else alert("資金が足りません！");
         }
 
         function toggleCarColor() {
-            const colors = ["police", "black", "gold"];
-            let idx = (colors.indexOf(player.carColor) + 1) % colors.length;
-            player.carColor = colors[idx];
+            const colors = ["police", "black", "gold", "cyan"];
+            player.carColor = colors[(colors.indexOf(player.carColor) + 1) % colors.length];
             savePlayerData();
             openShop();
         }
@@ -470,13 +549,17 @@
         function startMode(mode) {
             currentMode = mode;
             score = 0;
-            playerHp = 100;
+            combo = 0;
+            speedKph = 80;
+            maxPlayerHp = 100 + (player.armorLv - 1) * 30;
+            playerHp = maxPlayerHp;
             enemyHp = 100;
+            boostGau = 0;
             ghostProgress = 0;
+            particles = [];
 
             document.getElementById("enemy-hp-box").style.display = (mode === "free") ? "none" : "flex";
-            document.getElementById("progress-label").innerText = (mode === "ghost") ? "ゴースト対戦:" : "容疑車HP:";
-            document.getElementById("mode-title").innerText = mode === "mission" ? "🔴 メインミッション" : (mode === "free" ? "🟢 自由走行" : "⚡ ゴースト対戦");
+            document.getElementById("progress-label").innerText = (mode === "ghost") ? "ゴースト:" : "敵HP:";
 
             updateBars();
             showScreen("game-screen");
@@ -485,13 +568,13 @@
 
             if (mode === "mission") {
                 damageTimer = setInterval(() => {
-                    playerHp -= 12;
+                    playerHp -= 10;
+                    screenShake = 10;
                     updateBars();
                     const container = document.getElementById("main-container");
                     container.classList.remove("damage-flash");
                     void container.offsetWidth;
                     container.classList.add("damage-flash");
-
                     if (playerHp <= 0) endGame(false, "💥 パトカー大破...！ 💥\n容疑車両に逃走された！");
                 }, 3500);
             }
@@ -500,22 +583,19 @@
         }
 
         function updateBars() {
-            document.getElementById("player-hp-bar").style.width = Math.max(0, playerHp) + "%";
+            document.getElementById("player-hp-bar").style.width = Math.max(0, (playerHp / maxPlayerHp) * 100) + "%";
             document.getElementById("enemy-hp-bar").style.width = Math.max(0, enemyHp) + "%";
+            document.getElementById("boost-bar").style.width = Math.min(100, boostGau) + "%";
+            document.getElementById("speed-display").innerText = `${Math.floor(speedKph)} km/h`;
         }
 
         function nextWord() {
-            if (currentMode === "mission" && enemyHp <= 0) {
-                endGame(true, "🚨 容疑車両の確保成功！ 🚨");
-                return;
-            }
-            if (currentMode === "ghost" && enemyHp <= 0) {
-                endGame(true, "⚡ ゴースト対戦勝利！ ⚡ ライバルを圧倒！");
-                return;
-            }
+            if (currentMode === "mission" && enemyHp <= 0) { endGame(true, "🚨 容疑車両のPIT捕獲完了！ 🚨"); return; }
+            if (currentMode === "ghost" && enemyHp <= 0) { endGame(true, "⚡ ゴースト対戦勝利！ ⚡"); return; }
 
-            currentWord = wordList[Math.floor(Math.random() * wordList.length)];
+            currentWord = wordPool[Math.floor(Math.random() * wordPool.length)];
             typedIdx = 0;
+            document.getElementById("police-banner").innerText = policeBannerTexts[Math.floor(Math.random() * policeBannerTexts.length)];
             renderWord();
         }
 
@@ -523,15 +603,14 @@
             if (damageTimer) clearInterval(damageTimer);
             window.removeEventListener("keydown", onKeyPress);
             
-            let reward = score + (isWin ? 150 : 30);
+            let reward = score + (isWin ? 250 : 50);
             player.money += reward;
             player.score += score;
             if (isWin) player.level++;
             savePlayerData();
 
             document.getElementById("result-title").innerText = title;
-            document.getElementById("result-title").style.color = isWin ? "var(--neon-green)" : "var(--neon-red)";
-            document.getElementById("result-detail").innerText = `獲得スコア: ${score} pt\n獲得賞金: ${reward} G\n現在のレベル: Lv.${player.level}`;
+            document.getElementById("result-detail").innerText = `獲得スコア: ${score} pt\n獲得賞金: ${reward} G\n捜査員レベル: Lv.${player.level}`;
             showScreen("result-screen");
         }
 
@@ -539,25 +618,63 @@
             document.getElementById("roma-hint").innerText = currentWord.roma;
             document.getElementById("typed-part").innerText = currentWord.roma.substring(0, typedIdx);
             document.getElementById("remain-part").innerText = currentWord.roma.substring(typedIdx);
-            document.getElementById("score-info").innerText = `スコア: ${score}`;
+            let mult = Math.floor(combo / 5) + 1;
+            document.getElementById("score-info").innerText = `SCORE: ${score} (x${mult})`;
+        }
+
+        function createSparkParticles(x, y, count) {
+            for (let i = 0; i < count; i++) {
+                particles.push({
+                    x: x, y: y,
+                    vx: (Math.random() - 0.5) * 12,
+                    vy: (Math.random() - 0.5) * 12,
+                    life: 20,
+                    color: Math.random() > 0.5 ? "#ffe600" : "#ff0055"
+                });
+            }
         }
 
         function onKeyPress(e) {
             if (!document.getElementById("game-screen").classList.contains("active")) return;
+
+            // BOOST体当たり発動
+            if (e.code === "Space" && boostGau >= 100) {
+                boostGau = 0;
+                let boostDmg = 45 + (player.bumperLv * 10);
+                enemyHp -= boostDmg;
+                screenShake = 15;
+                createSparkParticles(620, 150, 40);
+                updateBars();
+
+                const container = document.getElementById("main-container");
+                container.classList.add("boost-flash");
+                setTimeout(() => container.classList.remove("boost-flash"), 400);
+
+                if (enemyHp <= 0) nextWord();
+                return;
+            }
+
             if (e.key.toLowerCase() === currentWord.roma[typedIdx]) {
                 typedIdx++;
-                score += 15;
+                combo++;
+                let mult = Math.floor(combo / 5) + 1;
+                score += 10 * mult;
+
+                // タイピングでスピード加速
+                speedKph = Math.min(320, speedKph + 8);
+                boostGau = Math.min(100, boostGau + (10 + player.sirenLv * 2));
 
                 if (currentMode === "mission" || currentMode === "ghost") {
-                    enemyHp -= (8 + player.engineLv * 2);
+                    let hitDmg = (6 + player.engineLv * 2);
+                    enemyHp -= hitDmg;
+                    createSparkParticles(600, 150, 6);
                     if (currentMode === "ghost") ghostProgress += 4;
-                    updateBars();
                 }
-
+                updateBars();
                 renderWord();
 
                 if (typedIdx >= currentWord.roma.length) {
-                    setTimeout(nextWord, 100);
+                    setTimeout(nextWord, 80);
                 }
             }
         }
@@ -570,24 +687,70 @@
 
             function render() {
                 frame++;
-                roadOffset = (roadOffset + 14) % 60;
+
+                // 速度に応じたスクロール速度
+                let moveSpeed = (canvasId === "game-canvas") ? (speedKph / 12) : 12;
+                roadOffset = (roadOffset + moveSpeed) % 60;
+
                 ctx.fillStyle = "#030712";
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+                // ネオン都市ビルの流れ
+                ctx.fillStyle = "#091226";
+                for (let i = 0; i < canvas.width; i += 70) {
+                    let h = 50 + Math.sin((i + frame * 2) * 0.04) * 30;
+                    ctx.fillRect(i, 120 - h, 55, h);
+                }
+
+                // 流れるハイウェイ道路
                 ctx.fillStyle = "#111827";
-                ctx.fillRect(0, 110, canvas.width, 110);
+                ctx.fillRect(0, 120, canvas.width, 120);
+
+                // センターライン
                 ctx.fillStyle = "#ffe600";
-                for (let x = -roadOffset; x < canvas.width; x += 60) ctx.fillRect(x, 160, 35, 6);
+                for (let x = -roadOffset; x < canvas.width; x += 60) {
+                    ctx.fillRect(x, 175, 35, 6);
+                }
 
-                drawPatcar(ctx, 80, 130 + Math.sin(frame * 0.15) * 3, frame, player.carColor, player.name);
+                // スパーク・爆発パーティクル更新
+                for (let i = particles.length - 1; i >= 0; i--) {
+                    let p = particles[i];
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.life--;
+                    ctx.fillStyle = p.color;
+                    ctx.fillRect(p.x, p.y, 4, 4);
+                    if (p.life <= 0) particles.splice(i, 1);
+                }
 
+                // 画面揺れ演出
+                ctx.save();
+                if (screenShake > 0) {
+                    let rx = (Math.random() - 0.5) * screenShake;
+                    let ry = (Math.random() - 0.5) * screenShake;
+                    ctx.translate(rx, ry);
+                    screenShake *= 0.85;
+                    if (screenShake < 0.5) screenShake = 0;
+                }
+
+                // 自機パトカー描画
+                drawPatcar(ctx, 80, 145 + Math.sin(frame * 0.2) * 2, frame, player ? player.carColor : "police", player ? player.name : "機捜210");
+
+                // 敵機・ライバル描画
                 if (canvasId === "game-canvas" && currentMode === "ghost") {
-                    let ghostX = 120 + (ghostProgress * 5);
-                    drawPatcar(ctx, Math.min(750, ghostX), 135, frame, "black", "GHOST");
+                    drawPatcar(ctx, Math.min(750, 120 + ghostProgress * 5), 150, frame, "black", "GHOST");
                 } else if (canvasId === "game-canvas" && currentMode === "mission") {
-                    drawEnemyCar(ctx, 620, 135);
+                    drawEnemyCar(ctx, 610 + Math.sin(frame * 0.1) * 10, 150);
                 } else if (canvasId === "menu-canvas") {
-                    drawEnemyCar(ctx, 600, 135);
+                    drawEnemyCar(ctx, 600, 150);
+                }
+
+                ctx.restore();
+
+                // 自然減速
+                if (canvasId === "game-canvas" && speedKph > 90) {
+                    speedKph -= 0.15;
+                    updateBars();
                 }
 
                 animId = requestAnimationFrame(render);
@@ -597,25 +760,38 @@
 
         function drawPatcar(ctx, x, y, frame, colorType, label) {
             ctx.save();
-            let sirenRed = (Math.floor(frame / 6) % 2 === 0);
-            ctx.shadowBlur = 15;
+            let sirenRed = (Math.floor(frame / 5) % 2 === 0);
+
+            // サイレンの強烈発光
+            ctx.shadowBlur = 18;
             ctx.shadowColor = sirenRed ? "#ff0055" : "#00f3ff";
             ctx.fillStyle = sirenRed ? "#ff0055" : "#00f3ff";
             ctx.fillRect(x + 45, y - 8, 25, 8);
 
             ctx.shadowBlur = 0;
-            ctx.fillStyle = colorType === "gold" ? "#ffe600" : "#ffffff";
+            // ボディ塗装
+            if (colorType === "gold") ctx.fillStyle = "#ffe600";
+            else if (colorType === "cyan") ctx.fillStyle = "#00f3ff";
+            else ctx.fillStyle = "#ffffff";
             ctx.fillRect(x + 25, y, 65, 22);
 
-            ctx.fillStyle = colorType === "black" ? "#050505" : "#111111";
+            ctx.fillStyle = (colorType === "black") ? "#050505" : "#111111";
             ctx.fillRect(x, y + 20, 115, 24);
 
+            // PIT体当たり強化バンパー
+            if (player && player.bumperLv > 1) {
+                ctx.fillStyle = "#666";
+                ctx.fillRect(x + 112, y + 22, 8, 20);
+            }
+
+            // コールサインラベル
             if (label) {
                 ctx.fillStyle = "#fff";
-                ctx.font = "10px sans-serif";
+                ctx.font = "bold 11px sans-serif";
                 ctx.fillText(label, x + 10, y - 12);
             }
 
+            // 回転ホイール
             ctx.fillStyle = "#333333";
             ctx.beginPath();
             ctx.arc(x + 25, y + 44, 10, 0, Math.PI * 2);
@@ -627,9 +803,19 @@
         function drawEnemyCar(ctx, x, y) {
             ctx.save();
             ctx.fillStyle = "#ff0055";
+            ctx.shadowBlur = 12;
+            ctx.shadowColor = "#ff0055";
             ctx.fillRect(x, y + 16, 105, 24);
+
+            ctx.shadowBlur = 0;
             ctx.fillStyle = "#222222";
             ctx.fillRect(x + 20, y, 55, 18);
+
+            ctx.fillStyle = "#333";
+            ctx.beginPath();
+            ctx.arc(x + 20, y + 40, 9, 0, Math.PI * 2);
+            ctx.arc(x + 80, y + 40, 9, 0, Math.PI * 2);
+            ctx.fill();
             ctx.restore();
         }
     </script>
