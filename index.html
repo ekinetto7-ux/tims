@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>機捜210 - SUPER HIGHWAY TYPING</title>
+    <title>機捜210 - ULTRA HIGHWAY CHASE & SHOP</title>
     <style>
         :root {
-            --bg-color: #030611;
-            --panel-bg: rgba(8, 14, 28, 0.92);
+            --bg-color: #02040a;
+            --panel-bg: rgba(6, 12, 24, 0.94);
             --neon-cyan: #00f3ff;
             --neon-red: #ff0055;
             --neon-yellow: #ffe600;
+            --neon-green: #00ff66;
             --text-color: #ffffff;
         }
 
@@ -19,6 +20,7 @@
             margin: 0;
             padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            user-select: none;
         }
 
         body {
@@ -28,16 +30,16 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow-x: hidden;
+            overflow: hidden;
         }
 
-        .container {
+        .game-container {
             width: 95%;
-            max-width: 900px;
+            max-width: 950px;
             background: var(--panel-bg);
             border: 2px solid var(--neon-cyan);
-            box-shadow: 0 0 30px rgba(0, 243, 255, 0.3);
-            border-radius: 12px;
+            box-shadow: 0 0 35px rgba(0, 243, 255, 0.4);
+            border-radius: 14px;
             padding: 20px;
             text-align: center;
             position: relative;
@@ -45,10 +47,10 @@
 
         h1 {
             color: var(--neon-cyan);
-            text-shadow: 0 0 15px var(--neon-cyan);
-            font-size: 2rem;
+            text-shadow: 0 0 18px var(--neon-cyan);
+            font-size: 2.2rem;
             margin-bottom: 15px;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
         }
 
         .screen { display: none; }
@@ -56,21 +58,23 @@
 
         input[type="text"] {
             width: 80%;
-            padding: 12px;
+            max-width: 400px;
+            padding: 14px;
             background: #000;
             border: 2px solid var(--neon-cyan);
             color: #fff;
             font-size: 1.2rem;
-            border-radius: 6px;
+            border-radius: 8px;
             margin: 15px 0;
             text-align: center;
             outline: none;
+            box-shadow: inset 0 0 10px rgba(0, 243, 255, 0.3);
         }
 
         .btn-group {
             display: flex;
             justify-content: center;
-            gap: 10px;
+            gap: 12px;
             flex-wrap: wrap;
             margin-top: 15px;
         }
@@ -79,294 +83,199 @@
             background: rgba(0, 243, 255, 0.1);
             color: var(--neon-cyan);
             border: 2px solid var(--neon-cyan);
-            padding: 12px 24px;
+            padding: 12px 26px;
             font-size: 1.1rem;
             font-weight: bold;
             cursor: pointer;
-            border-radius: 6px;
-            transition: 0.2s;
-            text-shadow: 0 0 5px var(--neon-cyan);
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            text-shadow: 0 0 6px var(--neon-cyan);
         }
 
         button:hover {
             background: var(--neon-cyan);
             color: #000;
-            box-shadow: 0 0 20px var(--neon-cyan);
+            box-shadow: 0 0 25px var(--neon-cyan);
+            transform: translateY(-2px);
         }
 
-        button.red {
-            color: var(--neon-red);
-            border-color: var(--neon-red);
-            text-shadow: 0 0 5px var(--neon-red);
-        }
-        button.red:hover {
-            background: var(--neon-red);
-            color: #fff;
-            box-shadow: 0 0 20px var(--neon-red);
-        }
+        button.red { color: var(--neon-red); border-color: var(--neon-red); text-shadow: 0 0 6px var(--neon-red); }
+        button.red:hover { background: var(--neon-red); color: #fff; box-shadow: 0 0 25px var(--neon-red); }
 
-        /* --- 疾走する道路アニメーション背景 --- */
-        .highway-stage {
-            position: relative;
+        button.green { color: var(--neon-green); border-color: var(--neon-green); text-shadow: 0 0 6px var(--neon-green); }
+        button.green:hover { background: var(--neon-green); color: #000; box-shadow: 0 0 25px var(--neon-green); }
+
+        button.yellow { color: var(--neon-yellow); border-color: var(--neon-yellow); text-shadow: 0 0 6px var(--neon-yellow); }
+        button.yellow:hover { background: var(--neon-yellow); color: #000; box-shadow: 0 0 25px var(--neon-yellow); }
+
+        canvas {
             width: 100%;
-            height: 180px;
-            background: linear-gradient(180deg, #050b18 0%, #111a2e 100%);
+            height: 220px;
+            background: #000;
             border-radius: 10px;
-            overflow: hidden;
-            border: 1px solid rgba(0, 243, 255, 0.4);
+            border: 1px solid rgba(0, 243, 255, 0.5);
             margin: 15px 0;
         }
 
-        /* 流れる中央線 */
-        .road-lines {
-            position: absolute;
-            top: 50%;
-            left: 0;
-            width: 200%;
-            height: 4px;
-            background: repeating-linear-gradient(90deg, var(--neon-yellow) 0px, var(--neon-yellow) 40px, transparent 40px, transparent 80px);
-            animation: roadMove 0.4s linear infinite;
-        }
-
-        @keyframes roadMove {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-80px); }
-        }
-
-        /* --- パトカー（自機）アニメーション --- */
-        .patcar {
-            position: absolute;
-            bottom: 35px;
-            left: 50px;
-            width: 130px;
-            height: 55px;
-            animation: bounce 0.8s infinite ease-in-out;
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-3px); }
-        }
-
-        .siren-light {
-            position: absolute;
-            top: -6px;
-            left: 50px;
-            width: 28px;
-            height: 8px;
+        .status-bar {
             display: flex;
             justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 1px solid var(--neon-cyan);
+            margin-bottom: 10px;
+            font-size: 1.1rem;
         }
-        .siren-r, .siren-b {
-            width: 12px;
+
+        .hp-container {
+            width: 200px;
+            height: 16px;
+            background: #222;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #555;
+        }
+
+        .hp-bar {
+            width: 100%;
             height: 100%;
-            border-radius: 3px 3px 0 0;
-        }
-        .siren-r { background: var(--neon-red); animation: flashRed 0.25s infinite alternate; }
-        .siren-b { background: var(--neon-cyan); animation: flashBlue 0.25s infinite alternate 0.12s; }
-
-        @keyframes flashRed {
-            from { opacity: 0.3; box-shadow: 0 0 2px var(--neon-red); }
-            to { opacity: 1; box-shadow: 0 0 20px var(--neon-red); }
-        }
-        @keyframes flashBlue {
-            from { opacity: 0.3; box-shadow: 0 0 2px var(--neon-cyan); }
-            to { opacity: 1; box-shadow: 0 0 20px var(--neon-cyan); }
+            background: linear-gradient(90deg, var(--neon-red), var(--neon-yellow));
+            transition: width 0.2s ease;
         }
 
-        .car-top {
-            position: absolute;
-            top: 0;
-            left: 30px;
-            width: 65px;
-            height: 24px;
-            background: #ffffff;
-            border-radius: 10px 10px 0 0;
-            border: 2px solid #000;
-        }
-        .car-body {
-            position: absolute;
-            top: 22px;
-            left: 5px;
-            width: 115px;
-            height: 24px;
-            background: #111;
-            border-radius: 5px;
-        }
-        .headlight {
-            position: absolute;
-            right: -4px;
-            top: 4px;
-            width: 6px;
-            height: 8px;
-            background: var(--neon-yellow);
-            box-shadow: 12px 0 15px var(--neon-yellow);
-        }
-        .wheel {
-            position: absolute;
-            bottom: -6px;
-            width: 18px;
-            height: 18px;
-            background: #222;
-            border: 2px solid #fff;
-            border-radius: 50%;
-            animation: spin 0.3s linear infinite;
-        }
-        .wheel.f { right: 18px; }
-        .wheel.r { left: 18px; }
-
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-
-        /* --- 敵車両（容疑者）アニメーション --- */
-        .enemy-car {
-            position: absolute;
-            bottom: 35px;
-            right: 60px;
-            width: 120px;
-            height: 50px;
-            animation: bounce 0.9s infinite ease-in-out 0.2s;
-        }
-        .enemy-body {
-            position: absolute;
-            top: 15px;
-            left: 0;
-            width: 110px;
-            height: 26px;
-            background: var(--neon-red);
-            border-radius: 6px;
-            box-shadow: 0 0 10px var(--neon-red);
-        }
-        .enemy-top {
-            position: absolute;
-            top: 0;
-            left: 20px;
-            width: 55px;
-            height: 18px;
-            background: #222;
-            border-radius: 8px 8px 0 0;
+        .word-display-box {
+            background: rgba(0,0,0,0.7);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 230, 0, 0.4);
+            margin: 10px 0;
         }
 
-        /* タイピングテキストエリア */
-        .word-box {
-            margin: 15px 0;
-        }
         .target-word {
-            font-size: 2.4rem;
+            font-size: 2.5rem;
             color: var(--neon-yellow);
-            letter-spacing: 4px;
-            text-shadow: 0 0 12px rgba(255, 230, 0, 0.6);
+            letter-spacing: 5px;
+            text-shadow: 0 0 15px rgba(255, 230, 0, 0.7);
+            font-weight: bold;
         }
-        .typed-char { color: var(--neon-cyan); }
-        .roma-sub { color: #888; font-size: 1.2rem; margin-bottom: 5px; }
 
-        /* スパーク演出用フラッシュ */
-        .spark-flash {
-            animation: flashSpark 0.1s ease-out;
+        .typed-char { color: var(--neon-cyan); text-shadow: 0 0 10px var(--neon-cyan); }
+        .roma-hint { color: #aaa; font-size: 1.3rem; margin-bottom: 5px; }
+
+        /* ショップカードレイアウト */
+        .shop-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
         }
-        @keyframes flashSpark {
-            0% { background: rgba(0, 243, 255, 0.2); }
+
+        .shop-card {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--neon-cyan);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .shop-card h3 { color: var(--neon-yellow); margin-bottom: 8px; }
+        .shop-card p { color: #ccc; font-size: 0.95rem; margin-bottom: 12px; }
+
+        .spark-flash { animation: flash 0.1s ease-out; }
+        @keyframes flash {
+            0% { background: rgba(0, 243, 255, 0.25); }
             100% { background: var(--panel-bg); }
         }
     </style>
 </head>
 <body>
 
-    <div class="container" id="main-container">
-        <!-- ログイン画面 -->
+    <div class="game-container" id="main-container">
+        <!-- 1. ログイン -->
         <div id="login-screen" class="screen active">
-            <h1>機捜210 HIGHWAY CHASE</h1>
-            <p>捜査員名を入力して出動！</p>
+            <h1>機捜210 ULTRA CHASE</h1>
+            <p style="color: #aaa; margin-bottom: 10px;">コールサインを入力してログイン！</p>
             <input type="text" id="username" placeholder="コールサイン (例: 機捜210)"><br>
             <button onclick="login()">出動認証</button>
         </div>
 
-        <!-- モード選択画面 -->
+        <!-- 2. メニュー -->
         <div id="menu-screen" class="screen">
             <h1 id="user-display">捜査員待機中</h1>
 
-            <!-- 疾走道路＆パトカープレビュー -->
-            <div class="highway-stage">
-                <div class="road-lines"></div>
-                <div class="patcar">
-                    <div class="siren-light">
-                        <div class="siren-r"></div>
-                        <div class="siren-b"></div>
-                    </div>
-                    <div class="car-top"></div>
-                    <div class="car-body">
-                        <div class="headlight"></div>
-                        <div class="wheel r"></div>
-                        <div class="wheel f"></div>
-                    </div>
-                </div>
-            </div>
+            <canvas id="menu-canvas" width="900" height="220"></canvas>
 
             <div class="btn-group">
-                <button onclick="startMode('free')">🟢 自由走行（無限疾走）</button>
-                <button class="red" onclick="startMode('mission')">🔴 メインミッション（追撃逮捕）</button>
-                <button onclick="startMode('practice')">🔵 練習（じっくりトレーニング）</button>
+                <button class="green" onclick="startMode('free')">🟢 自由走行</button>
+                <button class="red" onclick="startMode('mission')">🔴 メインミッション</button>
+                <button onclick="startMode('practice')">🔵 練習</button>
+                <button class="yellow" onclick="openShop()">🛒 装備カスタムショップ</button>
             </div>
         </div>
 
-        <!-- タイピングゲーム画面 -->
+        <!-- 3. ショップ画面 -->
+        <div id="shop-screen" class="screen">
+            <h1>装備カスタマイズ・ショップ</h1>
+            <p style="color: var(--neon-yellow); font-size: 1.2rem; margin-bottom: 10px;" id="shop-money">所持資金: 0 G</p>
+
+            <div class="shop-grid">
+                <div class="shop-card">
+                    <h3>エンジン強化</h3>
+                    <p>打鍵時の容疑者車両ダメージ増加<br>(Lv.<span id="engine-lv">1</span>)</p>
+                    <button class="yellow" onclick="buyUpgrade('engine')">強化 (<span id="engine-cost">100</span> G)</button>
+                </div>
+                <div class="shop-card">
+                    <h3>車体カラー切替</h3>
+                    <p>現在: <span id="car-color-name" style="color:var(--neon-cyan);">白黒クラウン</span></p>
+                    <button onclick="toggleCarColor()">カラー変更</button>
+                </div>
+            </div>
+
+            <button onclick="toMenu()">メニューに戻る</button>
+        </div>
+
+        <!-- 4. ゲーム画面 -->
         <div id="game-screen" class="screen">
-            <div style="display: flex; justify-content: space-between; font-size: 1.1rem; color: var(--neon-cyan);">
+            <div class="status-bar">
                 <span id="player-info">機捜210</span>
-                <span id="mode-title" style="color: var(--neon-yellow); font-weight: bold;">自由走行</span>
+                <span id="mode-title" style="color: var(--neon-yellow); font-weight: bold;">メインミッション</span>
+                <div id="hp-box" style="display: flex; align-items: center; gap: 8px;">
+                    <span style="font-size: 0.9rem; color: var(--neon-red);">容疑車HP:</span>
+                    <div class="hp-container"><div class="hp-bar" id="hp-bar"></div></div>
+                </div>
                 <span id="score-info">スコア: 0</span>
             </div>
 
-            <!-- 疾走道路＆追撃グラフィック -->
-            <div class="highway-stage">
-                <div class="road-lines"></div>
+            <canvas id="game-canvas" width="900" height="220"></canvas>
 
-                <!-- パトカー -->
-                <div class="patcar">
-                    <div class="siren-light">
-                        <div class="siren-r"></div>
-                        <div class="siren-b"></div>
-                    </div>
-                    <div class="car-top"></div>
-                    <div class="car-body">
-                        <div class="headlight"></div>
-                        <div class="wheel r"></div>
-                        <div class="wheel f"></div>
-                    </div>
-                </div>
-
-                <!-- 敵車両 -->
-                <div class="enemy-car">
-                    <div class="enemy-top"></div>
-                    <div class="enemy-body"></div>
-                    <div class="wheel r"></div>
-                    <div class="wheel f"></div>
-                </div>
-            </div>
-
-            <div class="word-box">
-                <div class="roma-sub" id="roma-sub">keisatsu</div>
+            <div class="word-display-box">
+                <div class="roma-hint" id="roma-hint">keisatsu</div>
                 <div class="target-word">
                     <span class="typed-char" id="typed-part"></span><span id="remain-part">keisatsu</span>
                 </div>
             </div>
 
-            <button onclick="toMenu()" style="padding: 6px 15px; font-size: 0.9rem;">一時停止 / メニューへ</button>
+            <button onclick="toMenu()" style="padding: 6px 16px; font-size: 0.9rem;">メニューに戻る</button>
         </div>
 
-        <!-- リザルト画面 -->
+        <!-- 5. リザルト画面 -->
         <div id="result-screen" class="screen">
-            <h1 id="result-title">ミッション完了！</h1>
-            <p id="result-detail" style="margin: 20px 0; font-size: 1.3rem; line-height: 1.6;"></p>
-            <button onclick="toMenu()">メニューへ戻る</button>
+            <h1 id="result-title" style="color: var(--neon-green);">ミッション完了！</h1>
+            <p id="result-detail" style="margin: 20px 0; font-size: 1.4rem; line-height: 1.8;"></p>
+            <button onclick="toMenu()">メニューに戻る</button>
         </div>
     </div>
 
     <script>
-        let player = { name: "機捜210", score: 0, level: 1 };
-        let currentMode = "free"; // 'free', 'mission', 'practice'
+        let player = { name: "機捜210", score: 0, level: 1, money: 0, engineLv: 1, carColor: "police" };
+        let currentMode = "mission";
         let score = 0;
         let wordCount = 0;
         let typedIdx = 0;
+        let enemyHp = 100;
+        let maxEnemyHp = 100;
 
         const wordList = [
             { jp: "けいさつ", roma: "keisatsu" },
@@ -375,29 +284,36 @@
             { jp: "きんきゅう", roma: "kinkyuu" },
             { jp: "めんきょていし", roma: "menkyoteishi" },
             { jp: "ついせき", roma: "tsuiseki" },
-            { jp: "はいうぇい", roma: "haiwei" }
+            { jp: "たいほ", roma: "taiho" }
         ];
         let currentWord = {};
+        let animId = null;
+        let roadOffset = 0;
 
         function login() {
-            const input = document.getElementById("username").value.trim();
-            if (input) player.name = input;
+            const inputName = document.getElementById("username").value.trim();
+            if (!inputName) return alert("名前を入力してください！");
 
-            const saved = localStorage.getItem("kisou210_v2_data");
+            const saved = localStorage.getItem("kisou210_v3_user");
             if (saved) {
-                const data = JSON.parse(saved);
-                if (data.name === player.name) player = data;
+                const parsed = JSON.parse(saved);
+                if (parsed.name === inputName) player = parsed;
+                else player = { name: inputName, score: 0, level: 1, money: 0, engineLv: 1, carColor: "police" };
+            } else {
+                player = { name: inputName, score: 0, level: 1, money: 0, engineLv: 1, carColor: "police" };
             }
             saveData();
             document.getElementById("user-display").innerText = `捜査員: ${player.name} (Lv.${player.level})`;
             showScreen("menu-screen");
+            startCanvasAnimation("menu-canvas");
         }
 
         function saveData() {
-            localStorage.setItem("kisou210_v2_data", JSON.stringify(player));
+            localStorage.setItem("kisou210_v3_user", JSON.stringify(player));
         }
 
         function showScreen(id) {
+            if (animId) cancelAnimationFrame(animId);
             document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
             document.getElementById(id).classList.add("active");
         }
@@ -406,32 +322,70 @@
             window.removeEventListener("keydown", onKeyPress);
             document.getElementById("user-display").innerText = `捜査員: ${player.name} (Lv.${player.level})`;
             showScreen("menu-screen");
+            startCanvasAnimation("menu-canvas");
+        }
+
+        function openShop() {
+            document.getElementById("shop-money").innerText = `所持資金: ${player.money} G`;
+            document.getElementById("engine-lv").innerText = player.engineLv;
+            document.getElementById("engine-cost").innerText = player.engineLv * 100;
+            document.getElementById("car-color-name").innerText = player.carColor === "police" ? "白黒クラウン" : (player.carColor === "black" ? "覆面ブラック" : "ハイパーゴールド");
+            showScreen("shop-screen");
+        }
+
+        function buyUpgrade(type) {
+            if (type === 'engine') {
+                let cost = player.engineLv * 100;
+                if (player.money >= cost) {
+                    player.money -= cost;
+                    player.engineLv++;
+                    saveData();
+                    openShop();
+                    alert("エンジンを強化しました！");
+                } else alert("資金が足りません！");
+            }
+        }
+
+        function toggleCarColor() {
+            const colors = ["police", "black", "gold"];
+            let idx = (colors.indexOf(player.carColor) + 1) % colors.length;
+            player.carColor = colors[idx];
+            saveData();
+            openShop();
         }
 
         function startMode(mode) {
             currentMode = mode;
             score = 0;
             wordCount = 0;
+            enemyHp = 100;
 
-            const titleMap = {
-                free: "🟢 自由走行",
-                mission: "🔴 メインミッション",
-                practice: "🔵 練習モード"
-            };
-            document.getElementById("mode-title").innerText = titleMap[mode];
+            const hpBox = document.getElementById("hp-box");
+            hpBox.style.display = (mode === "mission") ? "flex" : "none";
+            document.getElementById("mode-title").innerText = mode === "mission" ? "🔴 メインミッション" : (mode === "free" ? "🟢 自由走行" : "🔵 練習");
+
+            updateHpBar();
             showScreen("game-screen");
+            startCanvasAnimation("game-canvas");
             nextWord();
             window.addEventListener("keydown", onKeyPress);
         }
 
+        function updateHpBar() {
+            const bar = document.getElementById("hp-bar");
+            bar.style.width = Math.max(0, (enemyHp / maxEnemyHp) * 100) + "%";
+        }
+
         function nextWord() {
-            if (currentMode === "mission" && wordCount >= 5) {
+            if (currentMode === "mission" && enemyHp <= 0) {
                 window.removeEventListener("keydown", onKeyPress);
+                let rewardMoney = score;
+                player.money += rewardMoney;
                 player.score += score;
                 player.level++;
                 saveData();
-                document.getElementById("result-title").innerText = "容疑車両の確保完了！";
-                document.getElementById("result-detail").innerText = `獲得スコア: ${score} pt\nレベルアップ！ Lv.${player.level}`;
+                document.getElementById("result-title").innerText = "🚨 容疑車両の確保成功！ 🚨";
+                document.getElementById("result-detail").innerText = `獲得スコア: ${score} pt\n獲得賞金: ${rewardMoney} G\n捜査官レベルアップ！ Lv.${player.level}`;
                 showScreen("result-screen");
                 return;
             }
@@ -442,7 +396,7 @@
         }
 
         function renderWord() {
-            document.getElementById("roma-sub").innerText = currentWord.roma;
+            document.getElementById("roma-hint").innerText = currentWord.roma;
             document.getElementById("typed-part").innerText = currentWord.roma.substring(0, typedIdx);
             document.getElementById("remain-part").innerText = currentWord.roma.substring(typedIdx);
             document.getElementById("score-info").innerText = `スコア: ${score}`;
@@ -451,24 +405,86 @@
 
         function onKeyPress(e) {
             if (!document.getElementById("game-screen").classList.contains("active")) return;
-            const target = currentWord.roma[typedIdx];
-            if (e.key.toLowerCase() === target) {
+            if (e.key.toLowerCase() === currentWord.roma[typedIdx]) {
                 typedIdx++;
-                score += 10;
+                score += 15;
 
-                // 入力時のスパークフラッシュ
+                if (currentMode === "mission") {
+                    enemyHp -= (5 + player.engineLv * 3);
+                    updateHpBar();
+                }
+
                 const container = document.getElementById("main-container");
                 container.classList.remove("spark-flash");
-                void container.offsetWidth; // リモートトリガー
+                void container.offsetWidth;
                 container.classList.add("spark-flash");
 
                 renderWord();
 
                 if (typedIdx >= currentWord.roma.length) {
                     wordCount++;
-                    setTimeout(nextWord, 150);
+                    setTimeout(nextWord, 120);
                 }
             }
+        }
+
+        function startCanvasAnimation(canvasId) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            const ctx = canvas.getContext("2d");
+            let frame = 0;
+
+            function render() {
+                frame++;
+                roadOffset = (roadOffset + 12) % 60;
+                ctx.fillStyle = "#030712";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                ctx.fillStyle = "#111827";
+                ctx.fillRect(0, 110, canvas.width, 110);
+                ctx.fillStyle = "#ffe600";
+                for (let x = -roadOffset; x < canvas.width; x += 60) ctx.fillRect(x, 160, 35, 6);
+
+                drawPatcar(ctx, 80, 130 + Math.sin(frame * 0.15) * 3, frame);
+
+                if (canvasId === "game-canvas" && currentMode === "mission") drawEnemyCar(ctx, 620, 135);
+                else if (canvasId === "menu-canvas") drawEnemyCar(ctx, 600, 135);
+
+                animId = requestAnimationFrame(render);
+            }
+            render();
+        }
+
+        function drawPatcar(ctx, x, y, frame) {
+            ctx.save();
+            let sirenRed = (Math.floor(frame / 6) % 2 === 0);
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = sirenRed ? "#ff0055" : "#00f3ff";
+            ctx.fillStyle = sirenRed ? "#ff0055" : "#00f3ff";
+            ctx.fillRect(x + 45, y - 8, 25, 8);
+
+            ctx.shadowBlur = 0;
+            ctx.fillStyle = player.carColor === "gold" ? "#ffe600" : "#ffffff";
+            ctx.fillRect(x + 25, y, 65, 22);
+
+            ctx.fillStyle = player.carColor === "black" ? "#050505" : "#111111";
+            ctx.fillRect(x, y + 20, 115, 24);
+
+            ctx.fillStyle = "#333333";
+            ctx.beginPath();
+            ctx.arc(x + 25, y + 44, 10, 0, Math.PI * 2);
+            ctx.arc(x + 90, y + 44, 10, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        }
+
+        function drawEnemyCar(ctx, x, y) {
+            ctx.save();
+            ctx.fillStyle = "#ff0055";
+            ctx.fillRect(x, y + 16, 105, 24);
+            ctx.fillStyle = "#222222";
+            ctx.fillRect(x + 20, y, 55, 18);
+            ctx.restore();
         }
     </script>
 </body>
