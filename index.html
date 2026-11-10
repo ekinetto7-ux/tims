@@ -295,6 +295,11 @@
 </head>
 <body>
 
+    <!-- 🎵 GitHub上の音楽ファイル (d.mp3) を読み込むBGM要素 -->
+    <audio id="bgm-audio" loop preload="auto">
+        <source src="d.mp3" type="audio/mp3">
+    </audio>
+
     <div class="game-container" id="main-container">
         <!-- 1. ログイン / 登録 -->
         <div id="login-screen" class="screen active">
@@ -334,8 +339,8 @@
             <div class="modal-box">
                 <p style="color:var(--neon-cyan); margin-bottom:15px; font-size:1.1rem;">挑む難易度を選択せよ！難度が高いほど報酬Gが増加する。</p>
                 <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;">
-                    <button class="green" onclick="startMissionWithDiff('normal')" style="padding: 14px;">🟢 NORMAL (標準チェイス / 報酬 80G)</button>
-                    <button class="yellow" onclick="startMissionWithDiff('hard')" style="padding: 14px;">🟡 HARD (被ダメ増加・高速 / 報酬 200G)</button>
+                    <button class="green" onclick="startMissionWithDiff('normal')" style="padding: 14px;">🟢 NORMAL (標準チェイス / 報酬 100G)</button>
+                    <button class="yellow" onclick="startMissionWithDiff('hard')" style="padding: 14px;">🟡 HARD (被ダメ増加・高速 / 報酬 250G)</button>
                     <button class="red" onclick="startMissionWithDiff('extreme')" style="padding: 14px;">🔴 EXTREME (極悪容疑車・超高速 / 報酬 500G)</button>
                 </div>
                 <button onclick="toMenu()">メニューに戻る</button>
@@ -456,7 +461,14 @@
         let particles = [];
         let screenShake = 0;
 
-        // 🎵 Web Audio API による内蔵効果音ジェネレーター
+        // 🎵 BGM & 効果音管理
+        const bgmAudio = document.getElementById("bgm-audio");
+        bgmAudio.volume = 0.5;
+
+        function playBGM() {
+            bgmAudio.play().catch(e => {});
+        }
+
         let audioCtx = null;
         function initAudio() {
             if (!audioCtx) {
@@ -465,6 +477,7 @@
             if (audioCtx.state === 'suspended') {
                 audioCtx.resume();
             }
+            playBGM();
         }
 
         function playSound(type) {
@@ -788,18 +801,22 @@
             if (damageTimer) clearInterval(damageTimer);
             window.removeEventListener("keydown", onKeyPress);
             
-            let baseReward = 80;
-            if (currentDiff === "hard") baseReward = 200;
-            if (currentDiff === "extreme") baseReward = 500;
-            let reward = (currentMode === "mission") ? baseReward : 40;
+            // 💡 勝利時のみ賞金獲得、敗北時は0G (ガチ仕様)
+            let reward = 0;
+            if (isWin) {
+                let baseReward = 100;
+                if (currentDiff === "hard") baseReward = 250;
+                if (currentDiff === "extreme") baseReward = 500;
+                reward = (currentMode === "mission") ? baseReward : 30;
+                player.money += reward;
+                player.level++;
+            }
 
-            player.money += reward;
             player.score += score;
-            if (isWin) player.level++;
             savePlayerData();
 
             document.getElementById("result-title").innerText = title;
-            document.getElementById("result-detail").innerText = `獲得スコア: ${score} pt\n獲得賞金: ${reward} G (${currentDiff.toUpperCase()})\n捜査員レベル: Lv.${player.level}`;
+            document.getElementById("result-detail").innerText = `獲得スコア: ${score} pt\n獲得賞金: ${reward} G ${isWin ? '(' + currentDiff.toUpperCase() + ')' : '(大破のため報酬なし)'}\n捜査員レベル: Lv.${player.level}`;
 
             showScreen("result-screen");
         }
