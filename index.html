@@ -295,7 +295,7 @@
 </head>
 <body>
 
-    <!-- 🎵 GitHub上の音楽ファイル (d.mp3) を読み込むBGM要素 -->
+    <!-- 🎵 GitHub上の音楽ファイル (d.mp3) をループ再生するBGM要素 -->
     <audio id="bgm-audio" loop preload="auto">
         <source src="d.mp3" type="audio/mp3">
     </audio>
@@ -347,7 +347,7 @@
             </div>
         </div>
 
-        <!-- 4. ショップ & ガレージ設定 -->
+        <!-- 4. ショップ & ガレージ設定 (BGMミュート切り替え付き) -->
         <div id="shop-screen" class="screen">
             <h1>機捜ガレージ・装備カスタマイズ</h1>
             
@@ -393,6 +393,12 @@
                     <h3>車体カラー</h3>
                     <p id="car-color-name" style="color:var(--neon-cyan);">白黒クラウン</p>
                     <button onclick="toggleCarColor()">塗装変更</button>
+                </div>
+                <!-- 🎵 BGM設定カード -->
+                <div class="shop-card" style="border-color: var(--neon-purple); grid-column: span auto;">
+                    <h3>BGM (d.mp3) 設定</h3>
+                    <p id="bgm-status-text" style="color:var(--neon-green);">状態: 再生中 (ループ)</p>
+                    <button class="purple" onclick="toggleBGM()">BGM切替 (ON/OFF)</button>
                 </div>
             </div>
             <button onclick="toMenu()" style="margin-top: 8px;">メニューに戻る</button>
@@ -461,12 +467,28 @@
         let particles = [];
         let screenShake = 0;
 
-        // 🎵 BGM & 効果音管理
+        // 🎵 BGM (d.mp3) ループ再生 & ミュート管理
         const bgmAudio = document.getElementById("bgm-audio");
         bgmAudio.volume = 0.5;
+        let isBgmEnabled = true;
 
         function playBGM() {
-            bgmAudio.play().catch(e => {});
+            if (isBgmEnabled) {
+                bgmAudio.play().catch(e => {});
+            }
+        }
+
+        function toggleBGM() {
+            isBgmEnabled = !isBgmEnabled;
+            if (isBgmEnabled) {
+                bgmAudio.play().catch(e => {});
+                document.getElementById("bgm-status-text").innerText = "状態: 再生中 (ループ)";
+                document.getElementById("bgm-status-text").style.color = "var(--neon-green)";
+            } else {
+                bgmAudio.pause();
+                document.getElementById("bgm-status-text").innerText = "状態: 停止中 (ミュート)";
+                document.getElementById("bgm-status-text").style.color = "var(--neon-red)";
+            }
         }
 
         let audioCtx = null;
@@ -801,7 +823,6 @@
             if (damageTimer) clearInterval(damageTimer);
             window.removeEventListener("keydown", onKeyPress);
             
-            // 💡 勝利時のみ賞金獲得、敗北時は0G (ガチ仕様)
             let reward = 0;
             if (isWin) {
                 let baseReward = 100;
