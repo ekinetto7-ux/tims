@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>タイピングゲーム</title>
+<title>タイピングコロシアム</title>
 <style>
   body { font-family: 'Segoe UI', sans-serif; background: #121212; color: #fff; text-align: center; margin: 0; padding: 20px; }
   .box { max-width: 700px; margin: 20px auto; background: #1e1e2e; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
@@ -14,7 +14,7 @@
   button.sub:hover { background: #57606f; }
   input, select { padding: 10px; font-size: 16px; border-radius: 6px; border: none; margin: 8px; }
   .hidden { display: none; }
-  .stats { display: flex; justify-content: space-around; background: #2f3542; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+  .stats { display: flex; justify-content: space-around; background: #2f3542; padding: 15px; border-radius: 8px; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
   .gauge-wrap { background: #333; height: 24px; border-radius: 12px; overflow: hidden; margin: 10px 0; position: relative; }
   .gauge-bar { height: 100%; width: 0%; transition: width 0.1s; }
   #player-bar { background: #2ed573; }
@@ -25,12 +25,13 @@
   .untyped { color: #a4b0be; }
   .miss { background: #ff4757; color: #fff; }
   textarea { width: 90%; height: 60px; margin-top: 10px; border-radius: 6px; padding: 8px; }
+  #mobile-input { opacity: 0; position: absolute; left: -9999px; }
 </style>
 </head>
 <body>
 
 <div class="box">
-  <h1>⚔️ タイピングゲーム ⚔️</h1>
+  <h1>⚔️ タイピングコロシアム ⚔️</h1>
 
   <!-- 1. 初回登録画面 -->
   <div id="screen-register" class="hidden">
@@ -86,7 +87,7 @@
   </div>
 
   <!-- 3. ゲームプレイ画面 -->
-  <div id="screen-game" class="hidden">
+  <div id="screen-game" class="hidden" onclick="focusInput()">
     <div id="ai-area">
       <div>🤖 AIの進捗 (<span id="ai-score-text">0</span> / 10問)</div>
       <div class="gauge-wrap"><div id="ai-bar" class="gauge-bar"></div></div>
@@ -97,7 +98,8 @@
 
     <div class="word-jp" id="word-jp">準備中...</div>
     <div class="word-ro" id="word-ro"></div>
-    <p style="color:#888; font-size:14px;">キーボードで直接入力してください（大文字・小文字は自動判定）</p>
+    <input type="text" id="mobile-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+    <p style="color:#888; font-size:14px;">キーボードで入力してください（iPadは画面タップでキーボード表示）</p>
     <button class="sub" onclick="quitGame()">中断して戻る</button>
   </div>
 
@@ -182,11 +184,20 @@ function showHome() {
 }
 
 // --- 音声システム（ファイル不要のシンセ音） ---
-const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+let audioCtx = null;
 let bgmTimer = null;
 
+function initAudio() {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if (audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
+}
+
 function playTone(freq, duration, type = 'sine', vol = 0.1) {
-  if (audioCtx.state === 'suspended') audioCtx.resume();
+  initAudio();
   const osc = audioCtx.createOscillator();
   const gain = audioCtx.createGain();
   osc.type = type;
@@ -202,10 +213,12 @@ function playTone(freq, duration, type = 'sine', vol = 0.1) {
 function startBGM(type) {
   stopBGM();
   if (type < 0) return;
-  const patterns = [, // BGM 1, // BGM 2
-    [196, 233, 261, 293, 311, 349]  // BGM 3
+  const patterns = [
+    [261.63, 329.63, 392.00, 523.25, 392.00, 329.63],
+    [220.00, 220.00, 261.63, 293.66, 329.63, 293.66],
+    [196.00, 246.94, 293.66, 369.99, 392.00, 369.99]
   ];
-  const notes = patterns[type];
+  const notes = patterns[type] || patterns[0];
   let step = 0;
   bgmTimer = setInterval(() => {
     playTone(notes[step % notes.length], 0.18, 'triangle', 0.04);
@@ -244,7 +257,12 @@ let charIndex = 0;
 let aiTimer = null;
 let startTime = 0;
 
+function focusInput() {
+  document.getElementById('mobile-input').focus();
+}
+
 function startGame(mode) {
+  initAudio();
   gameMode = mode;
   isPlaying = true;
   playerScore = 0;
@@ -256,6 +274,7 @@ function startGame(mode) {
   updateGauges();
   nextWord();
   showScreen('screen-game');
+  focusInput();
 
   const bgmChoice = parseInt(document.getElementById('bgm-select').value);
   startBGM(bgmChoice);
@@ -265,7 +284,7 @@ function startGame(mode) {
     aiTimer = setInterval(() => {
       if (!isPlaying) return;
       aiProgress += 1;
-      if (aiProgress >= 12) { // 12文字分で1問クリア扱い
+      if (aiProgress >= 12) {
         aiProgress = 0;
         aiScore++;
         updateGauges();
@@ -287,10 +306,3 @@ function renderWord(isMiss = false) {
   const current = currentWord.ro[charIndex] || '';
   const rest = currentWord.ro.slice(charIndex + 1);
   document.getElementById('word-ro').innerHTML =
-    `<span class="typed">${typed}</span><span class="${isMiss ? 'miss' : 'untyped'}">${current}</span><span class="untyped">${rest}</span>`;
-}
-
-function updateGauges() {
-  document.getElementById('player-score-text').textContent = playerScore;
-  document.getElementById('ai-score-text').textContent = aiScore;
-  document.getElementById('player-bar').style.width = (playerScore / targetCount * 100) + '%';
