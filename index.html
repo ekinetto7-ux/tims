@@ -106,6 +106,8 @@
             gap: 12px;
             flex-wrap: wrap;
             margin-top: 15px;
+            position: relative;
+            z-index: 10; /* 💡 ボタンが確実に最前面でクリックできるように設定 */
         }
 
         button {
@@ -144,6 +146,7 @@
             border-radius: 10px;
             border: 1px solid rgba(0, 243, 255, 0.5);
             margin: 10px 0;
+            pointer-events: none; /* 💡 キャンバスがクリックを邪魔しないようにする設定 */
         }
 
         .status-bar {
@@ -328,7 +331,7 @@
                 </div>
                 <div id="enemy-hp-box" style="display: flex; align-items: center; gap: 4px;">
                     <span style="color: var(--neon-red);" id="progress-label">残り:</span>
-                    <div class="hp-container"><div class="hp-bar-enemy" id="enemy-hp-bar"></div></div>
+                    <div class="hp-container"><div class="hp-bar-enemy" id="hp-bar-enemy"></div></div>
                 </div>
                 <div class="speed-gauge" id="speed-display">0 km/h</div>
                 <span id="score-info">SCORE: 0 (20/20)</span>
@@ -365,7 +368,6 @@
         let playerHp = 100;
         let maxPlayerHp = 100;
         
-        // 💡 1回クリアに必要なワード数を「20回」に設定
         let targetWordsCount = 20;
         let remainingWords = 20;
 
@@ -547,7 +549,7 @@
             maxPlayerHp = 100 + (player.armorLv - 1) * 30;
             playerHp = maxPlayerHp;
             
-            remainingWords = 20; // 💡 20問スタート
+            remainingWords = 20;
             boostGau = 0;
             ghostProgress = 0;
             particles = [];
@@ -601,7 +603,7 @@
             if (damageTimer) clearInterval(damageTimer);
             window.removeEventListener("keydown", onKeyPress);
             
-            let reward = 50; // 💡 賞金一律 50 G
+            let reward = 50;
             player.money += reward;
             player.score += score;
             if (isWin) player.level++;
@@ -633,7 +635,6 @@
         function onKeyPress(e) {
             if (!document.getElementById("game-screen").classList.contains("active")) return;
 
-            // SPACEキーでブースト発動（残りワードを3つ一気に削る！）
             if (e.code === "Space" && boostGau >= 100) {
                 boostGau = 0;
                 if (currentMode !== "free") {
