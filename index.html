@@ -311,8 +311,7 @@
             <div id="register-form" class="auth-form" style="display: none;">
                 <input type="text" id="reg-username" placeholder="新規コールサイン (名前)">
                 <input type="password" id="reg-password" placeholder="新規暗号パスワード">
-                <input type="text" id="reg-invite" placeholder="招待コード (任意 / 例: 2100)">
-                <button class="yellow" onclick="handleRegister()">新規登録して出動 (+200Gボーナス)</button>
+                <button class="yellow" onclick="handleRegister()">新規登録して出動</button>
             </div>
         </div>
 
@@ -343,7 +342,7 @@
             </div>
         </div>
 
-        <!-- 4. ショップ & ガレージ設定 (値上げ版) -->
+        <!-- 4. ショップ & ガレージ設定 -->
         <div id="shop-screen" class="screen">
             <h1>機捜ガレージ・装備カスタマイズ</h1>
             
@@ -457,8 +456,63 @@
         let particles = [];
         let screenShake = 0;
 
+        // 🎵 Web Audio API による内蔵効果音ジェネレーター
+        let audioCtx = null;
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        function playSound(type) {
+            try {
+                initAudio();
+                if (!audioCtx) return;
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                const now = audioCtx.currentTime;
+
+                if (type === 'type') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(600, now);
+                    osc.frequency.exponentialRampToValueAtTime(900, now + 0.05);
+                    gain.gain.setValueAtTime(0.08, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.05);
+                    osc.start(now);
+                    osc.stop(now + 0.05);
+                } else if (type === 'boost') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(150, now);
+                    osc.frequency.linearRampToValueAtTime(600, now + 0.3);
+                    gain.gain.setValueAtTime(0.15, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.3);
+                    osc.start(now);
+                    osc.stop(now + 0.3);
+                } else if (type === 'damage') {
+                    osc.type = 'square';
+                    osc.frequency.setValueAtTime(120, now);
+                    osc.frequency.linearRampToValueAtTime(40, now + 0.2);
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.2);
+                    osc.start(now);
+                    osc.stop(now + 0.2);
+                } else if (type === 'clear') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(440, now);
+                    osc.frequency.setValueAtTime(554.37, now + 0.1);
+                    osc.frequency.setValueAtTime(659.25, now + 0.2);
+                    gain.gain.setValueAtTime(0.15, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.4);
+                    osc.start(now);
+                    osc.stop(now + 0.4);
+                }
+            } catch(e) {}
+        }
+
         const prefixes = ["きんきゅう", "こうそく", "きどう", "ついせき", "たいほ", "めんきょ", "さいれん", "ぱとかー", "ふくめん", "けいさつ", "そうさ", "しゅうけき", "へり", "ぶろっく", "えんじん", "ないす", "すぴーど", "びーこん", "あくせる", "ぶれーき", "どりふと", "ちぇいす"];
-        const middles = ["そうこう", "とりしまり", "ていし", "めいれい", "しれい", "つうほう", "ばとる", "あたっく", "ばーすと", "すぱーく", "がーど", "らんく", "こ-ど", "ゆにっと", "みっしょん", "がれ-じ", "ちゅ-にんぐ", "ぶ-すと"];
+        const middles = ["そうこう", "とりしまり", "ていし", "めいれい", "しれい", "つうほう", "ばとる", "あたっく", "ばーすと", "すぱーく", "がーど", "らんく", "こーど", "ゆにっと", "みっしょん", "がれーじ", "ちゅーにんぐ", "ぶーすと"];
 
         function generateMassiveWordList() {
             let list = [
@@ -506,6 +560,7 @@
         ];
 
         function switchTab(type) {
+            initAudio();
             if (type === 'login') {
                 document.getElementById('login-form').style.display = 'flex';
                 document.getElementById('register-form').style.display = 'none';
@@ -529,28 +584,27 @@
         }
 
         function handleRegister() {
+            initAudio();
             const name = document.getElementById("reg-username").value.trim();
             const pass = document.getElementById("reg-password").value.trim();
-            const invite = document.getElementById("reg-invite").value.trim();
             if (!name || !pass) return alert("コールサインとパスワードを入力してください！");
 
             const db = getUsersDB();
             if (db[name]) return alert("既に登録されているコールサインです！");
 
-            let bonusMoney = invite ? 300 : 0;
-
             db[name] = {
                 name: name, password: pass,
-                score: 0, level: 1, money: bonusMoney,
+                score: 0, level: 1, money: 100,
                 engineLv: 1, bumperLv: 1, armorLv: 1, lampLv: 1, carColor: "police"
             };
             saveUsersDB(db);
             player = db[name];
-            alert(`新規登録完了: [${name}]${invite ? " 招待ボーナス+300G獲得！" : ""}`);
+            alert(`新規登録完了: [${name}] 出動準備完了！`);
             onAuthSuccess();
         }
 
         function handleLogin() {
+            initAudio();
             const name = document.getElementById("login-username").value.trim();
             const pass = document.getElementById("login-password").value.trim();
             if (!name || !pass) return alert("コールサインとパスワードを入力してください！");
@@ -579,12 +633,14 @@
         }
 
         function toMenu() {
+            initAudio();
             window.removeEventListener("keydown", onKeyPress);
             showScreen("menu-screen");
             startCanvasAnimation("menu-canvas");
         }
 
         function openDifficultyModal() {
+            initAudio();
             showScreen("difficulty-screen");
         }
 
@@ -594,6 +650,7 @@
         }
 
         function openShop() {
+            initAudio();
             document.getElementById("pf-name").innerText = player.name;
             document.getElementById("pf-level").innerText = player.level;
             document.getElementById("pf-score").innerText = player.score;
@@ -606,7 +663,6 @@
             const colorNames = { police: "白黒クラウン", black: "覆面ブラック", gold: "ハイパーゴールド", cyan: "ネオンブルー" };
             document.getElementById("pf-color").innerText = colorNames[player.carColor] || "白黒クラウン";
 
-            document.getElementById("shop-money").innerText = `所持資金: ${player.money} G`;
             document.getElementById("engine-lv").innerText = player.engineLv;
             document.getElementById("engine-cost").innerText = player.engineLv * 300;
             document.getElementById("bumper-lv").innerText = player.bumperLv;
@@ -623,9 +679,10 @@
         function buyRepairKit() {
             if (player.money >= 800) {
                 player.money -= 800;
-                playerHp = maxPlayerHp; // 💡 購入と同時にHPも全回復する仕様
+                playerHp = maxPlayerHp;
                 savePlayerData();
                 openShop();
+                playSound('clear');
                 alert("応急修理キットを購入・使用しました！自機HPが全回復します！");
             } else {
                 alert("資金が足りません！（800 G必要です）");
@@ -633,7 +690,6 @@
         }
 
         function buyUpgrade(type) {
-            // 💡 アップグレード費用もすべて値上げ
             const costs = { 
                 engine: player.engineLv * 300, 
                 bumper: player.bumperLv * 450, 
@@ -645,6 +701,7 @@
                 player[type + 'Lv']++;
                 savePlayerData();
                 openShop();
+                playSound('clear');
                 alert("装備の強化が完了しました！");
             } else alert("資金が足りません！");
         }
@@ -663,6 +720,7 @@
         }
 
         function startMode(mode) {
+            initAudio();
             currentMode = mode;
             score = 0;
             combo = 0;
@@ -688,6 +746,7 @@
                 damageTimer = setInterval(() => {
                     playerHp -= dmgAmount;
                     screenShake = 10;
+                    playSound('damage');
                     updateBars();
                     const container = document.getElementById("main-container");
                     container.classList.remove("damage-flash");
@@ -711,6 +770,7 @@
 
         function nextWord() {
             if (currentMode !== "free" && remainingWords <= 0) {
+                playSound('clear');
                 endGame(true, "🚨 容疑車両のPIT捕獲完了！任務達成！ 🚨");
                 return;
             }
@@ -725,7 +785,6 @@
             if (damageTimer) clearInterval(damageTimer);
             window.removeEventListener("keydown", onKeyPress);
             
-            // 💡 値上げに伴い報酬も少し調整 (Normal:80G, Hard:200G, Extreme:500G)
             let baseReward = 80;
             if (currentDiff === "hard") baseReward = 200;
             if (currentDiff === "extreme") baseReward = 500;
@@ -769,6 +828,7 @@
                     remainingWords = Math.max(0, remainingWords - (1 + Math.floor(player.bumperLv / 2)));
                 }
                 screenShake = 16;
+                playSound('boost');
                 createSparkParticles(620, 150, 45);
                 updateBars();
 
@@ -789,6 +849,8 @@
                 speedKph = Math.min(320, speedKph + 6);
                 let boostAdd = 12 + (player.lampLv * 2.5);
                 boostGau = Math.min(100, boostGau + boostAdd);
+
+                playSound('type');
 
                 if (combo > 0 && combo % 5 === 0) {
                     playerHp = Math.min(maxPlayerHp, playerHp + 6);
@@ -936,3 +998,4 @@
     </script>
 </body>
 </html>
+                                player.            remainingWords =                 if (combo > 0 
