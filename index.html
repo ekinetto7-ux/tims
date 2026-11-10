@@ -3,59 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>機捜210 - タイピングコロシアム</title>
+    <title>機捜210 - FREEDOM CHASE TYPING</title>
     <style>
         :root {
-            --bg-color: #0b0f19;
-            --panel-bg: rgba(16, 22, 36, 0.85);
-            --neon-blue: #00f3ff;
+            --bg-color: #050811;
+            --panel-bg: rgba(10, 16, 30, 0.9);
+            --neon-cyan: #00f3ff;
             --neon-red: #ff0055;
-            --neon-yellow: #f3e600;
-            --text-color: #ffffff;
+            --neon-yellow: #ffe600;
+            --text-color: #f1f5f9;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Courier New', Courier, monospace, sans-serif;
+            font-family: 'Courier New', monospace, sans-serif;
         }
 
         body {
             background-color: var(--bg-color);
-            background-image: linear-gradient(rgba(0,243,255,0.03) 1px, transparent 1px),
-                              linear-gradient(90deg, rgba(0,243,255,0.03) 1px, transparent 1px);
-            background-size: 20px 20px;
             color: var(--text-color);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            overflow-x: hidden;
         }
 
         .container {
-            width: 90%;
-            max-width: 800px;
+            width: 95%;
+            max-width: 850px;
             background: var(--panel-bg);
-            border: 2px solid var(--neon-blue);
-            box-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
-            border-radius: 10px;
-            padding: 30px;
+            border: 2px solid var(--neon-cyan);
+            box-shadow: 0 0 25px rgba(0, 243, 255, 0.3);
+            border-radius: 12px;
+            padding: 25px;
             text-align: center;
         }
 
         h1 {
-            color: var(--neon-blue);
-            text-shadow: 0 0 10px var(--neon-blue);
-            margin-bottom: 20px;
-            font-size: 2rem;
-            letter-spacing: 2px;
+            color: var(--neon-cyan);
+            text-shadow: 0 0 12px var(--neon-cyan);
+            font-size: 1.8rem;
+            margin-bottom: 15px;
         }
 
         .screen {
             display: none;
         }
-
         .screen.active {
             display: block;
         }
@@ -63,11 +59,11 @@
         input[type="text"], input[type="password"] {
             width: 80%;
             padding: 12px;
-            background: #05070a;
-            border: 2px solid var(--neon-blue);
-            color: var(--text-color);
-            font-size: 1.2rem;
-            border-radius: 5px;
+            background: #000;
+            border: 2px solid var(--neon-cyan);
+            color: #fff;
+            font-size: 1.1rem;
+            border-radius: 6px;
             margin: 10px 0;
             text-align: center;
             outline: none;
@@ -75,328 +71,303 @@
 
         button {
             background: transparent;
-            color: var(--neon-blue);
-            border: 2px solid var(--neon-blue);
-            padding: 10px 25px;
-            font-size: 1.1rem;
+            color: var(--neon-cyan);
+            border: 2px solid var(--neon-cyan);
+            padding: 10px 20px;
+            font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
-            border-radius: 5px;
-            margin: 10px;
+            border-radius: 6px;
+            margin: 8px;
             transition: 0.2s;
-            text-shadow: 0 0 5px var(--neon-blue);
-            box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
+            text-shadow: 0 0 5px var(--neon-cyan);
         }
 
         button:hover {
-            background: var(--neon-blue);
-            color: var(--bg-color);
-            box-shadow: 0 0 20px var(--neon-blue);
+            background: var(--neon-cyan);
+            color: #000;
+            box-shadow: 0 0 15px var(--neon-cyan);
         }
 
-        /* --- 動くパトカーアニメーション（ファイル不要・CSS描画） --- */
-        .pixel-patcar {
+        /* --- 動くパトカー（CSS完全描画） --- */
+        .patcar-container {
             position: relative;
-            width: 120px;
-            height: 60px;
-            margin: 20px auto;
-            animation: drive 1.5s infinite ease-in-out;
+            width: 140px;
+            height: 70px;
+            margin: 15px auto;
+            animation: drive 1.2s infinite ease-in-out;
         }
 
         @keyframes drive {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-6px) rotate(-1deg); }
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
         }
 
-        .siren {
+        .siren-box {
             position: absolute;
-            top: 0;
-            width: 14px;
+            top: 2px;
+            left: 55px;
+            width: 30px;
             height: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .siren-light {
+            width: 12px;
+            height: 100%;
             border-radius: 3px 3px 0 0;
         }
-        .siren.red {
-            left: 45px;
+
+        .siren-red {
             background: var(--neon-red);
-            animation: blinkRed 0.4s infinite alternate;
-        }
-        .siren.blue {
-            left: 61px;
-            background: var(--neon-blue);
-            animation: blinkBlue 0.4s infinite alternate 0.2s;
+            animation: flashRed 0.3s infinite alternate;
         }
 
-        @keyframes blinkRed {
-            from { opacity: 0.3; box-shadow: 0 0 2px var(--neon-red); }
-            to { opacity: 1; box-shadow: 0 0 15px var(--neon-red), 0 0 25px var(--neon-red); }
-        }
-        @keyframes blinkBlue {
-            from { opacity: 0.3; box-shadow: 0 0 2px var(--neon-blue); }
-            to { opacity: 1; box-shadow: 0 0 15px var(--neon-blue), 0 0 25px var(--neon-blue); }
+        .siren-blue {
+            background: var(--neon-cyan);
+            animation: flashBlue 0.3s infinite alternate 0.15s;
         }
 
-        .car-top {
-            position: absolute;
-            top: 8px;
-            left: 30px;
-            width: 60px;
-            height: 22px;
-            background: #ffffff;
-            border-top-left-radius: 10px;
-            border-top-right-radius: 10px;
-            border: 2px solid #111;
+        @keyframes flashRed {
+            from { opacity: 0.2; box-shadow: 0 0 2px var(--neon-red); }
+            to { opacity: 1; box-shadow: 0 0 18px var(--neon-red); }
         }
-        .car-bottom {
+        @keyframes flashBlue {
+            from { opacity: 0.2; box-shadow: 0 0 2px var(--neon-cyan); }
+            to { opacity: 1; box-shadow: 0 0 18px var(--neon-cyan); }
+        }
+
+        .car-roof {
             position: absolute;
-            top: 28px;
+            top: 10px;
+            left: 35px;
+            width: 70px;
+            height: 25px;
+            background: #fff;
+            border-radius: 12px 12px 0 0;
+            border: 2px solid #000;
+        }
+
+        .car-body {
+            position: absolute;
+            top: 32px;
             left: 10px;
-            width: 100px;
-            height: 22px;
-            background: #111111;
-            border-radius: 5px;
+            width: 120px;
+            height: 26px;
+            background: #111;
+            border-radius: 6px;
         }
-        .light-front {
+
+        .headlight {
             position: absolute;
             left: 0;
-            top: 4px;
+            top: 6px;
             width: 6px;
-            height: 8px;
+            height: 10px;
             background: var(--neon-yellow);
-            box-shadow: -8px 0 12px var(--neon-yellow);
+            box-shadow: -10px 0 15px var(--neon-yellow);
         }
+
         .wheel {
             position: absolute;
-            bottom: -6px;
-            width: 16px;
-            height: 16px;
-            background: #333;
+            bottom: -8px;
+            width: 20px;
+            height: 20px;
+            background: #222;
             border: 2px solid #fff;
             border-radius: 50%;
-            animation: spin 0.6s linear infinite;
+            animation: spin 0.4s linear infinite;
         }
-        .wheel-left { left: 15px; }
-        .wheel-right { right: 15px; }
+
+        .wheel-front { left: 20px; }
+        .wheel-rear { right: 20px; }
 
         @keyframes spin {
             100% { transform: rotate(360deg); }
         }
 
-        /* --- バトル画面スタイル --- */
-        .status-bar {
+        /* --- ゲーム表示 --- */
+        .status-box {
             display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-            font-size: 1.1rem;
-            background: rgba(0,0,0,0.4);
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid rgba(0,243,255,0.3);
+            justify-content: space-around;
+            background: rgba(0,0,0,0.5);
+            padding: 8px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            border: 1px solid var(--neon-cyan);
         }
 
-        .target-word {
+        .word-display {
             font-size: 2.2rem;
-            letter-spacing: 4px;
-            margin: 20px 0;
             color: var(--neon-yellow);
-            text-shadow: 0 0 10px rgba(243,230,0,0.5);
+            letter-spacing: 3px;
+            margin: 15px 0;
+            text-shadow: 0 0 10px rgba(255,230,0,0.5);
         }
 
-        .typed {
-            color: var(--neon-blue);
-        }
-
-        .roma-guide {
-            font-size: 1.2rem;
-            color: #888;
-            margin-bottom: 20px;
-        }
-
-        .enemy-info {
-            font-size: 1.3rem;
-            margin-bottom: 10px;
-            color: var(--neon-red);
-            font-weight: bold;
-        }
+        .typed-char { color: var(--neon-cyan); }
+        .roma-hint { color: #888; font-size: 1.1rem; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <!-- 1. ログイン画面 -->
-        <div id="auth-screen" class="screen active">
-            <h1>機捜210 タイピング</h1>
-            <p>プレイヤー名を入力して出動せよ！</p>
-            <input type="text" id="username" placeholder="プレイヤー名 (例: 捜査員210)"><br>
-            <button onclick="loginUser()">ログイン / 登録</button>
+        <!-- ログイン画面 -->
+        <div id="login-screen" class="screen active">
+            <h1>機捜210 FREEDOM TYPING</h1>
+            <p>捜査員名を入力して出動！</p>
+            <input type="text" id="username" placeholder="コールサイン (例: 機捜210)"><br>
+            <button onclick="login()">出動開始</button>
         </div>
 
-        <!-- 2. メニュー画面 -->
+        <!-- メニュー画面 -->
         <div id="menu-screen" class="screen">
-            <h1>出動準備完了</h1>
-            <p id="welcome-msg" style="margin-bottom: 15px; font-size: 1.2rem;"></p>
+            <h1 id="user-display">捜査員待機中</h1>
 
-            <!-- 動くパトカー（CSSアニメーション） -->
-            <div class="pixel-patcar">
-                <div class="siren red"></div>
-                <div class="siren blue"></div>
+            <!-- 動くパトカー -->
+            <div class="patcar-container">
+                <div class="siren-box">
+                    <div class="siren-light siren-red"></div>
+                    <div class="siren-light siren-blue"></div>
+                </div>
+                <div class="car-roof"></div>
                 <div class="car-body">
-                    <div class="car-top"></div>
-                    <div class="car-bottom">
-                        <div class="light-front"></div>
-                        <div class="wheel wheel-left"></div>
-                        <div class="wheel wheel-right"></div>
-                    </div>
+                    <div class="headlight"></div>
+                    <div class="wheel wheel-front"></div>
+                    <div class="wheel wheel-rear"></div>
                 </div>
             </div>
 
-            <button onclick="startBattle()">パトロール出動（ゲーム開始）</button>
+            <button onclick="startMode('normal')">通常追跡モード</button>
+            <button onclick="startMode('free')">フリー無限走行（時間無制限）</button>
         </div>
 
-        <!-- 3. バトル画面 -->
-        <div id="battle-screen" class="screen">
-            <div class="status-bar">
-                <span id="player-status">名無し | Lv.1</span>
-                <span id="score-status">スコア: 0</span>
+        <!-- タイピング画面 -->
+        <div id="game-screen" class="screen">
+            <div class="status-box">
+                <span id="player-info">機捜210</span>
+                <span id="score-info">スコア: 0</span>
+                <span id="mode-info">通常モード</span>
             </div>
 
-            <div class="enemy-info" id="enemy-name">犯行車両を追尾中...</div>
-
-            <!-- パトカーアニメーション常時表示 -->
-            <div class="pixel-patcar" style="transform: scale(0.8);">
-                <div class="siren red"></div>
-                <div class="siren blue"></div>
+            <!-- バトル中もパトカーが走る -->
+            <div class="patcar-container" style="transform: scale(0.85);">
+                <div class="siren-box">
+                    <div class="siren-light siren-red"></div>
+                    <div class="siren-light siren-blue"></div>
+                </div>
+                <div class="car-roof"></div>
                 <div class="car-body">
-                    <div class="car-top"></div>
-                    <div class="car-bottom">
-                        <div class="light-front"></div>
-                        <div class="wheel wheel-left"></div>
-                        <div class="wheel wheel-right"></div>
-                    </div>
+                    <div class="headlight"></div>
+                    <div class="wheel wheel-front"></div>
+                    <div class="wheel wheel-rear"></div>
                 </div>
             </div>
 
-            <div class="roma-guide" id="roma-guide">keisatsu</div>
-            <div class="target-word" id="target-word"><span class="typed" id="typed-part"></span><span id="remaining-part">keisatsu</span></div>
-            <p style="color: #aaa; font-size: 0.9rem;">キーボードでローマ字を入力せよ！</p>
+            <div class="roma-hint" id="roma-hint">keisatsu</div>
+            <div class="word-display"><span class="typed-char" id="typed-part"></span><span id="remain-part">keisatsu</span></div>
+            <p style="color: #666; font-size: 0.85rem;">ローマ字でタイピング入力！</p>
         </div>
 
-        <!-- 4. リザルト画面 -->
+        <!-- リザルト画面 -->
         <div id="result-screen" class="screen">
-            <h1>逮捕完了！</h1>
-            <p id="result-text" style="font-size: 1.3rem; margin: 20px 0;"></p>
-            <button onclick="toMenu()">メニューに戻る</button>
+            <h1>任務完了！</h1>
+            <p id="result-detail" style="margin: 20px 0; font-size: 1.2rem;"></p>
+            <button onclick="toMenu()">メニューへ戻る</button>
         </div>
     </div>
 
     <script>
-        // ゲームデータ管理
-        let userData = {
-            name: "",
-            score: 0,
-            level: 1
-        };
+        let player = { name: "機捜210", score: 0, level: 1 };
+        let isFreeMode = false;
+        let score = 0;
+        let wordIndex = 0;
+        let typedIdx = 0;
 
-        const words = [
+        const wordList = [
             { jp: "けいさつ", roma: "keisatsu" },
             { jp: "ぱとかー", roma: "patoka-" },
             { jp: "さいれん", roma: "sairen" },
             { jp: "きんきゅう", roma: "kinkyuu" },
-            { jp: "とせいきゅう", roma: "toseikyuu" },
-            { jp: "めんきょていし", roma: "menkyoteishi" },
-            { jp: "そくいん", roma: "sokuin" }
+            { jp: "めんきょ", roma: "menkyo" },
+            { jp: "ついせき", roma: "tsuiseki" }
         ];
-
         let currentWord = {};
-        let typedIndex = 0;
-        let score = 0;
-        let wordCount = 0;
 
-        // ログイン処理（ローカルストレージ保存）
-        function loginUser() {
-            const nameInput = document.getElementById("username").value.trim();
-            if (!nameInput) {
-                alert("プレイヤー名を入力してください！");
-                return;
-            }
-
-            userData.name = nameInput;
+        function login() {
+            const input = document.getElementById("username").value.trim();
+            if (input) player.name = input;
             
-            // ローカルストレージから前回のデータをロード（あれば）
-            const saved = localStorage.getItem("kishu210_typing_user");
+            const saved = localStorage.getItem("kisou210_data");
             if (saved) {
-                const parsed = JSON.parse(saved);
-                if (parsed.name === nameInput) {
-                    userData = parsed;
-                }
+                const data = JSON.parse(saved);
+                if (data.name === player.name) player = data;
             }
             saveData();
-
-            document.getElementById("welcome-msg").innerText = `捜査員: ${userData.name} (Lv.${userData.level})`;
-            switchScreen("menu-screen");
+            document.getElementById("user-display").innerText = `捜査員: ${player.name} (Lv.${player.level})`;
+            showScreen("menu-screen");
         }
 
         function saveData() {
-            localStorage.setItem("kishu210_typing_user", JSON.stringify(userData));
+            localStorage.setItem("kisou210_data", JSON.stringify(player));
         }
 
-        function switchScreen(screenId) {
+        function showScreen(id) {
             document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
-            document.getElementById(screenId).classList.add("active");
+            document.getElementById(id).classList.add("active");
         }
 
         function toMenu() {
-            document.getElementById("welcome-msg").innerText = `捜査員: ${userData.name} (Lv.${userData.level})`;
-            switchScreen("menu-screen");
+            document.getElementById("user-display").innerText = `捜査員: ${player.name} (Lv.${player.level})`;
+            showScreen("menu-screen");
         }
 
-        // バトル開始
-        function startBattle() {
+        function startMode(mode) {
+            isFreeMode = (mode === 'free');
             score = 0;
-            wordCount = 0;
-            switchScreen("battle-screen");
+            wordIndex = 0;
+            document.getElementById("mode-info").innerText = isFreeMode ? "フリー無限" : "通常モード";
+            showScreen("game-screen");
             nextWord();
-            window.addEventListener("keydown", handleKeypress);
+            window.addEventListener("keydown", onKeyPress);
         }
 
         function nextWord() {
-            if (wordCount >= 5) {
-                // 5問クリアでリザルトへ
-                window.removeEventListener("keydown", handleKeypress);
-                userData.score += score;
-                if (score >= 300) userData.level++;
+            if (!isFreeMode && wordIndex >= 5) {
+                window.removeEventListener("keydown", onKeyPress);
+                player.score += score;
+                player.level++;
                 saveData();
-                document.getElementById("result-text").innerText = `スコア: ${score} pt 獲得！\n合計レベル: ${userData.level}`;
-                switchScreen("result-screen");
+                document.getElementById("result-detail").innerText = `獲得スコア: ${score} pt\nレベルアップ！ Lv.${player.level}`;
+                showScreen("result-screen");
                 return;
             }
 
-            currentWord = words[Math.floor(Math.random() * words.length)];
-            typedIndex = 0;
-            updateWordDisplay();
-            document.getElementById("enemy-name").innerText = `容疑車両 #${wordCount + 1} を追跡中...`;
+            currentWord = wordList[Math.floor(Math.random() * wordList.length)];
+            typedIdx = 0;
+            renderWord();
         }
 
-        function updateWordDisplay() {
-            document.getElementById("roma-guide").innerText = currentWord.roma;
-            document.getElementById("typed-part").innerText = currentWord.roma.substring(0, typedIndex);
-            document.getElementById("remaining-part").innerText = currentWord.roma.substring(typedIndex);
-            document.getElementById("score-status").innerText = `スコア: ${score}`;
-            document.getElementById("player-status").innerText = `${userData.name} | Lv.${userData.level}`;
+        function renderWord() {
+            document.getElementById("roma-hint").innerText = currentWord.roma;
+            document.getElementById("typed-part").innerText = currentWord.roma.substring(0, typedIdx);
+            document.getElementById("remain-part").innerText = currentWord.roma.substring(typedIdx);
+            document.getElementById("score-info").innerText = `スコア: ${score}`;
+            document.getElementById("player-info").innerText = `${player.name} | Lv.${player.level}`;
         }
 
-        // キー入力判定
-        function handleKeypress(e) {
-            if (document.getElementById("battle-screen").classList.contains("active")) {
-                const expectedChar = currentWord.roma[typedIndex];
-                if (e.key.toLowerCase() === expectedChar) {
-                    typedIndex++;
-                    score += 10;
-                    updateWordDisplay();
+        function onKeyPress(e) {
+            if (!document.getElementById("game-screen").classList.contains("active")) return;
+            const target = currentWord.roma[typedIdx];
+            if (e.key.toLowerCase() === target) {
+                typedIdx++;
+                score += 10;
+                renderWord();
 
-                    if (typedIndex >= currentWord.roma.length) {
-                        wordCount++;
-                        setTimeout(nextWord, 300); // 次の問題へ
-                    }
+                if (typedIdx >= currentWord.roma.length) {
+                    wordIndex++;
+                    setTimeout(nextWord, 200);
                 }
             }
         }
