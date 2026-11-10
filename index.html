@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>機捜210 - ULTRA HIGHWAY CHASE & SHOP</title>
+    <title>機捜210 - DAMAGE CHASE TYPING</title>
     <style>
         :root {
             --bg-color: #02040a;
@@ -68,7 +68,6 @@
             margin: 15px 0;
             text-align: center;
             outline: none;
-            box-shadow: inset 0 0 10px rgba(0, 243, 255, 0.3);
         }
 
         .btn-group {
@@ -99,14 +98,12 @@
             transform: translateY(-2px);
         }
 
-        button.red { color: var(--neon-red); border-color: var(--neon-red); text-shadow: 0 0 6px var(--neon-red); }
-        button.red:hover { background: var(--neon-red); color: #fff; box-shadow: 0 0 25px var(--neon-red); }
-
-        button.green { color: var(--neon-green); border-color: var(--neon-green); text-shadow: 0 0 6px var(--neon-green); }
-        button.green:hover { background: var(--neon-green); color: #000; box-shadow: 0 0 25px var(--neon-green); }
-
-        button.yellow { color: var(--neon-yellow); border-color: var(--neon-yellow); text-shadow: 0 0 6px var(--neon-yellow); }
-        button.yellow:hover { background: var(--neon-yellow); color: #000; box-shadow: 0 0 25px var(--neon-yellow); }
+        button.red { color: var(--neon-red); border-color: var(--neon-red); }
+        button.red:hover { background: var(--neon-red); color: #fff; }
+        button.green { color: var(--neon-green); border-color: var(--neon-green); }
+        button.green:hover { background: var(--neon-green); color: #000; }
+        button.yellow { color: var(--neon-yellow); border-color: var(--neon-yellow); }
+        button.yellow:hover { background: var(--neon-yellow); color: #000; }
 
         canvas {
             width: 100%;
@@ -126,19 +123,26 @@
             border-radius: 8px;
             border: 1px solid var(--neon-cyan);
             margin-bottom: 10px;
-            font-size: 1.1rem;
+            font-size: 1.0rem;
         }
 
         .hp-container {
-            width: 200px;
-            height: 16px;
+            width: 140px;
+            height: 14px;
             background: #222;
-            border-radius: 8px;
+            border-radius: 7px;
             overflow: hidden;
             border: 1px solid #555;
         }
 
-        .hp-bar {
+        .hp-bar-player {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, #00ff66, #00f3ff);
+            transition: width 0.2s ease;
+        }
+
+        .hp-bar-enemy {
             width: 100%;
             height: 100%;
             background: linear-gradient(90deg, var(--neon-red), var(--neon-yellow));
@@ -164,28 +168,16 @@
         .typed-char { color: var(--neon-cyan); text-shadow: 0 0 10px var(--neon-cyan); }
         .roma-hint { color: #aaa; font-size: 1.3rem; margin-bottom: 5px; }
 
-        /* ショップカードレイアウト */
-        .shop-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
-        }
-
-        .shop-card {
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px solid var(--neon-cyan);
-            border-radius: 10px;
-            padding: 15px;
-            text-align: center;
-        }
-
-        .shop-card h3 { color: var(--neon-yellow); margin-bottom: 8px; }
-        .shop-card p { color: #ccc; font-size: 0.95rem; margin-bottom: 12px; }
-
         .spark-flash { animation: flash 0.1s ease-out; }
         @keyframes flash {
             0% { background: rgba(0, 243, 255, 0.25); }
+            100% { background: var(--panel-bg); }
+        }
+
+        /* 被弾時の画面揺れ・赤フラッシュ */
+        .damage-flash { animation: dmgFlash 0.3s ease-out; }
+        @keyframes dmgFlash {
+            0% { background: rgba(255, 0, 85, 0.4); }
             100% { background: var(--panel-bg); }
         }
     </style>
@@ -195,7 +187,7 @@
     <div class="game-container" id="main-container">
         <!-- 1. ログイン -->
         <div id="login-screen" class="screen active">
-            <h1>機捜210 ULTRA CHASE</h1>
+            <h1>機捜210 DAMAGE CHASE</h1>
             <p style="color: #aaa; margin-bottom: 10px;">コールサインを入力してログイン！</p>
             <input type="text" id="username" placeholder="コールサイン (例: 機捜210)"><br>
             <button onclick="login()">出動認証</button>
@@ -204,46 +196,25 @@
         <!-- 2. メニュー -->
         <div id="menu-screen" class="screen">
             <h1 id="user-display">捜査員待機中</h1>
-
             <canvas id="menu-canvas" width="900" height="220"></canvas>
-
             <div class="btn-group">
                 <button class="green" onclick="startMode('free')">🟢 自由走行</button>
-                <button class="red" onclick="startMode('mission')">🔴 メインミッション</button>
-                <button onclick="startMode('practice')">🔵 練習</button>
-                <button class="yellow" onclick="openShop()">🛒 装備カスタムショップ</button>
+                <button class="red" onclick="startMode('mission')">🔴 メインミッション (体当たり注意!)</button>
+                <button class="yellow" onclick="startMode('ghost')">⚡ ゴースト対戦</button>
             </div>
         </div>
 
-        <!-- 3. ショップ画面 -->
-        <div id="shop-screen" class="screen">
-            <h1>装備カスタマイズ・ショップ</h1>
-            <p style="color: var(--neon-yellow); font-size: 1.2rem; margin-bottom: 10px;" id="shop-money">所持資金: 0 G</p>
-
-            <div class="shop-grid">
-                <div class="shop-card">
-                    <h3>エンジン強化</h3>
-                    <p>打鍵時の容疑者車両ダメージ増加<br>(Lv.<span id="engine-lv">1</span>)</p>
-                    <button class="yellow" onclick="buyUpgrade('engine')">強化 (<span id="engine-cost">100</span> G)</button>
-                </div>
-                <div class="shop-card">
-                    <h3>車体カラー切替</h3>
-                    <p>現在: <span id="car-color-name" style="color:var(--neon-cyan);">白黒クラウン</span></p>
-                    <button onclick="toggleCarColor()">カラー変更</button>
-                </div>
-            </div>
-
-            <button onclick="toMenu()">メニューに戻る</button>
-        </div>
-
-        <!-- 4. ゲーム画面 -->
+        <!-- 3. ゲーム画面 -->
         <div id="game-screen" class="screen">
             <div class="status-bar">
-                <span id="player-info">機捜210</span>
+                <div style="display: flex; align-items: center; gap: 6px;">
+                    <span style="color: var(--neon-green);">自機HP:</span>
+                    <div class="hp-container"><div class="hp-bar-player" id="player-hp-bar"></div></div>
+                </div>
                 <span id="mode-title" style="color: var(--neon-yellow); font-weight: bold;">メインミッション</span>
-                <div id="hp-box" style="display: flex; align-items: center; gap: 8px;">
-                    <span style="font-size: 0.9rem; color: var(--neon-red);">容疑車HP:</span>
-                    <div class="hp-container"><div class="hp-bar" id="hp-bar"></div></div>
+                <div id="enemy-hp-box" style="display: flex; align-items: center; gap: 6px;">
+                    <span style="color: var(--neon-red);">容疑車HP:</span>
+                    <div class="hp-container"><div class="hp-bar-enemy" id="enemy-hp-bar"></div></div>
                 </div>
                 <span id="score-info">スコア: 0</span>
             </div>
@@ -260,7 +231,7 @@
             <button onclick="toMenu()" style="padding: 6px 16px; font-size: 0.9rem;">メニューに戻る</button>
         </div>
 
-        <!-- 5. リザルト画面 -->
+        <!-- 4. リザルト -->
         <div id="result-screen" class="screen">
             <h1 id="result-title" style="color: var(--neon-green);">ミッション完了！</h1>
             <p id="result-detail" style="margin: 20px 0; font-size: 1.4rem; line-height: 1.8;"></p>
@@ -269,13 +240,13 @@
     </div>
 
     <script>
-        let player = { name: "機捜210", score: 0, level: 1, money: 0, engineLv: 1, carColor: "police" };
+        let player = { name: "機捜210", score: 0, level: 1 };
         let currentMode = "mission";
         let score = 0;
-        let wordCount = 0;
         let typedIdx = 0;
+        let playerHp = 100;
         let enemyHp = 100;
-        let maxEnemyHp = 100;
+        let damageTimer = null; // 時間経過ダメージタイマー
 
         const wordList = [
             { jp: "けいさつ", roma: "keisatsu" },
@@ -293,100 +264,68 @@
         function login() {
             const inputName = document.getElementById("username").value.trim();
             if (!inputName) return alert("名前を入力してください！");
-
-            const saved = localStorage.getItem("kisou210_v3_user");
-            if (saved) {
-                const parsed = JSON.parse(saved);
-                if (parsed.name === inputName) player = parsed;
-                else player = { name: inputName, score: 0, level: 1, money: 0, engineLv: 1, carColor: "police" };
-            } else {
-                player = { name: inputName, score: 0, level: 1, money: 0, engineLv: 1, carColor: "police" };
-            }
-            saveData();
+            player.name = inputName;
             document.getElementById("user-display").innerText = `捜査員: ${player.name} (Lv.${player.level})`;
             showScreen("menu-screen");
             startCanvasAnimation("menu-canvas");
         }
 
-        function saveData() {
-            localStorage.setItem("kisou210_v3_user", JSON.stringify(player));
-        }
-
         function showScreen(id) {
             if (animId) cancelAnimationFrame(animId);
+            if (damageTimer) clearInterval(damageTimer);
             document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
             document.getElementById(id).classList.add("active");
         }
 
         function toMenu() {
             window.removeEventListener("keydown", onKeyPress);
-            document.getElementById("user-display").innerText = `捜査員: ${player.name} (Lv.${player.level})`;
             showScreen("menu-screen");
             startCanvasAnimation("menu-canvas");
-        }
-
-        function openShop() {
-            document.getElementById("shop-money").innerText = `所持資金: ${player.money} G`;
-            document.getElementById("engine-lv").innerText = player.engineLv;
-            document.getElementById("engine-cost").innerText = player.engineLv * 100;
-            document.getElementById("car-color-name").innerText = player.carColor === "police" ? "白黒クラウン" : (player.carColor === "black" ? "覆面ブラック" : "ハイパーゴールド");
-            showScreen("shop-screen");
-        }
-
-        function buyUpgrade(type) {
-            if (type === 'engine') {
-                let cost = player.engineLv * 100;
-                if (player.money >= cost) {
-                    player.money -= cost;
-                    player.engineLv++;
-                    saveData();
-                    openShop();
-                    alert("エンジンを強化しました！");
-                } else alert("資金が足りません！");
-            }
-        }
-
-        function toggleCarColor() {
-            const colors = ["police", "black", "gold"];
-            let idx = (colors.indexOf(player.carColor) + 1) % colors.length;
-            player.carColor = colors[idx];
-            saveData();
-            openShop();
         }
 
         function startMode(mode) {
             currentMode = mode;
             score = 0;
-            wordCount = 0;
+            playerHp = 100;
             enemyHp = 100;
 
-            const hpBox = document.getElementById("hp-box");
-            hpBox.style.display = (mode === "mission") ? "flex" : "none";
-            document.getElementById("mode-title").innerText = mode === "mission" ? "🔴 メインミッション" : (mode === "free" ? "🟢 自由走行" : "🔵 練習");
+            document.getElementById("enemy-hp-box").style.display = (mode === "free") ? "none" : "flex";
+            document.getElementById("mode-title").innerText = mode === "mission" ? "🔴 メインミッション" : (mode === "free" ? "🟢 自由走行" : "⚡ ゴースト対戦");
 
-            updateHpBar();
+            updateBars();
             showScreen("game-screen");
             startCanvasAnimation("game-canvas");
             nextWord();
+
+            // 🔴 メインミッション時：3.5秒ごとに容疑者からダメージを受ける！
+            if (mode === "mission") {
+                damageTimer = setInterval(() => {
+                    playerHp -= 12; // 時間経過で体当たりダメージ
+                    updateBars();
+
+                    // 画面を赤く光らせて被弾演出
+                    const container = document.getElementById("main-container");
+                    container.classList.remove("damage-flash");
+                    void container.offsetWidth;
+                    container.classList.add("damage-flash");
+
+                    if (playerHp <= 0) {
+                        endGame(false, "💥 パトカー大破...！ 💥\n容疑車両に逃走された！");
+                    }
+                }, 3500);
+            }
+
             window.addEventListener("keydown", onKeyPress);
         }
 
-        function updateHpBar() {
-            const bar = document.getElementById("hp-bar");
-            bar.style.width = Math.max(0, (enemyHp / maxEnemyHp) * 100) + "%";
+        function updateBars() {
+            document.getElementById("player-hp-bar").style.width = Math.max(0, playerHp) + "%";
+            document.getElementById("enemy-hp-bar").style.width = Math.max(0, enemyHp) + "%";
         }
 
         function nextWord() {
             if (currentMode === "mission" && enemyHp <= 0) {
-                window.removeEventListener("keydown", onKeyPress);
-                let rewardMoney = score;
-                player.money += rewardMoney;
-                player.score += score;
-                player.level++;
-                saveData();
-                document.getElementById("result-title").innerText = "🚨 容疑車両の確保成功！ 🚨";
-                document.getElementById("result-detail").innerText = `獲得スコア: ${score} pt\n獲得賞金: ${rewardMoney} G\n捜査官レベルアップ！ Lv.${player.level}`;
-                showScreen("result-screen");
+                endGame(true, "🚨 容疑車両の確保成功！ 🚨");
                 return;
             }
 
@@ -395,12 +334,22 @@
             renderWord();
         }
 
+        function endGame(isWin, title) {
+            if (damageTimer) clearInterval(damageTimer);
+            window.removeEventListener("keydown", onKeyPress);
+            if (isWin) player.level++;
+
+            document.getElementById("result-title").innerText = title;
+            document.getElementById("result-title").style.color = isWin ? "var(--neon-green)" : "var(--neon-red)";
+            document.getElementById("result-detail").innerText = `獲得スコア: ${score} pt\n捜査官レベル: Lv.${player.level}`;
+            showScreen("result-screen");
+        }
+
         function renderWord() {
             document.getElementById("roma-hint").innerText = currentWord.roma;
             document.getElementById("typed-part").innerText = currentWord.roma.substring(0, typedIdx);
             document.getElementById("remain-part").innerText = currentWord.roma.substring(typedIdx);
             document.getElementById("score-info").innerText = `スコア: ${score}`;
-            document.getElementById("player-info").innerText = `${player.name} | Lv.${player.level}`;
         }
 
         function onKeyPress(e) {
@@ -410,20 +359,14 @@
                 score += 15;
 
                 if (currentMode === "mission") {
-                    enemyHp -= (5 + player.engineLv * 3);
-                    updateHpBar();
+                    enemyHp -= 10; // タイピング成功でダメージを与える
+                    updateBars();
                 }
-
-                const container = document.getElementById("main-container");
-                container.classList.remove("spark-flash");
-                void container.offsetWidth;
-                container.classList.add("spark-flash");
 
                 renderWord();
 
                 if (typedIdx >= currentWord.roma.length) {
-                    wordCount++;
-                    setTimeout(nextWord, 120);
+                    setTimeout(nextWord, 100);
                 }
             }
         }
@@ -436,7 +379,7 @@
 
             function render() {
                 frame++;
-                roadOffset = (roadOffset + 12) % 60;
+                roadOffset = (roadOffset + 14) % 60;
                 ctx.fillStyle = "#030712";
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -447,8 +390,11 @@
 
                 drawPatcar(ctx, 80, 130 + Math.sin(frame * 0.15) * 3, frame);
 
-                if (canvasId === "game-canvas" && currentMode === "mission") drawEnemyCar(ctx, 620, 135);
-                else if (canvasId === "menu-canvas") drawEnemyCar(ctx, 600, 135);
+                if (canvasId === "game-canvas" && currentMode === "mission") {
+                    drawEnemyCar(ctx, 620, 135);
+                } else if (canvasId === "menu-canvas") {
+                    drawEnemyCar(ctx, 600, 135);
+                }
 
                 animId = requestAnimationFrame(render);
             }
@@ -464,10 +410,10 @@
             ctx.fillRect(x + 45, y - 8, 25, 8);
 
             ctx.shadowBlur = 0;
-            ctx.fillStyle = player.carColor === "gold" ? "#ffe600" : "#ffffff";
+            ctx.fillStyle = "#ffffff";
             ctx.fillRect(x + 25, y, 65, 22);
 
-            ctx.fillStyle = player.carColor === "black" ? "#050505" : "#111111";
+            ctx.fillStyle = "#111111";
             ctx.fillRect(x, y + 20, 115, 24);
 
             ctx.fillStyle = "#333333";
