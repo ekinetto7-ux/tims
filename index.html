@@ -7,7 +7,7 @@
     <style>
         :root {
             --bg-deep: #020617;
-            --panel-bg: rgba(13, 20, 38, 0.85);
+            --panel-bg: rgba(8, 15, 30, 0.95);
             --neon-cyan: #00f3ff;
             --neon-red: #ff0055;
             --neon-yellow: #fde047;
@@ -43,7 +43,7 @@
             border: 2px solid rgba(0, 243, 255, 0.4);
             box-shadow: 0 0 50px rgba(0, 243, 255, 0.25), inset 0 0 30px rgba(0, 243, 255, 0.08);
             border-radius: 20px;
-            padding: 28px;
+            padding: 24px;
             text-align: center;
             position: relative;
         }
@@ -51,9 +51,9 @@
         h1 {
             color: var(--neon-cyan);
             text-shadow: 0 0 25px rgba(0, 243, 255, 0.6);
-            font-size: 2.4rem;
-            margin-bottom: 16px;
-            letter-spacing: 4px;
+            font-size: 2.2rem;
+            margin-bottom: 14px;
+            letter-spacing: 3px;
             font-weight: 900;
         }
 
@@ -68,13 +68,13 @@
         .auth-tab {
             display: flex;
             justify-content: center;
-            gap: 14px;
-            margin-bottom: 24px;
+            gap: 12px;
+            margin-bottom: 20px;
         }
 
         .tab-btn {
-            padding: 11px 28px;
-            font-size: 1.05rem;
+            padding: 10px 24px;
+            font-size: 1.02rem;
             border-radius: 10px;
             cursor: pointer;
             border: 1px solid rgba(0, 243, 255, 0.4);
@@ -95,35 +95,29 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 14px;
+            gap: 12px;
         }
 
         input[type="text"], input[type="password"] {
-            width: 82%;
-            max-width: 400px;
-            padding: 14px;
+            width: 80%;
+            max-width: 380px;
+            padding: 12px;
             background: rgba(2, 6, 23, 0.85);
             border: 2px solid rgba(0, 243, 255, 0.4);
             color: #fff;
-            font-size: 1.15rem;
-            border-radius: 12px;
+            font-size: 1.1rem;
+            border-radius: 10px;
             text-align: center;
             outline: none;
             box-shadow: inset 0 0 15px rgba(0, 243, 255, 0.15);
-            transition: all 0.2s;
-        }
-
-        input:focus {
-            border-color: var(--neon-yellow);
-            box-shadow: 0 0 20px rgba(253, 224, 71, 0.4), inset 0 0 15px rgba(253, 224, 71, 0.1);
         }
 
         .btn-group {
             display: flex;
             justify-content: center;
-            gap: 14px;
+            gap: 12px;
             flex-wrap: wrap;
-            margin-top: 18px;
+            margin-top: 16px;
             position: relative;
             z-index: 10;
         }
@@ -132,41 +126,41 @@
             background: rgba(0, 243, 255, 0.1);
             color: var(--neon-cyan);
             border: 2px solid var(--neon-cyan);
-            padding: 12px 26px;
-            font-size: 1.02rem;
+            padding: 11px 22px;
+            font-size: 0.98rem;
             font-weight: bold;
             cursor: pointer;
-            border-radius: 12px;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
-            box-shadow: 0 0 15px rgba(0, 243, 255, 0.15);
+            border-radius: 10px;
+            transition: all 0.25s ease;
+            text-shadow: 0 0 8px rgba(0, 243, 255, 0.5);
+            box-shadow: 0 0 12px rgba(0, 243, 255, 0.15);
         }
 
         button:hover {
             background: var(--neon-cyan);
             color: #020617;
-            box-shadow: 0 0 30px var(--neon-cyan);
-            transform: translateY(-3px);
+            box-shadow: 0 0 25px var(--neon-cyan);
+            transform: translateY(-2px);
         }
 
-        button.red { color: var(--neon-red); border-color: var(--neon-red); text-shadow: 0 0 10px var(--neon-red); box-shadow: 0 0 15px rgba(255,0,85,0.15); }
-        button.red:hover { background: var(--neon-red); color: #fff; box-shadow: 0 0 30px var(--neon-red); }
-        button.green { color: var(--neon-green); border-color: var(--neon-green); text-shadow: 0 0 10px var(--neon-green); box-shadow: 0 0 15px rgba(34,197,94,0.15); }
-        button.green:hover { background: var(--neon-green); color: #020617; box-shadow: 0 0 30px var(--neon-green); }
-        button.yellow { color: var(--neon-yellow); border-color: var(--neon-yellow); text-shadow: 0 0 10px var(--neon-yellow); box-shadow: 0 0 15px rgba(253,224,71,0.15); }
-        button.yellow:hover { background: var(--neon-yellow); color: #020617; box-shadow: 0 0 30px var(--neon-yellow); }
-        button.purple { color: var(--neon-purple); border-color: var(--neon-purple); text-shadow: 0 0 10px var(--neon-purple); box-shadow: 0 0 15px rgba(168,85,247,0.15); }
-        button.purple:hover { background: var(--neon-purple); color: #fff; box-shadow: 0 0 30px var(--neon-purple); }
+        button.red { color: var(--neon-red); border-color: var(--neon-red); text-shadow: 0 0 8px var(--neon-red); }
+        button.red:hover { background: var(--neon-red); color: #fff; box-shadow: 0 0 25px var(--neon-red); }
+        button.green { color: var(--neon-green); border-color: var(--neon-green); text-shadow: 0 0 8px var(--neon-green); }
+        button.green:hover { background: var(--neon-green); color: #020617; box-shadow: 0 0 25px var(--neon-green); }
+        button.yellow { color: var(--neon-yellow); border-color: var(--neon-yellow); text-shadow: 0 0 8px var(--neon-yellow); }
+        button.yellow:hover { background: var(--neon-yellow); color: #020617; box-shadow: 0 0 25px var(--neon-yellow); }
+        button.purple { color: var(--neon-purple); border-color: var(--neon-purple); text-shadow: 0 0 8px var(--neon-purple); }
+        button.purple:hover { background: var(--neon-purple); color: #fff; box-shadow: 0 0 25px var(--neon-purple); }
 
         canvas {
             width: 100%;
-            height: 250px;
+            height: 240px;
             background: #000;
-            border-radius: 14px;
+            border-radius: 12px;
             border: 1px solid rgba(0, 243, 255, 0.4);
-            margin: 12px 0;
+            margin: 10px 0;
             pointer-events: none;
-            box-shadow: inset 0 0 30px rgba(0,0,0,0.9);
+            box-shadow: inset 0 0 25px rgba(0,0,0,0.8);
         }
 
         .status-bar {
@@ -174,18 +168,18 @@
             justify-content: space-between;
             align-items: center;
             background: rgba(2, 6, 23, 0.9);
-            padding: 12px 18px;
-            border-radius: 12px;
+            padding: 10px 16px;
+            border-radius: 10px;
             border: 1px solid rgba(0, 243, 255, 0.4);
-            margin-bottom: 10px;
-            font-size: 1rem;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
         }
 
         .hp-container {
-            width: 120px;
-            height: 16px;
+            width: 110px;
+            height: 14px;
             background: #020617;
-            border-radius: 8px;
+            border-radius: 7px;
             overflow: hidden;
             border: 1px solid rgba(255,255,255,0.2);
         }
@@ -195,21 +189,21 @@
         .boost-bar { width: 100%; height: 100%; background: linear-gradient(90deg, #a855f7, #00f3ff); transition: width 0.2s; }
 
         .speed-gauge {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             font-weight: 900;
             color: var(--neon-yellow);
-            text-shadow: 0 0 12px var(--neon-yellow);
+            text-shadow: 0 0 10px var(--neon-yellow);
         }
 
         .police-radio-ticker {
             background: rgba(255, 0, 85, 0.12);
             border: 1px solid var(--neon-red);
             color: var(--neon-yellow);
-            padding: 8px 14px;
-            border-radius: 8px;
-            font-size: 1rem;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.95rem;
             font-weight: bold;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             letter-spacing: 1px;
             text-shadow: 0 0 8px rgba(255,0,85,0.6);
             white-space: nowrap;
@@ -219,78 +213,73 @@
 
         .word-display-box {
             background: rgba(2, 6, 23, 0.9);
-            padding: 16px;
-            border-radius: 12px;
+            padding: 14px;
+            border-radius: 10px;
             border: 1px solid rgba(253, 224, 71, 0.4);
-            margin: 10px 0;
-            box-shadow: 0 0 20px rgba(253, 224, 71, 0.12);
+            margin: 8px 0;
+            box-shadow: 0 0 15px rgba(253, 224, 71, 0.1);
         }
 
         .furigana-display {
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             color: var(--neon-green);
             font-weight: bold;
             letter-spacing: 2px;
-            text-shadow: 0 0 12px rgba(34, 197, 94, 0.6);
-            margin-bottom: 3px;
+            text-shadow: 0 0 10px rgba(34, 197, 94, 0.6);
+            margin-bottom: 2px;
         }
 
         .kanji-display {
-            font-size: 1.9rem;
+            font-size: 1.8rem;
             color: #ffffff;
             font-weight: 900;
             letter-spacing: 3px;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .target-word {
-            font-size: 2.3rem;
+            font-size: 2.2rem;
             color: var(--neon-yellow);
             letter-spacing: 4px;
             text-shadow: 0 0 20px rgba(253, 224, 71, 0.8);
             font-weight: 900;
         }
 
-        .typed-char { color: var(--neon-cyan); text-shadow: 0 0 15px var(--neon-cyan); }
+        .typed-char { color: var(--neon-cyan); text-shadow: 0 0 12px var(--neon-cyan); }
 
         .shop-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 14px;
-            margin: 16px 0;
-            max-height: 360px;
+            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+            gap: 12px;
+            margin: 14px 0;
+            max-height: 320px;
             overflow-y: auto;
-            padding-right: 6px;
+            padding-right: 4px;
         }
 
         .shop-card {
-            background: rgba(2, 6, 23, 0.8);
+            background: rgba(2, 6, 23, 0.85);
             border: 1px solid rgba(0, 243, 255, 0.4);
-            border-radius: 14px;
-            padding: 14px;
+            border-radius: 12px;
+            padding: 12px;
             text-align: center;
             transition: all 0.2s;
         }
 
-        .shop-card:hover {
-            border-color: var(--neon-cyan);
-            box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
-        }
-
-        .shop-card h3 { color: var(--neon-yellow); margin-bottom: 6px; font-size: 1.1rem; }
-        .shop-card p { color: #cbd5e1; font-size: 0.85rem; margin-bottom: 10px; }
+        .shop-card h3 { color: var(--neon-yellow); margin-bottom: 4px; font-size: 1rem; }
+        .shop-card p { color: #cbd5e1; font-size: 0.78rem; margin-bottom: 8px; line-height: 1.4; }
 
         .profile-card {
             background: rgba(2, 6, 23, 0.9);
             border: 1px solid rgba(168, 85, 247, 0.5);
-            border-radius: 14px;
-            padding: 16px;
-            margin-bottom: 14px;
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 12px;
             text-align: left;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            font-size: 0.95rem;
+            gap: 8px;
+            font-size: 0.9rem;
         }
 
         .profile-item { color: #cbd5e1; }
@@ -299,27 +288,27 @@
         .modal-box {
             background: rgba(2, 6, 23, 0.95);
             border: 2px solid var(--neon-purple);
-            box-shadow: 0 0 40px rgba(168, 85, 247, 0.3);
-            border-radius: 16px;
-            padding: 24px;
-            max-width: 540px;
+            box-shadow: 0 0 35px rgba(168, 85, 247, 0.3);
+            border-radius: 14px;
+            padding: 20px;
+            max-width: 520px;
             margin: 15px auto;
         }
 
         .trophy-list {
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            max-height: 240px;
+            gap: 8px;
+            max-height: 220px;
             overflow-y: auto;
-            margin-bottom: 18px;
+            margin-bottom: 15px;
         }
 
         .trophy-item {
             background: rgba(255,255,255,0.03);
             border: 1px solid rgba(0, 243, 255, 0.3);
-            padding: 10px 14px;
-            border-radius: 10px;
+            padding: 8px 12px;
+            border-radius: 8px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -357,12 +346,12 @@
             <div id="login-form" class="auth-form">
                 <input type="text" id="login-username" placeholder="コールサイン (名前)">
                 <input type="password" id="login-password" placeholder="暗号パスワード">
-                <div style="display:flex; gap:12px; width:82%; max-width:400px;">
+                <div style="display:flex; gap:10px; width:80%; max-width:380px;">
                     <button class="green" onclick="handleLogin()" style="flex:1;">出動開始</button>
                 </div>
-                <div style="display:flex; gap:10px; margin-top:8px; font-size:0.9rem;">
-                    <button onclick="openNameHelper()" style="padding:7px 14px; font-size:0.85rem; border-color:#64748b; color:#94a3b8;">👤 名前を忘れた場合</button>
-                    <button onclick="openGoogleStyleRecovery()" style="padding:7px 14px; font-size:0.85rem; border-color:var(--neon-cyan); color:var(--neon-cyan);">🔑 パスワードを忘れた場合</button>
+                <div style="display:flex; gap:8px; margin-top:6px; font-size:0.85rem;">
+                    <button onclick="openNameHelper()" style="padding:6px 12px; font-size:0.8rem; border-color:#64748b; color:#94a3b8;">👤 名前を忘れた場合</button>
+                    <button onclick="openGoogleStyleRecovery()" style="padding:6px 12px; font-size:0.8rem; border-color:var(--neon-cyan); color:var(--neon-cyan);">🔑 パスワードを忘れた場合</button>
                 </div>
             </div>
 
@@ -378,8 +367,8 @@
         <div id="name-helper-screen" class="screen">
             <h1>アカウントの確認 (署員名簿)</h1>
             <div class="modal-box">
-                <p style="color:var(--neon-cyan); margin-bottom:14px;">この端末に登録されている署員のコールサイン一覧です。</p>
-                <div id="registered-names-list" style="background:rgba(2,6,23,0.6); border:1px solid #334155; border-radius:10px; padding:12px; max-height:180px; overflow-y:auto; margin-bottom:18px; color:#f8fafc; text-align:left;"></div>
+                <p style="color:var(--neon-cyan); margin-bottom:12px;">この端末に登録されている署員のコールサイン一覧です。</p>
+                <div id="registered-names-list" style="background:rgba(2,6,23,0.6); border:1px solid #334155; border-radius:8px; padding:10px; max-height:160px; overflow-y:auto; margin-bottom:15px; color:#f8fafc; text-align:left;"></div>
                 <button onclick="showScreen('login-screen')">ログイン画面に戻る</button>
             </div>
         </div>
@@ -388,15 +377,15 @@
         <div id="recovery-screen" class="screen">
             <h1>アカウントの復旧</h1>
             <div class="modal-box" style="text-align: left; line-height: 1.6;">
-                <p style="color:var(--neon-yellow); margin-bottom:12px; text-align:center;">🔒 本人確認プロセス</p>
-                <div class="auth-form" style="gap:12px; align-items: stretch;">
+                <p style="color:var(--neon-yellow); margin-bottom:10px; text-align:center;">🔒 本人確認プロセス</p>
+                <div class="auth-form" style="gap:10px; align-items: stretch;">
                     <input type="text" id="rec-username" placeholder="コールサイン (名前)" style="width:100%; max-width:none;">
-                    <p id="rec-hint-label" style="font-size:0.92rem; color:#94a3b8;">※名前を入力すると、再設定用ヒントが表示されます。</p>
+                    <p id="rec-hint-label" style="font-size:0.9rem; color:#94a3b8;">※名前を入力すると、再設定用ヒントが表示されます。</p>
                     <input type="text" id="rec-hint-answer" placeholder="再設定用ヒントの答えを入力" style="width:100%; max-width:none;">
                     <input type="password" id="rec-new-password" placeholder="新しい暗号パスワード" style="width:100%; max-width:none;">
-                    <button class="yellow" onclick="executeGoogleRecovery()" style="margin-top:6px;">パスワードをリセットして再設定</button>
+                    <button class="yellow" onclick="executeGoogleRecovery()" style="margin-top:5px;">パスワードをリセットして再設定</button>
                 </div>
-                <button onclick="showScreen('login-screen')" style="margin-top:18px; width:100%;">ログイン画面に戻る</button>
+                <button onclick="showScreen('login-screen')" style="margin-top:15px; width:100%;">ログイン画面に戻る</button>
             </div>
         </div>
 
@@ -417,14 +406,15 @@
         <div id="difficulty-screen" class="screen">
             <h1>エリア＆難易度選択</h1>
             <div class="modal-box">
-                <p style="color:var(--neon-cyan); margin-bottom:12px;">出動ステージを選択せよ！</p>
-                <div style="display:flex; justify-content:center; gap:10px; margin-bottom:18px;">
+                <p style="color:var(--neon-cyan); margin-bottom:10px;">出動ステージを選択せよ！</p>
+                <div style="display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin-bottom:15px;">
                     <button id="stage-btn-c1" class="yellow" onclick="selectStage('c1')">🏙️ 首都高C1</button>
+                    <button id="stage-btn-wangan" onclick="selectStage('wangan')">🌊 湾岸線</button>
                     <button id="stage-btn-city" onclick="selectStage('city')">🏙️ 一般市街地</button>
                     <button id="stage-btn-touge" onclick="selectStage('touge')">⛰️ 山岳ワインディング</button>
                 </div>
 
-                <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 18px;">
+                <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px;">
                     <button class="green" onclick="startMissionWithDiff('normal')">🟢 NORMAL (報酬 100G)</button>
                     <button class="yellow" onclick="startMissionWithDiff('hard')">🟡 HARD (報酬 250G)</button>
                     <button class="red" onclick="startMissionWithDiff('extreme')">🔴 EXTREME (報酬 500G)</button>
@@ -436,13 +426,13 @@
         <!-- 3.5 タイムアタック説明・確認モーダル -->
         <div id="ta-intro-screen" class="screen">
             <h1>スピードスター・タイムアタック</h1>
-            <div class="modal-box" style="text-align: left; line-height: 1.7;">
-                <p style="color:var(--neon-yellow); font-weight:bold; margin-bottom:12px; text-align:center;">⏱️ タイムアタック報酬ルール</p>
-                <p style="color:#f8fafc; margin-bottom:8px;">🚀 <b>20秒未満</b> の完走: <span style="color:var(--neon-green); font-weight:bold;">550 G</span></p>
-                <p style="color:#f8fafc; margin-bottom:8px;">⚡ <b>20秒以上 ～ 45秒未満</b>: <span style="color:var(--neon-yellow); font-weight:bold;">200 G</span></p>
-                <p style="color:#f8fafc; margin-bottom:14px;">🐢 <b>45秒以上</b> の完走: <span style="color:#94a3b8; font-weight:bold;">30 G</span></p>
-                <p style="color:var(--neon-red); font-size:0.92rem; margin-bottom:22px;">※タイピングミスをすると、ペナルティとしてタイムに <b>＋0.5秒</b> が加算されます！正確かつスピーディーに駆け抜けろ！</p>
-                <div style="display:flex; gap:12px; justify-content:center;">
+            <div class="modal-box" style="text-align: left; line-height: 1.6;">
+                <p style="color:var(--neon-yellow); font-weight:bold; margin-bottom:10px; text-align:center;">⏱️ タイムアタック報酬ルール</p>
+                <p style="color:#f8fafc; margin-bottom:6px;">🚀 <b>20秒未満</b> の完走: <span style="color:var(--neon-green); font-weight:bold;">550 G</span></p>
+                <p style="color:#f8fafc; margin-bottom:6px;">⚡ <b>20秒以上 ～ 45秒未満</b>: <span style="color:var(--neon-yellow); font-weight:bold;">200 G</span></p>
+                <p style="color:#f8fafc; margin-bottom:12px;">🐢 <b>45秒以上</b> の完走: <span style="color:#94a3b8; font-weight:bold;">30 G</span></p>
+                <p style="color:var(--neon-red); font-size:0.9rem; margin-bottom:20px;">※タイピングミスをすると、ペナルティとしてタイムに <b>＋0.5秒</b> が加算されます！正確かつスピーディーに駆け抜けろ！</p>
+                <div style="display:flex; gap:10px; justify-content:center;">
                     <button class="yellow" onclick="startMode('timeattack')" style="flex:1;">出動開始！</button>
                     <button onclick="toMenu()" style="flex:1;">メニューに戻る</button>
                 </div>
@@ -462,7 +452,7 @@
 
             <div class="shop-grid" id="dealer-car-grid"></div>
             
-            <div style="display:flex; justify-content:center; gap:14px; margin-top:10px;">
+            <div style="display:flex; justify-content:center; gap:12px; margin-top:8px;">
                 <button class="purple" onclick="toggleBGM()">BGM切替 (ON/OFF)</button>
                 <button onclick="toMenu()">メニューに戻る</button>
             </div>
@@ -482,15 +472,15 @@
             <div class="police-radio-ticker" id="police-radio">📡 [機捜無線] 捜査車両210、エリアにて不審車両の追尾を開始せよ。</div>
             
             <div class="status-bar">
-                <div id="player-hp-wrapper" style="display: flex; align-items: center; gap: 8px;">
+                <div id="player-hp-wrapper" style="display: flex; align-items: center; gap: 6px;">
                     <span style="color: var(--neon-green);">自機:</span>
                     <div class="hp-container"><div class="hp-bar-player" id="player-hp-bar"></div></div>
                 </div>
-                <div style="display: flex; align-items: center; gap: 8px;">
+                <div style="display: flex; align-items: center; gap: 6px;">
                     <span style="color: var(--neon-purple);">BOOST:</span>
                     <div class="hp-container"><div class="boost-bar" id="boost-bar"></div></div>
                 </div>
-                <div id="enemy-hp-box" style="display: flex; align-items: center; gap: 8px;">
+                <div id="enemy-hp-box" style="display: flex; align-items: center; gap: 6px;">
                     <span style="color: var(--neon-red);">進捗:</span>
                     <div class="hp-container"><div class="hp-bar-enemy" id="hp-bar-enemy"></div></div>
                 </div>
@@ -506,33 +496,29 @@
                 <div class="target-word">
                     <span class="typed-char" id="typed-part"></span><span id="remain-part">kidousousatai</span>
                 </div>
-                <p style="color: var(--neon-cyan); font-size: 0.88rem; margin-top: 8px;">[SPACEキー] BOOST満タンで一気に追撃！ | (ミスするとTAはタイム＋0.5秒ペナルティ！)</p>
+                <p style="color: var(--neon-cyan); font-size: 0.85rem; margin-top: 6px;">[SPACEキー] BOOST満タンで一気に追撃！ | (ミスするとTAはタイム＋0.5秒ペナルティ！)</p>
             </div>
 
-            <button onclick="toMenu()" style="padding: 7px 18px; font-size: 0.92rem;">一時停止 / メニューに戻る</button>
+            <button onclick="toMenu()" style="padding: 6px 16px; font-size: 0.9rem;">一時停止 / メニューに戻る</button>
         </div>
 
         <!-- 7. リザルト -->
         <div id="result-screen" class="screen">
             <h1 id="result-title" style="color: var(--neon-green);">ミッション完了！</h1>
             <div class="modal-box" style="border-color: var(--neon-cyan);">
-                <p id="result-detail" style="margin: 18px 0; font-size: 1.3rem; line-height: 1.8;"></p>
+                <p id="result-detail" style="margin: 15px 0; font-size: 1.25rem; line-height: 1.8;"></p>
                 <button class="green" onclick="toMenu()">メニューに戻る</button>
             </div>
         </div>
     </div>
 
     <script>
-        // 💡 起動時に古い登録データを完全にリセット（削除）してクリーンスタート
-        (function initCleanReset() {
-            localStorage.removeItem("kisou210_solo_ultimate_db");
-        })();
-
         const POLICE_CARS = {
             "crown210": { name: "210系クラウン パトカー", price: 0, speedMax: 280, boostPower: 1, type: "patrol" },
             "crown180_fukumen": { name: "180系クラウン 覆面", price: 1000, speedMax: 300, boostPower: 1.2, type: "fukumen" },
             "legacy_b4": { name: "B4レガシー 機動捜査隊", price: 1000, speedMax: 320, boostPower: 1.4, type: "kisou" },
-            "gtr_r35": { name: "GTR R35 高速隊仕様", price: 1100, speedMax: 360, boostPower: 1.8, type: "gtr" }
+            "landcruiser": { name: "ランクル 高速隊ヘビー", price: 1500, speedMax: 340, boostPower: 1.6, type: "suv" },
+            "gtr_r35": { name: "GTR R35 高速隊仕様", price: 2000, speedMax: 380, boostPower: 2.0, type: "gtr" }
         };
 
         const TROPHIES = [
@@ -571,7 +557,9 @@
         let isBgmEnabled = true;
 
         function playBGM() {
-            if (isBgmEnabled) bgmAudio.play().catch(e => {});
+            if (isBgmEnabled) {
+                bgmAudio.play().catch(e => {});
+            }
         }
 
         function stopBGM() {
@@ -580,6 +568,7 @@
         }
 
         function toggleBGM() {
+            initAudio();
             isBgmEnabled = !isBgmEnabled;
             if (isBgmEnabled) {
                 bgmAudio.play().catch(e => {});
@@ -592,7 +581,10 @@
         function initAudio() {
             if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             if (audioCtx.state === 'suspended') audioCtx.resume();
+            if (bgmAudio.paused && isBgmEnabled) bgmAudio.play().catch(e => {});
         }
+
+        window.addEventListener("click", () => { initAudio(); }, { once: true });
 
         function playSound(type) {
             try {
@@ -656,10 +648,7 @@
             { kanji: "緊急停止命令", furigana: "きんきゅうていしめいれい", roma: "kinkyuuteishimeirei" },
             { kanji: "無線連絡", furigana: "むせんれんらく", roma: "musenrenraku" },
             { kanji: "エンジン全開", furigana: "えんじんぜんかい", roma: "enjinzenkai" },
-            { kanji: "追跡ミッション", furigana: "ついせきみっしょん", roma: "tsuisekimisshon" },
-            { kanji: "赤色灯点滅", furigana: "せきしょくとうてんめつ", roma: "sekishokutoutenmetsu" },
-            { kanji: "スピード違反", furigana: "すぴーどいはん", roma: "supi-doihan" },
-            { kanji: "全速力チェイス", furigana: "ぜんそくりょくちぇいす", roma: "zensokuryokucheisu" }
+            { kanji: "湾岸線バトル", furigana: "わんがんせんばとる", roma: "wangansenbatoru" }
         ];
 
         let currentWord = {};
@@ -689,12 +678,14 @@
         }
 
         function getUsersDB() {
-            const db = localStorage.getItem("kisou210_solo_ultimate_db");
-            return db ? JSON.parse(db) : {};
+            try {
+                const db = localStorage.getItem("kisou210_solo_ultimate_db");
+                return db ? JSON.parse(db) : {};
+            } catch(e) { return {}; }
         }
 
         function saveUsersDB(db) {
-            localStorage.setItem("kisou210_solo_ultimate_db", JSON.stringify(db));
+            try { localStorage.setItem("kisou210_solo_ultimate_db", JSON.stringify(db)); } catch(e) {}
         }
 
         function openNameHelper() {
@@ -702,7 +693,6 @@
             const db = getUsersDB();
             const names = Object.keys(db);
             const listEl = document.getElementById("registered-names-list");
-            
             if (names.length === 0) {
                 listEl.innerHTML = "<span style='color:#94a3b8;'>現在登録されている署員はいません。新規登録してください。</span>";
             } else {
@@ -728,7 +718,7 @@
                     const uname = recUserIn.value.trim();
                     const label = document.getElementById("rec-hint-label");
                     if (db[uname]) {
-                        label.innerHTML = `💡 ヒント: <span style="color:var(--neon-yellow);">${db[uname].hint || "デフォルトヒント"}</span>`;
+                        label.innerHTML = `💡 ヒント: <span style="color:var(--neon-yellow);">${db[uname].hint || "デフォルト"}</span>`;
                     } else {
                         label.innerText = "※該当するコールサインが見つかりません。";
                     }
@@ -741,17 +731,13 @@
             const name = document.getElementById("rec-username").value.trim();
             const answer = document.getElementById("rec-hint-answer").value.trim();
             const newPass = document.getElementById("rec-new-password").value.trim();
-
             if (!name || !answer || !newPass) return alert("すべての項目を入力してください！");
-
             const db = getUsersDB();
             if (!db[name]) return alert("指定されたコールサインが見つかりません！");
-
             const savedHintAns = (db[name].hintAnswer || "").trim().toLowerCase();
             if (savedHintAns && savedHintAns !== answer.toLowerCase()) {
                 return alert("再設定用ヒントの答えが間違っています！");
             }
-
             db[name].password = newPass;
             saveUsersDB(db);
             alert(`[${name}] のパスワードを再設定しました！ログインしてください。`);
@@ -763,12 +749,9 @@
             const name = document.getElementById("reg-username").value.trim();
             const pass = document.getElementById("reg-password").value.trim();
             const hint = document.getElementById("reg-hint").value.trim() || "デフォルト";
-            
             if (!name || !pass) return alert("コールサインとパスワードを入力してください！");
-
             const db = getUsersDB();
             if (db[name]) return alert("既に登録されているコールサインです！");
-
             db[name] = {
                 name: name, password: pass,
                 hint: hint, hintAnswer: hint,
@@ -787,16 +770,13 @@
             const name = document.getElementById("login-username").value.trim();
             const pass = document.getElementById("login-password").value.trim();
             if (!name || !pass) return alert("コールサインとパスワードを入力してください！");
-
             const db = getUsersDB();
             if (!db[name] || db[name].password !== pass) return alert("名前または暗号パスワードが違います！");
-
             player = db[name];
             if (!player.ownedCars) player.ownedCars = ["crown210"];
             if (!player.currentCar) player.currentCar = "crown210";
             if (!player.unlockedTrophies) player.unlockedTrophies = [];
             if (!player.hint) { player.hint = "デフォルト"; player.hintAnswer = "デフォルト"; }
-
             alert(`おかえりなさい、${name} 捜査員！`);
             onAuthSuccess();
         }
@@ -844,6 +824,7 @@
         function selectStage(stage) {
             currentStage = stage;
             document.getElementById("stage-btn-c1").className = (stage === 'c1') ? "yellow" : "";
+            document.getElementById("stage-btn-wangan").className = (stage === 'wangan') ? "yellow" : "";
             document.getElementById("stage-btn-city").className = (stage === 'city') ? "yellow" : "";
             document.getElementById("stage-btn-touge").className = (stage === 'touge') ? "yellow" : "";
         }
@@ -874,16 +855,16 @@
 
                 let btnHtml = "";
                 if (isEquipped) {
-                    btnHtml = `<button class="green" disabled style="opacity:0.8;">乗車中</button>`;
+                    btnHtml = `<button class="green" disabled style="opacity:0.8; padding:8px 16px;">乗車中</button>`;
                 } else if (isOwned) {
-                    btnHtml = `<button class="yellow" onclick="equipCar('${carId}')">乗車する</button>`;
+                    btnHtml = `<button class="yellow" onclick="equipCar('${carId}')" style="padding:8px 16px;">乗車する</button>`;
                 } else {
-                    btnHtml = `<button class="cyan" onclick="buyCar('${carId}')">購入 (${car.price} G)</button>`;
+                    btnHtml = `<button class="cyan" onclick="buyCar('${carId}')" style="padding:8px 16px; color:var(--neon-cyan);">購入 (${car.price} G)</button>`;
                 }
 
                 card.innerHTML = `
                     <h3>${car.name}</h3>
-                    <p>最高速: ${car.speedMax} km/h<br>ブースト倍率: x${car.boostPower}</p>
+                    <p>最高速: ${car.speedMax} km/h<br>ブースト: x${car.boostPower}</p>
                     ${btnHtml}
                 `;
                 grid.appendChild(card);
@@ -919,7 +900,6 @@
             checkTrophies();
             const container = document.getElementById("trophy-container");
             container.innerHTML = "";
-
             TROPHIES.forEach(t => {
                 const isUnlocked = player.unlockedTrophies.includes(t.id);
                 const item = document.createElement("div");
@@ -928,13 +908,12 @@
                 item.innerHTML = `
                     <div style="text-align:left;">
                         <div style="font-weight:bold; color:${isUnlocked ? 'var(--neon-yellow)' : '#64748b'}">${isUnlocked ? '🏆 ' : '🔒 '}${t.title}</div>
-                        <div style="font-size:0.82rem; color:#94a3b8;">${t.desc}</div>
+                        <div style="font-size:0.8rem; color:#94a3b8;">${t.desc}</div>
                     </div>
                     <span style="font-size:0.85rem; color:${isUnlocked ? 'var(--neon-green)' : '#64748b'}">${isUnlocked ? '達成済' : '未達成'}</span>
                 `;
                 container.appendChild(item);
             });
-
             showScreen("trophy-screen");
         }
 
@@ -1154,22 +1133,30 @@
                 let moveSpeed = (canvasId === "game-canvas") ? (speedKph / 12) : 12;
                 roadOffset = (roadOffset + moveSpeed) % 60;
 
-                if (currentStage === 'city') ctx.fillStyle = "#020617";
+                if (currentStage === 'wangan') ctx.fillStyle = "#020f1a";
+                else if (currentStage === 'city') ctx.fillStyle = "#020617";
                 else if (currentStage === 'touge') ctx.fillStyle = "#031109";
                 else ctx.fillStyle = "#020617";
                 
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                ctx.fillStyle = (currentStage === 'touge') ? "#052212" : "#0a1329";
-                for (let i = 0; i < canvas.width; i += 70) {
-                    let h = 50 + Math.sin((i + frame * 2) * 0.04) * 30;
-                    ctx.fillRect(i, 120 - h, 55, h);
+                if (currentStage === 'wangan') {
+                    ctx.fillStyle = "#032d4d";
+                    for (let i = 0; i < canvas.width; i += 100) {
+                        ctx.fillRect(i, 40, 70, 80);
+                    }
+                } else {
+                    ctx.fillStyle = (currentStage === 'touge') ? "#052212" : "#0a1329";
+                    for (let i = 0; i < canvas.width; i += 70) {
+                        let h = 50 + Math.sin((i + frame * 2) * 0.04) * 30;
+                        ctx.fillRect(i, 120 - h, 55, h);
+                    }
                 }
 
-                ctx.fillStyle = "#0b1329";
+                ctx.fillStyle = (currentStage === 'wangan') ? "#051626" : "#0b1329";
                 ctx.fillRect(0, 120, canvas.width, 120);
 
-                ctx.fillStyle = "#fde047";
+                ctx.fillStyle = (currentStage === 'wangan') ? "#00f3ff" : "#fde047";
                 for (let x = -roadOffset; x < canvas.width; x += 60) {
                     ctx.fillRect(x, 175, 35, 6);
                 }
@@ -1230,6 +1217,13 @@
                 ctx.fillStyle = "#1e293b";
                 ctx.fillRect(x + 20, y + 2, 70, 20);
                 ctx.fillRect(x, y + 20, 115, 24);
+            } else if (carKey === "landcruiser") {
+                ctx.fillStyle = sirenRed ? "#ff0055" : "#00f3ff";
+                ctx.fillRect(x + 40, y - 10, 30, 8);
+                ctx.fillStyle = "#ffffff";
+                ctx.fillRect(x + 15, y - 4, 80, 24);
+                ctx.fillStyle = "#0f172a";
+                ctx.fillRect(x, y + 20, 125, 26);
             } else if (carKey === "gtr_r35") {
                 ctx.fillStyle = sirenRed ? "#ff0055" : "#00f3ff";
                 ctx.fillRect(x + 50, y - 8, 25, 8);
