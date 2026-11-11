@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>機捜210 - ULTIMATE SOLO CHASE</title>
+    <title>機捜210 - ULTIMATE POLICE CHASE</title>
     <style>
         :root {
             --bg-color: #030712;
@@ -49,7 +49,7 @@
         h1 {
             color: var(--neon-cyan);
             text-shadow: 0 0 20px var(--neon-cyan);
-            font-size: 2.3rem;
+            font-size: 2.2rem;
             margin-bottom: 12px;
             letter-spacing: 3px;
             font-weight: 900;
@@ -109,11 +109,6 @@
             box-shadow: inset 0 0 10px rgba(0, 243, 255, 0.2);
         }
 
-        input:focus {
-            border-color: var(--neon-yellow);
-            box-shadow: 0 0 15px rgba(255, 230, 0, 0.4);
-        }
-
         .btn-group {
             display: flex;
             justify-content: center;
@@ -128,8 +123,8 @@
             background: rgba(0, 243, 255, 0.12);
             color: var(--neon-cyan);
             border: 2px solid var(--neon-cyan);
-            padding: 11px 24px;
-            font-size: 1rem;
+            padding: 11px 22px;
+            font-size: 0.98rem;
             font-weight: bold;
             cursor: pointer;
             border-radius: 10px;
@@ -251,10 +246,10 @@
 
         .shop-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
             gap: 12px;
             margin: 14px 0;
-            max-height: 330px;
+            max-height: 340px;
             overflow-y: auto;
             padding-right: 6px;
         }
@@ -292,8 +287,27 @@
             box-shadow: 0 0 30px rgba(204, 0, 255, 0.3);
             border-radius: 14px;
             padding: 20px;
-            max-width: 480px;
+            max-width: 520px;
             margin: 15px auto;
+        }
+
+        .trophy-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 220px;
+            overflow-y: auto;
+            margin-bottom: 15px;
+        }
+
+        .trophy-item {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--neon-cyan);
+            padding: 8px 12px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .damage-flash { animation: dmgFlash 0.3s ease-out; }
@@ -311,15 +325,15 @@
 </head>
 <body>
 
-    <!-- 🎵 BGM (d.mp3) -->
+    <!-- 🎵 BGM (D.mp3) -->
     <audio id="bgm-audio" loop preload="auto">
-        <source src="d.mp3" type="audio/mp3">
+        <source src="D.mp3" type="audio/mp3">
     </audio>
 
     <div class="game-container" id="main-container">
         <!-- 1. ログイン / 登録 -->
         <div id="login-screen" class="screen active">
-            <h1>機捜210 - ULTIMATE SOLO</h1>
+            <h1>機捜210 - ULTIMATE POLICE</h1>
             <div class="auth-tab">
                 <button class="tab-btn active" id="tab-login-btn" onclick="switchTab('login')">認証ログイン</button>
                 <button class="tab-btn" id="tab-register-btn" onclick="switchTab('register')">新規署員登録</button>
@@ -336,92 +350,86 @@
             </div>
         </div>
 
-        <!-- 2. メニュー (自由モード廃止・タイムアタック進化版を配置) -->
+        <!-- 2. メニュー -->
         <div id="menu-screen" class="screen">
             <h1 id="user-display">捜査員待機中</h1>
             <canvas id="menu-canvas" width="900" height="240"></canvas>
             <div class="btn-group">
-                <button class="red" onclick="openDifficultyModal()">🔴 メインミッション出動</button>
-                <button class="yellow" onclick="startMode('timeattack')">⚡ スピードスター・タイムアタック</button>
-                <button class="cyan" onclick="openShop()" style="color:var(--neon-cyan); border-color:var(--neon-cyan);">🛒 機捜ガレージ / 設定</button>
+                <button class="red" onclick="openMissionModal()">🔴 ミッション出動 (エリア選択)</button>
+                <button class="yellow" onclick="openTaIntroModal()">⚡ スピードスターTA</button>
+                <button class="purple" onclick="openTrophyModal()">🏆 実績・アチーブメント</button>
+                <button class="cyan" onclick="openShop()" style="color:var(--neon-cyan); border-color:var(--neon-cyan);">🚗 機捜ディーラー＆ガレージ</button>
                 <button style="border-color: #777; color: #aaa;" onclick="logout()">ログアウト</button>
             </div>
         </div>
 
-        <!-- 3. 難易度選択 -->
+        <!-- 3. エリア＆難易度選択モーダル -->
         <div id="difficulty-screen" class="screen">
-            <h1>ミッション難易度選択</h1>
+            <h1>エリア＆難易度選択</h1>
             <div class="modal-box">
-                <p style="color:var(--neon-cyan); margin-bottom:15px; font-size:1.1rem;">挑む難易度を選択せよ！難度が高いほど報酬Gが増加する。</p>
-                <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;">
-                    <button class="green" onclick="startMissionWithDiff('normal')" style="padding: 14px;">🟢 NORMAL (標準チェイス / 報酬 100G)</button>
-                    <button class="yellow" onclick="startMissionWithDiff('hard')" style="padding: 14px;">🟡 HARD (被ダメ増加・高速 / 報酬 250G)</button>
-                    <button class="red" onclick="startMissionWithDiff('extreme')" style="padding: 14px;">🔴 EXTREME (極悪容疑車・超高速 / 報酬 500G)</button>
+                <p style="color:var(--neon-cyan); margin-bottom:10px;">出動ステージを選択せよ！</p>
+                <div style="display:flex; justify-content:center; gap:8px; margin-bottom:15px;">
+                    <button id="stage-btn-c1" class="yellow" onclick="selectStage('c1')">🏙️ 首都高C1</button>
+                    <button id="stage-btn-city" onclick="selectStage('city')">🏙️ 一般市街地</button>
+                    <button id="stage-btn-touge" onclick="selectStage('touge')">⛰️ 山岳ワインディング</button>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px;">
+                    <button class="green" onclick="startMissionWithDiff('normal')">🟢 NORMAL (報酬 100G)</button>
+                    <button class="yellow" onclick="startMissionWithDiff('hard')">🟡 HARD (報酬 250G)</button>
+                    <button class="red" onclick="startMissionWithDiff('extreme')">🔴 EXTREME (報酬 500G)</button>
                 </div>
                 <button onclick="toMenu()">メニューに戻る</button>
             </div>
         </div>
 
-        <!-- 4. ガレージ & 設定 -->
+        <!-- 3.5 タイムアタック説明・確認モーダル (新規追加) -->
+        <div id="ta-intro-screen" class="screen">
+            <h1>スピードスター・タイムアタック</h1>
+            <div class="modal-box" style="text-align: left; line-height: 1.6;">
+                <p style="color:var(--neon-yellow); font-weight:bold; margin-bottom:10px; text-align:center;">⏱️ タイムアタック報酬ルール</p>
+                <p style="color:#fff; margin-bottom:6px;">🚀 <b>20秒未満</b> の完走: <span style="color:var(--neon-green); font-weight:bold;">550 G</span></p>
+                <p style="color:#fff; margin-bottom:6px;">⚡ <b>20秒以上 ～ 45秒未満</b>: <span style="color:var(--neon-yellow); font-weight:bold;">200 G</span></p>
+                <p style="color:#fff; margin-bottom:12px;">🐢 <b>45秒以上</b> の完走: <span style="color:#aaa; font-weight:bold;">30 G</span></p>
+                <p style="color:var(--neon-red); font-size:0.9rem; margin-bottom:20px;">※タイピングミスをすると、ペナルティとしてタイムに <b>＋0.5秒</b> が加算されます！正確かつスピーディーに駆け抜けろ！</p>
+                <div style="display:flex; gap:10px; justify-content:center;">
+                    <button class="yellow" onclick="startMode('timeattack')" style="flex:1;">出動開始！</button>
+                    <button onclick="toMenu()" style="flex:1;">メニューに戻る</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. 車両ディーラー＆ガレージ -->
         <div id="shop-screen" class="screen">
-            <h1>機捜ガレージ・装備カスタマイズ</h1>
+            <h1>日本警察 車両納入ディーラー & ガレージ</h1>
             
             <div class="profile-card" id="profile-card-view">
                 <div class="profile-item">コールサイン: <span id="pf-name">---</span></div>
-                <div class="profile-item">階級/Lv: <span id="pf-level">1</span></div>
-                <div class="profile-item">累計スコア: <span id="pf-score">0</span> pt</div>
                 <div class="profile-item">所持資金: <span id="pf-money" style="color:var(--neon-yellow);">0</span> G</div>
-                <div class="profile-item">自己ベスト(TA): <span id="pf-besttime" style="color:var(--neon-green);">---</span></div>
-                <div class="profile-item">エンジンLv: <span id="pf-engine">1</span></div>
-                <div class="profile-item">PITバンパーLv: <span id="pf-bumper">1</span></div>
-                <div class="profile-item">装甲シャーシLv: <span id="pf-armor">1</span></div>
-                <div class="profile-item">パトランプLv: <span id="pf-lamp">1</span></div>
-                <div class="profile-item" style="grid-column: span 2;">愛車カラー: <span id="pf-color">白黒クラウン</span></div>
+                <div class="profile-item">現在乗車車両: <span id="pf-car-name" style="color:var(--neon-green);">210系クラウン</span></div>
+                <div class="profile-item">TA自己ベスト: <span id="pf-besttime">---</span></div>
             </div>
 
-            <div class="shop-grid">
-                <div class="shop-card" style="border-color: var(--neon-green);">
-                    <h3>応急修理キット</h3>
-                    <p>自機HPを一気に全回復！<br>(800 G)</p>
-                    <button class="green" onclick="buyRepairKit()">購入 (800 G)</button>
-                </div>
-                <div class="shop-card">
-                    <h3>V8ツインターボ</h3>
-                    <p>加速＆ダメUP<br>(Lv.<span id="engine-lv">1</span>)</p>
-                    <button class="yellow" onclick="buyUpgrade('engine')">強化 (<span id="engine-cost">300</span> G)</button>
-                </div>
-                <div class="shop-card">
-                    <h3>PITバンパー</h3>
-                    <p>ブースト威力UP<br>(Lv.<span id="bumper-lv">1</span>)</p>
-                    <button class="yellow" onclick="buyUpgrade('bumper')">強化 (<span id="bumper-cost">450</span> G)</button>
-                </div>
-                <div class="shop-card">
-                    <h3>重装甲シャーシ</h3>
-                    <p>最大HP増加<br>(Lv.<span id="armor-lv">1</span>)</p>
-                    <button class="yellow" onclick="buyUpgrade('armor')">強化 (<span id="armor-cost">400</span> G)</button>
-                </div>
-                <div class="shop-card">
-                    <h3>高輝度パトランプ</h3>
-                    <p>ブースト回復UP<br>(Lv.<span id="lamp-lv">1</span>)</p>
-                    <button class="yellow" onclick="buyUpgrade('lamp')">強化 (<span id="lamp-cost">420</span> G)</button>
-                </div>
-                <div class="shop-card">
-                    <h3>車体カラー</h3>
-                    <p id="car-color-name" style="color:var(--neon-cyan);">白黒クラウン</p>
-                    <button onclick="toggleCarColor()">塗装変更</button>
-                </div>
-                <div class="shop-card" style="border-color: var(--neon-purple);">
-                    <h3>BGM (d.mp3) 設定</h3>
-                    <p id="bgm-status-text" style="color:var(--neon-green);">状態: 再生中 (ループ)</p>
-                    <button class="purple" onclick="toggleBGM()">BGM切替 (ON/OFF)</button>
-                </div>
+            <div class="shop-grid" id="dealer-car-grid"></div>
+            
+            <div style="display:flex; justify-content:center; gap:12px; margin-top:8px;">
+                <button class="purple" onclick="toggleBGM()">BGM切替 (ON/OFF)</button>
+                <button onclick="toMenu()">メニューに戻る</button>
             </div>
-            <button onclick="toMenu()" style="margin-top: 8px;">メニューに戻る</button>
         </div>
 
-        <!-- 5. ゲーム画面 -->
+        <!-- 5. 実績（トロフィー）モーダル -->
+        <div id="trophy-screen" class="screen">
+            <h1>実績・アチーブメント</h1>
+            <div class="modal-box">
+                <div class="trophy-list" id="trophy-container"></div>
+                <button onclick="toMenu()">メニューに戻る</button>
+            </div>
+        </div>
+
+        <!-- 6. ゲーム画面 -->
         <div id="game-screen" class="screen">
-            <div class="police-radio-ticker" id="police-radio">📡 [機捜無線] 捜査車両210、首都高エリアにて不審車両の追尾を開始せよ。</div>
+            <div class="police-radio-ticker" id="police-radio">📡 [機捜無線] 捜査車両210、エリアにて不審車両の追尾を開始せよ。</div>
             
             <div class="status-bar">
                 <div id="player-hp-wrapper" style="display: flex; align-items: center; gap: 6px;">
@@ -454,7 +462,7 @@
             <button onclick="toMenu()" style="padding: 6px 16px; font-size: 0.9rem;">一時停止 / メニューに戻る</button>
         </div>
 
-        <!-- 6. リザルト -->
+        <!-- 7. リザルト -->
         <div id="result-screen" class="screen">
             <h1 id="result-title" style="color: var(--neon-green);">ミッション完了！</h1>
             <div class="modal-box" style="border-color: var(--neon-cyan);">
@@ -465,9 +473,24 @@
     </div>
 
     <script>
+        const POLICE_CARS = {
+            "crown210": { name: "210系クラウン パトカー", price: 0, speedMax: 280, boostPower: 1, type: "patrol" },
+            "crown180_fukumen": { name: "180系クラウン 覆面", price: 1000, speedMax: 300, boostPower: 1.2, type: "fukumen" },
+            "legacy_b4": { name: "B4レガシー 機動捜査隊", price: 1000, speedMax: 320, boostPower: 1.4, type: "kisou" },
+            "gtr_r35": { name: "GTR R35 高速隊仕様", price: 1100, speedMax: 360, boostPower: 1.8, type: "gtr" }
+        };
+
+        const TROPHIES = [
+            { id: "first_win", title: "初検挙", desc: "ミッションを1回クリアする" },
+            { id: "car_collector", title: "名車コレクター", desc: "パトカーを2台以上所有する" },
+            { id: "ta_master", title: "スピードスター", desc: "タイムアタックで完走する" },
+            { id: "rich_police", title: "優秀な予算獲得", desc: "所持金が2000Gを超える" }
+        ];
+
         let player = null;
         let currentMode = "mission";
         let currentDiff = "normal";
+        let currentStage = "c1";
         let score = 0;
         let combo = 0;
         let typedIdx = 0;
@@ -483,7 +506,6 @@
         let particles = [];
         let screenShake = 0;
 
-        // ⏱️ タイムアタック専用変数
         let taStartTime = 0;
         let taElapsedTimer = null;
         let currentTaSeconds = 0;
@@ -494,9 +516,7 @@
         let isBgmEnabled = true;
 
         function playBGM() {
-            if (isBgmEnabled) {
-                bgmAudio.play().catch(e => {});
-            }
+            if (isBgmEnabled) bgmAudio.play().catch(e => {});
         }
 
         function stopBGM() {
@@ -508,23 +528,15 @@
             isBgmEnabled = !isBgmEnabled;
             if (isBgmEnabled) {
                 bgmAudio.play().catch(e => {});
-                document.getElementById("bgm-status-text").innerText = "状態: 再生中 (ループ)";
-                document.getElementById("bgm-status-text").style.color = "var(--neon-green)";
             } else {
                 bgmAudio.pause();
-                document.getElementById("bgm-status-text").innerText = "状態: 停止中 (ミュート)";
-                document.getElementById("bgm-status-text").style.color = "var(--neon-red)";
             }
         }
 
         let audioCtx = null;
         function initAudio() {
-            if (!audioCtx) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            }
-            if (audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
         }
 
         function playSound(type) {
@@ -602,7 +614,7 @@
         const radioMessages = [
             "📡 [機捜無線] 前方の容疑車が蛇行運転中！慎重に距離を詰めろ！",
             "📢 [本部司令] 「210号、PITマニューバの準備よし。確実にとらえろ！」",
-            "🚨 [緊急警報] 高速道路上で容疑車両がさらに加速！タイピングを急げ！",
+            "🚨 [緊急警報] エリア内で容疑車両がさらに加速！タイピングを急げ！",
             "💬 [同乗相棒] 「先輩、ナイスタイピングっす！このまま追い詰けましょう！」"
         ];
 
@@ -642,7 +654,8 @@
             db[name] = {
                 name: name, password: pass,
                 score: 0, level: 1, money: 100, bestTime: null,
-                engineLv: 1, bumperLv: 1, armorLv: 1, lampLv: 1, carColor: "police"
+                ownedCars: ["crown210"], currentCar: "crown210",
+                unlockedTrophies: []
             };
             saveUsersDB(db);
             player = db[name];
@@ -660,6 +673,10 @@
             if (!db[name] || db[name].password !== pass) return alert("名前または暗号パスワードが違います！");
 
             player = db[name];
+            if (!player.ownedCars) player.ownedCars = ["crown210"];
+            if (!player.currentCar) player.currentCar = "crown210";
+            if (!player.unlockedTrophies) player.unlockedTrophies = [];
+
             alert(`おかえりなさい、${name} 捜査員！`);
             onAuthSuccess();
         }
@@ -693,9 +710,21 @@
             startCanvasAnimation("menu-canvas");
         }
 
-        function openDifficultyModal() {
+        function openMissionModal() {
             initAudio();
             showScreen("difficulty-screen");
+        }
+
+        function openTaIntroModal() {
+            initAudio();
+            showScreen("ta-intro-screen");
+        }
+
+        function selectStage(stage) {
+            currentStage = stage;
+            document.getElementById("stage-btn-c1").className = (stage === 'c1') ? "yellow" : "";
+            document.getElementById("stage-btn-city").className = (stage === 'city') ? "yellow" : "";
+            document.getElementById("stage-btn-touge").className = (stage === 'touge') ? "yellow" : "";
         }
 
         function startMissionWithDiff(diff) {
@@ -706,66 +735,95 @@
         function openShop() {
             initAudio();
             document.getElementById("pf-name").innerText = player.name;
-            document.getElementById("pf-level").innerText = player.level;
-            document.getElementById("pf-score").innerText = player.score;
             document.getElementById("pf-money").innerText = player.money;
+            document.getElementById("pf-car-name").innerText = POLICE_CARS[player.currentCar].name;
             document.getElementById("pf-besttime").innerText = player.bestTime ? player.bestTime.toFixed(2) + " 秒" : "未記録";
-            document.getElementById("pf-engine").innerText = player.engineLv;
-            document.getElementById("pf-bumper").innerText = player.bumperLv;
-            document.getElementById("pf-armor").innerText = player.armorLv;
-            document.getElementById("pf-lamp").innerText = player.lampLv;
 
-            const colorNames = { police: "白黒クラウン", black: "覆面ブラック", gold: "ハイパーゴールド", cyan: "ネオンブルー" };
-            document.getElementById("pf-color").innerText = colorNames[player.carColor] || "白黒クラウン";
+            const grid = document.getElementById("dealer-car-grid");
+            grid.innerHTML = "";
 
-            document.getElementById("engine-lv").innerText = player.engineLv;
-            document.getElementById("engine-cost").innerText = player.engineLv * 300;
-            document.getElementById("bumper-lv").innerText = player.bumperLv;
-            document.getElementById("bumper-cost").innerText = player.bumperLv * 450;
-            document.getElementById("armor-lv").innerText = player.armorLv;
-            document.getElementById("armor-cost").innerText = player.armorLv * 400;
-            document.getElementById("lamp-lv").innerText = player.lampLv;
-            document.getElementById("lamp-cost").innerText = player.lampLv * 420;
-            document.getElementById("car-color-name").innerText = colorNames[player.carColor] || "白黒クラウン";
+            Object.keys(POLICE_CARS).forEach(carId => {
+                const car = POLICE_CARS[carId];
+                const isOwned = player.ownedCars.includes(carId);
+                const isEquipped = (player.currentCar === carId);
+
+                const card = document.createElement("div");
+                card.className = "shop-card";
+                card.style.borderColor = isEquipped ? "var(--neon-green)" : "var(--neon-cyan)";
+
+                let btnHtml = "";
+                if (isEquipped) {
+                    btnHtml = `<button class="green" disabled style="opacity:0.8;">乗車中</button>`;
+                } else if (isOwned) {
+                    btnHtml = `<button class="yellow" onclick="equipCar('${carId}')">乗車する</button>`;
+                } else {
+                    btnHtml = `<button class="cyan" onclick="buyCar('${carId}')">購入 (${car.price} G)</button>`;
+                }
+
+                card.innerHTML = `
+                    <h3>${car.name}</h3>
+                    <p>最高速: ${car.speedMax} km/h<br>ブースト倍率: x${car.boostPower}</p>
+                    ${btnHtml}
+                `;
+                grid.appendChild(card);
+            });
 
             showScreen("shop-screen");
         }
 
-        function buyRepairKit() {
-            if (player.money >= 800) {
-                player.money -= 800;
-                playerHp = maxPlayerHp;
+        function buyCar(carId) {
+            const car = POLICE_CARS[carId];
+            if (player.money >= car.price) {
+                player.money -= car.price;
+                player.ownedCars.push(carId);
+                player.currentCar = carId;
                 savePlayerData();
-                openShop();
                 playSound('clear');
-                alert("応急修理キットを購入・使用しました！自機HPが全回復します！");
+                checkTrophies();
+                alert(`${car.name} を購入し、警察車両を乗り換えました！`);
+                openShop();
             } else {
-                alert("資金が足りません！（800 G必要です）");
+                alert("資金が足りません！");
             }
         }
 
-        function buyUpgrade(type) {
-            const costs = { 
-                engine: player.engineLv * 300, 
-                bumper: player.bumperLv * 450, 
-                armor: player.armorLv * 400, 
-                lamp: player.lampLv * 420 
-            };
-            if (player.money >= costs[type]) {
-                player.money -= costs[type];
-                player[type + 'Lv']++;
-                savePlayerData();
-                openShop();
-                playSound('clear');
-                alert("装備の強化が完了しました！");
-            } else alert("資金が足りません！");
-        }
-
-        function toggleCarColor() {
-            const colors = ["police", "black", "gold", "cyan"];
-            player.carColor = colors[(colors.indexOf(player.carColor) + 1) % colors.length];
+        function equipCar(carId) {
+            player.currentCar = carId;
             savePlayerData();
             openShop();
+        }
+
+        function openTrophyModal() {
+            initAudio();
+            checkTrophies();
+            const container = document.getElementById("trophy-container");
+            container.innerHTML = "";
+
+            TROPHIES.forEach(t => {
+                const isUnlocked = player.unlockedTrophies.includes(t.id);
+                const item = document.createElement("div");
+                item.className = "trophy-item";
+                item.style.borderColor = isUnlocked ? "var(--neon-yellow)" : "#444";
+                item.innerHTML = `
+                    <div style="text-align:left;">
+                        <div style="font-weight:bold; color:${isUnlocked ? 'var(--neon-yellow)' : '#888'}">${isUnlocked ? '🏆 ' : '🔒 '}${t.title}</div>
+                        <div style="font-size:0.8rem; color:#aaa;">${t.desc}</div>
+                    </div>
+                    <span style="font-size:0.85rem; color:${isUnlocked ? 'var(--neon-green)' : '#666'}">${isUnlocked ? '達成済' : '未達成'}</span>
+                `;
+                container.appendChild(item);
+            });
+
+            showScreen("trophy-screen");
+        }
+
+        function checkTrophies() {
+            if (!player) return;
+            if (player.level > 1 && !player.unlockedTrophies.includes("first_win")) player.unlockedTrophies.push("first_win");
+            if (player.ownedCars.length >= 2 && !player.unlockedTrophies.includes("car_collector")) player.unlockedTrophies.push("car_collector");
+            if (player.bestTime && !player.unlockedTrophies.includes("ta_master")) player.unlockedTrophies.push("ta_master");
+            if (player.money >= 2000 && !player.unlockedTrophies.includes("rich_police")) player.unlockedTrophies.push("rich_police");
+            savePlayerData();
         }
 
         function savePlayerData() {
@@ -780,8 +838,8 @@
             score = 0;
             combo = 0;
             speedKph = 80;
-            maxPlayerHp = 100 + (player.armorLv - 1) * 30;
-            playerHp = maxPlayerHp;
+            playerHp = 100;
+            maxPlayerHp = 100;
             
             remainingWords = 20;
             boostGau = 0;
@@ -790,7 +848,7 @@
 
             if (mode === "timeattack") {
                 document.getElementById("enemy-hp-box").style.display = "flex";
-                document.getElementById("player-hp-wrapper").style.display = "none"; // タイムアタック中はHP非表示(無敵の純粋スピード勝負)
+                document.getElementById("player-hp-wrapper").style.display = "none";
                 taStartTime = Date.now();
                 currentTaSeconds = 0;
                 
@@ -831,7 +889,7 @@
 
         function updateBars() {
             let progressPct = (remainingWords / targetWordsCount) * 100;
-            document.getElementById("player-hp-bar").style.width = Math.max(0, (playerHp / maxPlayerHp) * 100) + "%";
+            document.getElementById("player-hp-bar").style.width = Math.max(0, playerHp) + "%";
             document.getElementById("hp-bar-enemy").style.width = Math.max(0, progressPct) + "%";
             document.getElementById("boost-bar").style.width = Math.min(100, boostGau) + "%";
             if (currentMode !== "timeattack") {
@@ -847,19 +905,25 @@
                     if (taElapsedTimer) clearInterval(taElapsedTimer);
                     let finalTime = ((Date.now() - taStartTime) / 1000) + (taMissCount * 0.5);
                     
+                    // 💡 タイム別の報酬計算 (20秒未満: 550G, 20〜45秒: 200G, 45秒以上: 30G)
+                    let reward = 30;
+                    if (finalTime < 20) reward = 550;
+                    else if (finalTime < 45) reward = 200;
+
                     let isNewBest = false;
                     if (!player.bestTime || finalTime < player.bestTime) {
                         player.bestTime = finalTime;
                         isNewBest = true;
                     }
-                    player.money += 50; // クリア報酬
+                    player.money += reward;
                     player.level++;
-                    savePlayerData();
-
-                    let titleMsg = isNewBest ? "🌟 新自己ベスト更新！ 🌟" : "⚡ タイムアタック完走！ ⚡";
-                    endGame(true, titleMsg, finalTime, taMissCount);
+                    checkTrophies();
+                    endGame(true, isNewBest ? "🌟 新自己ベスト更新！ 🌟" : "⚡ タイムアタック完走！ ⚡", finalTime, taMissCount, reward);
                 } else {
-                    endGame(true, "🚨 容疑車両のPIT捕獲完了！任務達成！ 🚨");
+                    let reward = (currentDiff === "hard") ? 250 : ((currentDiff === "extreme") ? 500 : 100);
+                    player.money += reward;
+                    player.level++;
+                    endGame(true, "🚨 容疑車両のPIT捕獲完了！任務達成！ 🚨", 0, 0, reward);
                 }
                 return;
             }
@@ -870,31 +934,18 @@
             renderWord();
         }
 
-        function endGame(isWin, title, finalTime = 0, missCount = 0) {
+        function endGame(isWin, title, finalTime = 0, missCount = 0, reward = 0) {
             if (damageTimer) clearInterval(damageTimer);
             if (taElapsedTimer) clearInterval(taElapsedTimer);
             window.removeEventListener("keydown", onKeyPress);
-            
-            let reward = 0;
-            if (isWin) {
-                if (currentMode === "timeattack") {
-                    reward = 50;
-                } else {
-                    let baseReward = 100;
-                    if (currentDiff === "hard") baseReward = 250;
-                    if (currentDiff === "extreme") baseReward = 500;
-                    reward = baseReward;
-                    player.money += reward;
-                    player.level++;
-                }
-            }
 
             player.score += score;
-            savePlayerData();
+            checkTrophies();
 
             document.getElementById("result-title").innerText = title;
             if (currentMode === "timeattack") {
-                document.getElementById("result-detail").innerText = `純粋タイム: ${(finalTime - (missCount * 0.5)).toFixed(2)} 秒\nミス数: ${missCount}回 (ペナルティ +${(missCount * 0.5).toFixed(1)}秒)\n🏆 最終記録: ${finalTime.toFixed(2)} 秒\n自己ベスト: ${player.bestTime.toFixed(2)} 秒\n獲得賞金: ${reward} G`;
+                let rankMsg = finalTime < 20 ? "🚀 Sランク (20秒未満達成！)" : (finalTime < 45 ? "⚡ Aランク (標準クリア)" : "🐢 Bランク (のんびりクリア)");
+                document.getElementById("result-detail").innerText = `ランク: ${rankMsg}\n純粋タイム: ${(finalTime - (missCount * 0.5)).toFixed(2)} 秒\nミス数: ${missCount}回 (ペナルティ +${(missCount * 0.5).toFixed(1)}秒)\n🏆 最終記録: ${finalTime.toFixed(2)} 秒\n獲得賞金: ${reward} G`;
             } else {
                 document.getElementById("result-detail").innerText = `獲得スコア: ${score} pt\n獲得賞金: ${reward} G ${isWin ? '(' + currentDiff.toUpperCase() + ')' : '(大破のため報酬なし)'}\n捜査員レベル: Lv.${player.level}`;
             }
@@ -924,9 +975,11 @@
         function onKeyPress(e) {
             if (!document.getElementById("game-screen").classList.contains("active")) return;
 
+            const carSpec = POLICE_CARS[player ? player.currentCar : "crown210"];
+
             if (e.code === "Space" && boostGau >= 100) {
                 boostGau = 0;
-                remainingWords = Math.max(0, remainingWords - (1 + Math.floor(player.bumperLv / 2)));
+                remainingWords = Math.max(0, remainingWords - Math.floor(2 * carSpec.boostPower));
                 screenShake = 16;
                 playSound('boost');
                 createSparkParticles(620, 150, 45);
@@ -944,17 +997,15 @@
                 if (e.key.toLowerCase() === currentWord.roma[typedIdx]) {
                     typedIdx++;
                     combo++;
-                    let mult = Math.floor(combo / 5) + 1;
-                    score += 10 * mult;
+                    score += 10 * (Math.floor(combo / 5) + 1);
 
-                    speedKph = Math.min(320, speedKph + 6);
-                    let boostAdd = 12 + (player.lampLv * 2.5);
-                    boostGau = Math.min(100, boostGau + boostAdd);
+                    speedKph = Math.min(carSpec.speedMax, speedKph + 8);
+                    boostGau = Math.min(100, boostGau + 14);
 
                     playSound('type');
 
                     if (combo > 0 && combo % 5 === 0) {
-                        playerHp = Math.min(maxPlayerHp, playerHp + 6);
+                        playerHp = Math.min(100, playerHp + 6);
                     }
 
                     createSparkParticles(600, 150, 5);
@@ -966,11 +1017,8 @@
                         setTimeout(nextWord, 70);
                     }
                 } else {
-                    // 💡 タイピングミス判定 (タイムアタックならペナルティ加算)
                     playSound('damage');
-                    if (currentMode === "timeattack") {
-                        taMissCount++;
-                    }
+                    if (currentMode === "timeattack") taMissCount++;
                 }
             }
         }
@@ -986,10 +1034,13 @@
                 let moveSpeed = (canvasId === "game-canvas") ? (speedKph / 12) : 12;
                 roadOffset = (roadOffset + moveSpeed) % 60;
 
-                ctx.fillStyle = "#030712";
+                if (currentStage === 'city') ctx.fillStyle = "#02111b";
+                else if (currentStage === 'touge') ctx.fillStyle = "#0a180d";
+                else ctx.fillStyle = "#030712";
+                
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                ctx.fillStyle = "#091226";
+                ctx.fillStyle = (currentStage === 'touge') ? "#0f2e1b" : "#091226";
                 for (let i = 0; i < canvas.width; i += 70) {
                     let h = 50 + Math.sin((i + frame * 2) * 0.04) * 30;
                     ctx.fillRect(i, 120 - h, 55, h);
@@ -1022,7 +1073,8 @@
                     if (screenShake < 0.5) screenShake = 0;
                 }
 
-                drawPatcar(ctx, 80, 145 + Math.sin(frame * 0.2) * 2, frame, player ? player.carColor : "police", player ? player.name : "機捜210");
+                const equippedCarKey = player ? player.currentCar : "crown210";
+                drawPatcar(ctx, 80, 145 + Math.sin(frame * 0.2) * 2, frame, equippedCarKey, player ? player.name : "機捜210");
 
                 if (canvasId === "game-canvas" && (currentMode === "mission" || currentMode === "timeattack")) {
                     drawEnemyCar(ctx, 610 + Math.sin(frame * 0.1) * 10, 150);
@@ -1042,28 +1094,38 @@
             render();
         }
 
-        function drawPatcar(ctx, x, y, frame, colorType, label) {
+        function drawPatcar(ctx, x, y, frame, carKey, label) {
             ctx.save();
-            let sirenSpeed = Math.max(2, 6 - (player ? player.lampLv : 1));
-            let sirenRed = (Math.floor(frame / sirenSpeed) % 2 === 0);
+            let sirenRed = (Math.floor(frame / 4) % 2 === 0);
 
-            ctx.shadowBlur = 22;
-            ctx.shadowColor = sirenRed ? "#ff0055" : "#00f3ff";
-            ctx.fillStyle = sirenRed ? "#ff0055" : "#00f3ff";
-            ctx.fillRect(x + 45, y - 8, 25, 8);
-
-            ctx.shadowBlur = 0;
-            if (colorType === "gold") ctx.fillStyle = "#ffe600";
-            else if (colorType === "cyan") ctx.fillStyle = "#00f3ff";
-            else ctx.fillStyle = "#ffffff";
-            ctx.fillRect(x + 25, y, 65, 22);
-
-            ctx.fillStyle = (colorType === "black") ? "#050505" : "#111111";
-            ctx.fillRect(x, y + 20, 115, 24);
-
-            if (player && player.bumperLv > 1) {
-                ctx.fillStyle = "#666";
-                ctx.fillRect(x + 112, y + 22, 8, 20);
+            if (carKey === "crown180_fukumen") {
+                ctx.fillStyle = sirenRed ? "#ff0055" : "#550011";
+                ctx.fillRect(x + 50, y - 4, 15, 5);
+                ctx.fillStyle = "#1a1a1a";
+                ctx.fillRect(x + 20, y + 2, 70, 20);
+                ctx.fillRect(x, y + 20, 115, 24);
+            } else if (carKey === "legacy_b4") {
+                ctx.fillStyle = sirenRed ? "#ff0055" : "#00f3ff";
+                ctx.fillRect(x + 45, y - 8, 25, 8);
+                ctx.fillStyle = "#2b2b2b";
+                ctx.fillRect(x + 20, y + 2, 70, 20);
+                ctx.fillRect(x, y + 20, 115, 24);
+            } else if (carKey === "gtr_r35") {
+                ctx.fillStyle = sirenRed ? "#ff0055" : "#00f3ff";
+                ctx.fillRect(x + 50, y - 8, 25, 8);
+                ctx.fillStyle = "#ffffff";
+                ctx.fillRect(x + 20, y + 4, 75, 18);
+                ctx.fillStyle = "#050505";
+                ctx.fillRect(x, y + 20, 120, 24);
+                ctx.fillStyle = "#111";
+                ctx.fillRect(x - 5, y + 10, 10, 12);
+            } else {
+                ctx.fillStyle = sirenRed ? "#ff0055" : "#00f3ff";
+                ctx.fillRect(x + 45, y - 8, 25, 8);
+                ctx.fillStyle = "#ffffff";
+                ctx.fillRect(x + 25, y, 65, 22);
+                ctx.fillStyle = "#111111";
+                ctx.fillRect(x, y + 20, 115, 24);
             }
 
             if (label) {
@@ -1097,7 +1159,3 @@
             ctx.arc(x + 80, y + 40, 9, 0, Math.PI * 2);
             ctx.fill();
             ctx.restore();
-        }
-    </script>
-</body>
-</html>
