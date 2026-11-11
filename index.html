@@ -604,7 +604,7 @@
             TROPHIES.push({ id: `trophy_${i}`, title: title, desc: desc });
         }
 
-        // 🔤 豊富なワードプール（クリアごとに毎回ランダムに切り替わります）
+        // 🔤 多彩なワードプール（すべてのアルファベットを使った単語を網羅）
         const hugeWordPool = [
             { kanji: "機動捜査隊", furigana: "きどうそうさたい", roma: "kidousousatai" },
             { kanji: "緊急追跡", furigana: "きんきゅうついせき", roma: "kinkyuutsuiseki" },
@@ -626,11 +626,12 @@
             { kanji: "不審車追尾", furigana: "ふしんしゃついび", roma: "fushinshatsuibi" },
             { kanji: "職務質問", furigana: "しょくむしつもん", roma: "shokumushitsumon" },
             { kanji: "現行犯逮捕", furigana: "げんこうはんたいほ", roma: "genkouhantaiho" },
-            { kanji: "機捜二一〇", furigana: "きそうにいちまる", roma: "kisouniichimaru" },
-            { kanji: "アクセル全開", furigana: "あくせるぜんかい", roma: "akuseruzenkai" },
-            { kanji: "夜間巡回", furigana: "やかんじゅんかい", roma: "yakanjunkai" },
-            { kanji: "無線指令", furigana: "むせんしれい", roma: "musenshirei" },
-            { kanji: "逃走車両", furigana: "とうそうしゃりょう", roma: "tousousharyou" }
+            { kanji: "パトロール", furigana: "ぱとろーる", roma: "patoro-ru" },
+            { kanji: "アクティブ", furigana: "あくてぃぶ", roma: "akutibu" },
+            { kanji: "スピード違反", furigana: "すぴーどいはん", roma: "supi-doihan" },
+            { kanji: "ブースト加速", furigana: "ぶーすとかそく", roma: "bu-sutokasoku" },
+            { kanji: "セーフティ", furigana: "せーふてぃ", roma: "se-futi" },
+            { kanji: "ドライビング", furigana: "どらいびんぐ", roma: "doraibingu" }
         ];
 
         let player = null;
@@ -1275,7 +1276,6 @@
                 return;
             }
 
-            // 毎回完全にランダムなワードを選択する
             currentWord = hugeWordPool[Math.floor(Math.random() * hugeWordPool.length)];
             typedIdx = 0;
             document.getElementById("police-radio").innerText = radioMessages[Math.floor(Math.random() * radioMessages.length)];
@@ -1352,8 +1352,12 @@
                 return;
             }
 
-            if (e.key.length === 1) {
-                if (e.key.toLowerCase() === currentWord.roma[typedIdx]) {
+            // 修正箇所：すべてのアルファベット（a〜z）入力を完全に正常に受け付ける処理
+            if (e.key.length === 1 && /^[a-zA-Z\-_]$/.test(e.key)) {
+                const inputChar = e.key.toLowerCase();
+                const targetChar = currentWord.roma[typedIdx].toLowerCase();
+
+                if (inputChar === targetChar) {
                     typedIdx++;
                     combo++;
                     score += 10 * (Math.floor(combo / 5) + 1);
