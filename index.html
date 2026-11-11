@@ -6,26 +6,26 @@
     <title>機捜210 - ULTIMATE POLICE CHASE</title>
     <style>
         :root {
-            --bg-color: #030712;
-            --panel-bg: rgba(8, 15, 30, 0.96);
+            --bg-deep: #020617;
+            --panel-bg: rgba(13, 20, 38, 0.85);
             --neon-cyan: #00f3ff;
             --neon-red: #ff0055;
-            --neon-yellow: #ffe600;
-            --neon-green: #00ff66;
-            --neon-purple: #cc00ff;
-            --text-color: #ffffff;
+            --neon-yellow: #fde047;
+            --neon-green: #22c55e;
+            --neon-purple: #a855f7;
+            --text-color: #f8fafc;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             user-select: none;
         }
 
         body {
-            background: radial-gradient(circle at center, #0f172a 0%, #02040a 100%);
+            background: radial-gradient(circle at center, #0f172a 0%, #020617 100%);
             color: var(--text-color);
             min-height: 100vh;
             display: flex;
@@ -36,171 +36,180 @@
 
         .game-container {
             width: 96%;
-            max-width: 1020px;
+            max-width: 1040px;
             background: var(--panel-bg);
-            border: 2px solid var(--neon-cyan);
-            box-shadow: 0 0 40px rgba(0, 243, 255, 0.35), inset 0 0 20px rgba(0, 243, 255, 0.1);
-            border-radius: 16px;
-            padding: 24px;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 2px solid rgba(0, 243, 255, 0.4);
+            box-shadow: 0 0 50px rgba(0, 243, 255, 0.25), inset 0 0 30px rgba(0, 243, 255, 0.08);
+            border-radius: 20px;
+            padding: 28px;
             text-align: center;
             position: relative;
         }
 
         h1 {
             color: var(--neon-cyan);
-            text-shadow: 0 0 20px var(--neon-cyan);
-            font-size: 2.2rem;
-            margin-bottom: 12px;
-            letter-spacing: 3px;
+            text-shadow: 0 0 25px rgba(0, 243, 255, 0.6);
+            font-size: 2.4rem;
+            margin-bottom: 16px;
+            letter-spacing: 4px;
             font-weight: 900;
         }
 
         .screen { display: none; }
-        .screen.active { display: block; animation: fadeIn 0.3s ease-out; }
+        .screen.active { display: block; animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1); }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(6px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; transform: translateY(10px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         .auth-tab {
             display: flex;
             justify-content: center;
-            gap: 12px;
-            margin-bottom: 20px;
+            gap: 14px;
+            margin-bottom: 24px;
         }
 
         .tab-btn {
-            padding: 10px 24px;
+            padding: 11px 28px;
             font-size: 1.05rem;
-            border-radius: 8px;
+            border-radius: 10px;
             cursor: pointer;
-            border: 1px solid var(--neon-cyan);
-            background: transparent;
+            border: 1px solid rgba(0, 243, 255, 0.4);
+            background: rgba(0, 0, 0, 0.4);
             color: var(--neon-cyan);
-            transition: all 0.2s;
+            transition: all 0.25s ease;
         }
 
         .tab-btn.active {
             background: var(--neon-cyan);
-            color: #000;
-            font-weight: bold;
-            box-shadow: 0 0 15px var(--neon-cyan);
+            color: #020617;
+            font-weight: 900;
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.6);
+            border-color: var(--neon-cyan);
         }
 
         .auth-form {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
         }
 
         input[type="text"], input[type="password"] {
-            width: 80%;
-            max-width: 380px;
-            padding: 12px;
-            background: rgba(0, 0, 0, 0.8);
-            border: 2px solid var(--neon-cyan);
+            width: 82%;
+            max-width: 400px;
+            padding: 14px;
+            background: rgba(2, 6, 23, 0.85);
+            border: 2px solid rgba(0, 243, 255, 0.4);
             color: #fff;
-            font-size: 1.1rem;
-            border-radius: 10px;
+            font-size: 1.15rem;
+            border-radius: 12px;
             text-align: center;
             outline: none;
-            box-shadow: inset 0 0 10px rgba(0, 243, 255, 0.2);
+            box-shadow: inset 0 0 15px rgba(0, 243, 255, 0.15);
+            transition: all 0.2s;
+        }
+
+        input:focus {
+            border-color: var(--neon-yellow);
+            box-shadow: 0 0 20px rgba(253, 224, 71, 0.4), inset 0 0 15px rgba(253, 224, 71, 0.1);
         }
 
         .btn-group {
             display: flex;
             justify-content: center;
-            gap: 12px;
+            gap: 14px;
             flex-wrap: wrap;
-            margin-top: 16px;
+            margin-top: 18px;
             position: relative;
             z-index: 10;
         }
 
         button {
-            background: rgba(0, 243, 255, 0.12);
+            background: rgba(0, 243, 255, 0.1);
             color: var(--neon-cyan);
             border: 2px solid var(--neon-cyan);
-            padding: 11px 22px;
-            font-size: 0.98rem;
+            padding: 12px 26px;
+            font-size: 1.02rem;
             font-weight: bold;
             cursor: pointer;
-            border-radius: 10px;
-            transition: all 0.2s ease;
-            text-shadow: 0 0 8px var(--neon-cyan);
-            box-shadow: 0 0 10px rgba(0, 243, 255, 0.1);
+            border-radius: 12px;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.15);
         }
 
         button:hover {
             background: var(--neon-cyan);
-            color: #000;
-            box-shadow: 0 0 25px var(--neon-cyan);
-            transform: translateY(-2px);
+            color: #020617;
+            box-shadow: 0 0 30px var(--neon-cyan);
+            transform: translateY(-3px);
         }
 
-        button.red { color: var(--neon-red); border-color: var(--neon-red); text-shadow: 0 0 8px var(--neon-red); }
-        button.red:hover { background: var(--neon-red); color: #fff; box-shadow: 0 0 25px var(--neon-red); }
-        button.green { color: var(--neon-green); border-color: var(--neon-green); text-shadow: 0 0 8px var(--neon-green); }
-        button.green:hover { background: var(--neon-green); color: #000; box-shadow: 0 0 25px var(--neon-green); }
-        button.yellow { color: var(--neon-yellow); border-color: var(--neon-yellow); text-shadow: 0 0 8px var(--neon-yellow); }
-        button.yellow:hover { background: var(--neon-yellow); color: #000; box-shadow: 0 0 25px var(--neon-yellow); }
-        button.purple { color: var(--neon-purple); border-color: var(--neon-purple); text-shadow: 0 0 8px var(--neon-purple); }
-        button.purple:hover { background: var(--neon-purple); color: #fff; box-shadow: 0 0 25px var(--neon-purple); }
+        button.red { color: var(--neon-red); border-color: var(--neon-red); text-shadow: 0 0 10px var(--neon-red); box-shadow: 0 0 15px rgba(255,0,85,0.15); }
+        button.red:hover { background: var(--neon-red); color: #fff; box-shadow: 0 0 30px var(--neon-red); }
+        button.green { color: var(--neon-green); border-color: var(--neon-green); text-shadow: 0 0 10px var(--neon-green); box-shadow: 0 0 15px rgba(34,197,94,0.15); }
+        button.green:hover { background: var(--neon-green); color: #020617; box-shadow: 0 0 30px var(--neon-green); }
+        button.yellow { color: var(--neon-yellow); border-color: var(--neon-yellow); text-shadow: 0 0 10px var(--neon-yellow); box-shadow: 0 0 15px rgba(253,224,71,0.15); }
+        button.yellow:hover { background: var(--neon-yellow); color: #020617; box-shadow: 0 0 30px var(--neon-yellow); }
+        button.purple { color: var(--neon-purple); border-color: var(--neon-purple); text-shadow: 0 0 10px var(--neon-purple); box-shadow: 0 0 15px rgba(168,85,247,0.15); }
+        button.purple:hover { background: var(--neon-purple); color: #fff; box-shadow: 0 0 30px var(--neon-purple); }
 
         canvas {
             width: 100%;
-            height: 240px;
+            height: 250px;
             background: #000;
-            border-radius: 12px;
-            border: 1px solid rgba(0, 243, 255, 0.5);
-            margin: 10px 0;
+            border-radius: 14px;
+            border: 1px solid rgba(0, 243, 255, 0.4);
+            margin: 12px 0;
             pointer-events: none;
-            box-shadow: inset 0 0 25px rgba(0,0,0,0.8);
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.9);
         }
 
         .status-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(0, 0, 0, 0.85);
-            padding: 10px 16px;
-            border-radius: 10px;
-            border: 1px solid var(--neon-cyan);
-            margin-bottom: 8px;
-            font-size: 0.95rem;
+            background: rgba(2, 6, 23, 0.9);
+            padding: 12px 18px;
+            border-radius: 12px;
+            border: 1px solid rgba(0, 243, 255, 0.4);
+            margin-bottom: 10px;
+            font-size: 1rem;
         }
 
         .hp-container {
-            width: 110px;
-            height: 14px;
-            background: #111;
-            border-radius: 7px;
+            width: 120px;
+            height: 16px;
+            background: #020617;
+            border-radius: 8px;
             overflow: hidden;
-            border: 1px solid #555;
+            border: 1px solid rgba(255,255,255,0.2);
         }
 
-        .hp-bar-player { width: 100%; height: 100%; background: linear-gradient(90deg, #00ff66, #00f3ff); transition: width 0.2s; }
+        .hp-bar-player { width: 100%; height: 100%; background: linear-gradient(90deg, #22c55e, #00f3ff); transition: width 0.2s; }
         .hp-bar-enemy { width: 100%; height: 100%; background: linear-gradient(90deg, var(--neon-red), var(--neon-yellow)); transition: width 0.2s; }
-        .boost-bar { width: 100%; height: 100%; background: linear-gradient(90deg, #ff00ff, #00ffff); transition: width 0.2s; }
+        .boost-bar { width: 100%; height: 100%; background: linear-gradient(90deg, #a855f7, #00f3ff); transition: width 0.2s; }
 
         .speed-gauge {
-            font-size: 1.2rem;
-            font-weight: bold;
+            font-size: 1.3rem;
+            font-weight: 900;
             color: var(--neon-yellow);
-            text-shadow: 0 0 10px var(--neon-yellow);
+            text-shadow: 0 0 12px var(--neon-yellow);
         }
 
         .police-radio-ticker {
-            background: rgba(255, 0, 85, 0.15);
+            background: rgba(255, 0, 85, 0.12);
             border: 1px solid var(--neon-red);
             color: var(--neon-yellow);
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 0.95rem;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 1rem;
             font-weight: bold;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             letter-spacing: 1px;
             text-shadow: 0 0 8px rgba(255,0,85,0.6);
             white-space: nowrap;
@@ -209,102 +218,108 @@
         }
 
         .word-display-box {
-            background: rgba(0, 0, 0, 0.85);
-            padding: 14px;
-            border-radius: 10px;
-            border: 1px solid rgba(255, 230, 0, 0.5);
-            margin: 8px 0;
-            box-shadow: 0 0 15px rgba(255, 230, 0, 0.1);
+            background: rgba(2, 6, 23, 0.9);
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(253, 224, 71, 0.4);
+            margin: 10px 0;
+            box-shadow: 0 0 20px rgba(253, 224, 71, 0.12);
         }
 
         .furigana-display {
-            font-size: 1.3rem;
-            color: #00ff66;
+            font-size: 1.4rem;
+            color: var(--neon-green);
             font-weight: bold;
             letter-spacing: 2px;
-            text-shadow: 0 0 10px rgba(0, 255, 102, 0.6);
-            margin-bottom: 2px;
+            text-shadow: 0 0 12px rgba(34, 197, 94, 0.6);
+            margin-bottom: 3px;
         }
 
         .kanji-display {
-            font-size: 1.8rem;
+            font-size: 1.9rem;
             color: #ffffff;
             font-weight: 900;
             letter-spacing: 3px;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
         }
 
         .target-word {
-            font-size: 2.2rem;
+            font-size: 2.3rem;
             color: var(--neon-yellow);
             letter-spacing: 4px;
-            text-shadow: 0 0 20px rgba(255, 230, 0, 0.8);
+            text-shadow: 0 0 20px rgba(253, 224, 71, 0.8);
             font-weight: 900;
         }
 
-        .typed-char { color: var(--neon-cyan); text-shadow: 0 0 12px var(--neon-cyan); }
+        .typed-char { color: var(--neon-cyan); text-shadow: 0 0 15px var(--neon-cyan); }
 
         .shop-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-            gap: 12px;
-            margin: 14px 0;
-            max-height: 340px;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 14px;
+            margin: 16px 0;
+            max-height: 360px;
             overflow-y: auto;
             padding-right: 6px;
         }
 
         .shop-card {
-            background: rgba(0, 0, 0, 0.75);
-            border: 1px solid var(--neon-cyan);
-            border-radius: 12px;
-            padding: 12px;
+            background: rgba(2, 6, 23, 0.8);
+            border: 1px solid rgba(0, 243, 255, 0.4);
+            border-radius: 14px;
+            padding: 14px;
             text-align: center;
+            transition: all 0.2s;
         }
 
-        .shop-card h3 { color: var(--neon-yellow); margin-bottom: 4px; font-size: 1.05rem; }
-        .shop-card p { color: #ccc; font-size: 0.8rem; margin-bottom: 8px; }
+        .shop-card:hover {
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
+        }
+
+        .shop-card h3 { color: var(--neon-yellow); margin-bottom: 6px; font-size: 1.1rem; }
+        .shop-card p { color: #cbd5e1; font-size: 0.85rem; margin-bottom: 10px; }
 
         .profile-card {
-            background: rgba(0, 0, 0, 0.85);
-            border: 1px solid var(--neon-purple);
-            border-radius: 12px;
-            padding: 14px;
-            margin-bottom: 12px;
+            background: rgba(2, 6, 23, 0.9);
+            border: 1px solid rgba(168, 85, 247, 0.5);
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 14px;
             text-align: left;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 8px;
-            font-size: 0.9rem;
+            gap: 10px;
+            font-size: 0.95rem;
         }
 
-        .profile-item { color: #ddd; }
+        .profile-item { color: #cbd5e1; }
         .profile-item span { color: var(--neon-cyan); font-weight: bold; }
 
         .modal-box {
-            background: rgba(0,0,0,0.9);
+            background: rgba(2, 6, 23, 0.95);
             border: 2px solid var(--neon-purple);
-            box-shadow: 0 0 30px rgba(204, 0, 255, 0.3);
-            border-radius: 14px;
-            padding: 20px;
-            max-width: 520px;
+            box-shadow: 0 0 40px rgba(168, 85, 247, 0.3);
+            border-radius: 16px;
+            padding: 24px;
+            max-width: 540px;
             margin: 15px auto;
         }
 
         .trophy-list {
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            max-height: 220px;
+            gap: 10px;
+            max-height: 240px;
             overflow-y: auto;
-            margin-bottom: 15px;
+            margin-bottom: 18px;
         }
 
         .trophy-item {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid var(--neon-cyan);
-            padding: 8px 12px;
-            border-radius: 8px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            padding: 10px 14px;
+            border-radius: 10px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -312,13 +327,13 @@
 
         .damage-flash { animation: dmgFlash 0.3s ease-out; }
         @keyframes dmgFlash {
-            0% { background: rgba(255, 0, 85, 0.5); }
+            0% { background: rgba(255, 0, 85, 0.4); }
             100% { background: var(--panel-bg); }
         }
 
         .boost-flash { animation: bstFlash 0.4s ease-out; }
         @keyframes bstFlash {
-            0% { background: rgba(255, 0, 255, 0.6); }
+            0% { background: rgba(168, 85, 247, 0.5); }
             100% { background: var(--panel-bg); }
         }
     </style>
@@ -342,12 +357,12 @@
             <div id="login-form" class="auth-form">
                 <input type="text" id="login-username" placeholder="コールサイン (名前)">
                 <input type="password" id="login-password" placeholder="暗号パスワード">
-                <div style="display:flex; gap:10px; width:80%; max-width:380px;">
+                <div style="display:flex; gap:12px; width:82%; max-width:400px;">
                     <button class="green" onclick="handleLogin()" style="flex:1;">出動開始</button>
                 </div>
-                <div style="display:flex; gap:8px; margin-top:6px; font-size:0.85rem;">
-                    <button onclick="openNameHelper()" style="padding:6px 12px; font-size:0.8rem; border-color:#888; color:#aaa;">👤 名前を忘れた場合</button>
-                    <button onclick="openGoogleStyleRecovery()" style="padding:6px 12px; font-size:0.8rem; border-color:var(--neon-cyan); color:var(--neon-cyan);">🔑 パスワードを忘れた場合</button>
+                <div style="display:flex; gap:10px; margin-top:8px; font-size:0.9rem;">
+                    <button onclick="openNameHelper()" style="padding:7px 14px; font-size:0.85rem; border-color:#64748b; color:#94a3b8;">👤 名前を忘れた場合</button>
+                    <button onclick="openGoogleStyleRecovery()" style="padding:7px 14px; font-size:0.85rem; border-color:var(--neon-cyan); color:var(--neon-cyan);">🔑 パスワードを忘れた場合</button>
                 </div>
             </div>
 
@@ -363,8 +378,8 @@
         <div id="name-helper-screen" class="screen">
             <h1>アカウントの確認 (署員名簿)</h1>
             <div class="modal-box">
-                <p style="color:var(--neon-cyan); margin-bottom:12px;">この端末に登録されている署員のコールサイン一覧です。</p>
-                <div id="registered-names-list" style="background:rgba(0,0,0,0.5); border:1px solid #444; border-radius:8px; padding:10px; max-height:160px; overflow-y:auto; margin-bottom:15px; color:#fff; text-align:left;"></div>
+                <p style="color:var(--neon-cyan); margin-bottom:14px;">この端末に登録されている署員のコールサイン一覧です。</p>
+                <div id="registered-names-list" style="background:rgba(2,6,23,0.6); border:1px solid #334155; border-radius:10px; padding:12px; max-height:180px; overflow-y:auto; margin-bottom:18px; color:#f8fafc; text-align:left;"></div>
                 <button onclick="showScreen('login-screen')">ログイン画面に戻る</button>
             </div>
         </div>
@@ -373,15 +388,15 @@
         <div id="recovery-screen" class="screen">
             <h1>アカウントの復旧</h1>
             <div class="modal-box" style="text-align: left; line-height: 1.6;">
-                <p style="color:var(--neon-yellow); margin-bottom:10px; text-align:center;">🔒 本人確認プロセス</p>
-                <div class="auth-form" style="gap:10px; align-items: stretch;">
+                <p style="color:var(--neon-yellow); margin-bottom:12px; text-align:center;">🔒 本人確認プロセス</p>
+                <div class="auth-form" style="gap:12px; align-items: stretch;">
                     <input type="text" id="rec-username" placeholder="コールサイン (名前)" style="width:100%; max-width:none;">
-                    <p id="rec-hint-label" style="font-size:0.9rem; color:#aaa;">※名前を入力すると、再設定用ヒントが表示されます。</p>
+                    <p id="rec-hint-label" style="font-size:0.92rem; color:#94a3b8;">※名前を入力すると、再設定用ヒントが表示されます。</p>
                     <input type="text" id="rec-hint-answer" placeholder="再設定用ヒントの答えを入力" style="width:100%; max-width:none;">
                     <input type="password" id="rec-new-password" placeholder="新しい暗号パスワード" style="width:100%; max-width:none;">
-                    <button class="yellow" onclick="executeGoogleRecovery()" style="margin-top:5px;">パスワードをリセットして再設定</button>
+                    <button class="yellow" onclick="executeGoogleRecovery()" style="margin-top:6px;">パスワードをリセットして再設定</button>
                 </div>
-                <button onclick="showScreen('login-screen')" style="margin-top:15px; width:100%;">ログイン画面に戻る</button>
+                <button onclick="showScreen('login-screen')" style="margin-top:18px; width:100%;">ログイン画面に戻る</button>
             </div>
         </div>
 
@@ -394,7 +409,7 @@
                 <button class="yellow" onclick="openTaIntroModal()">⚡ スピードスターTA</button>
                 <button class="purple" onclick="openTrophyModal()">🏆 実績・アチーブメント</button>
                 <button class="cyan" onclick="openShop()" style="color:var(--neon-cyan); border-color:var(--neon-cyan);">🚗 機捜ディーラー＆ガレージ</button>
-                <button style="border-color: #777; color: #aaa;" onclick="logout()">ログアウト</button>
+                <button style="border-color: #64748b; color: #94a3b8;" onclick="logout()">ログアウト</button>
             </div>
         </div>
 
@@ -402,14 +417,14 @@
         <div id="difficulty-screen" class="screen">
             <h1>エリア＆難易度選択</h1>
             <div class="modal-box">
-                <p style="color:var(--neon-cyan); margin-bottom:10px;">出動ステージを選択せよ！</p>
-                <div style="display:flex; justify-content:center; gap:8px; margin-bottom:15px;">
+                <p style="color:var(--neon-cyan); margin-bottom:12px;">出動ステージを選択せよ！</p>
+                <div style="display:flex; justify-content:center; gap:10px; margin-bottom:18px;">
                     <button id="stage-btn-c1" class="yellow" onclick="selectStage('c1')">🏙️ 首都高C1</button>
                     <button id="stage-btn-city" onclick="selectStage('city')">🏙️ 一般市街地</button>
                     <button id="stage-btn-touge" onclick="selectStage('touge')">⛰️ 山岳ワインディング</button>
                 </div>
 
-                <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px;">
+                <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 18px;">
                     <button class="green" onclick="startMissionWithDiff('normal')">🟢 NORMAL (報酬 100G)</button>
                     <button class="yellow" onclick="startMissionWithDiff('hard')">🟡 HARD (報酬 250G)</button>
                     <button class="red" onclick="startMissionWithDiff('extreme')">🔴 EXTREME (報酬 500G)</button>
@@ -421,13 +436,13 @@
         <!-- 3.5 タイムアタック説明・確認モーダル -->
         <div id="ta-intro-screen" class="screen">
             <h1>スピードスター・タイムアタック</h1>
-            <div class="modal-box" style="text-align: left; line-height: 1.6;">
-                <p style="color:var(--neon-yellow); font-weight:bold; margin-bottom:10px; text-align:center;">⏱️ タイムアタック報酬ルール</p>
-                <p style="color:#fff; margin-bottom:6px;">🚀 <b>20秒未満</b> の完走: <span style="color:var(--neon-green); font-weight:bold;">550 G</span></p>
-                <p style="color:#fff; margin-bottom:6px;">⚡ <b>20秒以上 ～ 45秒未満</b>: <span style="color:var(--neon-yellow); font-weight:bold;">200 G</span></p>
-                <p style="color:#fff; margin-bottom:12px;">🐢 <b>45秒以上</b> の完走: <span style="color:#aaa; font-weight:bold;">30 G</span></p>
-                <p style="color:var(--neon-red); font-size:0.9rem; margin-bottom:20px;">※タイピングミスをすると、ペナルティとしてタイムに <b>＋0.5秒</b> が加算されます！正確かつスピーディーに駆け抜けろ！</p>
-                <div style="display:flex; gap:10px; justify-content:center;">
+            <div class="modal-box" style="text-align: left; line-height: 1.7;">
+                <p style="color:var(--neon-yellow); font-weight:bold; margin-bottom:12px; text-align:center;">⏱️ タイムアタック報酬ルール</p>
+                <p style="color:#f8fafc; margin-bottom:8px;">🚀 <b>20秒未満</b> の完走: <span style="color:var(--neon-green); font-weight:bold;">550 G</span></p>
+                <p style="color:#f8fafc; margin-bottom:8px;">⚡ <b>20秒以上 ～ 45秒未満</b>: <span style="color:var(--neon-yellow); font-weight:bold;">200 G</span></p>
+                <p style="color:#f8fafc; margin-bottom:14px;">🐢 <b>45秒以上</b> の完走: <span style="color:#94a3b8; font-weight:bold;">30 G</span></p>
+                <p style="color:var(--neon-red); font-size:0.92rem; margin-bottom:22px;">※タイピングミスをすると、ペナルティとしてタイムに <b>＋0.5秒</b> が加算されます！正確かつスピーディーに駆け抜けろ！</p>
+                <div style="display:flex; gap:12px; justify-content:center;">
                     <button class="yellow" onclick="startMode('timeattack')" style="flex:1;">出動開始！</button>
                     <button onclick="toMenu()" style="flex:1;">メニューに戻る</button>
                 </div>
@@ -447,7 +462,7 @@
 
             <div class="shop-grid" id="dealer-car-grid"></div>
             
-            <div style="display:flex; justify-content:center; gap:12px; margin-top:8px;">
+            <div style="display:flex; justify-content:center; gap:14px; margin-top:10px;">
                 <button class="purple" onclick="toggleBGM()">BGM切替 (ON/OFF)</button>
                 <button onclick="toMenu()">メニューに戻る</button>
             </div>
@@ -467,15 +482,15 @@
             <div class="police-radio-ticker" id="police-radio">📡 [機捜無線] 捜査車両210、エリアにて不審車両の追尾を開始せよ。</div>
             
             <div class="status-bar">
-                <div id="player-hp-wrapper" style="display: flex; align-items: center; gap: 6px;">
+                <div id="player-hp-wrapper" style="display: flex; align-items: center; gap: 8px;">
                     <span style="color: var(--neon-green);">自機:</span>
                     <div class="hp-container"><div class="hp-bar-player" id="player-hp-bar"></div></div>
                 </div>
-                <div style="display: flex; align-items: center; gap: 6px;">
-                    <span style="color: #ff00ff;">BOOST:</span>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="color: var(--neon-purple);">BOOST:</span>
                     <div class="hp-container"><div class="boost-bar" id="boost-bar"></div></div>
                 </div>
-                <div id="enemy-hp-box" style="display: flex; align-items: center; gap: 6px;">
+                <div id="enemy-hp-box" style="display: flex; align-items: center; gap: 8px;">
                     <span style="color: var(--neon-red);">進捗:</span>
                     <div class="hp-container"><div class="hp-bar-enemy" id="hp-bar-enemy"></div></div>
                 </div>
@@ -491,23 +506,28 @@
                 <div class="target-word">
                     <span class="typed-char" id="typed-part"></span><span id="remain-part">kidousousatai</span>
                 </div>
-                <p style="color: var(--neon-cyan); font-size: 0.85rem; margin-top: 6px;">[SPACEキー] BOOST満タンで一気に追撃！ | (ミスするとTAはタイム＋0.5秒ペナルティ！)</p>
+                <p style="color: var(--neon-cyan); font-size: 0.88rem; margin-top: 8px;">[SPACEキー] BOOST満タンで一気に追撃！ | (ミスするとTAはタイム＋0.5秒ペナルティ！)</p>
             </div>
 
-            <button onclick="toMenu()" style="padding: 6px 16px; font-size: 0.9rem;">一時停止 / メニューに戻る</button>
+            <button onclick="toMenu()" style="padding: 7px 18px; font-size: 0.92rem;">一時停止 / メニューに戻る</button>
         </div>
 
         <!-- 7. リザルト -->
         <div id="result-screen" class="screen">
             <h1 id="result-title" style="color: var(--neon-green);">ミッション完了！</h1>
             <div class="modal-box" style="border-color: var(--neon-cyan);">
-                <p id="result-detail" style="margin: 15px 0; font-size: 1.25rem; line-height: 1.8;"></p>
+                <p id="result-detail" style="margin: 18px 0; font-size: 1.3rem; line-height: 1.8;"></p>
                 <button class="green" onclick="toMenu()">メニューに戻る</button>
             </div>
         </div>
     </div>
 
     <script>
+        // 💡 起動時に古い登録データを完全にリセット（削除）してクリーンスタート
+        (function initCleanReset() {
+            localStorage.removeItem("kisou210_solo_ultimate_db");
+        })();
+
         const POLICE_CARS = {
             "crown210": { name: "210系クラウン パトカー", price: 0, speedMax: 280, boostPower: 1, type: "patrol" },
             "crown180_fukumen": { name: "180系クラウン 覆面", price: 1000, speedMax: 300, boostPower: 1.2, type: "fukumen" },
@@ -684,7 +704,7 @@
             const listEl = document.getElementById("registered-names-list");
             
             if (names.length === 0) {
-                listEl.innerHTML = "<span style='color:#888;'>現在登録されている署員はいません。新規登録してください。</span>";
+                listEl.innerHTML = "<span style='color:#94a3b8;'>現在登録されている署員はいません。新規登録してください。</span>";
             } else {
                 listEl.innerHTML = names.map(n => `• コールサイン: <b style="color:var(--neon-cyan);">${n}</b> (Lv.${db[n].level || 1})`).join("<br>");
             }
@@ -700,7 +720,6 @@
             showScreen('recovery-screen');
         }
 
-        // 入力時のリスナーを確実にするため動的バインド
         document.addEventListener("DOMContentLoaded", () => {
             const recUserIn = document.getElementById("rec-username");
             if (recUserIn) {
@@ -851,7 +870,7 @@
 
                 const card = document.createElement("div");
                 card.className = "shop-card";
-                card.style.borderColor = isEquipped ? "var(--neon-green)" : "var(--neon-cyan)";
+                card.style.borderColor = isEquipped ? "var(--neon-green)" : "rgba(0, 243, 255, 0.4)";
 
                 let btnHtml = "";
                 if (isEquipped) {
@@ -905,13 +924,13 @@
                 const isUnlocked = player.unlockedTrophies.includes(t.id);
                 const item = document.createElement("div");
                 item.className = "trophy-item";
-                item.style.borderColor = isUnlocked ? "var(--neon-yellow)" : "#444";
+                item.style.borderColor = isUnlocked ? "var(--neon-yellow)" : "rgba(255,255,255,0.1)";
                 item.innerHTML = `
                     <div style="text-align:left;">
-                        <div style="font-weight:bold; color:${isUnlocked ? 'var(--neon-yellow)' : '#888'}">${isUnlocked ? '🏆 ' : '🔒 '}${t.title}</div>
-                        <div style="font-size:0.8rem; color:#aaa;">${t.desc}</div>
+                        <div style="font-weight:bold; color:${isUnlocked ? 'var(--neon-yellow)' : '#64748b'}">${isUnlocked ? '🏆 ' : '🔒 '}${t.title}</div>
+                        <div style="font-size:0.82rem; color:#94a3b8;">${t.desc}</div>
                     </div>
-                    <span style="font-size:0.85rem; color:${isUnlocked ? 'var(--neon-green)' : '#666'}">${isUnlocked ? '達成済' : '未達成'}</span>
+                    <span style="font-size:0.85rem; color:${isUnlocked ? 'var(--neon-green)' : '#64748b'}">${isUnlocked ? '達成済' : '未達成'}</span>
                 `;
                 container.appendChild(item);
             });
@@ -1068,7 +1087,7 @@
                     vx: (Math.random() - 0.5) * 12,
                     vy: (Math.random() - 0.5) * 12,
                     life: 20,
-                    color: Math.random() > 0.5 ? "#ffe600" : "#ff0055"
+                    color: Math.random() > 0.5 ? "#fde047" : "#ff0055"
                 });
             }
         }
@@ -1135,22 +1154,22 @@
                 let moveSpeed = (canvasId === "game-canvas") ? (speedKph / 12) : 12;
                 roadOffset = (roadOffset + moveSpeed) % 60;
 
-                if (currentStage === 'city') ctx.fillStyle = "#02111b";
-                else if (currentStage === 'touge') ctx.fillStyle = "#0a180d";
-                else ctx.fillStyle = "#030712";
+                if (currentStage === 'city') ctx.fillStyle = "#020617";
+                else if (currentStage === 'touge') ctx.fillStyle = "#031109";
+                else ctx.fillStyle = "#020617";
                 
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                ctx.fillStyle = (currentStage === 'touge') ? "#0f2e1b" : "#091226";
+                ctx.fillStyle = (currentStage === 'touge') ? "#052212" : "#0a1329";
                 for (let i = 0; i < canvas.width; i += 70) {
                     let h = 50 + Math.sin((i + frame * 2) * 0.04) * 30;
                     ctx.fillRect(i, 120 - h, 55, h);
                 }
 
-                ctx.fillStyle = "#111827";
+                ctx.fillStyle = "#0b1329";
                 ctx.fillRect(0, 120, canvas.width, 120);
 
-                ctx.fillStyle = "#ffe600";
+                ctx.fillStyle = "#fde047";
                 for (let x = -roadOffset; x < canvas.width; x += 60) {
                     ctx.fillRect(x, 175, 35, 6);
                 }
@@ -1200,15 +1219,15 @@
             let sirenRed = (Math.floor(frame / 4) % 2 === 0);
 
             if (carKey === "crown180_fukumen") {
-                ctx.fillStyle = sirenRed ? "#ff0055" : "#550011";
+                ctx.fillStyle = sirenRed ? "#ff0055" : "#660022";
                 ctx.fillRect(x + 50, y - 4, 15, 5);
-                ctx.fillStyle = "#1a1a1a";
+                ctx.fillStyle = "#0f172a";
                 ctx.fillRect(x + 20, y + 2, 70, 20);
                 ctx.fillRect(x, y + 20, 115, 24);
             } else if (carKey === "legacy_b4") {
                 ctx.fillStyle = sirenRed ? "#ff0055" : "#00f3ff";
                 ctx.fillRect(x + 45, y - 8, 25, 8);
-                ctx.fillStyle = "#2b2b2b";
+                ctx.fillStyle = "#1e293b";
                 ctx.fillRect(x + 20, y + 2, 70, 20);
                 ctx.fillRect(x, y + 20, 115, 24);
             } else if (carKey === "gtr_r35") {
@@ -1216,16 +1235,16 @@
                 ctx.fillRect(x + 50, y - 8, 25, 8);
                 ctx.fillStyle = "#ffffff";
                 ctx.fillRect(x + 20, y + 4, 75, 18);
-                ctx.fillStyle = "#050505";
+                ctx.fillStyle = "#020617";
                 ctx.fillRect(x, y + 20, 120, 24);
-                ctx.fillStyle = "#111";
+                ctx.fillStyle = "#334155";
                 ctx.fillRect(x - 5, y + 10, 10, 12);
             } else {
                 ctx.fillStyle = sirenRed ? "#ff0055" : "#00f3ff";
                 ctx.fillRect(x + 45, y - 8, 25, 8);
                 ctx.fillStyle = "#ffffff";
                 ctx.fillRect(x + 25, y, 65, 22);
-                ctx.fillStyle = "#111111";
+                ctx.fillStyle = "#0f172a";
                 ctx.fillRect(x, y + 20, 115, 24);
             }
 
@@ -1235,7 +1254,7 @@
                 ctx.fillText(label, x + 10, y - 12);
             }
 
-            ctx.fillStyle = "#333333";
+            ctx.fillStyle = "#1e293b";
             ctx.beginPath();
             ctx.arc(x + 25, y + 44, 10, 0, Math.PI * 2);
             ctx.arc(x + 90, y + 44, 10, 0, Math.PI * 2);
@@ -1246,15 +1265,15 @@
         function drawEnemyCar(ctx, x, y) {
             ctx.save();
             ctx.fillStyle = "#ff0055";
-            ctx.shadowBlur = 12;
+            ctx.shadowBlur = 14;
             ctx.shadowColor = "#ff0055";
             ctx.fillRect(x, y + 16, 105, 24);
 
             ctx.shadowBlur = 0;
-            ctx.fillStyle = "#222222";
+            ctx.fillStyle = "#1e293b";
             ctx.fillRect(x + 20, y, 55, 18);
 
-            ctx.fillStyle = "#333";
+            ctx.fillStyle = "#0f172a";
             ctx.beginPath();
             ctx.arc(x + 20, y + 40, 9, 0, Math.PI * 2);
             ctx.arc(x + 80, y + 40, 9, 0, Math.PI * 2);
