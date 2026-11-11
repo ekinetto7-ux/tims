@@ -443,7 +443,7 @@
             <div class="btn-group">
                 <button class="red" onclick="openMissionModal()">🔴 ミッション出動 (エリア選択)</button>
                 <button class="yellow" onclick="openTaIntroModal()">⚡ スピードスターTA</button>
-                <button class="purple" onclick="openTrophyModal()">🏆 実績・アチーブメント (100個)</button>
+                <button class="purple" onclick="openTrophyModal()">🏆 実績・アチーブメント (50個)</button>
                 <button class="cyan" onclick="openShop()" style="color:var(--neon-cyan); border-color:var(--neon-cyan);">🚗 車両＆特殊アイテム売店</button>
                 <button style="border-color: #64748b; color: #94a3b8;" onclick="logout()">ログアウト</button>
             </div>
@@ -511,9 +511,9 @@
             </div>
         </div>
 
-        <!-- 5. 実績（トロフィー100個）モーダル -->
+        <!-- 5. 実績（トロフィー50個）モーダル -->
         <div id="trophy-screen" class="screen">
-            <h1>実績・アチーブメント (全100個)</h1>
+            <h1>実績・アチーブメント (全50個)</h1>
             <div class="modal-box">
                 <div class="trophy-list" id="trophy-container"></div>
                 <button onclick="toMenu()">メニューに戻る</button>
@@ -586,23 +586,22 @@
             "badge": { name: "主任警部補の特命バッジ", price: 3000, desc: "ミッション・TA報酬の獲得資金(G)が1.5倍に！" }
         };
 
+        // 🏆 実績（全50個生成）
         const TROPHIES = [];
-        for (let i = 1; i <= 100; i++) {
+        for (let i = 1; i <= 50; i++) {
             let title = `機捜勲章 第${i}級`;
             let desc = `ミッションややり込みを進めてランク${i}に到達する`;
             
             if (i === 1) { title = "初検挙"; desc = "ミッションを1回クリアする"; }
-            else if (i === 5) { title = "ベテラン捜査員"; desc = "ミッションを5回クリアする"; }
-            else if (i === 10) { title = "エース機捜隊員"; desc = "ミッションを10回クリアする"; }
-            else if (i === 20) { title = "ベテラン機捜班長"; desc = "ミッションを20回クリアする"; }
-            else if (i === 50) { title = "伝説の捜査官"; desc = "ミッションを50回クリアする"; }
-            else if (i === 100) { title = "究極機捜210マスター", desc: "すべての実績（全100個）を制覇する"; }
-            else if (i === 25) { title = "名車コレクター"; desc = "パトカーを複数所有する"; }
-            else if (i === 30) { title = "特殊装備マニア"; desc = "ショップアイテムを複数購入する"; }
-            else if (i === 40) { title = "スピードスター"; desc = "タイムアタックモードを完走する"; }
-            else if (i === 60) { title = "電光石火の追撃"; desc = "TAで20秒未満を達成する"; }
-            else if (i === 75) { title = "予算獲得・黄金期"; desc = "所持金が5,000Gを超える"; }
-            else if (i === 90) { title = "階級章・警視正", desc: "捜査員レベルが15に到達する"; }
+            else if (i === 3) { title = "ベテラン捜査員"; desc = "ミッションを3回クリアする"; }
+            else if (i === 5) { title = "エース機捜隊員"; desc = "ミッションを5回クリアする"; }
+            else if (i === 10) { title = "ベテラン機捜班長"; desc = "ミッションを10回クリアする"; }
+            else if (i === 25) { title = "伝説の捜査官"; desc = "ミッションを25回クリアする"; }
+            else if (i === 50) { title = "究極機捜210マスター"; desc = "すべての実績（全50個）を制覇する"; }
+            else if (i === 15) { title = "名車コレクター"; desc = "パトカーを複数所有する"; }
+            else if (i === 20) { title = "特殊装備マニア"; desc = "ショップアイテムを複数購入する"; }
+            else if (i === 30) { title = "スピードスター"; desc = "タイムアタックモードを完走する"; }
+            else if (i === 40) { title = "電光石火の追撃"; desc = "TAで20秒未満を達成する"; }
 
             TROPHIES.push({ id: `trophy_${i}`, title: title, desc: desc });
         }
@@ -1121,25 +1120,23 @@
                 if (!player.unlockedTrophies.includes(id)) player.unlockedTrophies.push(id);
             };
 
-            for (let i = 1; i <= 100; i++) {
+            for (let i = 1; i <= 50; i++) {
                 if (player.clearCount >= i) unlock(`trophy_${i}`);
             }
 
             if (player.clearCount >= 1) unlock("trophy_1");
+            if (player.clearCount >= 3) unlock("trophy_3");
             if (player.clearCount >= 5) unlock("trophy_5");
             if (player.clearCount >= 10) unlock("trophy_10");
-            if (player.clearCount >= 20) unlock("trophy_20");
-            if (player.clearCount >= 50) unlock("trophy_50");
+            if (player.clearCount >= 25) unlock("trophy_25");
 
-            if (player.ownedCars.length >= 2) unlock("trophy_25");
-            if (player.ownedItems && player.ownedItems.length >= 2) unlock("trophy_30");
-            if (player.bestTime) unlock("trophy_40");
-            if (player.bestTime && player.bestTime < 20) unlock("trophy_60");
-            if (player.money >= 5000) unlock("trophy_75");
-            if (player.level >= 15) unlock("trophy_90");
+            if (player.ownedCars.length >= 2) unlock("trophy_15");
+            if (player.ownedItems && player.ownedItems.length >= 2) unlock("trophy_20");
+            if (player.bestTime) unlock("trophy_30");
+            if (player.bestTime && player.bestTime < 20) unlock("trophy_40");
 
-            if (player.unlockedTrophies.length >= 99) {
-                unlock("trophy_100");
+            if (player.unlockedTrophies.length >= 49) {
+                unlock("trophy_50");
             }
 
             savePlayerData();
