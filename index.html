@@ -32,6 +32,7 @@
             justify-content: center;
             align-items: center;
             overflow: hidden;
+            position: relative;
         }
 
         .game-container {
@@ -46,7 +47,7 @@
             padding: 24px;
             text-align: center;
             position: relative;
-            z-index: 10;
+            z-index: 50;
         }
 
         h1 {
@@ -56,9 +57,11 @@
             margin-bottom: 14px;
             letter-spacing: 3px;
             font-weight: 900;
+            position: relative;
+            z-index: 60;
         }
 
-        .screen { display: none; position: relative; z-index: 20; }
+        .screen { display: none; position: relative; z-index: 60; }
         .screen.active { display: block; animation: fadeIn 0.3s ease-out; }
 
         @keyframes fadeIn {
@@ -72,7 +75,7 @@
             gap: 12px;
             margin-bottom: 20px;
             position: relative;
-            z-index: 30;
+            z-index: 70;
         }
 
         .tab-btn {
@@ -81,9 +84,12 @@
             border-radius: 10px;
             cursor: pointer;
             border: 1px solid rgba(0, 243, 255, 0.4);
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(0, 0, 0, 0.6);
             color: var(--neon-cyan);
             transition: all 0.25s ease;
+            position: relative;
+            z-index: 70;
+            pointer-events: auto;
         }
 
         .tab-btn.active {
@@ -100,14 +106,14 @@
             align-items: center;
             gap: 12px;
             position: relative;
-            z-index: 30;
+            z-index: 70;
         }
 
         input[type="text"], input[type="password"] {
             width: 80%;
             max-width: 380px;
             padding: 12px;
-            background: rgba(2, 6, 23, 0.85);
+            background: rgba(2, 6, 23, 0.95);
             border: 2px solid rgba(0, 243, 255, 0.4);
             color: #fff;
             font-size: 1.1rem;
@@ -116,7 +122,8 @@
             outline: none;
             box-shadow: inset 0 0 15px rgba(0, 243, 255, 0.15);
             position: relative;
-            z-index: 30;
+            z-index: 70;
+            pointer-events: auto;
         }
 
         .btn-group {
@@ -126,11 +133,11 @@
             flex-wrap: wrap;
             margin-top: 16px;
             position: relative;
-            z-index: 30;
+            z-index: 70;
         }
 
         button {
-            background: rgba(0, 243, 255, 0.1);
+            background: rgba(0, 243, 255, 0.15);
             color: var(--neon-cyan);
             border: 2px solid var(--neon-cyan);
             padding: 11px 22px;
@@ -142,7 +149,8 @@
             text-shadow: 0 0 8px rgba(0, 243, 255, 0.5);
             box-shadow: 0 0 12px rgba(0, 243, 255, 0.15);
             position: relative;
-            z-index: 30;
+            z-index: 70;
+            pointer-events: auto;
         }
 
         button:hover {
@@ -171,7 +179,7 @@
             pointer-events: none;
             box-shadow: inset 0 0 25px rgba(0,0,0,0.8);
             position: relative;
-            z-index: 15;
+            z-index: 40;
         }
 
         .status-bar {
@@ -184,6 +192,8 @@
             border: 1px solid rgba(0, 243, 255, 0.4);
             margin-bottom: 8px;
             font-size: 0.95rem;
+            position: relative;
+            z-index: 60;
         }
 
         .hp-container {
@@ -220,6 +230,8 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            position: relative;
+            z-index: 60;
         }
 
         .word-display-box {
@@ -229,6 +241,8 @@
             border: 1px solid rgba(253, 224, 71, 0.4);
             margin: 8px 0;
             box-shadow: 0 0 15px rgba(253, 224, 71, 0.1);
+            position: relative;
+            z-index: 60;
         }
 
         .furigana-display {
@@ -264,7 +278,7 @@
             gap: 10px;
             margin-bottom: 10px;
             position: relative;
-            z-index: 30;
+            z-index: 70;
         }
 
         .shop-grid {
@@ -276,18 +290,18 @@
             overflow-y: auto;
             padding-right: 4px;
             position: relative;
-            z-index: 30;
+            z-index: 70;
         }
 
         .shop-card {
-            background: rgba(2, 6, 23, 0.85);
+            background: rgba(2, 6, 23, 0.9);
             border: 1px solid rgba(0, 243, 255, 0.4);
             border-radius: 12px;
             padding: 10px;
             text-align: center;
             transition: all 0.2s;
             position: relative;
-            z-index: 30;
+            z-index: 70;
         }
 
         .shop-card h3 { color: var(--neon-yellow); margin-bottom: 4px; font-size: 0.9rem; }
@@ -304,13 +318,15 @@
             grid-template-columns: 1fr 1fr;
             gap: 6px;
             font-size: 0.88rem;
+            position: relative;
+            z-index: 60;
         }
 
         .profile-item { color: #cbd5e1; }
         .profile-item span { color: var(--neon-cyan); font-weight: bold; }
 
         .modal-box {
-            background: rgba(2, 6, 23, 0.95);
+            background: rgba(2, 6, 23, 0.98);
             border: 2px solid var(--neon-purple);
             box-shadow: 0 0 35px rgba(168, 85, 247, 0.3);
             border-radius: 14px;
@@ -318,7 +334,7 @@
             max-width: 560px;
             margin: 15px auto;
             position: relative;
-            z-index: 30;
+            z-index: 70;
         }
 
         .trophy-list {
@@ -329,6 +345,8 @@
             overflow-y: auto;
             margin-bottom: 15px;
             padding-right: 6px;
+            position: relative;
+            z-index: 70;
         }
 
         .trophy-item {
@@ -373,10 +391,10 @@
             <div id="login-form" class="auth-form">
                 <input type="text" id="login-username" placeholder="コールサイン (名前)">
                 <input type="password" id="login-password" placeholder="暗号パスワード">
-                <div style="display:flex; gap:10px; width:80%; max-width:380px; position:relative; z-index:30;">
+                <div style="display:flex; gap:10px; width:80%; max-width:380px; position:relative; z-index:70;">
                     <button class="green" onclick="handleLogin()" style="flex:1;">出動開始</button>
                 </div>
-                <div style="display:flex; gap:8px; margin-top:6px; font-size:0.85rem; position:relative; z-index:30;">
+                <div style="display:flex; gap:8px; margin-top:6px; font-size:0.85rem; position:relative; z-index:70;">
                     <button onclick="openNameHelper()" style="padding:6px 12px; font-size:0.8rem; border-color:#64748b; color:#94a3b8;">👤 名前を忘れた場合</button>
                     <button onclick="openGoogleStyleRecovery()" style="padding:6px 12px; font-size:0.8rem; border-color:var(--neon-cyan); color:var(--neon-cyan);">🔑 パスワードを忘れた場合</button>
                 </div>
@@ -574,7 +592,6 @@
             let title = `機捜勲章 第${i}級`;
             let desc = `ミッションややり込みを進めてランク${i}に到達する`;
             
-            // 特殊なキリ番実績の個別設定
             if (i === 1) { title = "初検挙"; desc = "ミッションを1回クリアする"; }
             else if (i === 5) { title = "ベテラン捜査員"; desc = "ミッションを5回クリアする"; }
             else if (i === 10) { title = "エース機捜隊員"; desc = "ミッションを10回クリアする"; }
@@ -582,16 +599,16 @@
             else if (i === 50) { title = "伝説の捜査官"; desc = "ミッションを50回クリアする"; }
             else if (i === 100) { title = "究極機捜210マスター", desc: "すべての実績（全100個）を制覇する"; }
             else if (i === 25) { title = "名車コレクター"; desc = "パトカーを複数所有する"; }
-            else if (i === 30) { title = "特殊装備マニア"; desc: "ショップアイテムを複数購入する"; }
-            else if (i === 40) { title = "スピードスター"; desc: "タイムアタックモードを完走する"; }
-            else if (i === 60) { title = "電光石火の追撃"; desc: "TAで20秒未満を達成する" };
-            else if (i === 75) { title = "予算獲得・黄金期"; desc: "所持金が5,000Gを超える" };
-            else if (i === 90) { title = "階級章・警視正", desc: "捜査員レベルが15に到達する" };
+            else if (i === 30) { title = "特殊装備マニア"; desc = "ショップアイテムを複数購入する"; }
+            else if (i === 40) { title = "スピードスター"; desc = "タイムアタックモードを完走する"; }
+            else if (i === 60) { title = "電光石火の追撃"; desc = "TAで20秒未満を達成する"; }
+            else if (i === 75) { title = "予算獲得・黄金期"; desc = "所持金が5,000Gを超える"; }
+            else if (i === 90) { title = "階級章・警視正", desc: "捜査員レベルが15に到達する"; }
 
             TROPHIES.push({ id: `trophy_${i}`, title: title, desc: desc });
         }
 
-        // 🔤 全200種類以上の膨大なワードプール（完全ランダム出題用）
+        // 🔤 全200種類以上の膨大なワードプール
         const hugeWordPool = [
             { kanji: "機動捜査隊", furigana: "きどうそうさたい", roma: "kidousousatai" },
             { kanji: "緊急追跡", furigana: "きんきゅうついせき", roma: "kinkyuutsuiseki" },
@@ -599,7 +616,7 @@
             { kanji: "サイレン鳴動", furigana: "さいれんめいどう", roma: "sairenmeidou" },
             { kanji: "覆面パトカー", furigana: "ふくめんぱとかー", roma: "fukumennpatoka-" },
             { kanji: "高速道路", furigana: "こうそくどうろ", roma: "kousokudouro" },
-            { kanji: "容疑車両発見", furigana: "ようぎしゃりょうHAKKEN", roma: "yougisharyouhakken" },
+            { kanji: "容疑車両発見", furigana: "ようぎしゃりょうはっけん", roma: "yougisharyouhakken" },
             { kanji: "現場急行", furigana: "げんばきゅうこう", roma: "genbakyuukou" },
             { kanji: "逮捕状請求", furigana: "たいほじょうせいきゅう", roma: "taihojouseikyuu" },
             { kanji: "警視庁司令室", furigana: "けいしちょうしれいしつ", roma: "keishichoushireishitsu" },
@@ -1106,7 +1123,6 @@
                 if (!player.unlockedTrophies.includes(id)) player.unlockedTrophies.push(id);
             };
 
-            // 100個の実績を動的判定
             for (let i = 1; i <= 100; i++) {
                 if (player.clearCount >= i) unlock(`trophy_${i}`);
             }
@@ -1124,7 +1140,6 @@
             if (player.money >= 5000) unlock("trophy_75");
             if (player.level >= 15) unlock("trophy_90");
 
-            // 全ての実績を解除したら100番も解除
             if (player.unlockedTrophies.length >= 99) {
                 unlock("trophy_100");
             }
