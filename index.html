@@ -337,9 +337,9 @@
 </head>
 <body>
 
-    <!-- 🎵 BGM (D.mp3) ※確実な自動再生＆エラーハンドリング対応 -->
+    <!-- 🎵 BGM (d.mp3) -->
     <audio id="bgm-audio" loop preload="auto">
-        <source src="D.mp3" type="audio/mp3">
+        <source src="d.mp3" type="audio/mp3">
     </audio>
 
     <div class="game-container" id="main-container">
@@ -447,7 +447,7 @@
             </div>
         </div>
 
-        <!-- 4. 車両ディーラー ＆ 特殊アイテムショップ (タブ切り替え対応) -->
+        <!-- 4. 車両ディーラー ＆ 特殊アイテムショップ -->
         <div id="shop-screen" class="screen">
             <h1>機捜データベース売店 & 車両ガレージ</h1>
             
@@ -467,7 +467,7 @@
             <div class="shop-grid" id="dealer-item-grid" style="display:none;"></div>
             
             <div style="display:flex; justify-content:center; gap:12px; margin-top:8px;">
-                <button class="purple" onclick="toggleBGM()">BGM切替 (ON/OFF)</button>
+                <button class="purple" onclick="toggleBGM()">BGM/サウンド切替 (ON/OFF)</button>
                 <button onclick="toMenu()">メニューに戻る</button>
             </div>
         </div>
@@ -539,7 +539,7 @@
             "lexus_lc": { name: "レクサス LC 要人警護仕様", price: 5000, speedMax: 420, boostPower: 2.2, type: "luxury" }
         };
 
-        // 🛡️ 新ショップアイテム（全6種）
+        // 🛡️ ショップアイテム（全6種）
         const SHOP_ITEMS = {
             "battery": { name: "予備サイレンバッテリー", price: 400, desc: "大破時にHPを+50自動回復する応急キット" },
             "turbine": { name: "高出力ブースト・タービン", price: 800, desc: "スペースキーのブースト進捗削りが1.5倍に！" },
@@ -600,25 +600,34 @@
         const bgmAudio = document.getElementById("bgm-audio");
         bgmAudio.volume = 0.5;
         let isBgmEnabled = true;
+        let useSynthBgm = false; // d.mp3が読めない場合の自動バックアップフラグ
+        let synthBgmTimer = null;
 
         function playBGM() {
-            if (isBgmEnabled) {
-                bgmAudio.play().catch(e => {});
-            }
+            if (!isBgmEnabled) return;
+            bgmAudio.play().then(() => {
+                useSynthBgm = false;
+            }).catch(e => {
+                // d.mp3が再生できない/見つからない場合は内蔵シンセサイザーBGMに自動切り替え！
+                useSynthBgm = true;
+                startSynthBgm();
+            });
         }
 
         function stopBGM() {
             bgmAudio.pause();
             bgmAudio.currentTime = 0;
+            if (synthBgmTimer) clearInterval(synthBgmTimer);
+            synthBgmTimer = null;
         }
 
         function toggleBGM() {
             initAudio();
             isBgmEnabled = !isBgmEnabled;
             if (isBgmEnabled) {
-                bgmAudio.play().catch(e => {});
+                playBGM();
             } else {
-                bgmAudio.pause();
+                stopBGM();
             }
         }
 
@@ -626,10 +635,35 @@
         function initAudio() {
             if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             if (audioCtx.state === 'suspended') audioCtx.resume();
-            if (bgmAudio.paused && isBgmEnabled) bgmAudio.play().catch(e => {});
+            if (isBgmEnabled && bgmAudio.paused && !useSynthBgm) {
+                playBGM();
+            }
         }
 
-        // 🎵 ページ内のどこをクリックしても確実音声をアクティブ化＆BGM再生
+        // 🎵 内蔵パトカー風シンセサイザーBGM（d.mp3代用として確実に鳴り響く）
+        function startSynthBgm() {
+            if (synthBgmTimer) return;
+            let noteIdx = 0;
+            const melody = [220, 247, 261, 330, 293, 261, 247, 220];
+            synthBgmTimer = setInterval(() => {
+                if (!isBgmEnabled || !useSynthBgm || !audioCtx) return;
+                try {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(melody[noteIdx % melody.length], audioCtx.currentTime);
+                    gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+                    gain.gain.linearRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.3);
+                    noteIdx++;
+                } catch(e) {}
+            }, 350);
+        }
+
+        // 🖱️ 画面クリックで確実Audio有効化
         window.addEventListener("click", () => {
             initAudio();
         }, { once: true });
@@ -1116,7 +1150,6 @@
                 let intervalTime = currentDiff === "extreme" ? 2500 : (currentDiff === "hard" ? 3200 : 4200);
                 let dmgAmount = currentDiff === "extreme" ? 14 : (currentDiff === "hard" ? 10 : 8);
 
-                // 防弾強化フロントバンパーの効果：ダメージ20%軽減
                 if (player.ownedItems && player.ownedItems.includes("bumper")) {
                     dmgAmount = Math.floor(dmgAmount * 0.8);
                 }
@@ -1132,9 +1165,7 @@
                     container.classList.add("damage-flash");
 
                     if (playerHp <= 0) {
-                        // 予備サイレンバッテリーの効果：大破時に一度だけHP+50で自動復活
                         if (player.ownedItems && player.ownedItems.includes("battery")) {
-                            // バッテリーを消費して復活
                             player.ownedItems = player.ownedItems.filter(i => i !== "battery");
                             playerHp = 50;
                             savePlayerData();
@@ -1164,7 +1195,6 @@
         function nextWord() {
             if (remainingWords <= 0) {
                 playSound('clear');
-                let baseReward = 100;
                 if (currentMode === "timeattack") {
                     if (taElapsedTimer) clearInterval(taElapsedTimer);
                     let finalTime = ((Date.now() - taStartTime) / 1000) + (taMissCount * 0.5);
@@ -1173,7 +1203,6 @@
                     if (finalTime < 20) reward = 550;
                     else if (finalTime < 45) reward = 200;
 
-                    // 主任警部補の特命バッジ効果：報酬1.5倍
                     if (player.ownedItems && player.ownedItems.includes("badge")) {
                         reward = Math.floor(reward * 1.5);
                     }
@@ -1192,7 +1221,6 @@
                 } else {
                     let reward = (currentDiff === "hard") ? 250 : ((currentDiff === "extreme") ? 500 : 100);
                     
-                    // 主任警部補の特命バッジ効果：報酬1.5倍
                     if (player.ownedItems && player.ownedItems.includes("badge")) {
                         reward = Math.floor(reward * 1.5);
                     }
@@ -1259,7 +1287,6 @@
             if (e.code === "Space" && boostGau >= 100) {
                 boostGau = 0;
                 
-                // 高出力ブースト・タービンの効果：進捗削り1.5倍
                 let boostDmgMultiplier = (player.ownedItems && player.ownedItems.includes("turbine")) ? 1.5 : 1.0;
                 let wordsToSkip = Math.floor(2 * carSpec.boostPower * boostDmgMultiplier);
 
@@ -1285,7 +1312,6 @@
 
                     speedKph = Math.min(carSpec.speedMax, speedKph + 8);
                     
-                    // 機捜特製エナジードリンクの効果：ブースト蓄積量1.3倍
                     let boostAdd = (player.ownedItems && player.ownedItems.includes("drink")) ? (14 * 1.3) : 14;
                     boostGau = Math.min(100, boostGau + boostAdd);
 
@@ -1306,7 +1332,6 @@
                 } else {
                     playSound('damage');
                     if (currentMode === "timeattack") {
-                        // レーダー探知パッチの効果：TA時のミスによるペナルティ(+0.5秒)を無効化
                         if (!(player.ownedItems && player.ownedItems.includes("radar"))) {
                             taMissCount++;
                         }
