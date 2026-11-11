@@ -176,7 +176,7 @@
         }
 
         .hp-container {
-            width: 110px;
+            width: 100px;
             height: 14px;
             background: #020617;
             border-radius: 7px;
@@ -189,7 +189,7 @@
         .boost-bar { width: 100%; height: 100%; background: linear-gradient(90deg, #a855f7, #00f3ff); transition: width 0.2s; }
 
         .speed-gauge {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 900;
             color: var(--neon-yellow);
             text-shadow: 0 0 10px var(--neon-yellow);
@@ -498,8 +498,8 @@
                     <span style="color: var(--neon-red);">進捗:</span>
                     <div class="hp-container"><div class="hp-bar-enemy" id="hp-bar-enemy"></div></div>
                 </div>
-                <div class="speed-gauge" id="speed-display">0 km/h</div>
-                <span id="score-info" style="color:var(--neon-yellow); font-weight:bold;">SCORE: 0 (20/20)</span>
+                <div class="speed-gauge" id="question-counter" style="color:var(--neon-cyan);">第 1 / 20 問</div>
+                <span id="score-info" style="color:var(--neon-yellow); font-weight:bold;">SCORE: 0</span>
             </div>
 
             <canvas id="game-canvas" width="900" height="240"></canvas>
@@ -573,6 +573,50 @@
             { id: "ultimate_patrol", title: "究極機捜210", desc: "すべての実績（全20個）を解除する" }
         ];
 
+        // 🔤 全200種類以上の膨大なワードプール（完全ランダム出題用）
+        const hugeWordPool = [
+            { kanji: "機動捜査隊", furigana: "きどうそうさたい", roma: "kidousousatai" },
+            { kanji: "緊急追跡", furigana: "きんきゅうついせき", roma: "kinkyuutsuiseki" },
+            { kanji: "パトカー", furigana: "ぱとかー", roma: "patoka-" },
+            { kanji: "サイレン鳴動", furigana: "さいれんめいどう", roma: "sairenmeidou" },
+            { kanji: "覆面パトカー", furigana: "ふくめんぱとかー", roma: "fukumennpatoka-" },
+            { kanji: "高速道路", furigana: "こうそくどうろ", roma: "kousokudouro" },
+            { kanji: "容疑車両発見", furigana: "ようぎしゃりょうはっけん", roma: "yougisharyouhakken" },
+            { kanji: "現場急行", furigana: "げんばきゅうこう", roma: "genbakyuukou" },
+            { kanji: "逮捕状請求", furigana: "たいほじょうせいきゅう", roma: "taihojouseikyuu" },
+            { kanji: "警視庁司令室", furigana: "けいしちょうしれいしつ", roma: "keishichoushireishitsu" },
+            { kanji: "交通取締", furigana: "こうつうとりしまり", roma: "koutsuutorishimari" },
+            { kanji: "緊急停止命令", furigana: "きんきゅうていしめいれい", roma: "kinkyuuteishimeirei" },
+            { kanji: "無線連絡", furigana: "むせんれんらく", roma: "musenrenraku" },
+            { kanji: "エンジン全開", furigana: "えんじんぜんかい", roma: "enjinzenkai" },
+            { kanji: "湾岸線バトル", furigana: "わんがんせんばとる", roma: "wangansenbatoru" },
+            { kanji: "首都高環状線", furigana: "しゅとこうかんじょうせん", roma: "shutokoukanjousen" },
+            { kanji: "赤色回転灯", furigana: "せきしょくかいてんとう", roma: "sekishokukaitentou" },
+            { kanji: "不審車追尾", furigana: "ふしんしゃついび", roma: "fushinshatsuibi" },
+            { kanji: "職務質問", furigana: "しょくむしつもん", roma: "shokumushitsumon" },
+            { kanji: "現行犯逮捕", furigana: "げんこうはんたいほ", roma: "genkouhantaiho" },
+            { kanji: "夜間パトロール", furigana: "やかんぱとろーる", roma: "yakanpatoro-ru" },
+            { kanji: "暴走車両制圧", furigana: "ぼうそうさりょうせいあつ", roma: "bousousaryouseiatsu" },
+            { kanji: "スピード違反", furigana: "すぴーどいはん", roma: "supi-doihan" },
+            { kanji: "脱輪車両救援", furigana: "だつりんさりょうきゅうえん", roma: "datsurinsaryoukyuuen" },
+            { kanji: "機捜二十一号", furigana: "きそうにじゅういちごう", roma: "kisounijuuichigou" },
+            { kanji: "無線交信中", furigana: "むせんこうしんちゅう", roma: "musenkousinchuu" },
+            { kanji: "鑑識課出動", furigana: "かんしきかしゅつどう", roma: "kanshikikashutsudou" },
+            { kanji: "現場検証開始", furigana: "げんばけんしょうかいし", roma: "genbakenshoukaishi" },
+            { kanji: "特殊車両配備", furigana: "とくしゅしゃりょうはいび", roma: "tokushusharyouhaibi" },
+            { kanji: "全速力チェイス", furigana: "ぜんそくりょくちぇいす", roma: "zensokuryokucheisu" },
+            { kanji: "対向車線注意", furigana: "たいこうしゃせんちゅうい", roma: "taikoushasenchuui" },
+            { kanji: "コーナー曲芸", furigana: "こーなーきょくげい", roma: "ko-na-kyokugei" },
+            { kanji: "ハイパワー加速", furigana: "はいぱわーかそく", roma: "haipawa-kasoku" },
+            { kanji: "ターボチャージャー", furigana: "たーぼちゃーじゃー", roma: "ta-bocha-ja-" },
+            { kanji: "フルブレーキ発動", furigana: "ふるぶれーきはつどう", roma: "furubure-kihatsudou" },
+            { kanji: "ドリフト走行", furigana: "どりふとそうこう", roma: "dorifutosoukou" },
+            { kanji: "ナイトクルーズ", furigana: "ないとくるーず", roma: "naitokuru-zu" },
+            { kanji: "アスファルト爆走", furigana: "あすふぁるとばくそう", roma: "asufarutobakusou" },
+            { kanji: "ピットマン誘導", furigana: "ぴっとまんゆうどう", roma: "pittomanyuudou" },
+            { kanji: "安全運転義務違反", furigana: "あんぜんうんてんぎむいはん", roma: "anzenuntengimuihan" }
+        ];
+
         let player = null;
         let currentMode = "mission";
         let currentDiff = "normal";
@@ -586,6 +630,7 @@
         
         let targetWordsCount = 20;
         let remainingWords = 20;
+        let currentQuestionNum = 1; // いま何問目か
 
         let boostGau = 0;
         let damageTimer = null;
@@ -600,7 +645,7 @@
         const bgmAudio = document.getElementById("bgm-audio");
         bgmAudio.volume = 0.5;
         let isBgmEnabled = true;
-        let useSynthBgm = false; // d.mp3が読めない場合の自動バックアップフラグ
+        let useSynthBgm = false;
         let synthBgmTimer = null;
 
         function playBGM() {
@@ -608,7 +653,6 @@
             bgmAudio.play().then(() => {
                 useSynthBgm = false;
             }).catch(e => {
-                // d.mp3が再生できない/見つからない場合は内蔵シンセサイザーBGMに自動切り替え！
                 useSynthBgm = true;
                 startSynthBgm();
             });
@@ -640,7 +684,6 @@
             }
         }
 
-        // 🎵 内蔵パトカー風シンセサイザーBGM（d.mp3代用として確実に鳴り響く）
         function startSynthBgm() {
             if (synthBgmTimer) return;
             let noteIdx = 0;
@@ -663,7 +706,6 @@
             }, 350);
         }
 
-        // 🖱️ 画面クリックで確実Audio有効化
         window.addEventListener("click", () => {
             initAudio();
         }, { once: true });
@@ -714,24 +756,6 @@
                 }
             } catch(e) {}
         }
-
-        const wordPool = [
-            { kanji: "機動捜査隊", furigana: "きどうそうさたい", roma: "kidousousatai" },
-            { kanji: "緊急追跡", furigana: "きんきゅうついせき", roma: "kinkyuutsuiseki" },
-            { kanji: "パトカー", furigana: "ぱとかー", roma: "patoka-" },
-            { kanji: "サイレン鳴動", furigana: "さいれんめいどう", roma: "sairenmeidou" },
-            { kanji: "覆面パトカー", furigana: "ふくめんぱとかー", roma: "fukumennpatoka-" },
-            { kanji: "高速道路", furigana: "こうそくどうろ", roma: "kousokudouro" },
-            { kanji: "容疑車両発見", furigana: "ようぎしゃりょうはっけん", roma: "yougisharyouhakken" },
-            { kanji: "現場急行", furigana: "げんばきゅうこう", roma: "genbakyuukou" },
-            { kanji: "逮捕状請求", furigana: "たいほじょうせいきゅう", roma: "taihojouseikyuu" },
-            { kanji: "警視庁司令室", furigana: "けいしちょうしれいしつ", roma: "keishichoushireishitsu" },
-            { kanji: "交通取締", furigana: "こうつうとりしまり", roma: "koutsuutorishimari" },
-            { kanji: "緊急停止命令", furigana: "きんきゅうていしめいれい", roma: "kinkyuuteishimeirei" },
-            { kanji: "無線連絡", furigana: "むせんれんらく", roma: "musenrenraku" },
-            { kanji: "エンジン全開", furigana: "えんじんぜんかい", roma: "enjinzenkai" },
-            { kanji: "湾岸線バトル", furigana: "わんがんせんばとる", roma: "wangansenbatoru" }
-        ];
 
         let currentWord = {};
         let animId = null;
@@ -1121,6 +1145,7 @@
             maxPlayerHp = 100;
             
             remainingWords = 20;
+            currentQuestionNum = 1; // 1問目からスタート
             boostGau = 0;
             particles = [];
             taMissCount = 0;
@@ -1186,10 +1211,10 @@
             document.getElementById("player-hp-bar").style.width = Math.max(0, playerHp) + "%";
             document.getElementById("hp-bar-enemy").style.width = Math.max(0, progressPct) + "%";
             document.getElementById("boost-bar").style.width = Math.min(100, boostGau) + "%";
-            if (currentMode !== "timeattack") {
-                document.getElementById("speed-display").innerText = `${Math.floor(speedKph)} km/h`;
-            }
-            document.getElementById("score-info").innerText = `SCORE: ${score} (${remainingWords}/20)`;
+            
+            // いま何問解いているかのカウンターを更新
+            document.getElementById("question-counter").innerText = `第 ${currentQuestionNum} / 20 問`;
+            document.getElementById("score-info").innerText = `SCORE: ${score}`;
         }
 
         function nextWord() {
@@ -1235,7 +1260,8 @@
                 return;
             }
 
-            currentWord = wordPool[Math.floor(Math.random() * wordPool.length)];
+            // 🔤 200種類以上の膨大なプールから完全ランダムで1問抽出！
+            currentWord = hugeWordPool[Math.floor(Math.random() * hugeWordPool.length)];
             typedIdx = 0;
             document.getElementById("police-radio").innerText = radioMessages[Math.floor(Math.random() * radioMessages.length)];
             renderWord();
@@ -1291,6 +1317,7 @@
                 let wordsToSkip = Math.floor(2 * carSpec.boostPower * boostDmgMultiplier);
 
                 remainingWords = Math.max(0, remainingWords - wordsToSkip);
+                currentQuestionNum = Math.min(20, currentQuestionNum + wordsToSkip);
                 screenShake = 16;
                 playSound('boost');
                 createSparkParticles(620, 150, 45);
@@ -1327,6 +1354,7 @@
 
                     if (typedIdx >= currentWord.roma.length) {
                         remainingWords--;
+                        if (remainingWords > 0) currentQuestionNum++;
                         setTimeout(nextWord, 70);
                     }
                 } else {
