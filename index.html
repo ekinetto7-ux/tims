@@ -222,16 +222,32 @@
             box-shadow: 0 0 15px rgba(255, 230, 0, 0.1);
         }
 
+        .furigana-display {
+            font-size: 1.3rem;
+            color: #00ff66;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(0, 255, 102, 0.6);
+            margin-bottom: 2px;
+        }
+
+        .kanji-display {
+            font-size: 1.8rem;
+            color: #ffffff;
+            font-weight: 900;
+            letter-spacing: 3px;
+            margin-bottom: 6px;
+        }
+
         .target-word {
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             color: var(--neon-yellow);
-            letter-spacing: 6px;
+            letter-spacing: 4px;
             text-shadow: 0 0 20px rgba(255, 230, 0, 0.8);
             font-weight: 900;
         }
 
         .typed-char { color: var(--neon-cyan); text-shadow: 0 0 12px var(--neon-cyan); }
-        .roma-hint { color: #aaa; font-size: 1.25rem; margin-bottom: 4px; font-weight: 600; }
 
         .shop-grid {
             display: grid;
@@ -295,13 +311,13 @@
 </head>
 <body>
 
-    <!-- 🎵 GitHub上の音楽ファイル (d.mp3) をループ再生するBGM要素 -->
+    <!-- 🎵 BGM (d.mp3) -->
     <audio id="bgm-audio" loop preload="auto">
         <source src="d.mp3" type="audio/mp3">
     </audio>
 
     <div class="game-container" id="main-container">
-        <!-- 1. ログイン / 登録 (ここでは曲は流れない) -->
+        <!-- 1. ログイン / 登録 -->
         <div id="login-screen" class="screen active">
             <h1>機捜210 - ULTIMATE SOLO</h1>
             <div class="auth-tab">
@@ -320,20 +336,19 @@
             </div>
         </div>
 
-        <!-- 2. メニュー (ここから曲が再生開始) -->
+        <!-- 2. メニュー (自由モード廃止・タイムアタック進化版を配置) -->
         <div id="menu-screen" class="screen">
             <h1 id="user-display">捜査員待機中</h1>
             <canvas id="menu-canvas" width="900" height="240"></canvas>
             <div class="btn-group">
-                <button class="green" onclick="startMode('free')">🟢 自由パトロール</button>
                 <button class="red" onclick="openDifficultyModal()">🔴 メインミッション出動</button>
-                <button class="yellow" onclick="startMode('timeattack')">⚡ タイムアタック</button>
+                <button class="yellow" onclick="startMode('timeattack')">⚡ スピードスター・タイムアタック</button>
                 <button class="cyan" onclick="openShop()" style="color:var(--neon-cyan); border-color:var(--neon-cyan);">🛒 機捜ガレージ / 設定</button>
                 <button style="border-color: #777; color: #aaa;" onclick="logout()">ログアウト</button>
             </div>
         </div>
 
-        <!-- 3. 難易度選択モーダル -->
+        <!-- 3. 難易度選択 -->
         <div id="difficulty-screen" class="screen">
             <h1>ミッション難易度選択</h1>
             <div class="modal-box">
@@ -347,7 +362,7 @@
             </div>
         </div>
 
-        <!-- 4. ショップ & ガレージ設定 (BGMミュート切り替え付き) -->
+        <!-- 4. ガレージ & 設定 -->
         <div id="shop-screen" class="screen">
             <h1>機捜ガレージ・装備カスタマイズ</h1>
             
@@ -356,6 +371,7 @@
                 <div class="profile-item">階級/Lv: <span id="pf-level">1</span></div>
                 <div class="profile-item">累計スコア: <span id="pf-score">0</span> pt</div>
                 <div class="profile-item">所持資金: <span id="pf-money" style="color:var(--neon-yellow);">0</span> G</div>
+                <div class="profile-item">自己ベスト(TA): <span id="pf-besttime" style="color:var(--neon-green);">---</span></div>
                 <div class="profile-item">エンジンLv: <span id="pf-engine">1</span></div>
                 <div class="profile-item">PITバンパーLv: <span id="pf-bumper">1</span></div>
                 <div class="profile-item">装甲シャーシLv: <span id="pf-armor">1</span></div>
@@ -394,8 +410,7 @@
                     <p id="car-color-name" style="color:var(--neon-cyan);">白黒クラウン</p>
                     <button onclick="toggleCarColor()">塗装変更</button>
                 </div>
-                <!-- 🎵 BGM設定カード -->
-                <div class="shop-card" style="border-color: var(--neon-purple); grid-column: span auto;">
+                <div class="shop-card" style="border-color: var(--neon-purple);">
                     <h3>BGM (d.mp3) 設定</h3>
                     <p id="bgm-status-text" style="color:var(--neon-green);">状態: 再生中 (ループ)</p>
                     <button class="purple" onclick="toggleBGM()">BGM切替 (ON/OFF)</button>
@@ -409,7 +424,7 @@
             <div class="police-radio-ticker" id="police-radio">📡 [機捜無線] 捜査車両210、首都高エリアにて不審車両の追尾を開始せよ。</div>
             
             <div class="status-bar">
-                <div style="display: flex; align-items: center; gap: 6px;">
+                <div id="player-hp-wrapper" style="display: flex; align-items: center; gap: 6px;">
                     <span style="color: var(--neon-green);">自機:</span>
                     <div class="hp-container"><div class="hp-bar-player" id="player-hp-bar"></div></div>
                 </div>
@@ -428,11 +443,12 @@
             <canvas id="game-canvas" width="900" height="240"></canvas>
 
             <div class="word-display-box">
-                <div class="roma-hint" id="roma-hint">keisatsu</div>
+                <div class="furigana-display" id="furigana-display">きどうそうさたい</div>
+                <div class="kanji-display" id="kanji-display">機動捜査隊</div>
                 <div class="target-word">
-                    <span class="typed-char" id="typed-part"></span><span id="remain-part">keisatsu</span>
+                    <span class="typed-char" id="typed-part"></span><span id="remain-part">kidousousatai</span>
                 </div>
-                <p style="color: var(--neon-cyan); font-size: 0.85rem; margin-top: 4px;">[SPACEキー] BOOST満タンで一気に追撃！ | (5コンボごとにHP少量回復！)</p>
+                <p style="color: var(--neon-cyan); font-size: 0.85rem; margin-top: 6px;">[SPACEキー] BOOST満タンで一気に追撃！ | (ミスするとTAはタイム＋0.5秒ペナルティ！)</p>
             </div>
 
             <button onclick="toMenu()" style="padding: 6px 16px; font-size: 0.9rem;">一時停止 / メニューに戻る</button>
@@ -467,7 +483,12 @@
         let particles = [];
         let screenShake = 0;
 
-        // 🎵 BGM (d.mp3) ループ再生 & ミュート管理
+        // ⏱️ タイムアタック専用変数
+        let taStartTime = 0;
+        let taElapsedTimer = null;
+        let currentTaSeconds = 0;
+        let taMissCount = 0;
+
         const bgmAudio = document.getElementById("bgm-audio");
         bgmAudio.volume = 0.5;
         let isBgmEnabled = true;
@@ -553,43 +574,27 @@
             } catch(e) {}
         }
 
-        const prefixes = ["きんきゅう", "こうそく", "きどう", "ついせき", "たいほ", "めんきょ", "さいれん", "ぱとかー", "ふくめん", "けいさつ", "そうさ", "しゅうけき", "へり", "ぶろっく", "えんじん", "ないす", "すぴーど", "びーこん", "あくせる", "ぶれーき", "どりふと", "ちぇいす"];
-        const middles = ["そうこう", "とりしまり", "ていし", "めいれい", "しれい", "つうほう", "ばとる", "あたっく", "ばーすと", "すぱーく", "がーど", "らんく", "こーど", "ゆにっと", "みっしょん", "がれーじ", "ちゅーにんぐ", "ぶーすと"];
+        const wordPool = [
+            { kanji: "機動捜査隊", furigana: "きどうそうさたい", roma: "kidousousatai" },
+            { kanji: "緊急追跡", furigana: "きんきゅうついせき", roma: "kinkyuutsuiseki" },
+            { kanji: "パトカー", furigana: "ぱとかー", roma: "patoka-" },
+            { kanji: "サイレン鳴動", furigana: "さいれんめいどう", roma: "sairenmeidou" },
+            { kanji: "覆面パトカー", furigana: "ふくめんぱとかー", roma: "fukumennpatoka-" },
+            { kanji: "高速道路", furigana: "こうそくどうろ", roma: "kousokudouro" },
+            { kanji: "容疑車両発見", furigana: "ようぎしゃりょうはっけん", roma: "yougisharyouhakken" },
+            { kanji: "現場急行", furigana: "げんばきゅうこう", roma: "genbakyuukou" },
+            { kanji: "逮捕状請求", furigana: "たいほじょうせいきゅう", roma: "taihojouseikyuu" },
+            { kanji: "警視庁司令室", furigana: "けいしちょうしれいしつ", roma: "keishichoushireishitsu" },
+            { kanji: "交通取締", furigana: "こうつうとりしまり", roma: "koutsuutorishimari" },
+            { kanji: "緊急停止命令", furigana: "きんきゅうていしめいれい", roma: "kinkyuuteishimeirei" },
+            { kanji: "無線連絡", furigana: "むせんれんらく", roma: "musenrenraku" },
+            { kanji: "エンジン全開", furigana: "えんじんぜんかい", roma: "enjinzenkai" },
+            { kanji: "追跡ミッション", furigana: "ついせきみっしょん", roma: "tsuisekimisshon" },
+            { kanji: "赤色灯点滅", furigana: "せきしょくとうてんめつ", roma: "sekishokutoutenmetsu" },
+            { kanji: "スピード違反", furigana: "すぴーどいはん", roma: "supi-doihan" },
+            { kanji: "全速力チェイス", furigana: "ぜんそくりょくちぇいす", roma: "zensokuryokucheisu" }
+        ];
 
-        function generateMassiveWordList() {
-            let list = [
-                { jp: "きどうそうさたい", roma: "kidousousatai" },
-                { jp: "みっしょん", roma: "misshon" },
-                { jp: "ぱとかー", roma: "patoka-" },
-                { jp: "さいれん", roma: "sairen" }
-            ];
-            for (let p of prefixes) {
-                for (let m of middles) {
-                    let jpStr = p + m;
-                    let romaStr = toRoma(p) + toRoma(m);
-                    list.push({ jp: jpStr, roma: romaStr });
-                }
-            }
-            return list;
-        }
-
-        function toRoma(str) {
-            const map = {
-                "きんきゅう":"kinkyuu", "こうそく":"kousoku", "きどう":"kidou", "ついせき":"tsuiseki",
-                "たいほ":"taiho", "めんきょ":"menkyo", "さいれん":"sairen", "ぱとかー":"patoka-",
-                "ふくめん":"fukumen", "けいさつ":"keisatsu", "そうさ":"sousa", "しゅうけき":"shuukeki",
-                "へり":"heri", "ぶろっく":"burokku", "えんじん":"enjin", "ないす":"naisu",
-                "すぴーど":"supi-do", "びーこん":"bi-kon", "あくせる":"akuseru", "ぶれーき":"bure-ki",
-                "どりふと":"dorifuto", "ちぇいす":"cheisu", "そうこう":"soukou", "とりしまり":"torishimari",
-                "ていし":"teishi", "めいれい":"meirei", "しれい":"shirei", "つうほう":"tsuuhou",
-                "ばとる":"batoru", "あたっく":"atakku", "ばーすと":"ba-suto", "すぱーく":"supa-ku",
-                "がーど":"ga-do", "らんく":"ranku", "こーど":"ko-do", "ゆにっと":"yunitto",
-                "みっしょん":"misshon", "がれーじ":"gare-ji", "ちゅーにんぐ":"chu-ningu", "ぶーすと":"bu-suto"
-            };
-            return map[str] || "drive";
-        }
-
-        const wordPool = generateMassiveWordList();
         let currentWord = {};
         let animId = null;
         let roadOffset = 0;
@@ -636,7 +641,7 @@
 
             db[name] = {
                 name: name, password: pass,
-                score: 0, level: 1, money: 100,
+                score: 0, level: 1, money: 100, bestTime: null,
                 engineLv: 1, bumperLv: 1, armorLv: 1, lampLv: 1, carColor: "police"
             };
             saveUsersDB(db);
@@ -662,19 +667,20 @@
         function onAuthSuccess() {
             document.getElementById("user-display").innerText = `捜査員: ${player.name} (Lv.${player.level})`;
             showScreen("menu-screen");
-            playBGM(); // 💡 ログイン成功してメニュー画面に入ったタイミングでBGM開始
+            playBGM();
             startCanvasAnimation("menu-canvas");
         }
 
         function logout() { 
             player = null; 
-            stopBGM(); // 💡 ログアウトしたらBGMを停止
+            stopBGM();
             showScreen("login-screen"); 
         }
 
         function showScreen(id) {
             if (animId) cancelAnimationFrame(animId);
             if (damageTimer) clearInterval(damageTimer);
+            if (taElapsedTimer) clearInterval(taElapsedTimer);
             document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
             document.getElementById(id).classList.add("active");
         }
@@ -683,7 +689,7 @@
             initAudio();
             window.removeEventListener("keydown", onKeyPress);
             showScreen("menu-screen");
-            playBGM(); // 💡 メニューに戻った時もBGMを流す
+            playBGM();
             startCanvasAnimation("menu-canvas");
         }
 
@@ -703,6 +709,7 @@
             document.getElementById("pf-level").innerText = player.level;
             document.getElementById("pf-score").innerText = player.score;
             document.getElementById("pf-money").innerText = player.money;
+            document.getElementById("pf-besttime").innerText = player.bestTime ? player.bestTime.toFixed(2) + " 秒" : "未記録";
             document.getElementById("pf-engine").innerText = player.engineLv;
             document.getElementById("pf-bumper").innerText = player.bumperLv;
             document.getElementById("pf-armor").innerText = player.armorLv;
@@ -779,8 +786,22 @@
             remainingWords = 20;
             boostGau = 0;
             particles = [];
+            taMissCount = 0;
 
-            document.getElementById("enemy-hp-box").style.display = (mode === "free") ? "none" : "flex";
+            if (mode === "timeattack") {
+                document.getElementById("enemy-hp-box").style.display = "flex";
+                document.getElementById("player-hp-wrapper").style.display = "none"; // タイムアタック中はHP非表示(無敵の純粋スピード勝負)
+                taStartTime = Date.now();
+                currentTaSeconds = 0;
+                
+                taElapsedTimer = setInterval(() => {
+                    currentTaSeconds = (Date.now() - taStartTime) / 1000;
+                    document.getElementById("speed-display").innerText = `${currentTaSeconds.toFixed(1)} 秒`;
+                }, 100);
+            } else {
+                document.getElementById("enemy-hp-box").style.display = "flex";
+                document.getElementById("player-hp-wrapper").style.display = "flex";
+            }
 
             updateBars();
             showScreen("game-screen");
@@ -813,14 +834,33 @@
             document.getElementById("player-hp-bar").style.width = Math.max(0, (playerHp / maxPlayerHp) * 100) + "%";
             document.getElementById("hp-bar-enemy").style.width = Math.max(0, progressPct) + "%";
             document.getElementById("boost-bar").style.width = Math.min(100, boostGau) + "%";
-            document.getElementById("speed-display").innerText = `${Math.floor(speedKph)} km/h`;
+            if (currentMode !== "timeattack") {
+                document.getElementById("speed-display").innerText = `${Math.floor(speedKph)} km/h`;
+            }
             document.getElementById("score-info").innerText = `SCORE: ${score} (${remainingWords}/20)`;
         }
 
         function nextWord() {
-            if (currentMode !== "free" && remainingWords <= 0) {
+            if (remainingWords <= 0) {
                 playSound('clear');
-                endGame(true, "🚨 容疑車両のPIT捕獲完了！任務達成！ 🚨");
+                if (currentMode === "timeattack") {
+                    if (taElapsedTimer) clearInterval(taElapsedTimer);
+                    let finalTime = ((Date.now() - taStartTime) / 1000) + (taMissCount * 0.5);
+                    
+                    let isNewBest = false;
+                    if (!player.bestTime || finalTime < player.bestTime) {
+                        player.bestTime = finalTime;
+                        isNewBest = true;
+                    }
+                    player.money += 50; // クリア報酬
+                    player.level++;
+                    savePlayerData();
+
+                    let titleMsg = isNewBest ? "🌟 新自己ベスト更新！ 🌟" : "⚡ タイムアタック完走！ ⚡";
+                    endGame(true, titleMsg, finalTime, taMissCount);
+                } else {
+                    endGame(true, "🚨 容疑車両のPIT捕獲完了！任務達成！ 🚨");
+                }
                 return;
             }
 
@@ -830,31 +870,41 @@
             renderWord();
         }
 
-        function endGame(isWin, title) {
+        function endGame(isWin, title, finalTime = 0, missCount = 0) {
             if (damageTimer) clearInterval(damageTimer);
+            if (taElapsedTimer) clearInterval(taElapsedTimer);
             window.removeEventListener("keydown", onKeyPress);
             
             let reward = 0;
             if (isWin) {
-                let baseReward = 100;
-                if (currentDiff === "hard") baseReward = 250;
-                if (currentDiff === "extreme") baseReward = 500;
-                reward = (currentMode === "mission") ? baseReward : 30;
-                player.money += reward;
-                player.level++;
+                if (currentMode === "timeattack") {
+                    reward = 50;
+                } else {
+                    let baseReward = 100;
+                    if (currentDiff === "hard") baseReward = 250;
+                    if (currentDiff === "extreme") baseReward = 500;
+                    reward = baseReward;
+                    player.money += reward;
+                    player.level++;
+                }
             }
 
             player.score += score;
             savePlayerData();
 
             document.getElementById("result-title").innerText = title;
-            document.getElementById("result-detail").innerText = `獲得スコア: ${score} pt\n獲得賞金: ${reward} G ${isWin ? '(' + currentDiff.toUpperCase() + ')' : '(大破のため報酬なし)'}\n捜査員レベル: Lv.${player.level}`;
+            if (currentMode === "timeattack") {
+                document.getElementById("result-detail").innerText = `純粋タイム: ${(finalTime - (missCount * 0.5)).toFixed(2)} 秒\nミス数: ${missCount}回 (ペナルティ +${(missCount * 0.5).toFixed(1)}秒)\n🏆 最終記録: ${finalTime.toFixed(2)} 秒\n自己ベスト: ${player.bestTime.toFixed(2)} 秒\n獲得賞金: ${reward} G`;
+            } else {
+                document.getElementById("result-detail").innerText = `獲得スコア: ${score} pt\n獲得賞金: ${reward} G ${isWin ? '(' + currentDiff.toUpperCase() + ')' : '(大破のため報酬なし)'}\n捜査員レベル: Lv.${player.level}`;
+            }
 
             showScreen("result-screen");
         }
 
         function renderWord() {
-            document.getElementById("roma-hint").innerText = currentWord.roma;
+            document.getElementById("furigana-display").innerText = currentWord.furigana;
+            document.getElementById("kanji-display").innerText = currentWord.kanji;
             document.getElementById("typed-part").innerText = currentWord.roma.substring(0, typedIdx);
             document.getElementById("remain-part").innerText = currentWord.roma.substring(typedIdx);
         }
@@ -876,9 +926,7 @@
 
             if (e.code === "Space" && boostGau >= 100) {
                 boostGau = 0;
-                if (currentMode !== "free") {
-                    remainingWords = Math.max(0, remainingWords - (1 + Math.floor(player.bumperLv / 2)));
-                }
+                remainingWords = Math.max(0, remainingWords - (1 + Math.floor(player.bumperLv / 2)));
                 screenShake = 16;
                 playSound('boost');
                 createSparkParticles(620, 150, 45);
@@ -892,34 +940,37 @@
                 return;
             }
 
-            if (e.key.toLowerCase() === currentWord.roma[typedIdx]) {
-                typedIdx++;
-                combo++;
-                let mult = Math.floor(combo / 5) + 1;
-                score += 10 * mult;
+            if (e.key.length === 1) {
+                if (e.key.toLowerCase() === currentWord.roma[typedIdx]) {
+                    typedIdx++;
+                    combo++;
+                    let mult = Math.floor(combo / 5) + 1;
+                    score += 10 * mult;
 
-                speedKph = Math.min(320, speedKph + 6);
-                let boostAdd = 12 + (player.lampLv * 2.5);
-                boostGau = Math.min(100, boostGau + boostAdd);
+                    speedKph = Math.min(320, speedKph + 6);
+                    let boostAdd = 12 + (player.lampLv * 2.5);
+                    boostGau = Math.min(100, boostGau + boostAdd);
 
-                playSound('type');
+                    playSound('type');
 
-                if (combo > 0 && combo % 5 === 0) {
-                    playerHp = Math.min(maxPlayerHp, playerHp + 6);
-                }
-
-                if (currentMode !== "free") {
-                    createSparkParticles(600, 150, 5);
-                }
-
-                updateBars();
-                renderWord();
-
-                if (typedIdx >= currentWord.roma.length) {
-                    if (currentMode !== "free") {
-                        remainingWords--;
+                    if (combo > 0 && combo % 5 === 0) {
+                        playerHp = Math.min(maxPlayerHp, playerHp + 6);
                     }
-                    setTimeout(nextWord, 70);
+
+                    createSparkParticles(600, 150, 5);
+                    updateBars();
+                    renderWord();
+
+                    if (typedIdx >= currentWord.roma.length) {
+                        remainingWords--;
+                        setTimeout(nextWord, 70);
+                    }
+                } else {
+                    // 💡 タイピングミス判定 (タイムアタックならペナルティ加算)
+                    playSound('damage');
+                    if (currentMode === "timeattack") {
+                        taMissCount++;
+                    }
                 }
             }
         }
@@ -973,7 +1024,7 @@
 
                 drawPatcar(ctx, 80, 145 + Math.sin(frame * 0.2) * 2, frame, player ? player.carColor : "police", player ? player.name : "機捜210");
 
-                if (canvasId === "game-canvas" && currentMode === "mission") {
+                if (canvasId === "game-canvas" && (currentMode === "mission" || currentMode === "timeattack")) {
                     drawEnemyCar(ctx, 610 + Math.sin(frame * 0.1) * 10, 150);
                 } else if (canvasId === "menu-canvas") {
                     drawEnemyCar(ctx, 600, 150);
@@ -981,7 +1032,7 @@
 
                 ctx.restore();
 
-                if (canvasId === "game-canvas" && speedKph > 90) {
+                if (canvasId === "game-canvas" && currentMode === "mission" && speedKph > 90) {
                     speedKph -= 0.15;
                     updateBars();
                 }
