@@ -241,8 +241,6 @@
             border: 1px solid rgba(253, 224, 71, 0.4);
             margin: 8px 0;
             box-shadow: 0 0 15px rgba(253, 224, 71, 0.1);
-            position: relative;
-            z-index: 110;
         }
 
         .furigana-display {
@@ -606,6 +604,7 @@
             TROPHIES.push({ id: `trophy_${i}`, title: title, desc: desc });
         }
 
+        // 🔤 豊富なワードプール（クリアごとに毎回ランダムに切り替わります）
         const hugeWordPool = [
             { kanji: "機動捜査隊", furigana: "きどうそうさたい", roma: "kidousousatai" },
             { kanji: "緊急追跡", furigana: "きんきゅうついせき", roma: "kinkyuutsuiseki" },
@@ -626,7 +625,12 @@
             { kanji: "赤色回転灯", furigana: "せきしょくかいてんとう", roma: "sekishokukaitentou" },
             { kanji: "不審車追尾", furigana: "ふしんしゃついび", roma: "fushinshatsuibi" },
             { kanji: "職務質問", furigana: "しょくむしつもん", roma: "shokumushitsumon" },
-            { kanji: "現行犯逮捕", furigana: "げんこうはんたいほ", roma: "genkouhantaiho" }
+            { kanji: "現行犯逮捕", furigana: "げんこうはんたいほ", roma: "genkouhantaiho" },
+            { kanji: "機捜二一〇", furigana: "きそうにいちまる", roma: "kisouniichimaru" },
+            { kanji: "アクセル全開", furigana: "あくせるぜんかい", roma: "akuseruzenkai" },
+            { kanji: "夜間巡回", furigana: "やかんじゅんかい", roma: "yakanjunkai" },
+            { kanji: "無線指令", furigana: "むせんしれい", roma: "musenshirei" },
+            { kanji: "逃走車両", furigana: "とうそうしゃりょう", roma: "tousousharyou" }
         ];
 
         let player = null;
@@ -1271,6 +1275,7 @@
                 return;
             }
 
+            // 毎回完全にランダムなワードを選択する
             currentWord = hugeWordPool[Math.floor(Math.random() * hugeWordPool.length)];
             typedIdx = 0;
             document.getElementById("police-radio").innerText = radioMessages[Math.floor(Math.random() * radioMessages.length)];
@@ -1337,7 +1342,13 @@
                 container.classList.add("boost-flash");
                 setTimeout(() => container.classList.remove("boost-flash"), 400);
 
-                if (remainingWords <= 0) nextWord();
+                if (remainingWords <= 0) {
+                    nextWord();
+                } else {
+                    currentWord = hugeWordPool[Math.floor(Math.random() * hugeWordPool.length)];
+                    typedIdx = 0;
+                    renderWord();
+                }
                 return;
             }
 
