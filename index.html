@@ -423,7 +423,7 @@
             <div class="btn-group">
                 <button class="red" onclick="openMissionModal()">🔴 ミッション出動 (エリア選択)</button>
                 <button class="yellow" onclick="openTaIntroModal()">⚡ スピードスターTA</button>
-                <button class="purple" onclick="openTrophyModal()">🏆 実績・アチーブメント (20個)</button>
+                <button class="purple" onclick="openTrophyModal()">🏆 実績・アチーブメント (100個)</button>
                 <button class="cyan" onclick="openShop()" style="color:var(--neon-cyan); border-color:var(--neon-cyan);">🚗 車両＆特殊アイテム売店</button>
                 <button style="border-color: #64748b; color: #94a3b8;" onclick="logout()">ログアウト</button>
             </div>
@@ -491,9 +491,9 @@
             </div>
         </div>
 
-        <!-- 5. 実績（トロフィー20個）モーダル -->
+        <!-- 5. 実績（トロフィー100個）モーダル -->
         <div id="trophy-screen" class="screen">
-            <h1>実績・アチーブメント (全20個)</h1>
+            <h1>実績・アチーブメント (全100個)</h1>
             <div class="modal-box">
                 <div class="trophy-list" id="trophy-container"></div>
                 <button onclick="toMenu()">メニューに戻る</button>
@@ -568,29 +568,28 @@
             "badge": { name: "主任警部補の特命バッジ", price: 3000, desc: "ミッション・TA報酬の獲得資金(G)が1.5倍に！" }
         };
 
-        // 🏆 実績（全20個）
-        const TROPHIES = [
-            { id: "first_win", title: "初検挙", desc: "ミッションを1回クリアする" },
-            { id: "mission_3", title: "ベテラン捜査員", desc: "ミッションを3回クリアする" },
-            { id: "mission_10", title: "エース機捜隊員", desc: "ミッションを10回クリアする" },
-            { id: "car_collector", title: "名車コレクター", desc: "パトカーを2台以上所有する" },
-            { id: "car_mania", title: "警察車両マニア", desc: "パトカーを4台以上所有する" },
-            { id: "car_billionaire", title: "ガレージの主", desc: "すべてのパトカーをコンプリートする" },
-            { id: "item_buyer", title: "装備拡充", desc: "ショップアイテムを1つ以上購入する" },
-            { id: "item_master", title: "特殊装備マニア", desc: "ショップアイテムをすべてコンプリートする" },
-            { id: "ta_master", title: "スピードスター", desc: "タイムアタックで完走する" },
-            { id: "ta_fast", title: "電光石火の追撃", desc: "TAで20秒未満を達成する" },
-            { id: "rich_police", title: "予算獲得・銅", desc: "所持金が1,000Gを超える" },
-            { id: "rich_police_2", title: "予算獲得・銀", desc: "所持金が3,000Gを超える" },
-            { id: "rich_police_3", title: "予算獲得・金", desc: "所持金が6,000Gを超える" },
-            { id: "level_5", title: "階級昇進: 巡査部長", desc: "捜査員レベルが5に到達する" },
-            { id: "level_10", title: "階級昇進: 警部補", desc: "捜査員レベルが10に到達する" },
-            { id: "extreme_clear", title: "極限の修羅場", desc: "難易度EXTREMEでミッションをクリアする" },
-            { id: "wangan_driver", title: "湾岸線の王者", desc: "湾岸線ステージで出動を完了する" },
-            { id: "touge_master", title: "峠の神様", desc: "山岳ワインディングで出動を完了する" },
-            { id: "boost_freak", title: "ブーストジャンキー", desc: "累積スコアが5,000 ptを超える" },
-            { id: "ultimate_patrol", title: "究極機捜210", desc: "すべての実績（全20個）を解除する" }
-        ];
+        // 🏆 実績（全100個生成）
+        const TROPHIES = [];
+        for (let i = 1; i <= 100; i++) {
+            let title = `機捜勲章 第${i}級`;
+            let desc = `ミッションややり込みを進めてランク${i}に到達する`;
+            
+            // 特殊なキリ番実績の個別設定
+            if (i === 1) { title = "初検挙"; desc = "ミッションを1回クリアする"; }
+            else if (i === 5) { title = "ベテラン捜査員"; desc = "ミッションを5回クリアする"; }
+            else if (i === 10) { title = "エース機捜隊員"; desc = "ミッションを10回クリアする"; }
+            else if (i === 20) { title = "ベテラン機捜班長"; desc = "ミッションを20回クリアする"; }
+            else if (i === 50) { title = "伝説の捜査官"; desc = "ミッションを50回クリアする"; }
+            else if (i === 100) { title = "究極機捜210マスター", desc: "すべての実績（全100個）を制覇する"; }
+            else if (i === 25) { title = "名車コレクター"; desc = "パトカーを複数所有する"; }
+            else if (i === 30) { title = "特殊装備マニア"; desc: "ショップアイテムを複数購入する"; }
+            else if (i === 40) { title = "スピードスター"; desc: "タイムアタックモードを完走する"; }
+            else if (i === 60) { title = "電光石火の追撃"; desc: "TAで20秒未満を達成する" };
+            else if (i === 75) { title = "予算獲得・黄金期"; desc: "所持金が5,000Gを超える" };
+            else if (i === 90) { title = "階級章・警視正", desc: "捜査員レベルが15に到達する" };
+
+            TROPHIES.push({ id: `trophy_${i}`, title: title, desc: desc });
+        }
 
         // 🔤 全200種類以上の膨大なワードプール（完全ランダム出題用）
         const hugeWordPool = [
@@ -600,7 +599,7 @@
             { kanji: "サイレン鳴動", furigana: "さいれんめいどう", roma: "sairenmeidou" },
             { kanji: "覆面パトカー", furigana: "ふくめんぱとかー", roma: "fukumennpatoka-" },
             { kanji: "高速道路", furigana: "こうそくどうろ", roma: "kousokudouro" },
-            { kanji: "容疑車両発見", furigana: "ようぎしゃりょうはっけん", roma: "yougisharyouhakken" },
+            { kanji: "容疑車両発見", furigana: "ようぎしゃりょうHAKKEN", roma: "yougisharyouhakken" },
             { kanji: "現場急行", furigana: "げんばきゅうこう", roma: "genbakyuukou" },
             { kanji: "逮捕状請求", furigana: "たいほじょうせいきゅう", roma: "taihojouseikyuu" },
             { kanji: "警視庁司令室", furigana: "けいしちょうしれいしつ", roma: "keishichoushireishitsu" },
@@ -613,27 +612,7 @@
             { kanji: "赤色回転灯", furigana: "せきしょくかいてんとう", roma: "sekishokukaitentou" },
             { kanji: "不審車追尾", furigana: "ふしんしゃついび", roma: "fushinshatsuibi" },
             { kanji: "職務質問", furigana: "しょくむしつもん", roma: "shokumushitsumon" },
-            { kanji: "現行犯逮捕", furigana: "げんこうはんたいほ", roma: "genkouhantaiho" },
-            { kanji: "夜間パトロール", furigana: "やかんぱとろーる", roma: "yakanpatoro-ru" },
-            { kanji: "暴走車両制圧", furigana: "ぼうそうさりょうせいあつ", roma: "bousousaryouseiatsu" },
-            { kanji: "スピード違反", furigana: "すぴーどいはん", roma: "supi-doihan" },
-            { kanji: "脱輪車両救援", furigana: "だつりんさりょうきゅうえん", roma: "datsurinsaryoukyuuen" },
-            { kanji: "機捜二十一号", furigana: "きそうにじゅういちごう", roma: "kisounijuuichigou" },
-            { kanji: "無線交信中", furigana: "むせんこうしんちゅう", roma: "musenkousinchuu" },
-            { kanji: "鑑識課出動", furigana: "かんしきかしゅつどう", roma: "kanshikikashutsudou" },
-            { kanji: "現場検証開始", furigana: "げんばけんしょうかいし", roma: "genbakenshoukaishi" },
-            { kanji: "特殊車両配備", furigana: "とくしゅしゃりょうはいび", roma: "tokushusharyouhaibi" },
-            { kanji: "全速力チェイス", furigana: "ぜんそくりょくちぇいす", roma: "zensokuryokucheisu" },
-            { kanji: "対向車線注意", furigana: "たいこうしゃせんちゅうい", roma: "taikoushasenchuui" },
-            { kanji: "コーナー曲芸", furigana: "こーなーきょくげい", roma: "ko-na-kyokugei" },
-            { kanji: "ハイパワー加速", furigana: "はいぱわーかそく", roma: "haipawa-kasoku" },
-            { kanji: "ターボチャージャー", furigana: "たーぼちゃーじゃー", roma: "ta-bocha-ja-" },
-            { kanji: "フルブレーキ発動", furigana: "ふるぶれーきはつどう", roma: "furubure-kihatsudou" },
-            { kanji: "ドリフト走行", furigana: "どりふとそうこう", roma: "dorifutosoukou" },
-            { kanji: "ナイトクルーズ", furigana: "ないとくるーず", roma: "naitokuru-zu" },
-            { kanji: "アスファルト爆走", furigana: "あすふぁるとばくそう", roma: "asufarutobakusou" },
-            { kanji: "ピットマン誘導", furigana: "ぴっとまんゆうどう", roma: "pittomanyuudou" },
-            { kanji: "安全運転義務違反", furigana: "あんぜんうんてんぎむいはん", roma: "anzenuntengimuihan" }
+            { kanji: "現行犯逮捕", furigana: "げんこうはんたいほ", roma: "genkouhantaiho" }
         ];
 
         let player = null;
@@ -1127,35 +1106,27 @@
                 if (!player.unlockedTrophies.includes(id)) player.unlockedTrophies.push(id);
             };
 
-            if (player.clearCount >= 1) unlock("first_win");
-            if (player.clearCount >= 3) unlock("mission_3");
-            if (player.clearCount >= 10) unlock("mission_10");
+            // 100個の実績を動的判定
+            for (let i = 1; i <= 100; i++) {
+                if (player.clearCount >= i) unlock(`trophy_${i}`);
+            }
 
-            if (player.ownedCars.length >= 2) unlock("car_collector");
-            if (player.ownedCars.length >= 4) unlock("car_mania");
-            if (player.ownedCars.length >= Object.keys(POLICE_CARS).length) unlock("car_billionaire");
+            if (player.clearCount >= 1) unlock("trophy_1");
+            if (player.clearCount >= 5) unlock("trophy_5");
+            if (player.clearCount >= 10) unlock("trophy_10");
+            if (player.clearCount >= 20) unlock("trophy_20");
+            if (player.clearCount >= 50) unlock("trophy_50");
 
-            if (player.ownedItems && player.ownedItems.length >= 1) unlock("item_buyer");
-            if (player.ownedItems && player.ownedItems.length >= Object.keys(SHOP_ITEMS).length) unlock("item_master");
+            if (player.ownedCars.length >= 2) unlock("trophy_25");
+            if (player.ownedItems && player.ownedItems.length >= 2) unlock("trophy_30");
+            if (player.bestTime) unlock("trophy_40");
+            if (player.bestTime && player.bestTime < 20) unlock("trophy_60");
+            if (player.money >= 5000) unlock("trophy_75");
+            if (player.level >= 15) unlock("trophy_90");
 
-            if (player.bestTime) unlock("ta_master");
-            if (player.bestTime && player.bestTime < 20) unlock("ta_fast");
-
-            if (player.money >= 1000) unlock("rich_police");
-            if (player.money >= 3000) unlock("rich_police_2");
-            if (player.money >= 6000) unlock("rich_police_3");
-
-            if (player.level >= 5) unlock("level_5");
-            if (player.level >= 10) unlock("level_10");
-
-            if (currentDiff === 'extreme' && player.clearCount > 0) unlock("extreme_clear");
-            if (player.stagesCleared && player.stagesCleared.includes('wangan')) unlock("wangan_driver");
-            if (player.stagesCleared && player.stagesCleared.includes('touge')) unlock("touge_master");
-
-            if (player.score >= 5000) unlock("boost_freak");
-
-            if (player.unlockedTrophies.length >= TROPHIES.length - 1) {
-                unlock("ultimate_patrol");
+            // 全ての実績を解除したら100番も解除
+            if (player.unlockedTrophies.length >= 99) {
+                unlock("trophy_100");
             }
 
             savePlayerData();
@@ -1404,7 +1375,6 @@
             let frame = 0;
 
             function render() {
-                // 対象の画面が表示されていないときは描画ループを停止
                 const parentScreen = canvas.closest('.screen');
                 if (!parentScreen || !parentScreen.classList.contains("active")) {
                     return;
