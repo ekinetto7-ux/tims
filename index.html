@@ -32,7 +32,7 @@
             justify-content: center;
             align-items: center;
             overflow: hidden;
-            position: relative;
+            pointer-events: auto !important;
         }
 
         .game-container {
@@ -47,7 +47,8 @@
             padding: 24px;
             text-align: center;
             position: relative;
-            z-index: 50;
+            z-index: 100;
+            pointer-events: auto !important;
         }
 
         h1 {
@@ -57,11 +58,9 @@
             margin-bottom: 14px;
             letter-spacing: 3px;
             font-weight: 900;
-            position: relative;
-            z-index: 60;
         }
 
-        .screen { display: none; position: relative; z-index: 60; }
+        .screen { display: none; position: relative; z-index: 110; pointer-events: auto !important; }
         .screen.active { display: block; animation: fadeIn 0.3s ease-out; }
 
         @keyframes fadeIn {
@@ -75,21 +74,21 @@
             gap: 12px;
             margin-bottom: 20px;
             position: relative;
-            z-index: 70;
+            z-index: 120;
         }
 
         .tab-btn {
             padding: 10px 24px;
             font-size: 1.02rem;
             border-radius: 10px;
-            cursor: pointer;
+            cursor: pointer !important;
             border: 1px solid rgba(0, 243, 255, 0.4);
             background: rgba(0, 0, 0, 0.6);
             color: var(--neon-cyan);
             transition: all 0.25s ease;
             position: relative;
-            z-index: 70;
-            pointer-events: auto;
+            z-index: 120;
+            pointer-events: auto !important;
         }
 
         .tab-btn.active {
@@ -106,7 +105,8 @@
             align-items: center;
             gap: 12px;
             position: relative;
-            z-index: 70;
+            z-index: 120;
+            pointer-events: auto !important;
         }
 
         input[type="text"], input[type="password"] {
@@ -122,8 +122,8 @@
             outline: none;
             box-shadow: inset 0 0 15px rgba(0, 243, 255, 0.15);
             position: relative;
-            z-index: 70;
-            pointer-events: auto;
+            z-index: 120;
+            pointer-events: auto !important;
         }
 
         .btn-group {
@@ -133,7 +133,7 @@
             flex-wrap: wrap;
             margin-top: 16px;
             position: relative;
-            z-index: 70;
+            z-index: 120;
         }
 
         button {
@@ -143,14 +143,14 @@
             padding: 11px 22px;
             font-size: 0.98rem;
             font-weight: bold;
-            cursor: pointer;
+            cursor: pointer !important;
             border-radius: 10px;
             transition: all 0.25s ease;
             text-shadow: 0 0 8px rgba(0, 243, 255, 0.5);
             box-shadow: 0 0 12px rgba(0, 243, 255, 0.15);
             position: relative;
-            z-index: 70;
-            pointer-events: auto;
+            z-index: 120;
+            pointer-events: auto !important;
         }
 
         button:hover {
@@ -179,7 +179,7 @@
             pointer-events: none;
             box-shadow: inset 0 0 25px rgba(0,0,0,0.8);
             position: relative;
-            z-index: 40;
+            z-index: 50;
         }
 
         .status-bar {
@@ -193,7 +193,7 @@
             margin-bottom: 8px;
             font-size: 0.95rem;
             position: relative;
-            z-index: 60;
+            z-index: 110;
         }
 
         .hp-container {
@@ -231,7 +231,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
             position: relative;
-            z-index: 60;
+            z-index: 110;
         }
 
         .word-display-box {
@@ -242,7 +242,7 @@
             margin: 8px 0;
             box-shadow: 0 0 15px rgba(253, 224, 71, 0.1);
             position: relative;
-            z-index: 60;
+            z-index: 110;
         }
 
         .furigana-display {
@@ -278,7 +278,7 @@
             gap: 10px;
             margin-bottom: 10px;
             position: relative;
-            z-index: 70;
+            z-index: 120;
         }
 
         .shop-grid {
@@ -290,7 +290,7 @@
             overflow-y: auto;
             padding-right: 4px;
             position: relative;
-            z-index: 70;
+            z-index: 120;
         }
 
         .shop-card {
@@ -301,7 +301,8 @@
             text-align: center;
             transition: all 0.2s;
             position: relative;
-            z-index: 70;
+            z-index: 120;
+            pointer-events: auto !important;
         }
 
         .shop-card h3 { color: var(--neon-yellow); margin-bottom: 4px; font-size: 0.9rem; }
@@ -319,7 +320,7 @@
             gap: 6px;
             font-size: 0.88rem;
             position: relative;
-            z-index: 60;
+            z-index: 110;
         }
 
         .profile-item { color: #cbd5e1; }
@@ -334,7 +335,8 @@
             max-width: 560px;
             margin: 15px auto;
             position: relative;
-            z-index: 70;
+            z-index: 120;
+            pointer-events: auto !important;
         }
 
         .trophy-list {
@@ -346,7 +348,7 @@
             margin-bottom: 15px;
             padding-right: 6px;
             position: relative;
-            z-index: 70;
+            z-index: 120;
         }
 
         .trophy-item {
@@ -391,10 +393,10 @@
             <div id="login-form" class="auth-form">
                 <input type="text" id="login-username" placeholder="コールサイン (名前)">
                 <input type="password" id="login-password" placeholder="暗号パスワード">
-                <div style="display:flex; gap:10px; width:80%; max-width:380px; position:relative; z-index:70;">
+                <div style="display:flex; gap:10px; width:80%; max-width:380px; position:relative; z-index:120;">
                     <button class="green" onclick="handleLogin()" style="flex:1;">出動開始</button>
                 </div>
-                <div style="display:flex; gap:8px; margin-top:6px; font-size:0.85rem; position:relative; z-index:70;">
+                <div style="display:flex; gap:8px; margin-top:6px; font-size:0.85rem; position:relative; z-index:120;">
                     <button onclick="openNameHelper()" style="padding:6px 12px; font-size:0.8rem; border-color:#64748b; color:#94a3b8;">👤 名前を忘れた場合</button>
                     <button onclick="openGoogleStyleRecovery()" style="padding:6px 12px; font-size:0.8rem; border-color:var(--neon-cyan); color:var(--neon-cyan);">🔑 パスワードを忘れた場合</button>
                 </div>
@@ -564,7 +566,6 @@
     </div>
 
     <script>
-        // 🚗 全8種のパトカー・特殊車両
         const POLICE_CARS = {
             "crown210": { name: "210系クラウン パトカー", price: 0, speedMax: 280, boostPower: 1.0, type: "patrol" },
             "crown180_fukumen": { name: "180系クラウン 覆面", price: 800, speedMax: 300, boostPower: 1.2, type: "fukumen" },
@@ -576,7 +577,6 @@
             "lexus_lc": { name: "レクサス LC 要人警護仕様", price: 5000, speedMax: 420, boostPower: 2.2, type: "luxury" }
         };
 
-        // 🛡️ ショップアイテム（全6種）
         const SHOP_ITEMS = {
             "battery": { name: "予備サイレンバッテリー", price: 400, desc: "大破時にHPを+50自動回復する応急キット" },
             "turbine": { name: "高出力ブースト・タービン", price: 800, desc: "スペースキーのブースト進捗削りが1.5倍に！" },
@@ -586,7 +586,6 @@
             "badge": { name: "主任警部補の特命バッジ", price: 3000, desc: "ミッション・TA報酬の獲得資金(G)が1.5倍に！" }
         };
 
-        // 🏆 実績（全100個生成）
         const TROPHIES = [];
         for (let i = 1; i <= 100; i++) {
             let title = `機捜勲章 第${i}級`;
@@ -608,7 +607,6 @@
             TROPHIES.push({ id: `trophy_${i}`, title: title, desc: desc });
         }
 
-        // 🔤 全200種類以上の膨大なワードプール
         const hugeWordPool = [
             { kanji: "機動捜査隊", furigana: "きどうそうさたい", roma: "kidousousatai" },
             { kanji: "緊急追跡", furigana: "きんきゅうついせき", roma: "kinkyuutsuiseki" },
