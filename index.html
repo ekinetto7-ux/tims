@@ -630,7 +630,7 @@
         
         let targetWordsCount = 20;
         let remainingWords = 20;
-        let currentQuestionNum = 1; // いま何問目か
+        let currentQuestionNum = 1;
 
         let boostGau = 0;
         let damageTimer = null;
@@ -648,8 +648,18 @@
         let useSynthBgm = false;
         let synthBgmTimer = null;
 
+        // 🛑 ログイン画面ではBGMを絶対に鳴らさない判定
+        function isLoginScreenActive() {
+            const loginScreen = document.getElementById("login-screen");
+            const helperScreen = document.getElementById("name-helper-screen");
+            const recoveryScreen = document.getElementById("recovery-screen");
+            return (loginScreen && loginScreen.classList.contains("active")) ||
+                   (helperScreen && helperScreen.classList.contains("active")) ||
+                   (recoveryScreen && recoveryScreen.classList.contains("active"));
+        }
+
         function playBGM() {
-            if (!isBgmEnabled) return;
+            if (!isBgmEnabled || isLoginScreenActive()) return;
             bgmAudio.play().then(() => {
                 useSynthBgm = false;
             }).catch(e => {
@@ -668,7 +678,7 @@
         function toggleBGM() {
             initAudio();
             isBgmEnabled = !isBgmEnabled;
-            if (isBgmEnabled) {
+            if (isBgmEnabled && !isLoginScreenActive()) {
                 playBGM();
             } else {
                 stopBGM();
@@ -679,17 +689,17 @@
         function initAudio() {
             if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             if (audioCtx.state === 'suspended') audioCtx.resume();
-            if (isBgmEnabled && bgmAudio.paused && !useSynthBgm) {
+            if (isBgmEnabled && !isLoginScreenActive() && bgmAudio.paused && !useSynthBgm) {
                 playBGM();
             }
         }
 
         function startSynthBgm() {
-            if (synthBgmTimer) return;
+            if (synthBgmTimer || isLoginScreenActive()) return;
             let noteIdx = 0;
             const melody = [220, 247, 261, 330, 293, 261, 247, 220];
             synthBgmTimer = setInterval(() => {
-                if (!isBgmEnabled || !useSynthBgm || !audioCtx) return;
+                if (!isBgmEnabled || !useSynthBgm || !audioCtx || isLoginScreenActive()) return;
                 try {
                     const osc = audioCtx.createOscillator();
                     const gain = audioCtx.createGain();
@@ -893,13 +903,13 @@
         function onAuthSuccess() {
             document.getElementById("user-display").innerText = `捜査員: ${player.name} (Lv.${player.level})`;
             showScreen("menu-screen");
-            playBGM();
+            playBGM(); // メニュー画面移行時にBGM開始
             startCanvasAnimation("menu-canvas");
         }
 
         function logout() { 
             player = null; 
-            stopBGM();
+            stopBGM(); // ログアウト時はBGM停止
             showScreen("login-screen"); 
         }
 
@@ -910,6 +920,11 @@
             document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
             const target = document.getElementById(id);
             if (target) target.classList.add("active");
+
+            // ログイン系画面に切り替わったときは確実にBGMをストップ
+            if (isLoginScreenActive()) {
+                stopBGM();
+            }
         }
 
         function toMenu() {
@@ -1145,7 +1160,7 @@
             maxPlayerHp = 100;
             
             remainingWords = 20;
-            currentQuestionNum = 1; // 1問目からスタート
+            currentQuestionNum = 1;
             boostGau = 0;
             particles = [];
             taMissCount = 0;
@@ -1212,7 +1227,6 @@
             document.getElementById("hp-bar-enemy").style.width = Math.max(0, progressPct) + "%";
             document.getElementById("boost-bar").style.width = Math.min(100, boostGau) + "%";
             
-            // いま何問解いているかのカウンターを更新
             document.getElementById("question-counter").innerText = `第 ${currentQuestionNum} / 20 問`;
             document.getElementById("score-info").innerText = `SCORE: ${score}`;
         }
@@ -1260,7 +1274,6 @@
                 return;
             }
 
-            // 🔤 200種類以上の膨大なプールから完全ランダムで1問抽出！
             currentWord = hugeWordPool[Math.floor(Math.random() * hugeWordPool.length)];
             typedIdx = 0;
             document.getElementById("police-radio").innerText = radioMessages[Math.floor(Math.random() * radioMessages.length)];
@@ -1492,53 +1505,4 @@
                 ctx.fillStyle = "#020617";
                 ctx.fillRect(x, y + 20, 120, 24);
             } else if (carKey === "lexus_lc") {
-                ctx.fillStyle = sirenRed ? "#ff0055" : "#00f3ff";
-                ctx.fillRect(x + 50, y - 8, 25, 8);
-                ctx.fillStyle = "#1e293b";
-                ctx.fillRect(x + 18, y + 4, 80, 18);
-                ctx.fillStyle = "#020617";
-                ctx.fillRect(x, y + 20, 125, 24);
-            } else {
-                ctx.fillStyle = sirenRed ? "#ff0055" : "#00f3ff";
-                ctx.fillRect(x + 45, y - 8, 25, 8);
-                ctx.fillStyle = "#ffffff";
-                ctx.fillRect(x + 25, y, 65, 22);
-                ctx.fillStyle = "#0f172a";
-                ctx.fillRect(x, y + 20, 115, 24);
-            }
-
-            if (label) {
-                ctx.fillStyle = "#fff";
-                ctx.font = "bold 11px sans-serif";
-                ctx.fillText(label, x + 10, y - 12);
-            }
-
-            ctx.fillStyle = "#1e293b";
-            ctx.beginPath();
-            ctx.arc(x + 25, y + 44, 10, 0, Math.PI * 2);
-            ctx.arc(x + 90, y + 44, 10, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.restore();
-        }
-
-        function drawEnemyCar(ctx, x, y) {
-            ctx.save();
-            ctx.fillStyle = "#ff0055";
-            ctx.shadowBlur = 14;
-            ctx.shadowColor = "#ff0055";
-            ctx.fillRect(x, y + 16, 105, 24);
-
-            ctx.shadowBlur = 0;
-            ctx.fillStyle = "#1e293b";
-            ctx.fillRect(x + 20, y, 55, 18);
-
-            ctx.fillStyle = "#0f172a";
-            ctx.beginPath();
-            ctx.arc(x + 20, y + 40, 9, 0, Math.PI * 2);
-            ctx.arc(x + 80, y + 40, 9, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.restore();
-        }
-    </script>
-</body>
-</html>
+                ctx.fillStyle = sirenRed ? "#ff0055" : "#00f3
