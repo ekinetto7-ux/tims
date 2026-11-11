@@ -247,12 +247,19 @@
 
         .typed-char { color: var(--neon-cyan); text-shadow: 0 0 12px var(--neon-cyan); }
 
+        .shop-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
         .shop-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 12px;
-            margin: 14px 0;
-            max-height: 340px;
+            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+            gap: 10px;
+            margin: 10px 0;
+            max-height: 290px;
             overflow-y: auto;
             padding-right: 4px;
         }
@@ -261,25 +268,25 @@
             background: rgba(2, 6, 23, 0.85);
             border: 1px solid rgba(0, 243, 255, 0.4);
             border-radius: 12px;
-            padding: 12px;
+            padding: 10px;
             text-align: center;
             transition: all 0.2s;
         }
 
-        .shop-card h3 { color: var(--neon-yellow); margin-bottom: 4px; font-size: 0.95rem; }
-        .shop-card p { color: #cbd5e1; font-size: 0.75rem; margin-bottom: 8px; line-height: 1.3; }
+        .shop-card h3 { color: var(--neon-yellow); margin-bottom: 4px; font-size: 0.9rem; }
+        .shop-card p { color: #cbd5e1; font-size: 0.72rem; margin-bottom: 8px; line-height: 1.3; }
 
         .profile-card {
             background: rgba(2, 6, 23, 0.9);
             border: 1px solid rgba(168, 85, 247, 0.5);
             border-radius: 12px;
-            padding: 12px 16px;
-            margin-bottom: 12px;
+            padding: 10px 16px;
+            margin-bottom: 10px;
             text-align: left;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 8px;
-            font-size: 0.9rem;
+            gap: 6px;
+            font-size: 0.88rem;
         }
 
         .profile-item { color: #cbd5e1; }
@@ -330,7 +337,7 @@
 </head>
 <body>
 
-    <!-- 🎵 BGM (D.mp3) -->
+    <!-- 🎵 BGM (D.mp3) ※確実な自動再生＆エラーハンドリング対応 -->
     <audio id="bgm-audio" loop preload="auto">
         <source src="D.mp3" type="audio/mp3">
     </audio>
@@ -398,7 +405,7 @@
                 <button class="red" onclick="openMissionModal()">🔴 ミッション出動 (エリア選択)</button>
                 <button class="yellow" onclick="openTaIntroModal()">⚡ スピードスターTA</button>
                 <button class="purple" onclick="openTrophyModal()">🏆 実績・アチーブメント (20個)</button>
-                <button class="cyan" onclick="openShop()" style="color:var(--neon-cyan); border-color:var(--neon-cyan);">🚗 車両ディーラー (全8種)</button>
+                <button class="cyan" onclick="openShop()" style="color:var(--neon-cyan); border-color:var(--neon-cyan);">🚗 車両＆特殊アイテム売店</button>
                 <button style="border-color: #64748b; color: #94a3b8;" onclick="logout()">ログアウト</button>
             </div>
         </div>
@@ -440,9 +447,9 @@
             </div>
         </div>
 
-        <!-- 4. 車両ディーラー＆ガレージ (全8車種) -->
+        <!-- 4. 車両ディーラー ＆ 特殊アイテムショップ (タブ切り替え対応) -->
         <div id="shop-screen" class="screen">
-            <h1>日本警察 車両納入ディーラー & ガレージ (全8種)</h1>
+            <h1>機捜データベース売店 & 車両ガレージ</h1>
             
             <div class="profile-card" id="profile-card-view">
                 <div class="profile-item">コールサイン: <span id="pf-name">---</span></div>
@@ -451,7 +458,13 @@
                 <div class="profile-item">TA自己ベスト: <span id="pf-besttime">---</span></div>
             </div>
 
+            <div class="shop-tabs">
+                <button class="tab-btn active" id="shop-tab-car" onclick="switchShopTab('car')">🚗 パトカー車両 (全8種)</button>
+                <button class="tab-btn" id="shop-tab-item" onclick="switchShopTab('item')">🛡️ 特殊装備・アイテム (6種)</button>
+            </div>
+
             <div class="shop-grid" id="dealer-car-grid"></div>
+            <div class="shop-grid" id="dealer-item-grid" style="display:none;"></div>
             
             <div style="display:flex; justify-content:center; gap:12px; margin-top:8px;">
                 <button class="purple" onclick="toggleBGM()">BGM切替 (ON/OFF)</button>
@@ -497,7 +510,7 @@
                 <div class="target-word">
                     <span class="typed-char" id="typed-part"></span><span id="remain-part">kidousousatai</span>
                 </div>
-                <p style="color: var(--neon-cyan); font-size: 0.85rem; margin-top: 6px;">[SPACEキー] BOOST満タンで一気に追撃！ | (ミスするとTAはタイム＋0.5秒ペナルティ！)</p>
+                <p style="color: var(--neon-cyan); font-size: 0.85rem; margin-top: 6px;">[SPACEキー] BOOST満タンで一気に追撃！ | (予備サイレンバッテリー所持時は大破時に自動回復！)</p>
             </div>
 
             <button onclick="toMenu()" style="padding: 6px 16px; font-size: 0.9rem;">一時停止 / メニューに戻る</button>
@@ -514,7 +527,7 @@
     </div>
 
     <script>
-        // 🚗 全8種のパトカー・特殊車両ラインナップ
+        // 🚗 全8種のパトカー・特殊車両
         const POLICE_CARS = {
             "crown210": { name: "210系クラウン パトカー", price: 0, speedMax: 280, boostPower: 1.0, type: "patrol" },
             "crown180_fukumen": { name: "180系クラウン 覆面", price: 800, speedMax: 300, boostPower: 1.2, type: "fukumen" },
@@ -526,6 +539,16 @@
             "lexus_lc": { name: "レクサス LC 要人警護仕様", price: 5000, speedMax: 420, boostPower: 2.2, type: "luxury" }
         };
 
+        // 🛡️ 新ショップアイテム（全6種）
+        const SHOP_ITEMS = {
+            "battery": { name: "予備サイレンバッテリー", price: 400, desc: "大破時にHPを+50自動回復する応急キット" },
+            "turbine": { name: "高出力ブースト・タービン", price: 800, desc: "スペースキーのブースト進捗削りが1.5倍に！" },
+            "bumper": { name: "防弾強化フロントバンパー", price: 1000, desc: "敵からの体当たりダメージを20%軽減" },
+            "drink": { name: "機捜特製エナジードリンク", price: 1200, desc: "タイピング正解時のブースト蓄積量が1.3倍に" },
+            "radar": { name: "レーダー探知パッチ", price: 1500, desc: "TA時のタイピングミスによるペナルティを無効化" },
+            "badge": { name: "主任警部補の特命バッジ", price: 3000, desc: "ミッション・TA報酬の獲得資金(G)が1.5倍に！" }
+        };
+
         // 🏆 実績（全20個）
         const TROPHIES = [
             { id: "first_win", title: "初検挙", desc: "ミッションを1回クリアする" },
@@ -534,6 +557,8 @@
             { id: "car_collector", title: "名車コレクター", desc: "パトカーを2台以上所有する" },
             { id: "car_mania", title: "警察車両マニア", desc: "パトカーを4台以上所有する" },
             { id: "car_billionaire", title: "ガレージの主", desc: "すべてのパトカーをコンプリートする" },
+            { id: "item_buyer", title: "装備拡充", desc: "ショップアイテムを1つ以上購入する" },
+            { id: "item_master", title: "特殊装備マニア", desc: "ショップアイテムをすべてコンプリートする" },
             { id: "ta_master", title: "スピードスター", desc: "タイムアタックで完走する" },
             { id: "ta_fast", title: "電光石火の追撃", desc: "TAで20秒未満を達成する" },
             { id: "rich_police", title: "予算獲得・銅", desc: "所持金が1,000Gを超える" },
@@ -541,12 +566,10 @@
             { id: "rich_police_3", title: "予算獲得・金", desc: "所持金が6,000Gを超える" },
             { id: "level_5", title: "階級昇進: 巡査部長", desc: "捜査員レベルが5に到達する" },
             { id: "level_10", title: "階級昇進: 警部補", desc: "捜査員レベルが10に到達する" },
-            { id: "level_20", title: "階級昇進: 警視", desc: "捜査員レベルが20に到達する" },
             { id: "extreme_clear", title: "極限の修羅場", desc: "難易度EXTREMEでミッションをクリアする" },
             { id: "wangan_driver", title: "湾岸線の王者", desc: "湾岸線ステージで出動を完了する" },
             { id: "touge_master", title: "峠の神様", desc: "山岳ワインディングで出動を完了する" },
             { id: "boost_freak", title: "ブーストジャンキー", desc: "累積スコアが5,000 ptを超える" },
-            { id: "high_score_king", title: "検挙王", desc: "累積スコアが15,000 ptを超える" },
             { id: "ultimate_patrol", title: "究極機捜210", desc: "すべての実績（全20個）を解除する" }
         ];
 
@@ -606,7 +629,10 @@
             if (bgmAudio.paused && isBgmEnabled) bgmAudio.play().catch(e => {});
         }
 
-        window.addEventListener("click", () => { initAudio(); }, { once: true });
+        // 🎵 ページ内のどこをクリックしても確実音声をアクティブ化＆BGM再生
+        window.addEventListener("click", () => {
+            initAudio();
+        }, { once: true });
 
         function playSound(type) {
             try {
@@ -779,7 +805,7 @@
                 hint: hint, hintAnswer: hint,
                 score: 0, level: 1, money: 100, bestTime: null,
                 ownedCars: ["crown210"], currentCar: "crown210",
-                unlockedTrophies: [], clearCount: 0, stagesCleared: []
+                ownedItems: [], unlockedTrophies: [], clearCount: 0, stagesCleared: []
             };
             saveUsersDB(db);
             player = db[name];
@@ -797,6 +823,7 @@
             player = db[name];
             if (!player.ownedCars) player.ownedCars = ["crown210"];
             if (!player.currentCar) player.currentCar = "crown210";
+            if (!player.ownedItems) player.ownedItems = [];
             if (!player.unlockedTrophies) player.unlockedTrophies = [];
             if (!player.clearCount) player.clearCount = 0;
             if (!player.stagesCleared) player.stagesCleared = [];
@@ -858,6 +885,27 @@
             startMode('mission');
         }
 
+        function switchShopTab(tab) {
+            initAudio();
+            const carTabBtn = document.getElementById("shop-tab-car");
+            const itemTabBtn = document.getElementById("shop-tab-item");
+            const carGrid = document.getElementById("dealer-car-grid");
+            const itemGrid = document.getElementById("dealer-item-grid");
+
+            if (tab === 'car') {
+                carTabBtn.classList.add("active");
+                itemTabBtn.classList.remove("active");
+                carGrid.style.display = "grid";
+                itemGrid.style.display = "none";
+            } else {
+                itemTabBtn.classList.add("active");
+                carTabBtn.classList.remove("active");
+                itemGrid.style.display = "grid";
+                carGrid.style.display = "none";
+                renderItemShop();
+            }
+        }
+
         function openShop() {
             initAudio();
             document.getElementById("pf-name").innerText = player.name;
@@ -865,6 +913,7 @@
             document.getElementById("pf-car-name").innerText = POLICE_CARS[player.currentCar].name;
             document.getElementById("pf-besttime").innerText = player.bestTime ? player.bestTime.toFixed(2) + " 秒" : "未記録";
 
+            switchShopTab('car');
             const grid = document.getElementById("dealer-car-grid");
             grid.innerHTML = "";
 
@@ -879,11 +928,11 @@
 
                 let btnHtml = "";
                 if (isEquipped) {
-                    btnHtml = `<button class="green" disabled style="opacity:0.8; padding:7px 14px;">乗車中</button>`;
+                    btnHtml = `<button class="green" disabled style="opacity:0.8; padding:6px 12px; font-size:0.85rem;">乗車中</button>`;
                 } else if (isOwned) {
-                    btnHtml = `<button class="yellow" onclick="equipCar('${carId}')" style="padding:7px 14px;">乗車する</button>`;
+                    btnHtml = `<button class="yellow" onclick="equipCar('${carId}')" style="padding:6px 12px; font-size:0.85rem;">乗車する</button>`;
                 } else {
-                    btnHtml = `<button class="cyan" onclick="buyCar('${carId}')" style="padding:7px 14px; color:var(--neon-cyan);">購入 (${car.price} G)</button>`;
+                    btnHtml = `<button class="cyan" onclick="buyCar('${carId}')" style="padding:6px 12px; font-size:0.85rem; color:var(--neon-cyan);">購入 (${car.price} G)</button>`;
                 }
 
                 card.innerHTML = `
@@ -897,6 +946,31 @@
             showScreen("shop-screen");
         }
 
+        function renderItemShop() {
+            const grid = document.getElementById("dealer-item-grid");
+            grid.innerHTML = "";
+
+            Object.keys(SHOP_ITEMS).forEach(itemId => {
+                const item = SHOP_ITEMS[itemId];
+                const isOwned = player.ownedItems.includes(itemId);
+
+                const card = document.createElement("div");
+                card.className = "shop-card";
+                card.style.borderColor = isOwned ? "var(--neon-purple)" : "rgba(168, 85, 247, 0.4)";
+
+                let btnHtml = isOwned 
+                    ? `<button class="purple" disabled style="opacity:0.8; padding:6px 12px; font-size:0.85rem;">所持・効果発動中</button>`
+                    : `<button class="purple" onclick="buyItem('${itemId}')" style="padding:6px 12px; font-size:0.85rem;">購入 (${item.price} G)</button>`;
+
+                card.innerHTML = `
+                    <h3>🛡️ ${item.name}</h3>
+                    <p>${item.desc}</p>
+                    ${btnHtml}
+                `;
+                grid.appendChild(card);
+            });
+        }
+
         function buyCar(carId) {
             const car = POLICE_CARS[carId];
             if (player.money >= car.price) {
@@ -908,6 +982,22 @@
                 checkTrophies();
                 alert(`${car.name} を購入し、警察車両を乗り換えました！`);
                 openShop();
+            } else {
+                alert("資金が足りません！");
+            }
+        }
+
+        function buyItem(itemId) {
+            const item = SHOP_ITEMS[itemId];
+            if (player.money >= item.price) {
+                player.money -= item.price;
+                if (!player.ownedItems.includes(itemId)) player.ownedItems.push(itemId);
+                savePlayerData();
+                playSound('clear');
+                checkTrophies();
+                alert(`[${item.name}] を購入しました！永続的に効果が発動します。`);
+                renderItemShop();
+                document.getElementById("pf-money").innerText = player.money;
             } else {
                 alert("資金が足りません！");
             }
@@ -955,6 +1045,9 @@
             if (player.ownedCars.length >= 4) unlock("car_mania");
             if (player.ownedCars.length >= Object.keys(POLICE_CARS).length) unlock("car_billionaire");
 
+            if (player.ownedItems && player.ownedItems.length >= 1) unlock("item_buyer");
+            if (player.ownedItems && player.ownedItems.length >= Object.keys(SHOP_ITEMS).length) unlock("item_master");
+
             if (player.bestTime) unlock("ta_master");
             if (player.bestTime && player.bestTime < 20) unlock("ta_fast");
 
@@ -964,14 +1057,12 @@
 
             if (player.level >= 5) unlock("level_5");
             if (player.level >= 10) unlock("level_10");
-            if (player.level >= 20) unlock("level_20");
 
             if (currentDiff === 'extreme' && player.clearCount > 0) unlock("extreme_clear");
             if (player.stagesCleared && player.stagesCleared.includes('wangan')) unlock("wangan_driver");
             if (player.stagesCleared && player.stagesCleared.includes('touge')) unlock("touge_master");
 
             if (player.score >= 5000) unlock("boost_freak");
-            if (player.score >= 15000) unlock("high_score_king");
 
             if (player.unlockedTrophies.length >= TROPHIES.length - 1) {
                 unlock("ultimate_patrol");
@@ -1025,6 +1116,11 @@
                 let intervalTime = currentDiff === "extreme" ? 2500 : (currentDiff === "hard" ? 3200 : 4200);
                 let dmgAmount = currentDiff === "extreme" ? 14 : (currentDiff === "hard" ? 10 : 8);
 
+                // 防弾強化フロントバンパーの効果：ダメージ20%軽減
+                if (player.ownedItems && player.ownedItems.includes("bumper")) {
+                    dmgAmount = Math.floor(dmgAmount * 0.8);
+                }
+
                 damageTimer = setInterval(() => {
                     playerHp -= dmgAmount;
                     screenShake = 10;
@@ -1034,7 +1130,20 @@
                     container.classList.remove("damage-flash");
                     void container.offsetWidth;
                     container.classList.add("damage-flash");
-                    if (playerHp <= 0) endGame(false, "💥 パトカー大破...！ 💥\n任務失敗！");
+
+                    if (playerHp <= 0) {
+                        // 予備サイレンバッテリーの効果：大破時に一度だけHP+50で自動復活
+                        if (player.ownedItems && player.ownedItems.includes("battery")) {
+                            // バッテリーを消費して復活
+                            player.ownedItems = player.ownedItems.filter(i => i !== "battery");
+                            playerHp = 50;
+                            savePlayerData();
+                            alert("⚡ [予備サイレンバッテリー発動] パトカーのシステムが緊急復旧！HP 50 で復活した！");
+                            updateBars();
+                            return;
+                        }
+                        endGame(false, "💥 パトカー大破...！ 💥\n任務失敗！");
+                    }
                 }, intervalTime);
             }
 
@@ -1055,6 +1164,7 @@
         function nextWord() {
             if (remainingWords <= 0) {
                 playSound('clear');
+                let baseReward = 100;
                 if (currentMode === "timeattack") {
                     if (taElapsedTimer) clearInterval(taElapsedTimer);
                     let finalTime = ((Date.now() - taStartTime) / 1000) + (taMissCount * 0.5);
@@ -1062,6 +1172,11 @@
                     let reward = 30;
                     if (finalTime < 20) reward = 550;
                     else if (finalTime < 45) reward = 200;
+
+                    // 主任警部補の特命バッジ効果：報酬1.5倍
+                    if (player.ownedItems && player.ownedItems.includes("badge")) {
+                        reward = Math.floor(reward * 1.5);
+                    }
 
                     let isNewBest = false;
                     if (!player.bestTime || finalTime < player.bestTime) {
@@ -1076,6 +1191,12 @@
                     endGame(true, isNewBest ? "🌟 新自己ベスト更新！ 🌟" : "⚡ タイムアタック完走！ ⚡", finalTime, taMissCount, reward);
                 } else {
                     let reward = (currentDiff === "hard") ? 250 : ((currentDiff === "extreme") ? 500 : 100);
+                    
+                    // 主任警部補の特命バッジ効果：報酬1.5倍
+                    if (player.ownedItems && player.ownedItems.includes("badge")) {
+                        reward = Math.floor(reward * 1.5);
+                    }
+
                     player.money += reward;
                     player.level++;
                     player.clearCount++;
@@ -1103,7 +1224,7 @@
             document.getElementById("result-title").innerText = title;
             if (currentMode === "timeattack") {
                 let rankMsg = finalTime < 20 ? "🚀 Sランク (20秒未満達成！)" : (finalTime < 45 ? "⚡ Aランク (標準クリア)" : "🐢 Bランク (のんびりクリア)");
-                document.getElementById("result-detail").innerText = `ランク: ${rankMsg}\n純粋タイム: ${(finalTime - (missCount * 0.5)).toFixed(2)} 秒\nミス数: ${missCount}回 (ペナルティ +${(missCount * 0.5).toFixed(1)}秒)\n🏆 最終記録: ${finalTime.toFixed(2)} 秒\n獲得賞金: ${reward} G`;
+                document.getElementById("result-detail").innerText = `ランク: ${rankMsg}\n純粋タイム: ${(finalTime - (missCount * 0.5)).toFixed(2)} 秒\nミス数: ${missCount}回\n🏆 最終記録: ${finalTime.toFixed(2)} 秒\n獲得賞金: ${reward} G`;
             } else {
                 document.getElementById("result-detail").innerText = `獲得スコア: ${score} pt\n獲得賞金: ${reward} G ${isWin ? '(' + currentDiff.toUpperCase() + ')' : '(大破のため報酬なし)'}\n捜査員レベル: Lv.${player.level}`;
             }
@@ -1137,7 +1258,12 @@
 
             if (e.code === "Space" && boostGau >= 100) {
                 boostGau = 0;
-                remainingWords = Math.max(0, remainingWords - Math.floor(2 * carSpec.boostPower));
+                
+                // 高出力ブースト・タービンの効果：進捗削り1.5倍
+                let boostDmgMultiplier = (player.ownedItems && player.ownedItems.includes("turbine")) ? 1.5 : 1.0;
+                let wordsToSkip = Math.floor(2 * carSpec.boostPower * boostDmgMultiplier);
+
+                remainingWords = Math.max(0, remainingWords - wordsToSkip);
                 screenShake = 16;
                 playSound('boost');
                 createSparkParticles(620, 150, 45);
@@ -1158,7 +1284,10 @@
                     score += 10 * (Math.floor(combo / 5) + 1);
 
                     speedKph = Math.min(carSpec.speedMax, speedKph + 8);
-                    boostGau = Math.min(100, boostGau + 14);
+                    
+                    // 機捜特製エナジードリンクの効果：ブースト蓄積量1.3倍
+                    let boostAdd = (player.ownedItems && player.ownedItems.includes("drink")) ? (14 * 1.3) : 14;
+                    boostGau = Math.min(100, boostGau + boostAdd);
 
                     playSound('type');
 
@@ -1176,7 +1305,12 @@
                     }
                 } else {
                     playSound('damage');
-                    if (currentMode === "timeattack") taMissCount++;
+                    if (currentMode === "timeattack") {
+                        // レーダー探知パッチの効果：TA時のミスによるペナルティ(+0.5秒)を無効化
+                        if (!(player.ownedItems && player.ownedItems.includes("radar"))) {
+                            taMissCount++;
+                        }
+                    }
                 }
             }
         }
