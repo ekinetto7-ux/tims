@@ -249,10 +249,10 @@
 
         .shop-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 12px;
             margin: 14px 0;
-            max-height: 320px;
+            max-height: 340px;
             overflow-y: auto;
             padding-right: 4px;
         }
@@ -266,8 +266,8 @@
             transition: all 0.2s;
         }
 
-        .shop-card h3 { color: var(--neon-yellow); margin-bottom: 4px; font-size: 1rem; }
-        .shop-card p { color: #cbd5e1; font-size: 0.78rem; margin-bottom: 8px; line-height: 1.4; }
+        .shop-card h3 { color: var(--neon-yellow); margin-bottom: 4px; font-size: 0.95rem; }
+        .shop-card p { color: #cbd5e1; font-size: 0.75rem; margin-bottom: 8px; line-height: 1.3; }
 
         .profile-card {
             background: rgba(2, 6, 23, 0.9);
@@ -291,7 +291,7 @@
             box-shadow: 0 0 35px rgba(168, 85, 247, 0.3);
             border-radius: 14px;
             padding: 20px;
-            max-width: 520px;
+            max-width: 560px;
             margin: 15px auto;
         }
 
@@ -299,9 +299,10 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
-            max-height: 220px;
+            max-height: 250px;
             overflow-y: auto;
             margin-bottom: 15px;
+            padding-right: 6px;
         }
 
         .trophy-item {
@@ -396,8 +397,8 @@
             <div class="btn-group">
                 <button class="red" onclick="openMissionModal()">🔴 ミッション出動 (エリア選択)</button>
                 <button class="yellow" onclick="openTaIntroModal()">⚡ スピードスターTA</button>
-                <button class="purple" onclick="openTrophyModal()">🏆 実績・アチーブメント</button>
-                <button class="cyan" onclick="openShop()" style="color:var(--neon-cyan); border-color:var(--neon-cyan);">🚗 機捜ディーラー＆ガレージ</button>
+                <button class="purple" onclick="openTrophyModal()">🏆 実績・アチーブメント (20個)</button>
+                <button class="cyan" onclick="openShop()" style="color:var(--neon-cyan); border-color:var(--neon-cyan);">🚗 車両ディーラー (全8種)</button>
                 <button style="border-color: #64748b; color: #94a3b8;" onclick="logout()">ログアウト</button>
             </div>
         </div>
@@ -439,9 +440,9 @@
             </div>
         </div>
 
-        <!-- 4. 車両ディーラー＆ガレージ -->
+        <!-- 4. 車両ディーラー＆ガレージ (全8車種) -->
         <div id="shop-screen" class="screen">
-            <h1>日本警察 車両納入ディーラー & ガレージ</h1>
+            <h1>日本警察 車両納入ディーラー & ガレージ (全8種)</h1>
             
             <div class="profile-card" id="profile-card-view">
                 <div class="profile-item">コールサイン: <span id="pf-name">---</span></div>
@@ -458,9 +459,9 @@
             </div>
         </div>
 
-        <!-- 5. 実績（トロフィー）モーダル -->
+        <!-- 5. 実績（トロフィー20個）モーダル -->
         <div id="trophy-screen" class="screen">
-            <h1>実績・アチーブメント</h1>
+            <h1>実績・アチーブメント (全20個)</h1>
             <div class="modal-box">
                 <div class="trophy-list" id="trophy-container"></div>
                 <button onclick="toMenu()">メニューに戻る</button>
@@ -513,19 +514,40 @@
     </div>
 
     <script>
+        // 🚗 全8種のパトカー・特殊車両ラインナップ
         const POLICE_CARS = {
-            "crown210": { name: "210系クラウン パトカー", price: 0, speedMax: 280, boostPower: 1, type: "patrol" },
-            "crown180_fukumen": { name: "180系クラウン 覆面", price: 1000, speedMax: 300, boostPower: 1.2, type: "fukumen" },
-            "legacy_b4": { name: "B4レガシー 機動捜査隊", price: 1000, speedMax: 320, boostPower: 1.4, type: "kisou" },
-            "landcruiser": { name: "ランクル 高速隊ヘビー", price: 1500, speedMax: 340, boostPower: 1.6, type: "suv" },
-            "gtr_r35": { name: "GTR R35 高速隊仕様", price: 2000, speedMax: 380, boostPower: 2.0, type: "gtr" }
+            "crown210": { name: "210系クラウン パトカー", price: 0, speedMax: 280, boostPower: 1.0, type: "patrol" },
+            "crown180_fukumen": { name: "180系クラウン 覆面", price: 800, speedMax: 300, boostPower: 1.2, type: "fukumen" },
+            "legacy_b4": { name: "B4レガシー 機動捜査隊", price: 1200, speedMax: 320, boostPower: 1.4, type: "kisou" },
+            "crown220": { name: "220系クラウン 最新パト", price: 1800, speedMax: 335, boostPower: 1.5, type: "patrol" },
+            "landcruiser": { name: "ランクル 高速隊ヘビー", price: 2500, speedMax: 350, boostPower: 1.6, type: "suv" },
+            "hiace_lighting": { name: "ハイエース 機動隊投光車", price: 3200, speedMax: 360, boostPower: 1.7, type: "support" },
+            "fairlady_z": { name: "フェアレディZ 高速隊仕様", price: 4000, speedMax: 390, boostPower: 1.9, type: "sports" },
+            "lexus_lc": { name: "レクサス LC 要人警護仕様", price: 5000, speedMax: 420, boostPower: 2.2, type: "luxury" }
         };
 
+        // 🏆 実績（全20個）
         const TROPHIES = [
             { id: "first_win", title: "初検挙", desc: "ミッションを1回クリアする" },
+            { id: "mission_3", title: "ベテラン捜査員", desc: "ミッションを3回クリアする" },
+            { id: "mission_10", title: "エース機捜隊員", desc: "ミッションを10回クリアする" },
             { id: "car_collector", title: "名車コレクター", desc: "パトカーを2台以上所有する" },
+            { id: "car_mania", title: "警察車両マニア", desc: "パトカーを4台以上所有する" },
+            { id: "car_billionaire", title: "ガレージの主", desc: "すべてのパトカーをコンプリートする" },
             { id: "ta_master", title: "スピードスター", desc: "タイムアタックで完走する" },
-            { id: "rich_police", title: "優秀な予算獲得", desc: "所持金が2000Gを超える" }
+            { id: "ta_fast", title: "電光石火の追撃", desc: "TAで20秒未満を達成する" },
+            { id: "rich_police", title: "予算獲得・銅", desc: "所持金が1,000Gを超える" },
+            { id: "rich_police_2", title: "予算獲得・銀", desc: "所持金が3,000Gを超える" },
+            { id: "rich_police_3", title: "予算獲得・金", desc: "所持金が6,000Gを超える" },
+            { id: "level_5", title: "階級昇進: 巡査部長", desc: "捜査員レベルが5に到達する" },
+            { id: "level_10", title: "階級昇進: 警部補", desc: "捜査員レベルが10に到達する" },
+            { id: "level_20", title: "階級昇進: 警視", desc: "捜査員レベルが20に到達する" },
+            { id: "extreme_clear", title: "極限の修羅場", desc: "難易度EXTREMEでミッションをクリアする" },
+            { id: "wangan_driver", title: "湾岸線の王者", desc: "湾岸線ステージで出動を完了する" },
+            { id: "touge_master", title: "峠の神様", desc: "山岳ワインディングで出動を完了する" },
+            { id: "boost_freak", title: "ブーストジャンキー", desc: "累積スコアが5,000 ptを超える" },
+            { id: "high_score_king", title: "検挙王", desc: "累積スコアが15,000 ptを超える" },
+            { id: "ultimate_patrol", title: "究極機捜210", desc: "すべての実績（全20個）を解除する" }
         ];
 
         let player = null;
@@ -757,7 +779,7 @@
                 hint: hint, hintAnswer: hint,
                 score: 0, level: 1, money: 100, bestTime: null,
                 ownedCars: ["crown210"], currentCar: "crown210",
-                unlockedTrophies: []
+                unlockedTrophies: [], clearCount: 0, stagesCleared: []
             };
             saveUsersDB(db);
             player = db[name];
@@ -776,6 +798,8 @@
             if (!player.ownedCars) player.ownedCars = ["crown210"];
             if (!player.currentCar) player.currentCar = "crown210";
             if (!player.unlockedTrophies) player.unlockedTrophies = [];
+            if (!player.clearCount) player.clearCount = 0;
+            if (!player.stagesCleared) player.stagesCleared = [];
             if (!player.hint) { player.hint = "デフォルト"; player.hintAnswer = "デフォルト"; }
             alert(`おかえりなさい、${name} 捜査員！`);
             onAuthSuccess();
@@ -855,11 +879,11 @@
 
                 let btnHtml = "";
                 if (isEquipped) {
-                    btnHtml = `<button class="green" disabled style="opacity:0.8; padding:8px 16px;">乗車中</button>`;
+                    btnHtml = `<button class="green" disabled style="opacity:0.8; padding:7px 14px;">乗車中</button>`;
                 } else if (isOwned) {
-                    btnHtml = `<button class="yellow" onclick="equipCar('${carId}')" style="padding:8px 16px;">乗車する</button>`;
+                    btnHtml = `<button class="yellow" onclick="equipCar('${carId}')" style="padding:7px 14px;">乗車する</button>`;
                 } else {
-                    btnHtml = `<button class="cyan" onclick="buyCar('${carId}')" style="padding:8px 16px; color:var(--neon-cyan);">購入 (${car.price} G)</button>`;
+                    btnHtml = `<button class="cyan" onclick="buyCar('${carId}')" style="padding:7px 14px; color:var(--neon-cyan);">購入 (${car.price} G)</button>`;
                 }
 
                 card.innerHTML = `
@@ -907,10 +931,10 @@
                 item.style.borderColor = isUnlocked ? "var(--neon-yellow)" : "rgba(255,255,255,0.1)";
                 item.innerHTML = `
                     <div style="text-align:left;">
-                        <div style="font-weight:bold; color:${isUnlocked ? 'var(--neon-yellow)' : '#64748b'}">${isUnlocked ? '🏆 ' : '🔒 '}${t.title}</div>
-                        <div style="font-size:0.8rem; color:#94a3b8;">${t.desc}</div>
+                        <div style="font-weight:bold; font-size:0.9rem; color:${isUnlocked ? 'var(--neon-yellow)' : '#64748b'}">${isUnlocked ? '🏆 ' : '🔒 '}${t.title}</div>
+                        <div style="font-size:0.75rem; color:#94a3b8;">${t.desc}</div>
                     </div>
-                    <span style="font-size:0.85rem; color:${isUnlocked ? 'var(--neon-green)' : '#64748b'}">${isUnlocked ? '達成済' : '未達成'}</span>
+                    <span style="font-size:0.8rem; color:${isUnlocked ? 'var(--neon-green)' : '#64748b'}">${isUnlocked ? '達成済' : '未達成'}</span>
                 `;
                 container.appendChild(item);
             });
@@ -919,10 +943,40 @@
 
         function checkTrophies() {
             if (!player) return;
-            if (player.level > 1 && !player.unlockedTrophies.includes("first_win")) player.unlockedTrophies.push("first_win");
-            if (player.ownedCars.length >= 2 && !player.unlockedTrophies.includes("car_collector")) player.unlockedTrophies.push("car_collector");
-            if (player.bestTime && !player.unlockedTrophies.includes("ta_master")) player.unlockedTrophies.push("ta_master");
-            if (player.money >= 2000 && !player.unlockedTrophies.includes("rich_police")) player.unlockedTrophies.push("rich_police");
+            const unlock = (id) => {
+                if (!player.unlockedTrophies.includes(id)) player.unlockedTrophies.push(id);
+            };
+
+            if (player.clearCount >= 1) unlock("first_win");
+            if (player.clearCount >= 3) unlock("mission_3");
+            if (player.clearCount >= 10) unlock("mission_10");
+
+            if (player.ownedCars.length >= 2) unlock("car_collector");
+            if (player.ownedCars.length >= 4) unlock("car_mania");
+            if (player.ownedCars.length >= Object.keys(POLICE_CARS).length) unlock("car_billionaire");
+
+            if (player.bestTime) unlock("ta_master");
+            if (player.bestTime && player.bestTime < 20) unlock("ta_fast");
+
+            if (player.money >= 1000) unlock("rich_police");
+            if (player.money >= 3000) unlock("rich_police_2");
+            if (player.money >= 6000) unlock("rich_police_3");
+
+            if (player.level >= 5) unlock("level_5");
+            if (player.level >= 10) unlock("level_10");
+            if (player.level >= 20) unlock("level_20");
+
+            if (currentDiff === 'extreme' && player.clearCount > 0) unlock("extreme_clear");
+            if (player.stagesCleared && player.stagesCleared.includes('wangan')) unlock("wangan_driver");
+            if (player.stagesCleared && player.stagesCleared.includes('touge')) unlock("touge_master");
+
+            if (player.score >= 5000) unlock("boost_freak");
+            if (player.score >= 15000) unlock("high_score_king");
+
+            if (player.unlockedTrophies.length >= TROPHIES.length - 1) {
+                unlock("ultimate_patrol");
+            }
+
             savePlayerData();
         }
 
@@ -1016,12 +1070,17 @@
                     }
                     player.money += reward;
                     player.level++;
+                    player.clearCount++;
+                    if (!player.stagesCleared.includes(currentStage)) player.stagesCleared.push(currentStage);
                     checkTrophies();
                     endGame(true, isNewBest ? "🌟 新自己ベスト更新！ 🌟" : "⚡ タイムアタック完走！ ⚡", finalTime, taMissCount, reward);
                 } else {
                     let reward = (currentDiff === "hard") ? 250 : ((currentDiff === "extreme") ? 500 : 100);
                     player.money += reward;
                     player.level++;
+                    player.clearCount++;
+                    if (!player.stagesCleared.includes(currentStage)) player.stagesCleared.push(currentStage);
+                    checkTrophies();
                     endGame(true, "🚨 容疑車両のPIT捕獲完了！任務達成！ 🚨", 0, 0, reward);
                 }
                 return;
@@ -1217,6 +1276,13 @@
                 ctx.fillStyle = "#1e293b";
                 ctx.fillRect(x + 20, y + 2, 70, 20);
                 ctx.fillRect(x, y + 20, 115, 24);
+            } else if (carKey === "crown220") {
+                ctx.fillStyle = sirenRed ? "#ff0055" : "#00f3ff";
+                ctx.fillRect(x + 48, y - 8, 25, 8);
+                ctx.fillStyle = "#ffffff";
+                ctx.fillRect(x + 22, y + 2, 72, 20);
+                ctx.fillStyle = "#0f172a";
+                ctx.fillRect(x, y + 20, 115, 24);
             } else if (carKey === "landcruiser") {
                 ctx.fillStyle = sirenRed ? "#ff0055" : "#00f3ff";
                 ctx.fillRect(x + 40, y - 10, 30, 8);
@@ -1224,15 +1290,27 @@
                 ctx.fillRect(x + 15, y - 4, 80, 24);
                 ctx.fillStyle = "#0f172a";
                 ctx.fillRect(x, y + 20, 125, 26);
-            } else if (carKey === "gtr_r35") {
+            } else if (carKey === "hiace_lighting") {
                 ctx.fillStyle = sirenRed ? "#ff0055" : "#00f3ff";
-                ctx.fillRect(x + 50, y - 8, 25, 8);
+                ctx.fillRect(x + 35, y - 14, 40, 10);
+                ctx.fillStyle = "#ffffff";
+                ctx.fillRect(x + 10, y - 6, 95, 30);
+                ctx.fillStyle = "#0f172a";
+                ctx.fillRect(x, y + 24, 130, 22);
+            } else if (carKey === "fairlady_z") {
+                ctx.fillStyle = sirenRed ? "#ff0055" : "#00f3ff";
+                ctx.fillRect(x + 50, y - 8, 22, 8);
                 ctx.fillStyle = "#ffffff";
                 ctx.fillRect(x + 20, y + 4, 75, 18);
                 ctx.fillStyle = "#020617";
                 ctx.fillRect(x, y + 20, 120, 24);
-                ctx.fillStyle = "#334155";
-                ctx.fillRect(x - 5, y + 10, 10, 12);
+            } else if (carKey === "lexus_lc") {
+                ctx.fillStyle = sirenRed ? "#ff0055" : "#00f3ff";
+                ctx.fillRect(x + 50, y - 8, 25, 8);
+                ctx.fillStyle = "#1e293b";
+                ctx.fillRect(x + 18, y + 4, 80, 18);
+                ctx.fillStyle = "#020617";
+                ctx.fillRect(x, y + 20, 125, 24);
             } else {
                 ctx.fillStyle = sirenRed ? "#ff0055" : "#00f3ff";
                 ctx.fillRect(x + 45, y - 8, 25, 8);
