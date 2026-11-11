@@ -338,15 +338,50 @@
                 <button class="tab-btn active" id="tab-login-btn" onclick="switchTab('login')">認証ログイン</button>
                 <button class="tab-btn" id="tab-register-btn" onclick="switchTab('register')">新規署員登録</button>
             </div>
+            
             <div id="login-form" class="auth-form">
                 <input type="text" id="login-username" placeholder="コールサイン (名前)">
                 <input type="password" id="login-password" placeholder="暗号パスワード">
-                <button class="green" onclick="handleLogin()">出動開始</button>
+                <div style="display:flex; gap:10px; width:80%; max-width:380px;">
+                    <button class="green" onclick="handleLogin()" style="flex:1;">出動開始</button>
+                </div>
+                <div style="display:flex; gap:8px; margin-top:6px; font-size:0.85rem;">
+                    <button onclick="openNameHelper()" style="padding:6px 12px; font-size:0.8rem; border-color:#888; color:#aaa;">👤 名前を忘れた場合</button>
+                    <button onclick="openGoogleStyleRecovery()" style="padding:6px 12px; font-size:0.8rem; border-color:var(--neon-cyan); color:var(--neon-cyan);">🔑 パスワードを忘れた場合</button>
+                </div>
             </div>
+
             <div id="register-form" class="auth-form" style="display: none;">
                 <input type="text" id="reg-username" placeholder="新規コールサイン (名前)">
                 <input type="password" id="reg-password" placeholder="新規暗号パスワード">
+                <input type="text" id="reg-hint" placeholder="再設定用ヒント (例: 好きな車・ペットの名前)">
                 <button class="yellow" onclick="handleRegister()">新規登録して出動</button>
+            </div>
+        </div>
+
+        <!-- 1.2 名前忘れ確認画面 -->
+        <div id="name-helper-screen" class="screen">
+            <h1>アカウントの確認 (署員名簿)</h1>
+            <div class="modal-box">
+                <p style="color:var(--neon-cyan); margin-bottom:12px;">この端末に登録されている署員のコールサイン一覧です。</p>
+                <div id="registered-names-list" style="background:rgba(0,0,0,0.5); border:1px solid #444; border-radius:8px; padding:10px; max-height:160px; overflow-y:auto; margin-bottom:15px; color:#fff; text-align:left;"></div>
+                <button onclick="showScreen('login-screen')">ログイン画面に戻る</button>
+            </div>
+        </div>
+
+        <!-- 1.3 Google風 パスワード復旧画面 -->
+        <div id="recovery-screen" class="screen">
+            <h1>アカウントの復旧</h1>
+            <div class="modal-box" style="text-align: left; line-height: 1.6;">
+                <p style="color:var(--neon-yellow); margin-bottom:10px; text-align:center;">🔒 本人確認プロセス</p>
+                <div class="auth-form" style="gap:10px; align-items: stretch;">
+                    <input type="text" id="rec-username" placeholder="コールサイン (名前)" style="width:100%; max-width:none;">
+                    <p id="rec-hint-label" style="font-size:0.9rem; color:#aaa;">※名前を入力すると、再設定用ヒントが表示されます。</p>
+                    <input type="text" id="rec-hint-answer" placeholder="再設定用ヒントの答えを入力" style="width:100%; max-width:none;">
+                    <input type="password" id="rec-new-password" placeholder="新しい暗号パスワード" style="width:100%; max-width:none;">
+                    <button class="yellow" onclick="executeGoogleRecovery()" style="margin-top:5px;">パスワードをリセットして再設定</button>
+                </div>
+                <button onclick="showScreen('login-screen')" style="margin-top:15px; width:100%;">ログイン画面に戻る</button>
             </div>
         </div>
 
@@ -383,7 +418,7 @@
             </div>
         </div>
 
-        <!-- 3.5 タイムアタック説明・確認モーダル (新規追加) -->
+        <!-- 3.5 タイムアタック説明・確認モーダル -->
         <div id="ta-intro-screen" class="screen">
             <h1>スピードスター・タイムアタック</h1>
             <div class="modal-box" style="text-align: left; line-height: 1.6;">
@@ -613,7 +648,7 @@
 
         const radioMessages = [
             "📡 [機捜無線] 前方の容疑車が蛇行運転中！慎重に距離を詰めろ！",
-            "📢 [本部司令] 「210号、PITマニューバの準備よし。確実にとらえろ！」",
+            "📢 [本部司令] 「210号、エリア内で不審車両を確認。確保せよ！」",
             "🚨 [緊急警報] エリア内で容疑車両がさらに加速！タイピングを急げ！",
             "💬 [同乗相棒] 「先輩、ナイスタイピングっす！このまま追い詰けましょう！」"
         ];
@@ -642,10 +677,74 @@
             localStorage.setItem("kisou210_solo_ultimate_db", JSON.stringify(db));
         }
 
+        function openNameHelper() {
+            initAudio();
+            const db = getUsersDB();
+            const names = Object.keys(db);
+            const listEl = document.getElementById("registered-names-list");
+            
+            if (names.length === 0) {
+                listEl.innerHTML = "<span style='color:#888;'>現在登録されている署員はいません。新規登録してください。</span>";
+            } else {
+                listEl.innerHTML = names.map(n => `• コールサイン: <b style="color:var(--neon-cyan);">${n}</b> (Lv.${db[n].level || 1})`).join("<br>");
+            }
+            showScreen('name-helper-screen');
+        }
+
+        function openGoogleStyleRecovery() {
+            initAudio();
+            document.getElementById("rec-username").value = "";
+            document.getElementById("rec-hint-answer").value = "";
+            document.getElementById("rec-new-password").value = "";
+            document.getElementById("rec-hint-label").innerText = "※名前を入力すると、再設定用ヒントが表示されます。";
+            showScreen('recovery-screen');
+        }
+
+        // 入力時のリスナーを確実にするため動的バインド
+        document.addEventListener("DOMContentLoaded", () => {
+            const recUserIn = document.getElementById("rec-username");
+            if (recUserIn) {
+                recUserIn.oninput = function() {
+                    const db = getUsersDB();
+                    const uname = recUserIn.value.trim();
+                    const label = document.getElementById("rec-hint-label");
+                    if (db[uname]) {
+                        label.innerHTML = `💡 ヒント: <span style="color:var(--neon-yellow);">${db[uname].hint || "デフォルトヒント"}</span>`;
+                    } else {
+                        label.innerText = "※該当するコールサインが見つかりません。";
+                    }
+                };
+            }
+        });
+
+        function executeGoogleRecovery() {
+            initAudio();
+            const name = document.getElementById("rec-username").value.trim();
+            const answer = document.getElementById("rec-hint-answer").value.trim();
+            const newPass = document.getElementById("rec-new-password").value.trim();
+
+            if (!name || !answer || !newPass) return alert("すべての項目を入力してください！");
+
+            const db = getUsersDB();
+            if (!db[name]) return alert("指定されたコールサインが見つかりません！");
+
+            const savedHintAns = (db[name].hintAnswer || "").trim().toLowerCase();
+            if (savedHintAns && savedHintAns !== answer.toLowerCase()) {
+                return alert("再設定用ヒントの答えが間違っています！");
+            }
+
+            db[name].password = newPass;
+            saveUsersDB(db);
+            alert(`[${name}] のパスワードを再設定しました！ログインしてください。`);
+            showScreen('login-screen');
+        }
+
         function handleRegister() {
             initAudio();
             const name = document.getElementById("reg-username").value.trim();
             const pass = document.getElementById("reg-password").value.trim();
+            const hint = document.getElementById("reg-hint").value.trim() || "デフォルト";
+            
             if (!name || !pass) return alert("コールサインとパスワードを入力してください！");
 
             const db = getUsersDB();
@@ -653,6 +752,7 @@
 
             db[name] = {
                 name: name, password: pass,
+                hint: hint, hintAnswer: hint,
                 score: 0, level: 1, money: 100, bestTime: null,
                 ownedCars: ["crown210"], currentCar: "crown210",
                 unlockedTrophies: []
@@ -676,6 +776,7 @@
             if (!player.ownedCars) player.ownedCars = ["crown210"];
             if (!player.currentCar) player.currentCar = "crown210";
             if (!player.unlockedTrophies) player.unlockedTrophies = [];
+            if (!player.hint) { player.hint = "デフォルト"; player.hintAnswer = "デフォルト"; }
 
             alert(`おかえりなさい、${name} 捜査員！`);
             onAuthSuccess();
@@ -699,7 +800,8 @@
             if (damageTimer) clearInterval(damageTimer);
             if (taElapsedTimer) clearInterval(taElapsedTimer);
             document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
-            document.getElementById(id).classList.add("active");
+            const target = document.getElementById(id);
+            if (target) target.classList.add("active");
         }
 
         function toMenu() {
@@ -905,7 +1007,6 @@
                     if (taElapsedTimer) clearInterval(taElapsedTimer);
                     let finalTime = ((Date.now() - taStartTime) / 1000) + (taMissCount * 0.5);
                     
-                    // 💡 タイム別の報酬計算 (20秒未満: 550G, 20〜45秒: 200G, 45秒以上: 30G)
                     let reward = 30;
                     if (finalTime < 20) reward = 550;
                     else if (finalTime < 45) reward = 200;
@@ -1159,3 +1260,7 @@
             ctx.arc(x + 80, y + 40, 9, 0, Math.PI * 2);
             ctx.fill();
             ctx.restore();
+        }
+    </script>
+</body>
+</html>
