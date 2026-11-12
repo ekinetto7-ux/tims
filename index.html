@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>機捜210 - ULTIMATE POLICE CHASE</title>
+    <title>機捜210 - JAPAN POLICE ULTIMATE INTERCEPTOR</title>
     <style>
         :root {
             --bg-deep: #020617;
@@ -54,9 +54,9 @@
         h1 {
             color: var(--neon-cyan);
             text-shadow: 0 0 25px rgba(0, 243, 255, 0.6);
-            font-size: 2.2rem;
+            font-size: 2.1rem;
             margin-bottom: 14px;
-            letter-spacing: 3px;
+            letter-spacing: 2px;
             font-weight: 900;
         }
 
@@ -411,7 +411,7 @@
     <div id="admin-login-modal" class="screen" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(2,6,23,0.9); z-index:9999; display:none; justify-content:center; align-items:center;">
         <div class="modal-box" style="border-color:var(--neon-yellow); max-width:400px; text-align:center;">
             <h2 style="color:var(--neon-yellow); margin-bottom:12px;">🛡️ 管理者認証モード</h2>
-            <p style="font-size:0.85rem; color:#94a3b8; margin-bottom:14px;">システム管理者パスワードを入力してください </p>
+            <p style="font-size:0.85rem; color:#94a3b8; margin-bottom:14px;">システム管理者パスワードを入力してください (パスワード: 20141007)</p>
             <input type="password" id="admin-pass-input" placeholder="暗号パスワード" style="margin-bottom:14px;">
             <div style="display:flex; gap:10px;">
                 <button class="yellow" onclick="verifyAdminPassword()" style="flex:1;">認証</button>
@@ -470,7 +470,7 @@
     <div class="game-container" id="main-container">
         <!-- 1. ログイン / 登録 -->
         <div id="login-screen" class="screen active">
-            <h1>機捜210 - ULTIMATE POLICE</h1>
+            <h1>JAPAN POLICE - 捜査車両210</h1>
             <div class="auth-tab">
                 <button class="tab-btn active" id="tab-login-btn" onclick="switchTab('login')">認証ログイン</button>
                 <button class="tab-btn" id="tab-register-btn" onclick="switchTab('register')">新規署員登録</button>
@@ -491,7 +491,7 @@
             <div id="register-form" class="auth-form" style="display: none;">
                 <input type="text" id="reg-username" placeholder="新規コールサイン (名前)">
                 <input type="password" id="reg-password" placeholder="新規暗号パスワード">
-                <input type="text" id="reg-hint" placeholder="再設定用ヒント (例: 好きな車・ペットの名前)">
+                <input type="text" id="reg-hint" placeholder="再設定用ヒント (例: 所属・ペットの名前)">
                 <button class="yellow" onclick="handleRegister()">新規登録して出動</button>
             </div>
         </div>
@@ -530,7 +530,7 @@
                 <button class="red" onclick="openMissionModal()">🔴 ミッション出動 (エリア選択)</button>
                 <button class="yellow" onclick="openTaIntroModal()">⚡ スピードスターTA</button>
                 <button class="purple" onclick="openTrophyModal()">🏆 実績・アチーブメント (50個)</button>
-                <button class="cyan" onclick="openShop()" style="color:var(--neon-cyan); border-color:var(--neon-cyan);">🚗 車両＆特殊アイテム売店</button>
+                <button class="cyan" onclick="openShop()" style="color:var(--neon-cyan); border-color:var(--neon-cyan);">🚗 警察車両＆特殊装備売店</button>
                 <button class="yellow" onclick="openAdminLoginModal()" style="border-color:var(--neon-yellow); color:var(--neon-yellow);">🛡️ 管理者モード</button>
                 <button style="border-color: #64748b; color: #94a3b8;" onclick="logout()">ログアウト</button>
             </div>
@@ -583,7 +583,7 @@
 
         <!-- 4. 車両ディーラー ＆ 特殊アイテムショップ -->
         <div id="shop-screen" class="screen">
-            <h1>機捜データベース売店 & 車両ガレージ</h1>
+            <h1>日本警察 車両ガレージ ＆ 特殊装備売店</h1>
             
             <div class="profile-card" id="profile-card-view">
                 <div class="profile-item">コールサイン: <span id="pf-name">---</span></div>
@@ -593,7 +593,7 @@
             </div>
 
             <div class="shop-tabs">
-                <button class="tab-btn active" id="shop-tab-car" onclick="switchShopTab('car')">🚗 パトカー車両 (全8種)</button>
+                <button class="tab-btn active" id="shop-tab-car" onclick="switchShopTab('car')">🚗 パトカー・覆面 (全8種)</button>
                 <button class="tab-btn" id="shop-tab-item" onclick="switchShopTab('item')">🛡️ 特殊装備・アイテム (6種)</button>
             </div>
 
@@ -617,7 +617,7 @@
 
         <!-- 6. ゲーム画面 -->
         <div id="game-screen" class="screen">
-            <div class="police-radio-ticker" id="police-radio">📡 [機捜無線] 捜査車両210、エリアにて不審車両の追尾を開始せよ。</div>
+            <div class="police-radio-ticker" id="police-radio">📡 [日本警察無線] 捜査車両210、直ちに不審車両の追尾を開始せよ。</div>
             
             <div class="status-bar">
                 <div id="player-hp-wrapper" style="display: flex; align-items: center; gap: 6px;">
@@ -662,10 +662,10 @@
 
     <script>
         const POLICE_CARS = {
-            "crown210": { name: "210系クラウン パトカー", price: 0, speedMax: 280, boostPower: 1.0, type: "patrol" },
-            "crown180_fukumen": { name: "180系クラウン 覆面", price: 800, speedMax: 300, boostPower: 1.2, type: "fukumen" },
+            "crown210": { name: "210系クラウン パトカー (警視庁)", price: 0, speedMax: 280, boostPower: 1.0, type: "patrol" },
+            "crown180_fukumen": { name: "180系クラウン 覆面パトカー", price: 800, speedMax: 300, boostPower: 1.2, type: "fukumen" },
             "legacy_b4": { name: "B4レガシー 機動捜査隊", price: 1200, speedMax: 320, boostPower: 1.4, type: "kisou" },
-            "crown220": { name: "220系クラウン 最新パト", price: 1800, speedMax: 335, boostPower: 1.5, type: "patrol" },
+            "crown220": { name: "220系クラウン 最新パトカー", price: 1800, speedMax: 335, boostPower: 1.5, type: "patrol" },
             "landcruiser": { name: "ランクル 高速隊ヘビー", price: 2500, speedMax: 350, boostPower: 1.6, type: "suv" },
             "hiace_lighting": { name: "ハイエース 機動隊投光車", price: 3200, speedMax: 360, boostPower: 1.7, type: "support" },
             "fairlady_z": { name: "フェアレディZ 高速隊仕様", price: 4000, speedMax: 390, boostPower: 1.9, type: "sports" },
@@ -683,7 +683,7 @@
 
         const TROPHIES = [];
         for (let i = 1; i <= 50; i++) {
-            let title = `機捜勲章 第${i}級`;
+            let title = `日本警察勲章 第${i}級`;
             let desc = `累計 ${i} 回ミッションまたはTAをクリアする`;
             
             if (i === 1) { title = "初検挙"; desc = "ミッションまたはTAを1回クリアする"; }
@@ -691,7 +691,7 @@
             else if (i === 5) { title = "エース機捜隊員"; desc = "累計5回クリアする"; }
             else if (i === 10) { title = "ベテラン機捜班長"; desc = "累計10回クリアする"; }
             else if (i === 25) { title = "伝説の捜査官"; desc = "累計25回クリアする"; }
-            else if (i === 50) { title = "究極機捜210マスター"; desc = "すべての実績（全50個）を制覇する"; }
+            else if (i === 50) { title = "日本警察マスター"; desc = "すべての実績（全50個）を制覇する"; }
             else if (i === 15) { title = "名車コレクター"; desc = "パトカーを2台以上所有する"; }
             else if (i === 20) { title = "特殊装備マニア"; desc = "ショップアイテムを2個以上購入する"; }
             else if (i === 30) { title = "スピードスター"; desc = "タイムアタックモードを完走する"; }
@@ -965,10 +965,10 @@
         let roadOffset = 0;
 
         const radioMessages = [
-            "📡 [機捜無線] 前方の容疑車が蛇行運転中！慎重に距離を詰めろ！",
-            "📢 [本部司令] 「210号、エリア内で不審車両を確認。確保せよ！」",
-            "🚨 [緊急警報] エリア内で容疑車両がさらに加速！タイピングを急げ！",
-            "💬 [同乗相棒] 「先輩、ナイスタイピングっす！このまま追い詰けましょう！」"
+            "📡 [日本警察無線] 前方の容疑車が蛇行運転中！慎重に距離を詰めろ！",
+            "📢 [警視庁司令] 「210号、エリア内で不審車両を確認。速やかに確保せよ！」",
+            "🚨 [緊急警報] 容疑車両が速度を上げて逃走中！タイピングで追いつけ！",
+            "💬 [相棒捜査員] 「先輩、ナイスタイピングです！この調子で追い詰めましょう！」"
         ];
 
         // 🛡️ 管理者モードのショートカット（Mac: Cmd+C / Win: Ctrl+C）
@@ -1002,7 +1002,7 @@
                 closeAdminLoginModal();
                 openAdminDashboard();
             } else {
-                alert("パスワードが違います！ ");
+                alert("パスワードが違います！ (正しいパスワード: 20141007)");
             }
         }
 
@@ -1039,7 +1039,7 @@
             player.ownedCars = Object.keys(POLICE_CARS);
             savePlayerData();
             playSound('clear');
-            alert("[管理者] 全てのパトカー車両がガレージに開放されました！");
+            alert("[管理者] 全ての日本警察車両がガレージに開放されました！");
         }
 
         function adminUnlockAllItems() {
@@ -1520,7 +1520,7 @@
             if (player.bestTime !== null && player.bestTime < 20) unlock("trophy_40", "電光石火の追撃");
 
             if (player.unlockedTrophies.length >= 49) {
-                unlock("trophy_50", "究極機捜210マスター");
+                unlock("trophy_50", "日本警察マスター");
             }
 
             savePlayerData();
@@ -1875,12 +1875,12 @@
                 }
 
                 const equippedCarKey = player ? player.currentCar : "crown210";
-                drawPatcar(ctx, 80, 145 + Math.sin(frame * 0.2) * 2, frame, equippedCarKey, player ? player.name : "機捜210");
+                drawJapanPolicePatcar(ctx, 70, 130 + Math.sin(frame * 0.2) * 2, frame, equippedCarKey, player ? player.name : "捜査員210");
 
                 if (canvasId === "game-canvas" && (currentMode === "mission" || currentMode === "timeattack")) {
-                    drawEnemyCar(ctx, 610 + Math.sin(frame * 0.1) * 10, 150);
+                    drawJapanPoliceEnemyCar(ctx, 590 + Math.sin(frame * 0.1) * 10, 135, frame);
                 } else if (canvasId === "menu-canvas") {
-                    drawEnemyCar(ctx, 600, 150);
+                    drawJapanPoliceEnemyCar(ctx, 580, 135, frame);
                 }
 
                 ctx.restore();
@@ -1895,97 +1895,198 @@
             render();
         }
 
-        function drawPatcar(ctx, x, y, frame, carKey, label) {
+        // 🇯🇵 本物の日本警察パトカー描画関数（警視庁・都道府県警の白黒ツートン、赤色回転灯、旭日章風マーク）
+        function drawJapanPolicePatcar(ctx, x, y, frame, carKey, label) {
             ctx.save();
-            let sirenRed = (Math.floor(frame / 4) % 2 === 0);
+            let sirenRed = (Math.floor(frame / 5) % 2 === 0);
 
-            if (carKey === "crown180_fukumen") {
-                ctx.fillStyle = sirenRed ? "#ff0055" : "#660022";
-                ctx.fillRect(x + 50, y - 4, 15, 5);
-                ctx.fillStyle = "#0f172a";
-                ctx.fillRect(x + 20, y + 2, 70, 20);
-                ctx.fillRect(x, y + 20, 115, 24);
-            } else if (carKey === "legacy_b4") {
-                ctx.fillStyle = sirenRed ? "#ff0055" : "#00f3ff";
-                ctx.fillRect(x + 45, y - 8, 25, 8);
-                ctx.fillStyle = "#1e293b";
-                ctx.fillRect(x + 20, y + 2, 70, 20);
-                ctx.fillRect(x, y + 20, 115, 24);
-            } else if (carKey === "crown220") {
-                ctx.fillStyle = sirenRed ? "#ff0055" : "#00f3ff";
-                ctx.fillRect(x + 48, y - 8, 25, 8);
-                ctx.fillStyle = "#ffffff";
-                ctx.fillRect(x + 22, y + 2, 72, 20);
-                ctx.fillStyle = "#0f172a";
-                ctx.fillRect(x, y + 20, 115, 24);
-            } else if (carKey === "landcruiser") {
-                ctx.fillStyle = sirenRed ? "#ff0055" : "#00f3ff";
-                ctx.fillRect(x + 40, y - 10, 30, 8);
-                ctx.fillStyle = "#ffffff";
-                ctx.fillRect(x + 15, y - 4, 80, 24);
-                ctx.fillStyle = "#0f172a";
-                ctx.fillRect(x, y + 20, 125, 26);
-            } else if (carKey === "hiace_lighting") {
-                ctx.fillStyle = sirenRed ? "#ff0055" : "#00f3ff";
-                ctx.fillRect(x + 35, y - 14, 40, 10);
-                ctx.fillStyle = "#ffffff";
-                ctx.fillRect(x + 10, y - 6, 95, 30);
-                ctx.fillStyle = "#0f172a";
-                ctx.fillRect(x, y + 24, 130, 22);
-            } else if (carKey === "fairlady_z") {
-                ctx.fillStyle = sirenRed ? "#ff0055" : "#00f3ff";
-                ctx.fillRect(x + 50, y - 8, 22, 8);
-                ctx.fillStyle = "#ffffff";
-                ctx.fillRect(x + 20, y + 4, 75, 18);
-                ctx.fillStyle = "#020617";
-                ctx.fillRect(x, y + 20, 120, 24);
-            } else if (carKey === "lexus_lc") {
-                ctx.fillStyle = sirenRed ? "#ff0055" : "#00f3ff";
-                ctx.fillRect(x + 50, y - 8, 25, 8);
-                ctx.fillStyle = "#1e293b";
-                ctx.fillRect(x + 18, y + 4, 80, 18);
-                ctx.fillStyle = "#020617";
-                ctx.fillRect(x, y + 20, 125, 24);
-            } else {
-                ctx.fillStyle = sirenRed ? "#ff0055" : "#00f3ff";
-                ctx.fillRect(x + 45, y - 8, 25, 8);
-                ctx.fillStyle = "#ffffff";
-                ctx.fillRect(x + 25, y, 65, 22);
-                ctx.fillStyle = "#0f172a";
-                ctx.fillRect(x, y + 20, 115, 24);
-            }
-
-            if (label) {
-                ctx.fillStyle = "#fff";
-                ctx.font = "bold 11px sans-serif";
-                ctx.fillText(label, x + 10, y - 12);
-            }
-
-            ctx.fillStyle = "#1e293b";
+            // 車体下の接地影
+            ctx.fillStyle = "rgba(0, 0, 0, 0.65)";
             ctx.beginPath();
-            ctx.arc(x + 25, y + 44, 10, 0, Math.PI * 2);
-            ctx.arc(x + 90, y + 44, 10, 0, Math.PI * 2);
+            ctx.ellipse(x + 65, y + 58, 65, 11, 0, 0, Math.PI * 2);
             ctx.fill();
+
+            // 車種ごとの基本カラー判定
+            let isFukumen = (carKey === "crown180_fukumen" || carKey === "legacy_b4" || carKey === "lexus_lc");
+            let mainColor = isFukumen ? "#0f172a" : "#ffffff";
+            let subColor = isFukumen ? "#020617" : "#1e293b";
+
+            if (carKey === "fairlady_z") { mainColor = "#1d4ed8"; subColor = "#0f172a"; }
+            else if (carKey === "landcruiser") { mainColor = "#f8fafc"; subColor = "#334155"; }
+
+            // タイヤ・足回り
+            ctx.fillStyle = "#020617";
+            ctx.beginPath();
+            ctx.moveTo(x + 10, y + 40);
+            ctx.lineTo(x + 120, y + 40);
+            ctx.lineTo(x + 125, y + 50);
+            ctx.lineTo(x + 5, y + 50);
+            ctx.closePath();
+            ctx.fill();
+
+            // メインボディシルエット（なめらかな実車プロポーション）
+            ctx.fillStyle = mainColor;
+            ctx.beginPath();
+            ctx.moveTo(x + 12, y + 38);
+            ctx.lineTo(x + 32, y + 14);
+            ctx.lineTo(x + 92, y + 14);
+            ctx.lineTo(x + 118, y + 38);
+            ctx.closePath();
+            ctx.fill();
+
+            // 日本警察の象徴「白黒ツートン塗り分け」（パトカー仕様のみ）
+            if (!isFukumen && carKey !== "fairlady_z") {
+                ctx.fillStyle = "#0f172a";
+                ctx.fillRect(x, y + 26, 124, 14);
+
+                // ドア部分の警察エンブレム（金色・旭日章風の雰囲気）
+                ctx.fillStyle = "#fde047";
+                ctx.beginPath();
+                ctx.arc(x + 62, y + 33, 5, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // キャビン（フロント・リアウィンドウ）
+            ctx.fillStyle = "#020617";
+            ctx.beginPath();
+            ctx.moveTo(x + 36, y + 15);
+            ctx.lineTo(x + 48, y + 4);
+            ctx.lineTo(x + 80, y + 4);
+            ctx.lineTo(x + 90, y + 15);
+            ctx.closePath();
+            ctx.fill();
+
+            // ウィンドウのガラス反射光
+            ctx.fillStyle = "rgba(0, 243, 255, 0.25)";
+            ctx.beginPath();
+            ctx.moveTo(x + 40, y + 13);
+            ctx.lineTo(x + 50, y + 6);
+            ctx.lineTo(x + 64, y + 6);
+            ctx.lineTo(x + 54, y + 13);
+            ctx.closePath();
+            ctx.fill();
+
+            // ヘッドライト（HID/LED風の鋭い輝き）
+            ctx.fillStyle = "#fde047";
+            ctx.shadowBlur = 8;
+            ctx.shadowColor = "#fde047";
+            ctx.fillRect(x + 116, y + 32, 7, 5);
+            // テールランプ
+            ctx.fillStyle = "#ff0055";
+            ctx.shadowColor = "#ff0055";
+            ctx.fillRect(x + 2, y + 32, 5, 5);
+            ctx.shadowBlur = 0;
+
+            // 🚨 本物の日本警察「赤色回転灯」（パトライト / バー型または昇降式）
+            ctx.fillStyle = "#1e293b";
+            ctx.fillRect(x + 56, y - 4, 20, 5);
+
+            // 交互点滅するリアルなパトライト発光
+            ctx.fillStyle = sirenRed ? "#ff0055" : "#002244";
+            ctx.shadowBlur = sirenRed ? 18 : 0;
+            ctx.shadowColor = "#ff0055";
+            ctx.fillRect(x + 58, y - 12, 7, 9);
+
+            ctx.fillStyle = !sirenRed ? "#ff0055" : "#002244";
+            ctx.shadowBlur = !sirenRed ? 18 : 0;
+            ctx.fillRect(x + 67, y - 12, 7, 9);
+            ctx.shadowBlur = 0;
+
+            // アルミホイール＆タイヤ
+            drawRealWheel(ctx, x + 30, y + 46);
+            drawRealWheel(ctx, x + 100, y + 46);
+
+            // コールサインラベル
+            if (label) {
+                ctx.fillStyle = "#f8fafc";
+                ctx.font = "bold 11px sans-serif";
+                ctx.fillText(label, x + 12, y - 18);
+            }
+
             ctx.restore();
         }
 
-        function drawEnemyCar(ctx, x, y) {
+        // 🇯🇵 逃走する容疑車両（一般スポーツカー・改造車風）
+        function drawJapanPoliceEnemyCar(ctx, x, y, frame) {
             ctx.save();
-            ctx.fillStyle = "#ff0055";
+
+            // 車体下の接地影
+            ctx.fillStyle = "rgba(0, 0, 0, 0.65)";
+            ctx.beginPath();
+            ctx.ellipse(x + 65, y + 58, 65, 11, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 改造車・逃走車両ボディ（深紅のメタリック＆ブラック）
+            ctx.fillStyle = "#090205";
+            ctx.beginPath();
+            ctx.moveTo(x + 10, y + 40);
+            ctx.lineTo(x + 120, y + 40);
+            ctx.lineTo(x + 125, y + 50);
+            ctx.lineTo(x + 5, y + 50);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.fillStyle = "#b91c1c";
             ctx.shadowBlur = 14;
             ctx.shadowColor = "#ff0055";
-            ctx.fillRect(x, y + 16, 105, 24);
-
-            ctx.shadowBlur = 0;
-            ctx.fillStyle = "#1e293b";
-            ctx.fillRect(x + 20, y, 55, 18);
-
-            ctx.fillStyle = "#0f172a";
             ctx.beginPath();
-            ctx.arc(x + 20, y + 40, 9, 0, Math.PI * 2);
-            ctx.arc(x + 80, y + 40, 9, 0, Math.PI * 2);
+            ctx.moveTo(x + 12, y + 38);
+            ctx.lineTo(x + 32, y + 14);
+            ctx.lineTo(x + 92, y + 14);
+            ctx.lineTo(x + 118, y + 38);
+            ctx.closePath();
             ctx.fill();
+            ctx.shadowBlur = 0;
+
+            // スモークキャビン
+            ctx.fillStyle = "#020617";
+            ctx.beginPath();
+            ctx.moveTo(x + 36, y + 15);
+            ctx.lineTo(x + 48, y + 4);
+            ctx.lineTo(x + 80, y + 4);
+            ctx.lineTo(x + 90, y + 15);
+            ctx.closePath();
+            ctx.fill();
+
+            // クールなヘッドライト＆テール
+            ctx.fillStyle = "#00f3ff";
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = "#00f3ff";
+            ctx.fillRect(x + 2, y + 32, 6, 5);
+            ctx.fillStyle = "#ff0055";
+            ctx.shadowColor = "#ff0055";
+            ctx.fillRect(x + 116, y + 32, 6, 5);
+            ctx.shadowBlur = 0;
+
+            // ホイール
+            drawRealWheel(ctx, x + 30, y + 46);
+            drawRealWheel(ctx, x + 100, y + 46);
+
+            // 逃走車両ラベル
+            ctx.fillStyle = "#ff0055";
+            ctx.font = "bold 11px sans-serif";
+            ctx.fillText("逃走車両 [要警戒]", x + 12, y - 18);
+
             ctx.restore();
+        }
+
+        // 🛞 リアルホイール描画ヘルパー
+        function drawRealWheel(ctx, wx, wy) {
+            ctx.fillStyle = "#020617";
+            ctx.beginPath();
+            ctx.arc(wx, wy, 9, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.strokeStyle = "#64748b";
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(wx, wy, 6, 0, Math.PI * 2);
+            ctx.stroke();
+
+            ctx.fillStyle = "#cbd5e1";
+            ctx.beginPath();
+            ctx.arc(wx, wy, 2, 0, Math.PI * 2);
+            ctx.fill();
         }
     </script>
 </body>
