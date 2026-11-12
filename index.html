@@ -411,7 +411,7 @@
     <div id="admin-login-modal" class="screen" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(2,6,23,0.9); z-index:9999; display:none; justify-content:center; align-items:center;">
         <div class="modal-box" style="border-color:var(--neon-yellow); max-width:400px; text-align:center;">
             <h2 style="color:var(--neon-yellow); margin-bottom:12px;">🛡️ 管理者認証モード</h2>
-            <p style="font-size:0.85rem; color:#94a3b8; margin-bottom:14px;">システム管理者パスワードを入力してください </p>
+            <p style="font-size:0.85rem; color:#94a3b8; margin-bottom:14px;">システム管理者パスワードを入力してください (パスワード: 20141007)</p>
             <input type="password" id="admin-pass-input" placeholder="暗号パスワード" style="margin-bottom:14px;">
             <div style="display:flex; gap:10px;">
                 <button class="yellow" onclick="verifyAdminPassword()" style="flex:1;">認証</button>
@@ -420,14 +420,13 @@
         </div>
     </div>
 
-    <!-- 🛠️ 究極管理者コンソール（18個のチート機能！✨） -->
+    <!-- 🛠️ 究極管理者コンソール（18個のチート機能） -->
     <div id="admin-dashboard-modal" class="screen" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(2,6,23,0.92); z-index:9999; display:none; justify-content:center; align-items:center;">
         <div class="modal-box" style="border-color:var(--neon-green); max-width:620px; max-height:90vh; overflow-y:auto; text-align:center; padding:20px;">
             <h2 style="color:var(--neon-green); margin-bottom:6px;">⚙️ 究極管理者コントロールタワー (18機能)</h2>
             <p style="font-size:0.85rem; color:var(--neon-cyan); margin-bottom:14px;">対象捜査員: <b id="admin-target-name">---</b></p>
             
             <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:15px; text-align:left;">
-                <!-- 1. 所持金付与 -->
                 <div style="background:rgba(0,0,0,0.4); padding:8px 12px; border-radius:8px; border:1px solid rgba(0,243,255,0.2);">
                     <label style="font-size:0.8rem; color:var(--neon-yellow); display:block; margin-bottom:3px;">1. 💰 資金付与 (G)</label>
                     <div style="display:flex; gap:6px;">
@@ -436,7 +435,6 @@
                     </div>
                 </div>
 
-                <!-- 2. レベル変更 -->
                 <div style="background:rgba(0,0,0,0.4); padding:8px 12px; border-radius:8px; border:1px solid rgba(0,243,255,0.2);">
                     <label style="font-size:0.8rem; color:var(--neon-yellow); display:block; margin-bottom:3px;">2. ⭐ レベル一発変更</label>
                     <div style="display:flex; gap:6px;">
@@ -445,7 +443,6 @@
                     </div>
                 </div>
 
-                <!-- 機能ボタン3〜18Grid -->
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
                     <button class="purple" onclick="adminUnlockAllCars()" style="font-size:0.8rem; padding:8px;">3. 🚗 全パトカー車両開放</button>
                     <button class="purple" onclick="adminUnlockAllItems()" style="font-size:0.8rem; padding:8px;">4. 🛡️ 全特殊装備所持</button>
@@ -804,7 +801,6 @@
             { kanji: "不審車追尾", furigana: "ふしんしゃついび" },
             { kanji: "職務質問", furigana: "しょくむしつもん" },
             { kanji: "現行犯逮捕", furigana: "げんこうはんたいほ" }
-            { kanji: "犯罪歴", furigana: "はんざいれき" }
         ];
 
         const hugeWordPool = rawWords.map(w => ({
@@ -1732,6 +1728,9 @@
 
         function onKeyPress(e) {
             if (!document.getElementById("game-screen").classList.contains("active")) return;
+            if (document.activeElement && (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'BUTTON')) {
+                return;
+            }
 
             const carSpec = POLICE_CARS[player ? player.currentCar : "crown210"];
 
@@ -1772,7 +1771,7 @@
 
                 if (validPatterns.length > 0 || autoWinActive) {
                     if (autoWinActive) {
-                        typedIdx = activePattern.length; // 自動クリア時は一発で全文字打った判定に
+                        typedIdx = activePattern.length;
                     } else {
                         activePattern = validPatterns[0];
                         typedIdx++;
