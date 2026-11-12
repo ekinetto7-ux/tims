@@ -68,6 +68,25 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* 🏆 実績解除トースト通知 */
+        #achievement-toast {
+            position: fixed;
+            top: 20px;
+            right: -320px;
+            background: rgba(2, 6, 23, 0.95);
+            border: 2px solid var(--neon-yellow);
+            box-shadow: 0 0 25px rgba(253, 224, 71, 0.5);
+            border-radius: 12px;
+            padding: 12px 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 9999;
+            transition: right 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: none;
+        }
+        #achievement-toast.show { right: 20px; }
+
         .auth-tab {
             display: flex;
             justify-content: center;
@@ -109,7 +128,7 @@
             pointer-events: auto !important;
         }
 
-        input[type="text"], input[type="password"] {
+        input[type="text"], input[type="password"], input[type="number"] {
             width: 80%;
             max-width: 380px;
             padding: 12px;
@@ -379,6 +398,53 @@
         <source src="d.mp3" type="audio/mp3">
     </audio>
 
+    <!-- 実績解除トースト通知 -->
+    <div id="achievement-toast">
+        <div style="font-size: 1.8rem;">🏆</div>
+        <div style="text-align: left;">
+            <div style="font-size: 0.75rem; color: var(--neon-yellow); font-weight: bold;">実績解除！</div>
+            <div id="toast-title" style="font-size: 0.95rem; font-weight: bold; color: #fff;">初検挙</div>
+        </div>
+    </div>
+
+    <!-- 管理者ログインモーダル -->
+    <div id="admin-login-modal" class="screen" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(2,6,23,0.9); z-index:9999; display:none; justify-content:center; align-items:center;">
+        <div class="modal-box" style="border-color:var(--neon-yellow); max-width:400px; text-align:center;">
+            <h2 style="color:var(--neon-yellow); margin-bottom:12px;">🛡️ 管理者認証モード</h2>
+            <p style="font-size:0.85rem; color:#94a3b8; margin-bottom:14px;">システム管理者パスワードを入力してください (パスワード: 2014)</p>
+            <input type="password" id="admin-pass-input" placeholder="暗号パスワード" style="margin-bottom:14px;">
+            <div style="display:flex; gap:10px;">
+                <button class="yellow" onclick="verifyAdminPassword()" style="flex:1;">認証</button>
+                <button onclick="closeAdminLoginModal()" style="flex:1; border-color:#64748b; color:#94a3b8;">キャンセル</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 管理者ダッシュボードモーダル -->
+    <div id="admin-dashboard-modal" class="screen" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(2,6,23,0.9); z-index:9999; display:none; justify-content:center; align-items:center;">
+        <div class="modal-box" style="border-color:var(--neon-green); max-width:500px; text-align:center;">
+            <h2 style="color:var(--neon-green); margin-bottom:10px;">⚙️ 管理者コンソール</h2>
+            <p style="font-size:0.85rem; color:var(--neon-cyan); margin-bottom:15px;">対象捜査員: <b id="admin-target-name">---</b></p>
+            
+            <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:15px; text-align:left;">
+                <div style="background:rgba(0,0,0,0.4); padding:10px; border-radius:8px; border:1px solid rgba(0,243,255,0.2);">
+                    <label style="font-size:0.85rem; color:var(--neon-yellow); display:block; margin-bottom:4px;">💰 所持金付与 (G)</label>
+                    <div style="display:flex; gap:8px;">
+                        <input type="number" id="admin-money-add" value="1000" style="width:100%; max-width:none; padding:8px;">
+                        <button class="yellow" onclick="adminAddMoney()" style="white-space:nowrap; padding:8px 14px;">付与実行</button>
+                    </div>
+                </div>
+
+                <div style="display:flex; gap:10px;">
+                    <button class="purple" onclick="adminUnlockAllCars()" style="flex:1; font-size:0.85rem;">🚗 全パトカー車両開放</button>
+                    <button class="purple" onclick="adminUnlockAllTrophies()" style="flex:1; font-size:0.85rem;">🏆 全実績即時解除</button>
+                </div>
+            </div>
+
+            <button class="green" onclick="closeAdminDashboard()" style="width:100%;">管理者モードを閉じる</button>
+        </div>
+    </div>
+
     <div class="game-container" id="main-container">
         <!-- 1. ログイン / 登録 -->
         <div id="login-screen" class="screen active">
@@ -447,24 +513,32 @@
             </div>
         </div>
 
-        <!-- 3. エリア＆難易度選択モーダル -->
+        <!-- 3. エリア＆難易度選択モーダル (ルール説明付き) -->
         <div id="difficulty-screen" class="screen">
             <h1>エリア＆難易度選択</h1>
-            <div class="modal-box">
-                <p style="color:var(--neon-cyan); margin-bottom:10px;">出動ステージを選択せよ！</p>
-                <div style="display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin-bottom:15px;">
+            <div class="modal-box" style="text-align: left; line-height: 1.5;">
+                <p style="color:var(--neon-cyan); margin-bottom:8px; text-align:center; font-weight:bold;">出動ステージを選択せよ！</p>
+                <div style="display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin-bottom:12px;">
                     <button id="stage-btn-c1" class="yellow" onclick="selectStage('c1')">🏙️ 首都高C1</button>
                     <button id="stage-btn-wangan" onclick="selectStage('wangan')">🌊 湾岸線</button>
                     <button id="stage-btn-city" onclick="selectStage('city')">🏙️ 一般市街地</button>
                     <button id="stage-btn-touge" onclick="selectStage('touge')">⛰️ 山岳ワインディング</button>
                 </div>
 
-                <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px;">
-                    <button class="green" onclick="startMissionWithDiff('normal')">🟢 NORMAL (報酬 100G)</button>
-                    <button class="yellow" onclick="startMissionWithDiff('hard')">🟡 HARD (報酬 250G)</button>
-                    <button class="red" onclick="startMissionWithDiff('extreme')">🔴 EXTREME (報酬 500G)</button>
+                <!-- 📜 ミッションルール説明エリア -->
+                <div style="background: rgba(0, 243, 255, 0.08); border: 1px solid rgba(0, 243, 255, 0.3); border-radius: 8px; padding: 10px; margin-bottom: 12px; font-size: 0.85rem;">
+                    <p style="color: var(--neon-yellow); font-weight: bold; margin-bottom: 4px;">📖 ミッションルール説明</p>
+                    <p style="color: #cbd5e1; margin-bottom: 2px;">• 20問のタイピングを正確に完遂し、容疑車両を追いつめてPIT捕獲せよ！</p>
+                    <p style="color: #cbd5e1; margin-bottom: 2px;">• 一定時間ごとに自機パトカーへ追突ダメージが入る。タイピングで速度を上げろ！</p>
+                    <p style="color: #cbd5e1;">• BOOSTゲージが満タンの時に [SPACEキー] を押すと、問を一気にスキップして強力な追撃が可能！</p>
                 </div>
-                <button onclick="toMenu()">メニューに戻る</button>
+
+                <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px;">
+                    <button class="green" onclick="startMissionWithDiff('normal')">🟢 NORMAL (報酬 100G / 標準)</button>
+                    <button class="yellow" onclick="startMissionWithDiff('hard')">🟡 HARD (報酬 250G / 被弾早い)</button>
+                    <button class="red" onclick="startMissionWithDiff('extreme')">🔴 EXTREME (報酬 500G / 高難度)</button>
+                </div>
+                <button onclick="toMenu()" style="width:100%;">メニューに戻る</button>
             </div>
         </div>
 
@@ -584,27 +658,25 @@
             "badge": { name: "主任警部補の特命バッジ", price: 3000, desc: "ミッション・TA報酬の獲得資金(G)が1.5倍に！" }
         };
 
-        // 🏆 実績（全50個生成）
         const TROPHIES = [];
         for (let i = 1; i <= 50; i++) {
             let title = `機捜勲章 第${i}級`;
-            let desc = `ミッションややり込みを進めてランク${i}に到達する`;
+            let desc = `累計 ${i} 回ミッションまたはTAをクリアする`;
             
-            if (i === 1) { title = "初検挙"; desc = "ミッションを1回クリアする"; }
-            else if (i === 3) { title = "ベテラン捜査員"; desc = "ミッションを3回クリアする"; }
-            else if (i === 5) { title = "エース機捜隊員"; desc = "ミッションを5回クリアする"; }
-            else if (i === 10) { title = "ベテラン機捜班長"; desc = "ミッションを10回クリアする"; }
-            else if (i === 25) { title = "伝説の捜査官"; desc = "ミッションを25回クリアする"; }
+            if (i === 1) { title = "初検挙"; desc = "ミッションまたはTAを1回クリアする"; }
+            else if (i === 3) { title = "ベテラン捜査員"; desc = "累計3回クリアする"; }
+            else if (i === 5) { title = "エース機捜隊員"; desc = "累計5回クリアする"; }
+            else if (i === 10) { title = "ベテラン機捜班長"; desc = "累計10回クリアする"; }
+            else if (i === 25) { title = "伝説の捜査官"; desc = "累計25回クリアする"; }
             else if (i === 50) { title = "究極機捜210マスター"; desc = "すべての実績（全50個）を制覇する"; }
-            else if (i === 15) { title = "名車コレクター"; desc = "パトカーを複数所有する"; }
-            else if (i === 20) { title = "特殊装備マニア"; desc = "ショップアイテムを複数購入する"; }
+            else if (i === 15) { title = "名車コレクター"; desc = "パトカーを2台以上所有する"; }
+            else if (i === 20) { title = "特殊装備マニア"; desc = "ショップアイテムを2個以上購入する"; }
             else if (i === 30) { title = "スピードスター"; desc = "タイムアタックモードを完走する"; }
             else if (i === 40) { title = "電光石火の追撃"; desc = "TAで20秒未満を達成する"; }
 
             TROPHIES.push({ id: `trophy_${i}`, title: title, desc: desc });
         }
 
-        // 🔤 すべての音節ごとに「可能な全てのローマ字パターン」を完全定義するテーブル
         const kanaMap = {
             "あ": ["a"], "い": ["i", "yi"], "う": ["u", "wu", "whu"], "え": ["e"], "お": ["o"],
             "か": ["ka", "ca"], "き": ["ki"], "く": ["ku", "cu", "qu"], "け": ["ke"], "こ": ["ko", "co"],
@@ -632,15 +704,13 @@
             "じゃ": ["ja", "zya", "jya"], "じゅ": ["ju", "zyu", "jyu"], "じょ": ["jo", "zyo", "jyo"],
             "びゃ": ["bya"], "びゅ": ["byu"], "びょ": ["byo"],
             "ぴゃ": ["pya"], "ぴゅ": ["pyu"], "ぴょ": ["pyo"],
-            "ー": ["-"], "っ": [] // 促音は次文字の重ねで自動処理
+            "ー": ["-"], "っ": []
         };
 
-        // かな文字列から「全パターンのローマ字配列」を再帰的に生成する関数
         function generateAllRomaPatterns(kanaStr) {
             let results = [""];
             let i = 0;
             while (i < kanaStr.length) {
-                // 拗音（例: きゃ、しゃ、ちゃ等）の2文字チェック
                 let sub2 = kanaStr.substr(i, 2);
                 let sub1 = kanaStr.substr(i, 1);
                 let target = "";
@@ -653,7 +723,6 @@
                     target = sub1;
                     advance = 1;
                 } else if (sub1 === "っ") {
-                    // 促音の処理
                     let nextSub2 = i + 2 < kanaStr.length ? kanaStr.substr(i + 1, 2) : "";
                     let nextSub1 = i + 1 < kanaStr.length ? kanaStr.substr(i + 1, 1) : "";
                     let nextKana = kanaMap[nextSub2] ? nextSub2 : nextSub1;
@@ -663,7 +732,7 @@
                     for (let prefix of results) {
                         for (let nc of nextChoices) {
                             if (nc.length > 0) {
-                                newResults.push(prefix + nc[0]); // 子音を重ねる
+                                newResults.push(prefix + nc[0]);
                             }
                         }
                     }
@@ -671,7 +740,6 @@
                     i++;
                     continue;
                 } else {
-                    // 未定義文字はそのまま
                     target = sub1;
                     advance = 1;
                 }
@@ -689,7 +757,6 @@
             return results;
         }
 
-        // 🔤 ワードプール（すべてのひらがなに対して全ローマ字パターンを自動展開！）
         const rawWords = [
             { kanji: "機動捜査隊", furigana: "きどうそうさたい" },
             { kanji: "緊急追跡", furigana: "きんきゅうついせき" },
@@ -880,6 +947,75 @@
             "💬 [同乗相棒] 「先輩、ナイスタイピングっす！このまま追い詰けましょう！」"
         ];
 
+        // 🛡️ 管理者モードのキーボードショートカット監視 (Mac: Cmd+C / Win: Ctrl+C)
+        window.addEventListener("keydown", (e) => {
+            const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+            const triggerKey = isMac ? (e.metaKey && e.code === "KeyC") : (e.ctrlKey && e.code === "KeyC");
+
+            if (triggerKey) {
+                // 通常のテキストコピー動作を防ぎ、管理者認証モーダルを開く
+                e.preventDefault();
+                openAdminLoginModal();
+            }
+        });
+
+        function openAdminLoginModal() {
+            initAudio();
+            if (!player) {
+                alert("先にログインまたは新規登録を行ってください！");
+                return;
+            }
+            document.getElementById("admin-pass-input").value = "";
+            document.getElementById("admin-login-modal").style.display = "flex";
+        }
+
+        function closeAdminLoginModal() {
+            document.getElementById("admin-login-modal").style.display = "none";
+        }
+
+        function verifyAdminPassword() {
+            const pass = document.getElementById("admin-pass-input").value.trim();
+            if (pass === "2014") {
+                closeAdminLoginModal();
+                openAdminDashboard();
+            } else {
+                alert("パスワードが違います！ (正しいパスワード: 2014)");
+            }
+        }
+
+        function openAdminDashboard() {
+            document.getElementById("admin-target-name").innerText = player.name;
+            document.getElementById("admin-money-add").value = "1000";
+            document.getElementById("admin-dashboard-modal").style.display = "flex";
+        }
+
+        function closeAdminDashboard() {
+            document.getElementById("admin-dashboard-modal").style.display = "none";
+        }
+
+        function adminAddMoney() {
+            const addVal = parseInt(document.getElementById("admin-money-add").value) || 0;
+            player.money += addVal;
+            savePlayerData();
+            playSound('clear');
+            alert(`[管理者権限] 資金に ${addVal} G を付与しました！ (現在所持金: ${player.money} G)`);
+        }
+
+        function adminUnlockAllCars() {
+            player.ownedCars = Object.keys(POLICE_CARS);
+            savePlayerData();
+            playSound('clear');
+            alert("[管理者権限] 全てのパトカー車両が開放されました！");
+        }
+
+        function adminUnlockAllTrophies() {
+            player.unlockedTrophies = TROPHIES.map(t => t.id);
+            player.clearCount = Math.max(player.clearCount, 50);
+            savePlayerData();
+            playSound('clear');
+            alert("[管理者権限] 全50個の実績が即時解除されました！");
+        }
+
         function switchTab(type) {
             initAudio();
             if (type === 'login') {
@@ -1007,6 +1143,7 @@
             showScreen("menu-screen");
             playBGM();
             startCanvasAnimation("menu-canvas");
+            checkTrophies();
         }
 
         function logout() { 
@@ -1183,6 +1320,50 @@
             openShop();
         }
 
+        function showAchievementToast(trophyTitle) {
+            const toast = document.getElementById("achievement-toast");
+            document.getElementById("toast-title").innerText = trophyTitle;
+            toast.classList.add("show");
+            playSound('clear');
+            setTimeout(() => {
+                toast.classList.remove("show");
+            }, 3500);
+        }
+
+        function checkTrophies() {
+            if (!player) return;
+            
+            const unlock = (id, title) => {
+                if (!player.unlockedTrophies.includes(id)) {
+                    player.unlockedTrophies.push(id);
+                    showAchievementToast(title);
+                }
+            };
+
+            for (let i = 1; i <= 50; i++) {
+                if (player.clearCount >= i) {
+                    unlock(`trophy_${i}`, TROPHIES[i - 1].title);
+                }
+            }
+
+            if (player.clearCount >= 1) unlock("trophy_1", "初検挙");
+            if (player.clearCount >= 3) unlock("trophy_3", "ベテラン捜査員");
+            if (player.clearCount >= 5) unlock("trophy_5", "エース機捜隊員");
+            if (player.clearCount >= 10) unlock("trophy_10", "ベテラン機捜班長");
+            if (player.clearCount >= 25) unlock("trophy_25", "伝説の捜査官");
+
+            if (player.ownedCars && player.ownedCars.length >= 2) unlock("trophy_15", "名車コレクター");
+            if (player.ownedItems && player.ownedItems.length >= 2) unlock("trophy_20", "特殊装備マニア");
+            if (player.bestTime !== null && player.bestTime !== undefined) unlock("trophy_30", "スピードスター");
+            if (player.bestTime !== null && player.bestTime < 20) unlock("trophy_40", "電光石火の追撃");
+
+            if (player.unlockedTrophies.length >= 49) {
+                unlock("trophy_50", "究極機捜210マスター");
+            }
+
+            savePlayerData();
+        }
+
         function openTrophyModal() {
             initAudio();
             checkTrophies();
@@ -1203,34 +1384,6 @@
                 container.appendChild(item);
             });
             showScreen("trophy-screen");
-        }
-
-        function checkTrophies() {
-            if (!player) return;
-            const unlock = (id) => {
-                if (!player.unlockedTrophies.includes(id)) player.unlockedTrophies.push(id);
-            };
-
-            for (let i = 1; i <= 50; i++) {
-                if (player.clearCount >= i) unlock(`trophy_${i}`);
-            }
-
-            if (player.clearCount >= 1) unlock("trophy_1");
-            if (player.clearCount >= 3) unlock("trophy_3");
-            if (player.clearCount >= 5) unlock("trophy_5");
-            if (player.clearCount >= 10) unlock("trophy_10");
-            if (player.clearCount >= 25) unlock("trophy_25");
-
-            if (player.ownedCars.length >= 2) unlock("trophy_15");
-            if (player.ownedItems && player.ownedItems.length >= 2) unlock("trophy_20");
-            if (player.bestTime) unlock("trophy_30");
-            if (player.bestTime && player.bestTime < 20) unlock("trophy_40");
-
-            if (player.unlockedTrophies.length >= 49) {
-                unlock("trophy_50");
-            }
-
-            savePlayerData();
         }
 
         function savePlayerData() {
@@ -1343,7 +1496,9 @@
                     player.level++;
                     player.clearCount++;
                     if (!player.stagesCleared.includes(currentStage)) player.stagesCleared.push(currentStage);
+                    
                     checkTrophies();
+                    
                     endGame(true, isNewBest ? "🌟 新自己ベスト更新！ 🌟" : "⚡ タイムアタック完走！ ⚡", finalTime, taMissCount, reward);
                 } else {
                     let reward = (currentDiff === "hard") ? 250 : ((currentDiff === "extreme") ? 500 : 100);
@@ -1356,7 +1511,9 @@
                     player.level++;
                     player.clearCount++;
                     if (!player.stagesCleared.includes(currentStage)) player.stagesCleared.push(currentStage);
+                    
                     checkTrophies();
+
                     endGame(true, "🚨 容疑車両のPIT捕獲完了！任務達成！ 🚨", 0, 0, reward);
                 }
                 return;
@@ -1440,7 +1597,6 @@
                 return;
             }
 
-            // 🔤 全文字・全ローマ字パターンの動的マッチングエンジン
             if (e.key.length === 1 && /^[a-zA-Z\-_]$/.test(e.key)) {
                 const inputChar = e.key.toLowerCase();
                 const typedSoFar = activePattern.substring(0, typedIdx);
