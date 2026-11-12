@@ -252,23 +252,31 @@
             margin-bottom: 2px;
         }
 
+        /* 💥 デカデカ「ち」表示用スタイル */
         .kanji-display {
-            font-size: 1.8rem;
-            color: #ffffff;
+            font-size: 4.5rem !important;
+            color: var(--neon-yellow) !important;
             font-weight: 900;
-            letter-spacing: 3px;
-            margin-bottom: 6px;
+            letter-spacing: 6px;
+            margin: 4px 0 10px 0;
+            text-shadow: 0 0 30px rgba(253, 224, 71, 0.8), 0 0 60px rgba(253, 224, 71, 0.4);
+            animation: pulseChi 1.5s infinite alternate;
+        }
+
+        @keyframes pulseChi {
+            0% { transform: scale(1); text-shadow: 0 0 20px rgba(253, 224, 71, 0.6); }
+            100% { transform: scale(1.05); text-shadow: 0 0 40px rgba(253, 224, 71, 1); }
         }
 
         .target-word {
-            font-size: 2.2rem;
-            color: var(--neon-yellow);
-            letter-spacing: 4px;
-            text-shadow: 0 0 20px rgba(253, 224, 71, 0.8);
+            font-size: 2.5rem;
+            color: var(--neon-cyan);
+            letter-spacing: 6px;
+            text-shadow: 0 0 20px rgba(0, 243, 255, 0.8);
             font-weight: 900;
         }
 
-        .typed-char { color: var(--neon-cyan); text-shadow: 0 0 12px var(--neon-cyan); }
+        .typed-char { color: var(--neon-green); text-shadow: 0 0 15px var(--neon-green); }
 
         .shop-tabs {
             display: flex;
@@ -542,12 +550,13 @@
             <canvas id="game-canvas" width="900" height="240"></canvas>
 
             <div class="word-display-box">
-                <div class="furigana-display" id="furigana-display">きどうそうさたい</div>
-                <div class="kanji-display" id="kanji-display">機動捜査隊</div>
+                <div class="furigana-display" id="furigana-display">ち</div>
+                <!-- 🔥 デカデカ「ち」の表示 -->
+                <div class="kanji-display" id="kanji-display">ち</div>
                 <div class="target-word">
-                    <span class="typed-char" id="typed-part"></span><span id="remain-part">kidousousatai</span>
+                    <span class="typed-char" id="typed-part"></span><span id="remain-part">chi</span>
                 </div>
-                <p style="color: var(--neon-cyan); font-size: 0.85rem; margin-top: 6px;">[SPACEキー] BOOST満タンで一気に追撃！ | (予備サイレンバッテリー所持時は大破時に自動回復！)</p>
+                <p style="color: var(--neon-cyan); font-size: 0.85rem; margin-top: 6px;">[SPACEキー] BOOST満タンで一気に追撃！ | (し=shi/si/ci、ち=chi/ti、つ=tsu/tu 等の複数の打ち方に対応！)</p>
             </div>
 
             <button onclick="toMenu()" style="padding: 6px 16px; font-size: 0.9rem;">一時停止 / メニューに戻る</button>
@@ -604,34 +613,32 @@
             TROPHIES.push({ id: `trophy_${i}`, title: title, desc: desc });
         }
 
-        // 🔤 多彩なワードプール（すべてのアルファベットを使った単語を網羅）
+        // 🔤 ワードプール（ローマ字の複数パターン対応データ）
         const hugeWordPool = [
-            { kanji: "機動捜査隊", furigana: "きどうそうさたい", roma: "kidousousatai" },
-            { kanji: "緊急追跡", furigana: "きんきゅうついせき", roma: "kinkyuutsuiseki" },
-            { kanji: "パトカー", furigana: "ぱとかー", roma: "patoka-" },
-            { kanji: "サイレン鳴動", furigana: "さいれんめいどう", roma: "sairenmeidou" },
-            { kanji: "覆面パトカー", furigana: "ふくめんぱとかー", roma: "fukumennpatoka-" },
-            { kanji: "高速道路", furigana: "こうそくどうろ", roma: "kousokudouro" },
-            { kanji: "容疑車両発見", furigana: "ようぎしゃりょうはっけん", roma: "yougisharyouhakken" },
-            { kanji: "現場急行", furigana: "げんばきゅうこう", roma: "genbakyuukou" },
-            { kanji: "逮捕状請求", furigana: "たいほじょうせいきゅう", roma: "taihojouseikyuu" },
-            { kanji: "警視庁司令室", furigana: "けいしちょうしれいしつ", roma: "keishichoushireishitsu" },
-            { kanji: "交通取締", furigana: "こうつうとりしまり", roma: "koutsuutorishimari" },
-            { kanji: "緊急停止命令", furigana: "きんきゅうていしめいれい", roma: "kinkyuuteishimeirei" },
-            { kanji: "無線連絡", furigana: "むせんれんらく", roma: "musenrenraku" },
-            { kanji: "エンジン全開", furigana: "えんじんぜんかい", roma: "enjinzenkai" },
-            { kanji: "湾岸線バトル", furigana: "わんがんせんばとる", roma: "wangansenbatoru" },
-            { kanji: "首都高環状線", furigana: "しゅとこうかんじょうせん", roma: "shutokoukanjousen" },
-            { kanji: "赤色回転灯", furigana: "せきしょくかいてんとう", roma: "sekishokukaitentou" },
-            { kanji: "不審車追尾", furigana: "ふしんしゃついび", roma: "fushinshatsuibi" },
-            { kanji: "職務質問", furigana: "しょくむしつもん", roma: "shokumushitsumon" },
-            { kanji: "現行犯逮捕", furigana: "げんこうはんたいほ", roma: "genkouhantaiho" },
-            { kanji: "パトロール", furigana: "ぱとろーる", roma: "patoro-ru" },
-            { kanji: "アクティブ", furigana: "あくてぃぶ", roma: "akutibu" },
-            { kanji: "スピード違反", furigana: "すぴーどいはん", roma: "supi-doihan" },
-            { kanji: "ブースト加速", furigana: "ぶーすとかそく", roma: "bu-sutokasoku" },
-            { kanji: "セーフティ", furigana: "せーふてぃ", roma: "se-futi" },
-            { kanji: "ドライビング", furigana: "どらいびんぐ", roma: "doraibingu" }
+            { kanji: "ち", furigana: "ち", patterns: ["chi", "ti"] },
+            { kanji: "し", furigana: "し", patterns: ["shi", "si", "ci"] },
+            { kanji: "つ", furigana: "つ", patterns: ["tsu", "tu"] },
+            { kanji: "きゅうきゅう", furigana: "きゅうきゅう", patterns: ["kyuukyuu", "kyukyuu"] },
+            { kanji: "機動捜査隊", furigana: "きどうそうさたい", patterns: ["kidousousatai"] },
+            { kanji: "緊急追跡", furigana: "きんきゅうついせき", patterns: ["kinkyuutsuiseki"] },
+            { kanji: "パトカー", furigana: "ぱとかー", patterns: ["patoka-"] },
+            { kanji: "サイレン鳴動", furigana: "さいれんめいどう", patterns: ["sairenmeidou"] },
+            { kanji: "覆面パトカー", furigana: "ふくめんぱとかー", patterns: ["fukumennpatoka-", "fukumenpatoka-"] },
+            { kanji: "高速道路", furigana: "こうそくどうろ", patterns: ["kousokudouro"] },
+            { kanji: "容疑車両発見", furigana: "ようぎしゃりょうはっけん", patterns: ["yougisharyouhakken", "yougisaryouhakken"] },
+            { kanji: "現場急行", furigana: "げんばきゅうこう", patterns: ["genbakyuukou"] },
+            { kanji: "逮捕状請求", furigana: "たいほじょうせいきゅう", patterns: ["taihojouseikyuu", "taihojyouseikyuu"] },
+            { kanji: "警視庁司令室", furigana: "けいしちょうしれいしつ", patterns: ["keishichoushireishitsu", "keisicyousireisitu", "keishicyoushireishitsu"] },
+            { kanji: "交通取締", furigana: "こうつうとりしまり", patterns: ["koutsuutorishimari", "koutsuutorisimari"] },
+            { kanji: "緊急停止命令", furigana: "きんきゅうていしめいれい", patterns: ["kinkyuuteishimeirei", "kinkyuuteisimeirei"] },
+            { kanji: "無線連絡", furigana: "むせんれんらく", patterns: ["musenrenraku"] },
+            { kanji: "エンジン全開", furigana: "えんじんぜんかい", patterns: ["enjinzenkai"] },
+            { kanji: "湾岸線バトル", furigana: "わんがんせんばとる", patterns: ["wangansenbatoru"] },
+            { kanji: "首都高環状線", furigana: "しゅとこうかんじょうせん", patterns: ["shutokoukanjousen"] },
+            { kanji: "赤色回転灯", furigana: "せきしょくかいてんとう", patterns: ["sekishokukaitentou"] },
+            { kanji: "不審車追尾", furigana: "ふしんしゃついび", patterns: ["fushinshatsuibi", "fusinsinatsuibi", "fusinshatsuibi"] },
+            { kanji: "職務質問", furigana: "しょくむしつもん", patterns: ["shokumushitsumon", "syokumusitumon"] },
+            { kanji: "現行犯逮捕", furigana: "げんこうはんたいほ", patterns: ["genkouhantaiho"] }
         ];
 
         let player = null;
@@ -784,6 +791,7 @@
         }
 
         let currentWord = {};
+        let activePattern = "";
         let animId = null;
         let roadOffset = 0;
 
@@ -1277,6 +1285,7 @@
             }
 
             currentWord = hugeWordPool[Math.floor(Math.random() * hugeWordPool.length)];
+            activePattern = currentWord.patterns[0];
             typedIdx = 0;
             document.getElementById("police-radio").innerText = radioMessages[Math.floor(Math.random() * radioMessages.length)];
             renderWord();
@@ -1304,8 +1313,8 @@
         function renderWord() {
             document.getElementById("furigana-display").innerText = currentWord.furigana;
             document.getElementById("kanji-display").innerText = currentWord.kanji;
-            document.getElementById("typed-part").innerText = currentWord.roma.substring(0, typedIdx);
-            document.getElementById("remain-part").innerText = currentWord.roma.substring(typedIdx);
+            document.getElementById("typed-part").innerText = activePattern.substring(0, typedIdx);
+            document.getElementById("remain-part").innerText = activePattern.substring(typedIdx);
         }
 
         function createSparkParticles(x, y, count) {
@@ -1346,18 +1355,22 @@
                     nextWord();
                 } else {
                     currentWord = hugeWordPool[Math.floor(Math.random() * hugeWordPool.length)];
+                    activePattern = currentWord.patterns[0];
                     typedIdx = 0;
                     renderWord();
                 }
                 return;
             }
 
-            // 修正箇所：すべてのアルファベット（a〜z）入力を完全に正常に受け付ける処理
             if (e.key.length === 1 && /^[a-zA-Z\-_]$/.test(e.key)) {
                 const inputChar = e.key.toLowerCase();
-                const targetChar = currentWord.roma[typedIdx].toLowerCase();
+                const typedSoFar = activePattern.substring(0, typedIdx);
+                const nextCharNeeded = inputChar;
 
-                if (inputChar === targetChar) {
+                const validPatterns = currentWord.patterns.filter(p => p.startsWith(typedSoFar + nextCharNeeded));
+
+                if (validPatterns.length > 0) {
+                    activePattern = validPatterns[0];
                     typedIdx++;
                     combo++;
                     score += 10 * (Math.floor(combo / 5) + 1);
@@ -1377,7 +1390,7 @@
                     updateBars();
                     renderWord();
 
-                    if (typedIdx >= currentWord.roma.length) {
+                    if (typedIdx >= activePattern.length) {
                         remainingWords--;
                         if (remainingWords > 0) currentQuestionNum++;
                         setTimeout(nextWord, 70);
@@ -1572,4 +1585,3 @@
     </script>
 </body>
 </html>
-
