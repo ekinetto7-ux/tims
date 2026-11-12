@@ -252,31 +252,23 @@
             margin-bottom: 2px;
         }
 
-        /* 💥 デカデカ「ち」表示用スタイル */
         .kanji-display {
-            font-size: 4.5rem !important;
-            color: var(--neon-yellow) !important;
+            font-size: 1.8rem;
+            color: #ffffff;
             font-weight: 900;
-            letter-spacing: 6px;
-            margin: 4px 0 10px 0;
-            text-shadow: 0 0 30px rgba(253, 224, 71, 0.8), 0 0 60px rgba(253, 224, 71, 0.4);
-            animation: pulseChi 1.5s infinite alternate;
-        }
-
-        @keyframes pulseChi {
-            0% { transform: scale(1); text-shadow: 0 0 20px rgba(253, 224, 71, 0.6); }
-            100% { transform: scale(1.05); text-shadow: 0 0 40px rgba(253, 224, 71, 1); }
+            letter-spacing: 3px;
+            margin-bottom: 6px;
         }
 
         .target-word {
-            font-size: 2.5rem;
-            color: var(--neon-cyan);
-            letter-spacing: 6px;
-            text-shadow: 0 0 20px rgba(0, 243, 255, 0.8);
+            font-size: 2.2rem;
+            color: var(--neon-yellow);
+            letter-spacing: 4px;
+            text-shadow: 0 0 20px rgba(253, 224, 71, 0.8);
             font-weight: 900;
         }
 
-        .typed-char { color: var(--neon-green); text-shadow: 0 0 15px var(--neon-green); }
+        .typed-char { color: var(--neon-cyan); text-shadow: 0 0 12px var(--neon-cyan); }
 
         .shop-tabs {
             display: flex;
@@ -550,13 +542,12 @@
             <canvas id="game-canvas" width="900" height="240"></canvas>
 
             <div class="word-display-box">
-                <div class="furigana-display" id="furigana-display">ち</div>
-                <!-- 🔥 デカデカ「ち」の表示 -->
-                <div class="kanji-display" id="kanji-display">ち</div>
+                <div class="furigana-display" id="furigana-display">きどうそうさたい</div>
+                <div class="kanji-display" id="kanji-display">機動捜査隊</div>
                 <div class="target-word">
-                    <span class="typed-char" id="typed-part"></span><span id="remain-part">chi</span>
+                    <span class="typed-char" id="typed-part"></span><span id="remain-part">kidousousatai</span>
                 </div>
-                <p style="color: var(--neon-cyan); font-size: 0.85rem; margin-top: 6px;">[SPACEキー] BOOST満タンで一気に追撃！ | (し=shi/si/ci、ち=chi/ti、つ=tsu/tu 等の複数の打ち方に対応！)</p>
+                <p style="color: var(--neon-cyan); font-size: 0.85rem; margin-top: 6px;">[SPACEキー] BOOST満タンで一気に追撃！ | (し=si/shi/ci、ち=chi/ti、ふ=fu/hu、じ=zi/ji等の【全文字のマルチローマ字入力】に完全対応！)</p>
             </div>
 
             <button onclick="toMenu()" style="padding: 6px 16px; font-size: 0.9rem;">一時停止 / メニューに戻る</button>
@@ -613,33 +604,120 @@
             TROPHIES.push({ id: `trophy_${i}`, title: title, desc: desc });
         }
 
-        // 🔤 ワードプール（ローマ字の複数パターン対応データ）
-        const hugeWordPool = [
-            { kanji: "ち", furigana: "ち", patterns: ["chi", "ti"] },
-            { kanji: "し", furigana: "し", patterns: ["shi", "si", "ci"] },
-            { kanji: "つ", furigana: "つ", patterns: ["tsu", "tu"] },
-            { kanji: "きゅうきゅう", furigana: "きゅうきゅう", patterns: ["kyuukyuu", "kyukyuu"] },
-            { kanji: "機動捜査隊", furigana: "きどうそうさたい", patterns: ["kidousousatai"] },
-            { kanji: "緊急追跡", furigana: "きんきゅうついせき", patterns: ["kinkyuutsuiseki"] },
-            { kanji: "パトカー", furigana: "ぱとかー", patterns: ["patoka-"] },
-            { kanji: "サイレン鳴動", furigana: "さいれんめいどう", patterns: ["sairenmeidou"] },
-            { kanji: "覆面パトカー", furigana: "ふくめんぱとかー", patterns: ["fukumennpatoka-", "fukumenpatoka-"] },
-            { kanji: "高速道路", furigana: "こうそくどうろ", patterns: ["kousokudouro"] },
-            { kanji: "容疑車両発見", furigana: "ようぎしゃりょうはっけん", patterns: ["yougisharyouhakken", "yougisaryouhakken"] },
-            { kanji: "現場急行", furigana: "げんばきゅうこう", patterns: ["genbakyuukou"] },
-            { kanji: "逮捕状請求", furigana: "たいほじょうせいきゅう", patterns: ["taihojouseikyuu", "taihojyouseikyuu"] },
-            { kanji: "警視庁司令室", furigana: "けいしちょうしれいしつ", patterns: ["keishichoushireishitsu", "keisicyousireisitu", "keishicyoushireishitsu"] },
-            { kanji: "交通取締", furigana: "こうつうとりしまり", patterns: ["koutsuutorishimari", "koutsuutorisimari"] },
-            { kanji: "緊急停止命令", furigana: "きんきゅうていしめいれい", patterns: ["kinkyuuteishimeirei", "kinkyuuteisimeirei"] },
-            { kanji: "無線連絡", furigana: "むせんれんらく", patterns: ["musenrenraku"] },
-            { kanji: "エンジン全開", furigana: "えんじんぜんかい", patterns: ["enjinzenkai"] },
-            { kanji: "湾岸線バトル", furigana: "わんがんせんばとる", patterns: ["wangansenbatoru"] },
-            { kanji: "首都高環状線", furigana: "しゅとこうかんじょうせん", patterns: ["shutokoukanjousen"] },
-            { kanji: "赤色回転灯", furigana: "せきしょくかいてんとう", patterns: ["sekishokukaitentou"] },
-            { kanji: "不審車追尾", furigana: "ふしんしゃついび", patterns: ["fushinshatsuibi", "fusinsinatsuibi", "fusinshatsuibi"] },
-            { kanji: "職務質問", furigana: "しょくむしつもん", patterns: ["shokumushitsumon", "syokumusitumon"] },
-            { kanji: "現行犯逮捕", furigana: "げんこうはんたいほ", patterns: ["genkouhantaiho"] }
+        // 🔤 すべての音節ごとに「可能な全てのローマ字パターン」を完全定義するテーブル
+        const kanaMap = {
+            "あ": ["a"], "い": ["i", "yi"], "う": ["u", "wu", "whu"], "え": ["e"], "お": ["o"],
+            "か": ["ka", "ca"], "き": ["ki"], "く": ["ku", "cu", "qu"], "け": ["ke"], "こ": ["ko", "co"],
+            "さ": ["sa"], "し": ["shi", "si", "ci"], "す": ["su"], "せ": ["se", "ce"], "そ": ["so"],
+            "た": ["ta"], "ち": ["chi", "ti"], "つ": ["tsu", "tu"], "て": ["te"], "と": ["to"],
+            "な": ["na"], "に": ["ni"], "ぬ": ["nu"], "ね": ["ne"], "の": ["no"],
+            "は": ["ha"], "ひ": ["hi"], "ふ": ["fu", "hu"], "へ": ["he"], "ほ": ["ho"],
+            "ま": ["ma"], "み": ["mi"], "む": ["mu"], "め": ["me"], "も": ["mo"],
+            "や": ["ya"], "ゆ": ["yu"], "よ": ["yo"],
+            "ら": ["ra"], "り": ["ri"], "る": ["ru"], "れ": ["re"], "ろ": ["ro"],
+            "わ": ["wa"], "を": ["wo"], "ん": ["nn", "n'", "xn"],
+            "が": ["ga"], "ぎ": ["gi"], "ぐ": ["gu"], "げ": ["ge"], "ご": ["go"],
+            "ざ": ["za"], "じ": ["ji", "zi"], "ず": ["zu"], "ぜ": ["ze"], "ぞ": ["zo"],
+            "だ": ["da"], "ぢ": ["di"], "づ": ["du"], "で": ["de"], "ど": ["do"],
+            "ば": ["ba"], "び": ["bi"], "ぶ": ["bu"], "べ": ["be"], "ぼ": ["bo"],
+            "ぱ": ["pa"], "ぴ": ["pi"], "ぷ": ["pu"], "ぺ": ["pe"], "ぽ": ["po"],
+            "きゃ": ["kya"], "きゅ": ["kyu"], "きょ": ["kyo"],
+            "しゃ": ["sha", "sya"], "しゅ": ["shu", "syu"], "しょ": ["sho", "syo"],
+            "ちゃ": ["cha", "cya", "tya"], "ちゅ": ["chu", "cyu", "tyu"], "ちょ": ["cho", "cyo", "tyo"],
+            "にゃ": ["nya"], "にゅ": ["nyu"], "にょ": ["nyo"],
+            "ひゃ": ["hya"], "ひゅ": ["hyu"], "ひょ": ["hyo"],
+            "みゃ": ["mya"], "みゅ": ["myu"], "みょ": ["myo"],
+            "りゃ": ["rya"], "りゅ": ["ryu"], "りょ": ["ryo"],
+            "ぎゃ": ["gya"], "ぎゅ": ["gyu"], "ぎょ": ["gyo"],
+            "じゃ": ["ja", "zya", "jya"], "じゅ": ["ju", "zyu", "jyu"], "じょ": ["jo", "zyo", "jyo"],
+            "びゃ": ["bya"], "びゅ": ["byu"], "びょ": ["byo"],
+            "ぴゃ": ["pya"], "ぴゅ": ["pyu"], "ぴょ": ["pyo"],
+            "ー": ["-"], "っ": [] // 促音は次文字の重ねで自動処理
+        };
+
+        // かな文字列から「全パターンのローマ字配列」を再帰的に生成する関数
+        function generateAllRomaPatterns(kanaStr) {
+            let results = [""];
+            let i = 0;
+            while (i < kanaStr.length) {
+                // 拗音（例: きゃ、しゃ、ちゃ等）の2文字チェック
+                let sub2 = kanaStr.substr(i, 2);
+                let sub1 = kanaStr.substr(i, 1);
+                let target = "";
+                let advance = 1;
+
+                if (i + 1 < kanaStr.length && kanaMap[sub2]) {
+                    target = sub2;
+                    advance = 2;
+                } else if (kanaMap[sub1]) {
+                    target = sub1;
+                    advance = 1;
+                } else if (sub1 === "っ") {
+                    // 促音の処理
+                    let nextSub2 = i + 2 < kanaStr.length ? kanaStr.substr(i + 1, 2) : "";
+                    let nextSub1 = i + 1 < kanaStr.length ? kanaStr.substr(i + 1, 1) : "";
+                    let nextKana = kanaMap[nextSub2] ? nextSub2 : nextSub1;
+                    let nextChoices = kanaMap[nextKana] ? kanaMap[nextKana] : [nextSub1];
+                    
+                    let newResults = [];
+                    for (let prefix of results) {
+                        for (let nc of nextChoices) {
+                            if (nc.length > 0) {
+                                newResults.push(prefix + nc[0]); // 子音を重ねる
+                            }
+                        }
+                    }
+                    results = newResults.length > 0 ? newResults : results;
+                    i++;
+                    continue;
+                } else {
+                    // 未定義文字はそのまま
+                    target = sub1;
+                    advance = 1;
+                }
+
+                let choices = kanaMap[target] ? kanaMap[target] : [target];
+                let newResults = [];
+                for (let prefix of results) {
+                    for (let c of choices) {
+                        newResults.push(prefix + c);
+                    }
+                }
+                results = newResults;
+                i += advance;
+            }
+            return results;
+        }
+
+        // 🔤 ワードプール（すべてのひらがなに対して全ローマ字パターンを自動展開！）
+        const rawWords = [
+            { kanji: "機動捜査隊", furigana: "きどうそうさたい" },
+            { kanji: "緊急追跡", furigana: "きんきゅうついせき" },
+            { kanji: "パトカー", furigana: "ぱとかー" },
+            { kanji: "サイレン鳴動", furigana: "さいれんめいどう" },
+            { kanji: "覆面パトカー", furigana: "ふくめんぱとかー" },
+            { kanji: "高速道路", furigana: "こうそくどうろ" },
+            { kanji: "容疑車両発見", furigana: "ようぎしゃりょうはっけん" },
+            { kanji: "現場急行", furigana: "げんばきゅうこう" },
+            { kanji: "逮捕状請求", furigana: "たいほじょうせいきゅう" },
+            { kanji: "警視庁司令室", furigana: "けいしちょうしれいしつ" },
+            { kanji: "交通取締", furigana: "こうつうとりしまり" },
+            { kanji: "緊急停止命令", furigana: "きんきゅうていしめいれい" },
+            { kanji: "無線連絡", furigana: "むせんれんらく" },
+            { kanji: "エンジン全開", furigana: "えんじんぜんかい" },
+            { kanji: "湾岸線バトル", furigana: "わんがんせんばとる" },
+            { kanji: "首都高環状線", furigana: "しゅとこうかんじょうせん" },
+            { kanji: "赤色回転灯", furigana: "せきしょくかいてんとう" },
+            { kanji: "不審車追尾", furigana: "ふしんしゃついび" },
+            { kanji: "職務質問", furigana: "しょくむしつもん" },
+            { kanji: "現行犯逮捕", furigana: "げんこうはんたいほ" }
         ];
+
+        const hugeWordPool = rawWords.map(w => ({
+            kanji: w.kanji,
+            furigana: w.furigana,
+            patterns: generateAllRomaPatterns(w.furigana)
+        }));
 
         let player = null;
         let currentMode = "mission";
@@ -1362,6 +1440,7 @@
                 return;
             }
 
+            // 🔤 全文字・全ローマ字パターンの動的マッチングエンジン
             if (e.key.length === 1 && /^[a-zA-Z\-_]$/.test(e.key)) {
                 const inputChar = e.key.toLowerCase();
                 const typedSoFar = activePattern.substring(0, typedIdx);
