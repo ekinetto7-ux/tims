@@ -1878,9 +1878,9 @@
                 drawJapanPolicePatcar(ctx, 70, 130 + Math.sin(frame * 0.2) * 2, frame, equippedCarKey, player ? player.name : "捜査員210");
 
                 if (canvasId === "game-canvas" && (currentMode === "mission" || currentMode === "timeattack")) {
-                    drawJapanPoliceEnemyCar(ctx, 590 + Math.sin(frame * 0.1) * 10, 135, frame);
+                    drawStylishEnemyCar(ctx, 590 + Math.sin(frame * 0.1) * 10, 135, frame);
                 } else if (canvasId === "menu-canvas") {
-                    drawJapanPoliceEnemyCar(ctx, 580, 135, frame);
+                    drawStylishEnemyCar(ctx, 580, 135, frame);
                 }
 
                 ctx.restore();
@@ -1895,7 +1895,7 @@
             render();
         }
 
-        // 🇯🇵 本物の日本警察パトカー描画関数（警視庁・都道府県警の白黒ツートン、赤色回転灯、旭日章風マーク）
+        // 🇯🇵 本物の日本警察パトカー描画関数（警視庁・都道府県警の白黒ツートン、赤色回転灯）
         function drawJapanPolicePatcar(ctx, x, y, frame, carKey, label) {
             ctx.save();
             let sirenRed = (Math.floor(frame / 5) % 2 === 0);
@@ -1906,7 +1906,6 @@
             ctx.ellipse(x + 65, y + 58, 65, 11, 0, 0, Math.PI * 2);
             ctx.fill();
 
-            // 車種ごとの基本カラー判定
             let isFukumen = (carKey === "crown180_fukumen" || carKey === "legacy_b4" || carKey === "lexus_lc");
             let mainColor = isFukumen ? "#0f172a" : "#ffffff";
             let subColor = isFukumen ? "#020617" : "#1e293b";
@@ -1924,7 +1923,7 @@
             ctx.closePath();
             ctx.fill();
 
-            // メインボディシルエット（なめらかな実車プロポーション）
+            // メインボディシルエット
             ctx.fillStyle = mainColor;
             ctx.beginPath();
             ctx.moveTo(x + 12, y + 38);
@@ -1934,19 +1933,18 @@
             ctx.closePath();
             ctx.fill();
 
-            // 日本警察の象徴「白黒ツートン塗り分け」（パトカー仕様のみ）
+            // 白黒ツートン塗り分け
             if (!isFukumen && carKey !== "fairlady_z") {
                 ctx.fillStyle = "#0f172a";
                 ctx.fillRect(x, y + 26, 124, 14);
 
-                // ドア部分の警察エンブレム（金色・旭日章風の雰囲気）
                 ctx.fillStyle = "#fde047";
                 ctx.beginPath();
                 ctx.arc(x + 62, y + 33, 5, 0, Math.PI * 2);
                 ctx.fill();
             }
 
-            // キャビン（フロント・リアウィンドウ）
+            // キャビン
             ctx.fillStyle = "#020617";
             ctx.beginPath();
             ctx.moveTo(x + 36, y + 15);
@@ -1956,7 +1954,7 @@
             ctx.closePath();
             ctx.fill();
 
-            // ウィンドウのガラス反射光
+            // ガラス反射光
             ctx.fillStyle = "rgba(0, 243, 255, 0.25)";
             ctx.beginPath();
             ctx.moveTo(x + 40, y + 13);
@@ -1966,22 +1964,20 @@
             ctx.closePath();
             ctx.fill();
 
-            // ヘッドライト（HID/LED風の鋭い輝き）
+            // ヘッドライト＆テール
             ctx.fillStyle = "#fde047";
             ctx.shadowBlur = 8;
             ctx.shadowColor = "#fde047";
             ctx.fillRect(x + 116, y + 32, 7, 5);
-            // テールランプ
             ctx.fillStyle = "#ff0055";
             ctx.shadowColor = "#ff0055";
             ctx.fillRect(x + 2, y + 32, 5, 5);
             ctx.shadowBlur = 0;
 
-            // 🚨 本物の日本警察「赤色回転灯」（パトライト / バー型または昇降式）
+            // 赤色回転灯（パトライト）
             ctx.fillStyle = "#1e293b";
             ctx.fillRect(x + 56, y - 4, 20, 5);
 
-            // 交互点滅するリアルなパトライト発光
             ctx.fillStyle = sirenRed ? "#ff0055" : "#002244";
             ctx.shadowBlur = sirenRed ? 18 : 0;
             ctx.shadowColor = "#ff0055";
@@ -1992,11 +1988,10 @@
             ctx.fillRect(x + 67, y - 12, 7, 9);
             ctx.shadowBlur = 0;
 
-            // アルミホイール＆タイヤ
+            // ホイール
             drawRealWheel(ctx, x + 30, y + 46);
             drawRealWheel(ctx, x + 100, y + 46);
 
-            // コールサインラベル
             if (label) {
                 ctx.fillStyle = "#f8fafc";
                 ctx.font = "bold 11px sans-serif";
@@ -2006,18 +2001,18 @@
             ctx.restore();
         }
 
-        // 🇯🇵 逃走する容疑車両（一般スポーツカー・改造車風）
-        function drawJapanPoliceEnemyCar(ctx, x, y, frame) {
+        // 🏎️ スタイリッシュでカッコいい高速逃走車両（改造スポーツクーペ仕様）
+        function drawStylishEnemyCar(ctx, x, y, frame) {
             ctx.save();
 
-            // 車体下の接地影
+            // 接地影
             ctx.fillStyle = "rgba(0, 0, 0, 0.65)";
             ctx.beginPath();
             ctx.ellipse(x + 65, y + 58, 65, 11, 0, 0, Math.PI * 2);
             ctx.fill();
 
-            // 改造車・逃走車両ボディ（深紅のメタリック＆ブラック）
-            ctx.fillStyle = "#090205";
+            // 車体下部・サイドスカート
+            ctx.fillStyle = "#090d16";
             ctx.beginPath();
             ctx.moveTo(x + 10, y + 40);
             ctx.lineTo(x + 120, y + 40);
@@ -2026,44 +2021,53 @@
             ctx.closePath();
             ctx.fill();
 
-            ctx.fillStyle = "#b91c1c";
-            ctx.shadowBlur = 14;
-            ctx.shadowColor = "#ff0055";
+            // 光沢のあるダークメタリックブルー／パープルのスポーツクーペボディ
+            ctx.fillStyle = "#1e1b4b";
             ctx.beginPath();
-            ctx.moveTo(x + 12, y + 38);
-            ctx.lineTo(x + 32, y + 14);
-            ctx.lineTo(x + 92, y + 14);
-            ctx.lineTo(x + 118, y + 38);
+            ctx.moveTo(x + 10, y + 38);
+            ctx.lineTo(x + 30, y + 16);
+            ctx.lineTo(x + 94, y + 16);
+            ctx.lineTo(x + 120, y + 38);
             ctx.closePath();
             ctx.fill();
-            ctx.shadowBlur = 0;
 
-            // スモークキャビン
+            // アクセントのレーシングストライプ / サイドグラデーション
+            ctx.fillStyle = "#4338ca";
+            ctx.fillRect(x + 15, y + 26, 95, 6);
+
+            // キャビン（スタイリッシュな傾斜ウィンドウ）
             ctx.fillStyle = "#020617";
             ctx.beginPath();
-            ctx.moveTo(x + 36, y + 15);
-            ctx.lineTo(x + 48, y + 4);
-            ctx.lineTo(x + 80, y + 4);
-            ctx.lineTo(x + 90, y + 15);
+            ctx.moveTo(x + 36, y + 17);
+            ctx.lineTo(x + 46, y + 6);
+            ctx.lineTo(x + 82, y + 6);
+            ctx.lineTo(x + 90, y + 17);
             ctx.closePath();
             ctx.fill();
 
-            // クールなヘッドライト＆テール
+            // フロントのシャープなLEDヘッドライト（アイスブルー）
             ctx.fillStyle = "#00f3ff";
             ctx.shadowBlur = 10;
             ctx.shadowColor = "#00f3ff";
-            ctx.fillRect(x + 2, y + 32, 6, 5);
+            ctx.fillRect(x + 116, y + 32, 6, 5);
+            // リアのシグネチャーテールランプ（ソリッドレッド）
             ctx.fillStyle = "#ff0055";
             ctx.shadowColor = "#ff0055";
-            ctx.fillRect(x + 116, y + 32, 6, 5);
+            ctx.fillRect(x + 2, y + 32, 6, 5);
             ctx.shadowBlur = 0;
 
-            // ホイール
+            // リアウィング（大型GTウイングでスポーティさを演出）
+            ctx.fillStyle = "#0f172a";
+            ctx.fillRect(x + 6, y + 12, 14, 4);
+            ctx.fillRect(x + 8, y + 8, 3, 4);
+            ctx.fillRect(x + 15, y + 8, 3, 4);
+
+            // アルミホイール
             drawRealWheel(ctx, x + 30, y + 46);
             drawRealWheel(ctx, x + 100, y + 46);
 
             // 逃走車両ラベル
-            ctx.fillStyle = "#ff0055";
+            ctx.fillStyle = "#00f3ff";
             ctx.font = "bold 11px sans-serif";
             ctx.fillText("逃走車両 [要警戒]", x + 12, y - 18);
 
