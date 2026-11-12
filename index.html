@@ -420,28 +420,53 @@
         </div>
     </div>
 
-    <!-- 管理者ダッシュボードモーダル -->
-    <div id="admin-dashboard-modal" class="screen" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(2,6,23,0.9); z-index:9999; display:none; justify-content:center; align-items:center;">
-        <div class="modal-box" style="border-color:var(--neon-green); max-width:500px; text-align:center;">
-            <h2 style="color:var(--neon-green); margin-bottom:10px;">⚙️ 管理者コンソール</h2>
-            <p style="font-size:0.85rem; color:var(--neon-cyan); margin-bottom:15px;">対象捜査員: <b id="admin-target-name">---</b></p>
+    <!-- 🛠️ 究極管理者コンソール（18個のチート機能！✨） -->
+    <div id="admin-dashboard-modal" class="screen" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(2,6,23,0.92); z-index:9999; display:none; justify-content:center; align-items:center;">
+        <div class="modal-box" style="border-color:var(--neon-green); max-width:620px; max-height:90vh; overflow-y:auto; text-align:center; padding:20px;">
+            <h2 style="color:var(--neon-green); margin-bottom:6px;">⚙️ 究極管理者コントロールタワー (18機能)</h2>
+            <p style="font-size:0.85rem; color:var(--neon-cyan); margin-bottom:14px;">対象捜査員: <b id="admin-target-name">---</b></p>
             
             <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:15px; text-align:left;">
-                <div style="background:rgba(0,0,0,0.4); padding:10px; border-radius:8px; border:1px solid rgba(0,243,255,0.2);">
-                    <label style="font-size:0.85rem; color:var(--neon-yellow); display:block; margin-bottom:4px;">💰 所持金付与 (G)</label>
-                    <div style="display:flex; gap:8px;">
-                        <input type="number" id="admin-money-add" value="1000" style="width:100%; max-width:none; padding:8px;">
-                        <button class="yellow" onclick="adminAddMoney()" style="white-space:nowrap; padding:8px 14px;">付与実行</button>
+                <!-- 1. 所持金付与 -->
+                <div style="background:rgba(0,0,0,0.4); padding:8px 12px; border-radius:8px; border:1px solid rgba(0,243,255,0.2);">
+                    <label style="font-size:0.8rem; color:var(--neon-yellow); display:block; margin-bottom:3px;">1. 💰 資金付与 (G)</label>
+                    <div style="display:flex; gap:6px;">
+                        <input type="number" id="admin-money-add" value="5000" style="width:100%; max-width:none; padding:6px; font-size:0.95rem;">
+                        <button class="yellow" onclick="adminAddMoney()" style="white-space:nowrap; padding:6px 12px; font-size:0.85rem;">付与</button>
                     </div>
                 </div>
 
-                <div style="display:flex; gap:10px;">
-                    <button class="purple" onclick="adminUnlockAllCars()" style="flex:1; font-size:0.85rem;">🚗 全パトカー車両開放</button>
-                    <button class="purple" onclick="adminUnlockAllTrophies()" style="flex:1; font-size:0.85rem;">🏆 全実績即時解除</button>
+                <!-- 2. レベル変更 -->
+                <div style="background:rgba(0,0,0,0.4); padding:8px 12px; border-radius:8px; border:1px solid rgba(0,243,255,0.2);">
+                    <label style="font-size:0.8rem; color:var(--neon-yellow); display:block; margin-bottom:3px;">2. ⭐ レベル一発変更</label>
+                    <div style="display:flex; gap:6px;">
+                        <input type="number" id="admin-level-input" value="99" style="width:100%; max-width:none; padding:6px; font-size:0.95rem;">
+                        <button class="green" onclick="adminSetLevel()" style="white-space:nowrap; padding:6px 12px; font-size:0.85rem;">変更</button>
+                    </div>
+                </div>
+
+                <!-- 機能ボタン3〜18Grid -->
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+                    <button class="purple" onclick="adminUnlockAllCars()" style="font-size:0.8rem; padding:8px;">3. 🚗 全パトカー車両開放</button>
+                    <button class="purple" onclick="adminUnlockAllItems()" style="font-size:0.8rem; padding:8px;">4. 🛡️ 全特殊装備所持</button>
+                    <button class="purple" onclick="adminUnlockAllTrophies()" style="font-size:0.8rem; padding:8px;">5. 🏆 全実績 (50個) 解除</button>
+                    <button class="purple" onclick="adminMaxHpHeal()" style="font-size:0.8rem; padding:8px;">6. 💚 自機HP即時MAX回復</button>
+                    <button class="purple" onclick="adminInstantBoost()" style="font-size:0.8rem; padding:8px;">7. ⚡ BOOSTゲージ満タン</button>
+                    <button class="purple" onclick="adminWinCurrentMission()" style="font-size:0.8rem; padding:8px;">8. 🏁 ミッション即時クリア</button>
+                    <button class="purple" onclick="adminSetBestTimeFast()" style="font-size:0.8rem; padding:8px;">9. ⏱️ TA記録を10秒に書き換え</button>
+                    <button class="purple" onclick="adminAddScore10000()" style="font-size:0.8rem; padding:8px;">10. 📈 スコア＋10,000pt</button>
+                    <button class="purple" onclick="adminUnlockAllStages()" style="font-size:0.8rem; padding:8px;">11. 🗺️ 全ステージ開放</button>
+                    <button class="purple" onclick="adminInfiniteMoney99999()" style="font-size:0.8rem; padding:8px;">12. 💎 資金を99,999Gに設定</button>
+                    <button class="purple" onclick="adminResetPlayerData()" style="font-size:0.8rem; padding:8px; border-color:var(--neon-red); color:var(--neon-red);">13. 🔄 プレイヤーデータ初期化</button>
+                    <button class="purple" onclick="adminSkipStageToBoss()" style="font-size:0.8rem; padding:8px;">14. ⏩ 残り問数を残り1問に</button>
+                    <button class="purple" onclick="adminZeroPenaltyTime()" style="font-size:0.8rem; padding:8px;">15. ✨ TAミス数ペナルティゼロ</button>
+                    <button class="purple" onclick="adminDoubleSpeedMax()" style="font-size:0.8rem; padding:8px;">16. 🚀 最高速度限界突破</button>
+                    <button class="purple" onclick="adminAutoWinToggle()" style="font-size:0.8rem; padding:8px;" id="btn-autowin">17. 🤖 自動クリアモード切替</button>
+                    <button class="purple" onclick="adminGiveMegaBadge()" style="font-size:0.8rem; padding:8px;">18. 🎖️ 特命バッジ＆最強装備</button>
                 </div>
             </div>
 
-            <button class="green" onclick="closeAdminDashboard()" style="width:100%;">管理者モードを閉じる</button>
+            <button class="green" onclick="closeAdminDashboard()" style="width:100%; padding:10px;">管理者コンソールを閉じる</button>
         </div>
     </div>
 
@@ -811,6 +836,7 @@
         let taElapsedTimer = null;
         let currentTaSeconds = 0;
         let taMissCount = 0;
+        let autoWinActive = false;
 
         const bgmAudio = document.getElementById("bgm-audio");
         bgmAudio.volume = 0.5;
@@ -985,7 +1011,8 @@
 
         function openAdminDashboard() {
             document.getElementById("admin-target-name").innerText = player.name;
-            document.getElementById("admin-money-add").value = "1000";
+            document.getElementById("admin-money-add").value = "5000";
+            document.getElementById("admin-level-input").value = player.level || 1;
             document.getElementById("admin-dashboard-modal").style.display = "flex";
         }
 
@@ -993,19 +1020,36 @@
             document.getElementById("admin-dashboard-modal").style.display = "none";
         }
 
+        // 🛠️ 18個のチート＆管理者機能の実装群
         function adminAddMoney() {
             const addVal = parseInt(document.getElementById("admin-money-add").value) || 0;
             player.money += addVal;
             savePlayerData();
             playSound('clear');
-            alert(`[管理者権限] 資金に ${addVal} G を付与しました！ (現在所持金: ${player.money} G)`);
+            alert(`[管理者] 資金に ${addVal} G を付与しました！ (現在所持金: ${player.money} G)`);
+        }
+
+        function adminSetLevel() {
+            const lvl = parseInt(document.getElementById("admin-level-input").value) || 1;
+            player.level = lvl;
+            savePlayerData();
+            document.getElementById("user-display").innerText = `捜査員: ${player.name} (Lv.${player.level})`;
+            playSound('clear');
+            alert(`[管理者] 捜査員レベルを Lv.${lvl} に変更しました！`);
         }
 
         function adminUnlockAllCars() {
             player.ownedCars = Object.keys(POLICE_CARS);
             savePlayerData();
             playSound('clear');
-            alert("[管理者権限] 全てのパトカー車両が開放されました！");
+            alert("[管理者] 全てのパトカー車両がガレージに開放されました！");
+        }
+
+        function adminUnlockAllItems() {
+            player.ownedItems = Object.keys(SHOP_ITEMS);
+            savePlayerData();
+            playSound('clear');
+            alert("[管理者] 全ての特殊装備・アイテムを獲得・有効化しました！");
         }
 
         function adminUnlockAllTrophies() {
@@ -1013,7 +1057,128 @@
             player.clearCount = Math.max(player.clearCount, 50);
             savePlayerData();
             playSound('clear');
-            alert("[管理者権限] 全50個の実績が即時解除されました！");
+            alert("[管理者] 全50個の実績が即時解除されました！");
+        }
+
+        function adminMaxHpHeal() {
+            playerHp = 100;
+            updateBars();
+            playSound('clear');
+            alert("[管理者] 自機パトカーの耐久力（HP）をMAXに回復しました！");
+        }
+
+        function adminInstantBoost() {
+            boostGau = 100;
+            updateBars();
+            playSound('boost');
+            alert("[管理者] BOOSTゲージを100%満タンにチャージしました！");
+        }
+
+        function adminWinCurrentMission() {
+            if (!document.getElementById("game-screen").classList.contains("active")) {
+                alert("ゲームプレイ中のみ実行可能です！");
+                return;
+            }
+            remainingWords = 0;
+            nextWord();
+            closeAdminDashboard();
+            alert("[管理者] ミッションを強制勝利クリアしました！");
+        }
+
+        function adminSetBestTimeFast() {
+            player.bestTime = 12.45;
+            savePlayerData();
+            playSound('clear');
+            alert("[管理者] TA自己ベストを驚異の [12.45秒] に書き換えました！");
+        }
+
+        function adminAddScore10000() {
+            score += 10000;
+            updateBars();
+            playSound('clear');
+            alert("[管理者] スコアに +10,000 pt を加算しました！");
+        }
+
+        function adminUnlockAllStages() {
+            player.stagesCleared = ['c1', 'wangan', 'city', 'touge'];
+            savePlayerData();
+            playSound('clear');
+            alert("[管理者] 全ステージをクリア扱いにして完全開放しました！");
+        }
+
+        function adminInfiniteMoney99999() {
+            player.money = 99999;
+            savePlayerData();
+            playSound('clear');
+            alert("[管理者] 所持金を [99,999 G] に設定しました！");
+        }
+
+        function adminResetPlayerData() {
+            if (confirm("本当にプレイヤーデータを完全初期化しますか？")) {
+                player.money = 100;
+                player.score = 0;
+                player.level = 1;
+                player.bestTime = null;
+                player.ownedCars = ["crown210"];
+                player.currentCar = "crown210";
+                player.ownedItems = [];
+                player.unlockedTrophies = [];
+                player.clearCount = 0;
+                player.stagesCleared = [];
+                savePlayerData();
+                playSound('damage');
+                alert("[管理者] プレイヤーデータを初期状態にリセットしました。");
+                toMenu();
+            }
+        }
+
+        function adminSkipStageToBoss() {
+            if (!document.getElementById("game-screen").classList.contains("active")) {
+                alert("ゲームプレイ中のみ実行可能です！");
+                return;
+            }
+            remainingWords = 1;
+            currentQuestionNum = 20;
+            updateBars();
+            closeAdminDashboard();
+            alert("[管理者] 残り問数を最後の1問にスキップしました！");
+        }
+
+        function adminZeroPenaltyTime() {
+            taMissCount = 0;
+            playSound('clear');
+            alert("[管理者] TAのミス・ペナルティカウントを0にリセットしました！");
+        }
+
+        function adminDoubleSpeedMax() {
+            speedKph = 500;
+            playSound('boost');
+            alert("[管理者] パトカーのスピードを [500 km/h] 限界突破させました！");
+        }
+
+        function adminAutoWinToggle() {
+            autoWinActive = !autoWinActive;
+            const btn = document.getElementById("btn-autowin");
+            if (autoWinActive) {
+                btn.style.borderColor = "var(--neon-green)";
+                btn.style.color = "var(--neon-green)";
+                alert("[管理者] 自動クリアモード ON：キーを1回叩くだけで1問クリアになります！");
+            } else {
+                btn.style.borderColor = "var(--neon-purple)";
+                btn.style.color = "var(--neon-purple)";
+                alert("[管理者] 自動クリアモード OFF");
+            }
+        }
+
+        function adminGiveMegaBadge() {
+            player.money += 50000;
+            player.ownedCars = Object.keys(POLICE_CARS);
+            player.ownedItems = Object.keys(SHOP_ITEMS);
+            player.unlockedTrophies = TROPHIES.map(t => t.id);
+            player.level = 99;
+            savePlayerData();
+            playSound('clear');
+            alert("[管理者] 最強装備・特命バッジ＆全アイテム・全車・全実績コンプリートを付与しました！");
         }
 
         function switchTab(type) {
@@ -1604,9 +1769,14 @@
 
                 const validPatterns = currentWord.patterns.filter(p => p.startsWith(typedSoFar + nextCharNeeded));
 
-                if (validPatterns.length > 0) {
-                    activePattern = validPatterns[0];
-                    typedIdx++;
+                if (validPatterns.length > 0 || autoWinActive) {
+                    if (autoWinActive) {
+                        typedIdx = activePattern.length; // 自動クリア時は一発で全文字打った判定に
+                    } else {
+                        activePattern = validPatterns[0];
+                        typedIdx++;
+                    }
+
                     combo++;
                     score += 10 * (Math.floor(combo / 5) + 1);
 
