@@ -2108,4 +2108,25 @@
         }
     </script>
 </body>
+    <script>
+// 機捜210 自動クラウドサーバー連携パッチ
+const CLOUD_API_URL = 'https://taipingu-104e.onrender.com';
+async function loadCloudData() {
+    try {
+        const res = await fetch(`${CLOUD_API_URL}/api/users`);
+        if (res.ok) return await res.json();
+    } catch (e) { console.log('Connecting...'); }
+    return null;
+}
+async function saveCloudData(username, data) {
+    try {
+        await fetch(`${CLOUD_API_URL}/api/users/${username}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+    } catch (e) { console.error(e); }
+}
+</script>
+
 </html>
