@@ -2153,12 +2153,60 @@ async function deleteCloudUser(username) {
         if (response.ok) {
             alert(`ユーザー [${username}] を削除しました。`);
             console.log(`🗑️ [${username}] を削除しました`);
+            renderAdminUserList(); // 削除後に一覧を再読み込み
         } else {
             alert('削除に失敗しました。');
         }
     } catch (err) {
         console.error('削除エラー:', err);
         alert('サーバーとの通信に失敗しました。');
+    }
+}
+
+// 4. 【管理者用】サーバーから全ユーザーを取得して管理者画面に一覧表示する関数
+async function renderAdminUserList() {
+    const container = document.getElementById("admin-user-list-container");
+    if (!container) return;
+    container.innerHTML = "<span style='color:#94a3b8; font-size:0.85rem;'>クラウドからユーザー一覧を読み込み中...</span>";
+
+    try {
+        const response = await fetch(`${CLOUD_API_URL}/api/users`);
+        if (!response.ok) throw new Error('サーバー通信失敗');
+        
+        const db = await response.json();
+        const names = Object.keys(db);
+
+        if (names.length === 0) {
+            container.innerHTML = "<span style='color:#94a3b8; font-size:0.85rem;'>登録ユーザーはまだいません。</span>";
+            return;
+        }
+
+        container.innerHTML = names.map(uname => {
+            const u = db[uname];
+            const isBanned = u.isBanned ? true : false;
+            const isBlocked = u.isBlocked ? true : false;
+
+            let statusBadge = "";
+            if (isBanned) statusBadge = `<span style="color:var(--neon-red); font-weight:bold;">[BAN中]</span>`;
+            else if (isBlocked) statusBadge = `<span style="color:var(--neon-yellow); font-weight:bold;">[ブロック中]</span>`;
+            else statusBadge = `<span style="color:var(--neon-green);">[正常]</span>`;
+
+            return `
+                <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(0,243,255,0.2); border-radius:8px; padding:8px 10px; display:flex; justify-content:space-between; align-items:center; font-size:0.85rem;">
+                    <div>
+                        <b style="color:var(--neon-cyan);">${uname}</b> ${statusBadge}
+                        <div style="font-size:0.75rem; color:#94a3b8;">パスワード: <span style="color:#fff; font-family:monospace;">${u.password || '---'}</span> | Lv.${u.level || 1} | 所持金: ${u.money || 0}G</div>
+                    </div>
+                    <div style="display:flex; gap:4px;">
+                        <button class="red" onclick="deleteCloudUser('${uname}')" style="padding:3px 8px; font-size:0.7rem;">削除</button>
+                    </div>
+                </div>
+            `;
+        }).join("");
+
+    } catch (err) {
+        console.error('ユーザー一覧取得エラー:', err);
+        container.innerHTML = "<span style='color:var(--neon-red); font-size:0.85rem;'>サーバーからのデータ取得に失敗しました。</span>";
     }
 }
 </script>
