@@ -2109,15 +2109,27 @@
     </script>
 </body>
     <script>
-// 機捜210 自動クラウドサーバー連携パッチ
+// ==========================================
+// 機捜210 クラウドサーバー連携＆管理者機能パッチ
+// ==========================================
 const CLOUD_API_URL = 'https://taipingu-104e.onrender.com';
+
+// 1. サーバーからデータを読み込む関数
 async function loadCloudData() {
     try {
         const res = await fetch(`${CLOUD_API_URL}/api/users`);
-        if (res.ok) return await res.json();
-    } catch (e) { console.log('Connecting...'); }
+        if (res.ok) {
+            const data = await res.json();
+            console.log('☁️ クラウドサーバーからデータを同期しました', data);
+            return data;
+        }
+    } catch (e) { 
+        console.log('オフラインまたはサーバー接続中...', e); 
+    }
     return null;
 }
+
+// 2. サーバーにデータを保存する関数
 async function saveCloudData(username, data) {
     try {
         await fetch(`${CLOUD_API_URL}/api/users/${username}`, {
@@ -2125,7 +2137,29 @@ async function saveCloudData(username, data) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         });
-    } catch (e) { console.error(e); }
+        console.log(`💾 [${username}] のデータをクラウドに保存しました`);
+    } catch (e) { 
+        console.error('クラウド保存エラー:', e); 
+    }
+}
+
+// 3. 【管理者用】指定したユーザーのアカウントをクラウドから削除する関数
+async function deleteCloudUser(username) {
+    if (!confirm(`本当にユーザー [${username}] を削除しますか？`)) return;
+    try {
+        const response = await fetch(`${CLOUD_API_URL}/api/users/${username}`, {
+            method: 'DELETE'
+        });
+        if (response.ok) {
+            alert(`ユーザー [${username}] を削除しました。`);
+            console.log(`🗑️ [${username}] を削除しました`);
+        } else {
+            alert('削除に失敗しました。');
+        }
+    } catch (err) {
+        console.error('削除エラー:', err);
+        alert('サーバーとの通信に失敗しました。');
+    }
 }
 </script>
 
