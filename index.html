@@ -411,7 +411,7 @@
     <div id="admin-login-modal" class="screen" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(2,6,23,0.9); z-index:9999; display:none; justify-content:center; align-items:center;">
         <div class="modal-box" style="border-color:var(--neon-yellow); max-width:400px; text-align:center;">
             <h2 style="color:var(--neon-yellow); margin-bottom:12px;">🛡️ 管理者認証モード</h2>
-            <p style="font-size:0.85rem; color:#94a3b8; margin-bottom:14px;">システム管理者パスワードを入力してください </p>
+            <p style="font-size:0.85rem; color:#94a3b8; margin-bottom:14px;">システム管理者パスワードを入力してください (パスワード: 20141007)</p>
             <input type="password" id="admin-pass-input" placeholder="暗号パスワード" style="margin-bottom:14px;">
             <div style="display:flex; gap:10px;">
                 <button class="yellow" onclick="verifyAdminPassword()" style="flex:1;">認証</button>
@@ -420,12 +420,17 @@
         </div>
     </div>
 
-    <!-- 🛠️ 究極管理者コンソール（18個のチート機能） -->
-    <div id="admin-dashboard-modal" class="screen" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(2,6,23,0.92); z-index:9999; display:none; justify-content:center; align-items:center;">
-        <div class="modal-box" style="border-color:var(--neon-green); max-width:620px; max-height:90vh; overflow-y:auto; text-align:center; padding:20px;">
-            <h2 style="color:var(--neon-green); margin-bottom:6px;">⚙️ 究極管理者コントロールタワー (18機能)</h2>
-            <p style="font-size:0.85rem; color:var(--neon-cyan); margin-bottom:14px;">対象捜査員: <b id="admin-target-name">---</b></p>
+    <!-- 🛠️ 究極管理者コントロールタワー（アカウント管理・BAN・ブロック・パスワード表示機能付き） -->
+    <div id="admin-dashboard-modal" class="screen" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(2,6,23,0.95); z-index:9999; display:none; justify-content:center; align-items:center;">
+        <div class="modal-box" style="border-color:var(--neon-green); max-width:680px; max-height:92vh; overflow-y:auto; text-align:center; padding:20px;">
+            <h2 style="color:var(--neon-green); margin-bottom:6px;">⚙️ マルチデバイス管理タワー (アカウント・BAN・ブロック)</h2>
+            <p style="font-size:0.85rem; color:var(--neon-cyan); margin-bottom:12px;">登録全ユーザー一覧・パスワード確認・凍結管理</p>
             
+            <div style="background:rgba(0,0,0,0.5); border:1px solid rgba(0,243,255,0.3); border-radius:10px; padding:12px; margin-bottom:15px; text-align:left;">
+                <h3 style="color:var(--neon-yellow); font-size:0.95rem; margin-bottom:8px;">👥 登録ユーザー＆パスワード一覧 (BAN / ブロック管理)</h3>
+                <div id="admin-user-list-container" style="max-height:180px; overflow-y:auto; display:flex; flex-direction:column; gap:6px; padding-right:4px;"></div>
+            </div>
+
             <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:15px; text-align:left;">
                 <div style="background:rgba(0,0,0,0.4); padding:8px 12px; border-radius:8px; border:1px solid rgba(0,243,255,0.2);">
                     <label style="font-size:0.8rem; color:var(--neon-yellow); display:block; margin-bottom:3px;">1. 💰 資金付与 (G)</label>
@@ -435,31 +440,19 @@
                     </div>
                 </div>
 
-                <div style="background:rgba(0,0,0,0.4); padding:8px 12px; border-radius:8px; border:1px solid rgba(0,243,255,0.2);">
-                    <label style="font-size:0.8rem; color:var(--neon-yellow); display:block; margin-bottom:3px;">2. ⭐ レベル一発変更</label>
-                    <div style="display:flex; gap:6px;">
-                        <input type="number" id="admin-level-input" value="99" style="width:100%; max-width:none; padding:6px; font-size:0.95rem;">
-                        <button class="green" onclick="adminSetLevel()" style="white-space:nowrap; padding:6px 12px; font-size:0.85rem;">変更</button>
-                    </div>
-                </div>
-
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-                    <button class="purple" onclick="adminUnlockAllCars()" style="font-size:0.8rem; padding:8px;">3. 🚗 全パトカー車両開放</button>
-                    <button class="purple" onclick="adminUnlockAllItems()" style="font-size:0.8rem; padding:8px;">4. 🛡️ 全特殊装備所持</button>
-                    <button class="purple" onclick="adminUnlockAllTrophies()" style="font-size:0.8rem; padding:8px;">5. 🏆 全実績 (50個) 解除</button>
-                    <button class="purple" onclick="adminMaxHpHeal()" style="font-size:0.8rem; padding:8px;">6. 💚 自機HP即時MAX回復</button>
-                    <button class="purple" onclick="adminInstantBoost()" style="font-size:0.8rem; padding:8px;">7. ⚡ BOOSTゲージ満タン</button>
-                    <button class="purple" onclick="adminWinCurrentMission()" style="font-size:0.8rem; padding:8px;">8. 🏁 ミッション即時クリア</button>
-                    <button class="purple" onclick="adminSetBestTimeFast()" style="font-size:0.8rem; padding:8px;">9. ⏱️ TA記録を10秒に書き換え</button>
-                    <button class="purple" onclick="adminAddScore10000()" style="font-size:0.8rem; padding:8px;">10. 📈 スコア＋10,000pt</button>
-                    <button class="purple" onclick="adminUnlockAllStages()" style="font-size:0.8rem; padding:8px;">11. 🗺️ 全ステージ開放</button>
-                    <button class="purple" onclick="adminInfiniteMoney99999()" style="font-size:0.8rem; padding:8px;">12. 💎 資金を99,999Gに設定</button>
-                    <button class="purple" onclick="adminResetPlayerData()" style="font-size:0.8rem; padding:8px; border-color:var(--neon-red); color:var(--neon-red);">13. 🔄 プレイヤーデータ初期化</button>
-                    <button class="purple" onclick="adminSkipStageToBoss()" style="font-size:0.8rem; padding:8px;">14. ⏩ 残り問数を残り1問に</button>
-                    <button class="purple" onclick="adminZeroPenaltyTime()" style="font-size:0.8rem; padding:8px;">15. ✨ TAミス数ペナルティゼロ</button>
-                    <button class="purple" onclick="adminDoubleSpeedMax()" style="font-size:0.8rem; padding:8px;">16. 🚀 最高速度限界突破</button>
-                    <button class="purple" onclick="adminAutoWinToggle()" style="font-size:0.8rem; padding:8px;" id="btn-autowin">17. 🤖 自動クリアモード切替</button>
-                    <button class="purple" onclick="adminGiveMegaBadge()" style="font-size:0.8rem; padding:8px;">18. 🎖️ 特命バッジ＆最強装備</button>
+                    <button class="purple" onclick="adminUnlockAllCars()" style="font-size:0.8rem; padding:8px;">2. 🚗 全パトカー車両開放</button>
+                    <button class="purple" onclick="adminUnlockAllItems()" style="font-size:0.8rem; padding:8px;">3. 🛡️ 全特殊装備所持</button>
+                    <button class="purple" onclick="adminUnlockAllTrophies()" style="font-size:0.8rem; padding:8px;">4. 🏆 全実績 (50個) 解除</button>
+                    <button class="purple" onclick="adminMaxHpHeal()" style="font-size:0.8rem; padding:8px;">5. 💚 自機HP即時MAX回復</button>
+                    <button class="purple" onclick="adminInstantBoost()" style="font-size:0.8rem; padding:8px;">6. ⚡ BOOSTゲージ満タン</button>
+                    <button class="purple" onclick="adminWinCurrentMission()" style="font-size:0.8rem; padding:8px;">7. 🏁 ミッション即時クリア</button>
+                    <button class="purple" onclick="adminSetBestTimeFast()" style="font-size:0.8rem; padding:8px;">8. ⏱️ TA記録を10秒に書き換え</button>
+                    <button class="purple" onclick="adminAddScore10000()" style="font-size:0.8rem; padding:8px;">9. 📈 スコア＋10,000pt</button>
+                    <button class="purple" onclick="adminUnlockAllStages()" style="font-size:0.8rem; padding:8px;">10. 🗺️ 全ステージ開放</button>
+                    <button class="purple" onclick="adminInfiniteMoney99999()" style="font-size:0.8rem; padding:8px;">11. 💎 資金を99,999Gに設定</button>
+                    <button class="purple" onclick="adminResetPlayerData()" style="font-size:0.8rem; padding:8px; border-color:var(--neon-red); color:var(--neon-red);">12. 🔄 プレイヤーデータ初期化</button>
+                    <button class="purple" onclick="adminAutoWinToggle()" style="font-size:0.8rem; padding:8px;" id="btn-autowin">13. 🤖 自動クリアモード切替</button>
                 </div>
             </div>
 
@@ -1002,14 +995,14 @@
                 closeAdminLoginModal();
                 openAdminDashboard();
             } else {
-                alert("パスワードが違います！ ");
+                alert("パスワードが違います！ (正しいパスワード: 20141007)");
             }
         }
 
         function openAdminDashboard() {
             document.getElementById("admin-target-name").innerText = player.name;
             document.getElementById("admin-money-add").value = "5000";
-            document.getElementById("admin-level-input").value = player.level || 1;
+            renderAdminUserList();
             document.getElementById("admin-dashboard-modal").style.display = "flex";
         }
 
@@ -1017,22 +1010,89 @@
             document.getElementById("admin-dashboard-modal").style.display = "none";
         }
 
-        // 🛠️ 18個のチート＆管理者機能の実装群
+        // 👥 管理者用ユーザーリスト・パスワード表示・BAN/ブロック・解除の管理群
+        function renderAdminUserList() {
+            const db = getUsersDB();
+            const container = document.getElementById("admin-user-list-container");
+            const names = Object.keys(db);
+
+            if (names.length === 0) {
+                container.innerHTML = "<span style='color:#94a3b8; font-size:0.85rem;'>登録ユーザーはまだいません。</span>";
+                return;
+            }
+
+            container.innerHTML = names.map(uname => {
+                const u = db[uname];
+                const isBanned = u.isBanned ? true : false;
+                const isBlocked = u.isBlocked ? true : false;
+
+                let statusBadge = "";
+                if (isBanned) statusBadge = `<span style="color:var(--neon-red); font-weight:bold;">[BAN中]</span>`;
+                else if (isBlocked) statusBadge = `<span style="color:var(--neon-yellow); font-weight:bold;">[ブロック中]</span>`;
+                else statusBadge = `<span style="color:var(--neon-green);">[正常]</span>`;
+
+                return `
+                    <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(0,243,255,0.2); border-radius:8px; padding:8px 10px; display:flex; justify-content:space-between; align-items:center; font-size:0.85rem;">
+                        <div>
+                            <b style="color:var(--neon-cyan);">${uname}</b> ${statusBadge}
+                            <div style="font-size:0.75rem; color:#94a3b8;">パスワード: <span style="color:#fff; font-family:monospace;">${u.password}</span> | Lv.${u.level || 1} | 所持金: ${u.money || 0}G</div>
+                        </div>
+                        <div style="display:flex; gap:4px;">
+                            ${isBanned ? `<button class="green" onclick="adminUnbanUser('${uname}')" style="padding:3px 8px; font-size:0.7rem;">BAN解除</button>` : `<button class="red" onclick="adminBanUser('${uname}')" style="padding:3px 8px; font-size:0.7rem;">BAN</button>`}
+                            ${isBlocked ? `<button class="green" onclick="adminUnblockUser('${uname}')" style="padding:3px 8px; font-size:0.7rem;">ブロック解除</button>` : `<button class="yellow" onclick="adminBlockUser('${uname}')" style="padding:3px 8px; font-size:0.7rem;">ブロック</button>`}
+                        </div>
+                    </div>
+                `;
+            }).join("");
+        }
+
+        function adminBanUser(uname) {
+            const db = getUsersDB();
+            if (db[uname]) {
+                db[uname].isBanned = true;
+                saveUsersDB(db);
+                renderAdminUserList();
+                alert(`[${uname}] をアカウントBAN（凍結）しました。`);
+            }
+        }
+
+        function adminUnbanUser(uname) {
+            const db = getUsersDB();
+            if (db[uname]) {
+                db[uname].isBanned = false;
+                saveUsersDB(db);
+                renderAdminUserList();
+                alert(`[${uname}] のBANを解除しました。`);
+            }
+        }
+
+        function adminBlockUser(uname) {
+            const db = getUsersDB();
+            if (db[uname]) {
+                db[uname].isBlocked = true;
+                saveUsersDB(db);
+                renderAdminUserList();
+                alert(`[${uname}] をブロックしました。`);
+            }
+        }
+
+        function adminUnblockUser(uname) {
+            const db = getUsersDB();
+            if (db[uname]) {
+                db[uname].isBlocked = false;
+                saveUsersDB(db);
+                renderAdminUserList();
+                alert(`[${uname}] のブロックを解除しました。`);
+            }
+        }
+
+        // 🛠️ その他の管理者チート機能
         function adminAddMoney() {
             const addVal = parseInt(document.getElementById("admin-money-add").value) || 0;
             player.money += addVal;
             savePlayerData();
             playSound('clear');
             alert(`[管理者] 資金に ${addVal} G を付与しました！ (現在所持金: ${player.money} G)`);
-        }
-
-        function adminSetLevel() {
-            const lvl = parseInt(document.getElementById("admin-level-input").value) || 1;
-            player.level = lvl;
-            savePlayerData();
-            document.getElementById("user-display").innerText = `捜査員: ${player.name} (Lv.${player.level})`;
-            playSound('clear');
-            alert(`[管理者] 捜査員レベルを Lv.${lvl} に変更しました！`);
         }
 
         function adminUnlockAllCars() {
@@ -1129,30 +1189,6 @@
             }
         }
 
-        function adminSkipStageToBoss() {
-            if (!document.getElementById("game-screen").classList.contains("active")) {
-                alert("ゲームプレイ中のみ実行可能です！");
-                return;
-            }
-            remainingWords = 1;
-            currentQuestionNum = 20;
-            updateBars();
-            closeAdminDashboard();
-            alert("[管理者] 残り問数を最後の1問にスキップしました！");
-        }
-
-        function adminZeroPenaltyTime() {
-            taMissCount = 0;
-            playSound('clear');
-            alert("[管理者] TAのミス・ペナルティカウントを0にリセットしました！");
-        }
-
-        function adminDoubleSpeedMax() {
-            speedKph = 500;
-            playSound('boost');
-            alert("[管理者] パトカーのスピードを [500 km/h] 限界突破させました！");
-        }
-
         function adminAutoWinToggle() {
             autoWinActive = !autoWinActive;
             const btn = document.getElementById("btn-autowin");
@@ -1165,17 +1201,6 @@
                 btn.style.color = "var(--neon-purple)";
                 alert("[管理者] 自動クリアモード OFF");
             }
-        }
-
-        function adminGiveMegaBadge() {
-            player.money += 50000;
-            player.ownedCars = Object.keys(POLICE_CARS);
-            player.ownedItems = Object.keys(SHOP_ITEMS);
-            player.unlockedTrophies = TROPHIES.map(t => t.id);
-            player.level = 99;
-            savePlayerData();
-            playSound('clear');
-            alert("[管理者] 最強装備・特命バッジ＆全アイテム・全車・全実績コンプリートを付与しました！");
         }
 
         function switchTab(type) {
@@ -1273,7 +1298,8 @@
                 hint: hint, hintAnswer: hint,
                 score: 0, level: 1, money: 100, bestTime: null,
                 ownedCars: ["crown210"], currentCar: "crown210",
-                ownedItems: [], unlockedTrophies: [], clearCount: 0, stagesCleared: []
+                ownedItems: [], unlockedTrophies: [], clearCount: 0, stagesCleared: [],
+                isBanned: false, isBlocked: false
             };
             saveUsersDB(db);
             player = db[name];
@@ -1288,6 +1314,16 @@
             if (!name || !pass) return alert("コールサインとパスワードを入力してください！");
             const db = getUsersDB();
             if (!db[name] || db[name].password !== pass) return alert("名前または暗号パスワードが違います！");
+
+            if (db[name].isBanned) {
+                alert("🚨 このアカウントは管理者によってBAN（凍結）されています。");
+                return;
+            }
+            if (db[name].isBlocked) {
+                alert("⚠️ このアカウントは一時ブロックされています。管理者にお問い合わせください。");
+                return;
+            }
+
             player = db[name];
             if (!player.ownedCars) player.ownedCars = ["crown210"];
             if (!player.currentCar) player.currentCar = "crown210";
@@ -1895,12 +1931,11 @@
             render();
         }
 
-        // 🇯🇵 本物の日本警察パトカー描画関数（警視庁・都道府県警の白黒ツートン、赤色回転灯）
+        // 🇯🇵 本物の日本警察パトカー描画関数
         function drawJapanPolicePatcar(ctx, x, y, frame, carKey, label) {
             ctx.save();
             let sirenRed = (Math.floor(frame / 5) % 2 === 0);
 
-            // 車体下の接地影
             ctx.fillStyle = "rgba(0, 0, 0, 0.65)";
             ctx.beginPath();
             ctx.ellipse(x + 65, y + 58, 65, 11, 0, 0, Math.PI * 2);
@@ -1913,7 +1948,6 @@
             if (carKey === "fairlady_z") { mainColor = "#1d4ed8"; subColor = "#0f172a"; }
             else if (carKey === "landcruiser") { mainColor = "#f8fafc"; subColor = "#334155"; }
 
-            // タイヤ・足回り
             ctx.fillStyle = "#020617";
             ctx.beginPath();
             ctx.moveTo(x + 10, y + 40);
@@ -1923,7 +1957,6 @@
             ctx.closePath();
             ctx.fill();
 
-            // メインボディシルエット
             ctx.fillStyle = mainColor;
             ctx.beginPath();
             ctx.moveTo(x + 12, y + 38);
@@ -1933,7 +1966,6 @@
             ctx.closePath();
             ctx.fill();
 
-            // 白黒ツートン塗り分け
             if (!isFukumen && carKey !== "fairlady_z") {
                 ctx.fillStyle = "#0f172a";
                 ctx.fillRect(x, y + 26, 124, 14);
@@ -1944,7 +1976,6 @@
                 ctx.fill();
             }
 
-            // キャビン
             ctx.fillStyle = "#020617";
             ctx.beginPath();
             ctx.moveTo(x + 36, y + 15);
@@ -1954,7 +1985,6 @@
             ctx.closePath();
             ctx.fill();
 
-            // ガラス反射光
             ctx.fillStyle = "rgba(0, 243, 255, 0.25)";
             ctx.beginPath();
             ctx.moveTo(x + 40, y + 13);
@@ -1964,7 +1994,6 @@
             ctx.closePath();
             ctx.fill();
 
-            // ヘッドライト＆テール
             ctx.fillStyle = "#fde047";
             ctx.shadowBlur = 8;
             ctx.shadowColor = "#fde047";
@@ -1974,7 +2003,6 @@
             ctx.fillRect(x + 2, y + 32, 5, 5);
             ctx.shadowBlur = 0;
 
-            // 赤色回転灯（パトライト）
             ctx.fillStyle = "#1e293b";
             ctx.fillRect(x + 56, y - 4, 20, 5);
 
@@ -1988,7 +2016,6 @@
             ctx.fillRect(x + 67, y - 12, 7, 9);
             ctx.shadowBlur = 0;
 
-            // ホイール
             drawRealWheel(ctx, x + 30, y + 46);
             drawRealWheel(ctx, x + 100, y + 46);
 
@@ -2001,17 +2028,15 @@
             ctx.restore();
         }
 
-        // 🏎️ スタイリッシュでカッコいい高速逃走車両（改造スポーツクーペ仕様）
+        // 🏎️ スタイリッシュな高速逃走車両
         function drawStylishEnemyCar(ctx, x, y, frame) {
             ctx.save();
 
-            // 接地影
             ctx.fillStyle = "rgba(0, 0, 0, 0.65)";
             ctx.beginPath();
             ctx.ellipse(x + 65, y + 58, 65, 11, 0, 0, Math.PI * 2);
             ctx.fill();
 
-            // 車体下部・サイドスカート
             ctx.fillStyle = "#090d16";
             ctx.beginPath();
             ctx.moveTo(x + 10, y + 40);
@@ -2021,7 +2046,6 @@
             ctx.closePath();
             ctx.fill();
 
-            // 光沢のあるダークメタリックブルー／パープルのスポーツクーペボディ
             ctx.fillStyle = "#1e1b4b";
             ctx.beginPath();
             ctx.moveTo(x + 10, y + 38);
@@ -2031,11 +2055,9 @@
             ctx.closePath();
             ctx.fill();
 
-            // アクセントのレーシングストライプ / サイドグラデーション
             ctx.fillStyle = "#4338ca";
             ctx.fillRect(x + 15, y + 26, 95, 6);
 
-            // キャビン（スタイリッシュな傾斜ウィンドウ）
             ctx.fillStyle = "#020617";
             ctx.beginPath();
             ctx.moveTo(x + 36, y + 17);
@@ -2045,28 +2067,23 @@
             ctx.closePath();
             ctx.fill();
 
-            // フロントのシャープなLEDヘッドライト（アイスブルー）
             ctx.fillStyle = "#00f3ff";
             ctx.shadowBlur = 10;
             ctx.shadowColor = "#00f3ff";
             ctx.fillRect(x + 116, y + 32, 6, 5);
-            // リアのシグネチャーテールランプ（ソリッドレッド）
             ctx.fillStyle = "#ff0055";
             ctx.shadowColor = "#ff0055";
             ctx.fillRect(x + 2, y + 32, 6, 5);
             ctx.shadowBlur = 0;
 
-            // リアウィング（大型GTウイングでスポーティさを演出）
             ctx.fillStyle = "#0f172a";
             ctx.fillRect(x + 6, y + 12, 14, 4);
             ctx.fillRect(x + 8, y + 8, 3, 4);
             ctx.fillRect(x + 15, y + 8, 3, 4);
 
-            // アルミホイール
             drawRealWheel(ctx, x + 30, y + 46);
             drawRealWheel(ctx, x + 100, y + 46);
 
-            // 逃走車両ラベル
             ctx.fillStyle = "#00f3ff";
             ctx.font = "bold 11px sans-serif";
             ctx.fillText("逃走車両 [要警戒]", x + 12, y - 18);
@@ -2074,7 +2091,6 @@
             ctx.restore();
         }
 
-        // 🛞 リアルホイール描画ヘルパー
         function drawRealWheel(ctx, wx, wy) {
             ctx.fillStyle = "#020617";
             ctx.beginPath();
