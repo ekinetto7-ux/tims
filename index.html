@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ピクミン タイピング大作戦 - Official World Edition</title>
+    <title>ピクミン タイピング大作戦 - 30 Stages Master Edition</title>
     <style>
         :root {
-            --bg-dark: #040907;
-            --panel-bg: rgba(10, 26, 20, 0.96);
+            --bg-dark: #020604;
+            --panel-bg: rgba(6, 20, 14, 0.96);
             --accent-green: #2ed573;
             --accent-gold: #ffb142;
             --accent-red: #ff5252;
@@ -19,7 +19,7 @@
         }
         * { box-sizing: border-box; }
         body {
-            background: radial-gradient(circle at center, #113524 0%, var(--bg-dark) 100%);
+            background: radial-gradient(circle at center, #0d261a 0%, var(--bg-dark) 100%);
             color: var(--text-main);
             font-family: 'Helvetica Neue', Arial, sans-serif;
             margin: 0;
@@ -45,8 +45,8 @@
         }
         .container {
             background: var(--panel-bg);
-            border: 2px solid rgba(46, 213, 115, 0.4);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9);
+            border: 2px solid rgba(46, 213, 115, 0.5);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.95);
             backdrop-filter: blur(15px);
             border-radius: 20px;
             padding: 20px;
@@ -95,7 +95,7 @@
         }
         .status-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
             gap: 10px;
             margin-top: 12px;
         }
@@ -106,22 +106,22 @@
             border-left: 5px solid var(--accent-gold);
         }
         .stat-label { font-size: 11px; color: var(--text-sub); }
-        .stat-val { font-size: 18px; font-weight: bold; color: #fff; margin-top: 3px; }
+        .stat-val { font-size: 17px; font-weight: bold; color: #fff; margin-top: 3px; }
 
         .canvas-wrapper {
             position: relative;
             width: 100%;
             border-radius: 16px;
             overflow: hidden;
-            border: 2px solid rgba(255, 177, 66, 0.6);
-            box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.9), 0 10px 30px rgba(0, 0, 0, 0.8);
+            border: 2px solid rgba(255, 177, 66, 0.7);
+            box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.95), 0 10px 30px rgba(0, 0, 0, 0.9);
             margin-bottom: 12px;
-            background: #061811;
+            background: #030e08;
         }
         canvas {
             display: block;
             width: 100%;
-            height: 300px;
+            height: 310px;
         }
         .word-overlay {
             background: rgba(3, 10, 8, 0.96);
@@ -149,7 +149,7 @@
 
         .grid-list {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 12px;
             max-height: 380px;
             overflow-y: auto;
@@ -166,8 +166,9 @@
             transition: 0.2s;
         }
         .card-item:hover { border-color: var(--accent-green); transform: translateY(-2px); }
-        .card-item h4 { color: var(--accent-gold); margin: 0 0 5px 0; font-size: 16px; }
+        .card-item h4 { color: var(--accent-gold); margin: 0 0 5px 0; font-size: 15px; }
         .card-item p { color: var(--text-sub); font-size: 12px; margin: 3px 0; line-height: 1.4; }
+        .card-locked { opacity: 0.5; border-color: #2f3640; cursor: not-allowed; }
 
         .rule-content {
             background: rgba(3, 10, 8, 0.9);
@@ -201,7 +202,7 @@
 <body>
 
     <h1>🌿 ピクミン タイピング大作戦</h1>
-    <div class="subtitle">Official World Edition — 原作フォト＆ワールド再現</div>
+    <div class="subtitle">30 Stages Mission Edition — 全30ステージ制覇を目指せ</div>
 
     <!-- 1. ログイン画面 -->
     <div class="container" id="authScreen">
@@ -228,17 +229,21 @@
                 <div class="stat-val" id="homeName">-</div>
             </div>
             <div class="stat-card" style="border-color: var(--accent-green);">
-                <div class="stat-label">ピクミン隊列数</div>
+                <div class="stat-label">ピクミン隊列</div>
                 <div class="stat-val" id="homePikmin">0 匹</div>
             </div>
             <div class="stat-card" style="border-color: var(--accent-gold);">
-                <div class="stat-label">探索スコア</div>
+                <div class="stat-label">スコア</div>
                 <div class="stat-val" id="homeScore">0 pt</div>
+            </div>
+            <div class="stat-card" style="border-color: var(--accent-blue);">
+                <div class="stat-label">クリア状況</div>
+                <div class="stat-val" id="homeStageProgress">Stage 1 / 30</div>
             </div>
         </div>
         <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 16px 0;">
         <div style="display: flex; flex-direction: column; gap: 10px;">
-            <button class="btn" onclick="playClickSound(); openStageSelect('solo')">🌱 惑星探索（エリア選択・討伐）</button>
+            <button class="btn" onclick="playClickSound(); openStageSelect('solo')">🗺️ ミッションステージ選択 (全30)</button>
             <button class="btn btn-ai" onclick="playClickSound(); openStageSelect('ai')">🔥 ライバル対決（vs ルーイAI）</button>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                 <button class="btn btn-book" onclick="playClickSound(); openEncyclopedia()">📖 生物ファイル図鑑</button>
@@ -249,16 +254,17 @@
                 <button class="btn btn-file" onclick="playClickSound(); document.getElementById('importFileBtn').click()">📂 セーブ読込</button>
                 <input type="file" id="importFileBtn" class="hidden" accept=".json" onchange="importSaveFile(event)">
             </div>
-            <button class="btn btn-admin" onclick="playClickSound(); openAdminModal()">🛠️ 管理者モード</button>
+            <button class="btn btn-admin" onclick="playClickSound(); promptAdminPassword()">🛠️ 管理者モード (PW: 2021)</button>
         </div>
     </div>
 
-    <!-- 3. エリア選択画面 -->
+    <!-- 3. ステージ選択画面 (全30ステージ) -->
     <div class="container hidden" id="stageSelectScreen">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-            <h3 style="margin: 0; color: var(--accent-gold);" id="stageSelectTitle">🗺️ 探索エリアを選択せよ</h3>
+            <h3 style="margin: 0; color: var(--accent-gold);" id="stageSelectTitle">🗺️ ミッションステージ選択 (全30)</h3>
             <button class="btn btn-sub" onclick="playClickSound(); goToHome()">← 司令室へ戻る</button>
         </div>
+        <p style="font-size: 12px; color: var(--text-sub); margin-top: 0;">クリアするごとに次のステージが解放されます！</p>
         <div class="grid-list" id="stageGrid"></div>
     </div>
 
@@ -278,19 +284,17 @@
             <button class="btn btn-sub" onclick="playClickSound(); goToHome()">← 司令室へ戻る</button>
         </div>
         <div class="rule-content">
-            <h4>🌿 基本ルール</h4>
-            <p>・キーボードを直接叩いて、画面に現れる原生生物やオニヨンのローマ字を打ち込もう！</p>
-            <p>・正確に打ち込むと、ピクミンたちが次々と突撃してダメージを与えるぞ。</p>
-            <p>・「ツ」などは <strong>tsu</strong> でも <strong>tu</strong> でもどちらで打っても正解になるマルチローマ字対応！</p>
-            <h4>🚀 プレイモード＆オニヨン連動</h4>
-            <p>・オニヨン拠点やドルフィン号からの照射エフェクトなど、本家さながらのビジュアルでタイピングを楽しめるよ。</p>
+            <h4>🌿 全30ステージ・ミッションクリア制</h4>
+            <p>・ステージは全部で<strong>30ステージ</strong>用意されているよ！</p>
+            <p>・ステージをクリア（目標スコアに到達）すると、次のステージが順次アンロックされて挑戦できるようになります。</p>
+            <p>・「ツ」は <strong>tsu</strong> でも <strong>tu</strong> でもOKなマルチローマ字対応！</p>
         </div>
     </div>
 
     <!-- 6. 管理者モード画面 -->
     <div class="container hidden" id="adminScreen">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-            <h3 style="margin: 0; color: var(--accent-purple);">🛠️ 司令官 管理者モード</h3>
+            <h3 style="margin: 0; color: var(--accent-purple);">🛠️ 司令官 管理者モード (PW: 2021)</h3>
             <button class="btn btn-sub" onclick="playClickSound(); goToHome()">← 司令室へ戻る</button>
         </div>
         <div style="margin-top: 15px;">
@@ -298,9 +302,11 @@
             <input type="number" id="adminPikminInput" value="20">
             <label style="font-size: 13px; color: var(--accent-gold);">探索スコアを変更:</label>
             <input type="number" id="adminScoreInput" value="0">
+            <label style="font-size: 13px; color: var(--accent-gold);">ステージ解放数を変更 (1〜30):</label>
+            <input type="number" id="adminStageInput" value="1" min="1" max="30">
             <div style="display: flex; gap: 10px; margin-top: 10px;">
                 <button class="btn btn-admin" onclick="playClickSound(); applyAdminChanges()">💾 設定を保存する</button>
-                <button class="btn" style="background: linear-gradient(135deg, #e67e22, #d35400);" onclick="playClickSound(); unlockAllEncyclopedia()">📖 図鑑を全開放(40種)</button>
+                <button class="btn" style="background: linear-gradient(135deg, #e67e22, #d35400);" onclick="playClickSound(); unlockAllStagesAndBook()">🚀 全30ステージ＆図鑑全開放</button>
             </div>
             <div id="adminMsg" style="margin-top: 10px; font-size: 13px; color: var(--accent-green); text-align: center;"></div>
         </div>
@@ -310,7 +316,7 @@
     <div class="container hidden" id="gameScreen">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
             <span id="gameModeTitle" style="font-weight: bold; color: var(--accent-gold); font-size: 15px;">🌱 探索モード</span>
-            <button class="btn btn-sub" onclick="playClickSound(); openStageSelect(playMode)">← エリア選択へ戻る</button>
+            <button class="btn btn-sub" onclick="playClickSound(); openStageSelect(playMode)">← ステージ選択へ戻る</button>
         </div>
         <div>
             <div style="display: flex; justify-content: space-between; font-size: 12px;">
@@ -327,7 +333,7 @@
             </div>
         </div>
         <div class="canvas-wrapper">
-            <canvas id="gameCanvas" width="760" height="290"></canvas>
+            <canvas id="gameCanvas" width="760" height="310"></canvas>
         </div>
         <div class="word-overlay">
             <div class="target-kanji" id="wordKanji">チャッピー</div>
@@ -341,8 +347,8 @@
 
     <script>
         let currentUser = null;
-        function getAllUsers() { try { return JSON.parse(localStorage.getItem('pikmin_world_users') || '{}'); } catch(e){ return {}; } }
-        function saveAllUsers(u) { localStorage.setItem('pikmin_world_users', JSON.stringify(u)); }
+        function getAllUsers() { try { return JSON.parse(localStorage.getItem('pikmin_stages30_users') || '{}'); } catch(e){ return {}; } }
+        function saveAllUsers(u) { localStorage.setItem('pikmin_stages30_users', JSON.stringify(u)); }
 
         function playClickSound() {
             const audio = document.getElementById('hitSound');
@@ -356,7 +362,7 @@
             if (!name || !pass) { msg.innerText = "⚠️ 隊長名とパスワードを入力してください"; return; }
             let users = getAllUsers();
             if (users[name]) { msg.innerText = "⚠️ すでに登録されている隊長名です"; return; }
-            users[name] = { password: pass, pikmin: 20, score: 0, unlocked: ["チャッピー"] };
+            users[name] = { password: pass, pikmin: 20, score: 0, maxStage: 1, unlocked: ["チャッピー"] };
             saveAllUsers(users);
             currentUser = { name, data: users[name] };
             goToHome();
@@ -369,6 +375,7 @@
             let users = getAllUsers();
             if (!users[name] || users[name].password !== pass) { msg.innerText = "❌ 認証失敗：名前かパスワードが違います"; return; }
             currentUser = { name, data: users[name] };
+            if (!currentUser.data.maxStage) currentUser.data.maxStage = 1;
             if (!currentUser.data.unlocked) currentUser.data.unlocked = ["チャッピー"];
             goToHome();
         }
@@ -392,6 +399,7 @@
             document.getElementById('homeName').innerText = currentUser.name;
             document.getElementById('homePikmin').innerText = `${currentUser.data.pikmin.toLocaleString()} 匹`;
             document.getElementById('homeScore').innerText = `${currentUser.data.score.toLocaleString()} pt`;
+            document.getElementById('homeStageProgress').innerText = `Stage ${currentUser.data.maxStage} / 30`;
             let users = getAllUsers(); users[currentUser.name] = currentUser.data; saveAllUsers(users);
         }
 
@@ -430,12 +438,20 @@
             reader.readAsText(file);
         }
 
-        const stages = [
-            { id: 'forest', name: "🌲 うすごぐの谷", desc: "初心者向け。穏やかな環境の探索ステージ。", goal: 800, bgGrad: ["#081c14", "#184530"] },
-            { id: 'swamp', name: "🌊 ヘドロの沼", desc: "中級者向け。テンポが早い湿地帯ステージ。", goal: 1200, bgGrad: ["#101c24", "#1a3a4b"] },
-            { id: 'cave', name: "🌋 灼熱の地下洞窟", desc: "上級者向け。危険な火気生物が出現。", goal: 1600, bgGrad: ["#2a1008", "#4b2210"] },
-            { id: 'final', name: "⭐ 最後の試練場", desc: "最高難易度。全強敵が襲いかかる最終決戦。", goal: 2000, bgGrad: ["#1f0a24", "#3b104b"] }
-        ];
+        // ==========================================
+        // 🗺️ 全30ステージの自動生成データ
+        // ==========================================
+        const stages = [];
+        const stageColors = ["#1d3822", "#162c38", "#3d1b11", "#281235", "#1b2631"];
+        for (let i = 1; i <= 30; i++) {
+            stages.push({
+                id: i,
+                name: `Stage ${i} : ミッション ${i}`,
+                desc: `目標スコア: ${i * 300} pt`,
+                goal: i * 300,
+                groundColor: stageColors[(i - 1) % stageColors.length]
+            });
+        }
 
         let selectedStage = stages[0];
         let pendingMode = 'solo';
@@ -444,15 +460,24 @@
             pendingMode = mode;
             document.getElementById('homeScreen').classList.add('hidden');
             document.getElementById('stageSelectScreen').classList.remove('hidden');
-            document.getElementById('stageSelectTitle').innerText = mode === 'ai' ? "🔥 ライバル対決：エリア選択" : "🗺️ 惑星探索：エリア選択";
+            document.getElementById('stageSelectTitle').innerText = mode === 'ai' ? "🔥 ライバル対決：ステージ選択 (全30)" : "🗺️ ミッションステージ選択 (全30)";
 
             const grid = document.getElementById('stageGrid');
             grid.innerHTML = "";
+            const maxUnlocked = currentUser.data.maxStage || 1;
+
             stages.forEach(st => {
                 const card = document.createElement('div');
-                card.className = 'card-item';
-                card.innerHTML = `<h4>${st.name}</h4><p>${st.desc}</p><p style="color:var(--accent-gold); margin-top:5px;">目標: ${st.goal} pt</p>`;
-                card.onclick = () => { playClickSound(); startPlay(pendingMode, st); };
+                const isUnlocked = st.id <= maxUnlocked;
+                card.className = isUnlocked ? 'card-item' : 'card-item card-locked';
+                card.innerHTML = `
+                    <h4>${st.name}</h4>
+                    <p>${st.desc}</p>
+                    <p style="color:${isUnlocked ? 'var(--accent-gold)' : 'var(--accent-red)'}; margin-top:5px;">${isUnlocked ? '✔ 挑戦可能' : '🔒 ロック中'}</p>
+                `;
+                if (isUnlocked) {
+                    card.onclick = () => { playClickSound(); startPlay(pendingMode, st); };
+                }
                 grid.appendChild(card);
             });
         }
@@ -484,27 +509,36 @@
             });
         }
 
-        function openAdminModal() {
-            document.getElementById('homeScreen').classList.add('hidden');
-            document.getElementById('adminScreen').classList.remove('hidden');
-            document.getElementById('adminPikminInput').value = currentUser.data.pikmin;
-            document.getElementById('adminScoreInput').value = currentUser.data.score;
-            document.getElementById('adminMsg').innerText = "";
+        function promptAdminPassword() {
+            const input = prompt("🛠️ 管理者パスワードを入力してください (PW: 2021):");
+            if (input === "2021") {
+                document.getElementById('homeScreen').classList.add('hidden');
+                document.getElementById('adminScreen').classList.remove('hidden');
+                document.getElementById('adminPikminInput').value = currentUser.data.pikmin;
+                document.getElementById('adminScoreInput').value = currentUser.data.score;
+                document.getElementById('adminStageInput').value = currentUser.data.maxStage || 1;
+                document.getElementById('adminMsg').innerText = "";
+            } else if (input !== null) {
+                alert("❌ パスワードが違います！");
+            }
         }
 
         function applyAdminChanges() {
             const pVal = parseInt(document.getElementById('adminPikminInput').value);
             const sVal = parseInt(document.getElementById('adminScoreInput').value);
+            const stVal = parseInt(document.getElementById('adminStageInput').value);
             if (!isNaN(pVal)) currentUser.data.pikmin = pVal;
             if (!isNaN(sVal)) currentUser.data.score = sVal;
+            if (!isNaN(stVal)) currentUser.data.maxStage = Math.max(1, Math.min(30, stVal));
             updateHomeUI();
             document.getElementById('adminMsg').innerText = "✨ 管理者権限でデータを更新しました！";
         }
 
-        function unlockAllEncyclopedia() {
+        function unlockAllStagesAndBook() {
+            currentUser.data.maxStage = 30;
             currentUser.data.unlocked = wordList.map(w => w.kanji);
             updateHomeUI();
-            document.getElementById('adminMsg').innerText = "📖 すべての原生生物ファイル(40種)を開放しました！";
+            document.getElementById('adminMsg').innerText = "🚀 全30ステージ＆図鑑(40種)をすべて開放しました！";
         }
 
         const wordList = [
@@ -698,19 +732,31 @@
             if (animFrameId) cancelAnimationFrame(animFrameId);
             if (playMode === 'ai') {
                 if (isWin) {
-                    currentUser.data.score += 600; currentUser.data.pikmin += 15; updateHomeUI();
-                    alert(`🏆 [${selectedStage.name}] 勝利！ ルーイAIに打ち勝った！`);
+                    currentUser.data.score += 600; currentUser.data.pikmin += 15;
+                    if (selectedStage.id >= currentUser.data.maxStage && selectedStage.id < 30) {
+                        currentUser.data.maxStage = selectedStage.id + 1;
+                    }
+                    updateHomeUI();
+                    alert(`🏆 [${selectedStage.name}] 勝利！ 次のステージが解放された！`);
                 } else {
                     alert(`💀 [${selectedStage.name}] 探索失敗... AIに先を越された！`);
                 }
             } else {
-                currentUser.data.score += 400; currentUser.data.pikmin += 8; updateHomeUI();
-                alert(`🎉 [${selectedStage.name}] 探索完了！ エリア制圧成功！`);
+                if (isWin) {
+                    currentUser.data.score += 400; currentUser.data.pikmin += 8;
+                    if (selectedStage.id >= currentUser.data.maxStage && selectedStage.id < 30) {
+                        currentUser.data.maxStage = selectedStage.id + 1;
+                    }
+                    updateHomeUI();
+                    alert(`🎉 [${selectedStage.name}] ミッションクリア！ 次のステージが解放された！`);
+                } else {
+                    alert(`🎉 [${selectedStage.name}] 探索完了！`);
+                }
             }
             goToHome();
         }
 
-        // Canvas描画用エンジン（オニヨン・光線・背景をよりリアルに再現）
+        // Canvas描画用エンジン
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
         let animFrameId = null;
@@ -718,7 +764,7 @@
         let attackers = [];
         let quickCarriers = [];
         let popups = [];
-        let enemy = { x: 600, y: 155, scale: 1.2, hp: 100, maxHp: 100, shake: 0, color: "#d63031" };
+        let enemy = { x: 600, y: 165, scale: 1.2, hp: 100, maxHp: 100, shake: 0, color: "#d63031" };
 
         function initSquad() {
             squad = [];
@@ -726,8 +772,8 @@
             const count = Math.min(35, Math.max(12, currentUser ? currentUser.data.pikmin : 15));
             for (let i = 0; i < count; i++) {
                 squad.push({
-                    x: 80 + (i % 6) * 26 + Math.random() * 8,
-                    y: 95 + Math.floor(i / 6) * 30 + Math.random() * 8,
+                    x: 100 + (i % 6) * 24 + Math.random() * 6,
+                    y: 110 + Math.floor(i / 6) * 26 + Math.random() * 6,
                     color: colors[i % 3],
                     phase: Math.random() * Math.PI * 2
                 });
@@ -740,8 +786,8 @@
             const num = isCritical ? 10 : 3;
             for (let i = 0; i < num; i++) {
                 attackers.push({
-                    x: 160 + Math.random() * 50,
-                    y: 110 + Math.random() * 90,
+                    x: 180 + Math.random() * 50,
+                    y: 120 + Math.random() * 90,
                     targetX: enemy.x - 40 + Math.random() * 60,
                     targetY: enemy.y - 20 + Math.random() * 40,
                     progress: 0,
@@ -755,7 +801,7 @@
         function triggerQuickCarryEffect() {
             const colors = ["#ff4757", "#ffa502", "#1e90ff"];
             for (let i = 0; i < 5; i++) {
-                quickCarriers.push({ x: enemy.x, y: enemy.y, targetX: 70, targetY: 170, progress: 0, color: colors[i % 3] });
+                quickCarriers.push({ x: enemy.x, y: enemy.y, targetX: 130, targetY: 190, progress: 0, color: colors[i % 3] });
             }
         }
 
@@ -763,7 +809,7 @@
             ctx.save();
             ctx.translate(x, y - Math.abs(Math.sin(bounce)) * 7 * scale);
             ctx.scale(scale, scale);
-            ctx.fillStyle = "rgba(0,0,0,0.35)"; ctx.beginPath(); ctx.ellipse(0, 10, 6, 3, 0, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = "rgba(0,0,0,0.4)"; ctx.beginPath(); ctx.ellipse(0, 10, 6, 3, 0, 0, Math.PI * 2); ctx.fill();
             ctx.fillStyle = color; ctx.beginPath(); ctx.ellipse(0, 4, 6, 9, 0, 0, Math.PI * 2); ctx.fill();
             ctx.beginPath(); ctx.arc(0, -7, 6.5, 0, Math.PI * 2); ctx.fill();
             ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(2.2, -8, 2, 0, Math.PI * 2); ctx.fill();
@@ -781,30 +827,58 @@
             const breathe = Math.sin(time * 0.0035) * 4;
             ctx.translate(enemy.x + sx, enemy.y + sy + breathe);
             ctx.scale(enemy.scale, enemy.scale);
-            ctx.fillStyle = "rgba(0,0,0,0.55)"; ctx.beginPath(); ctx.ellipse(10, 58, 62, 18, 0, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = "rgba(0,0,0,0.6)"; ctx.beginPath(); ctx.ellipse(10, 58, 62, 18, 0, 0, Math.PI * 2); ctx.fill();
             ctx.fillStyle = enemy.color; ctx.beginPath(); ctx.ellipse(15, 8, 54, 44, 0, 0, Math.PI * 2); ctx.fill();
-            ctx.fillStyle = "rgba(0,0,0,0.75)"; ctx.fillRect(-55, -64, 120, 12);
+            ctx.fillStyle = "rgba(0,0,0,0.8)"; ctx.fillRect(-55, -64, 120, 12);
             ctx.fillStyle = "#2ed573"; ctx.fillRect(-53, -62, 116 * Math.max(0, enemy.hp / enemy.maxHp), 8);
             ctx.restore();
         }
 
-        function drawOnion() {
+        function drawRealisticScenery() {
+            ctx.fillStyle = selectedStage.groundColor;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = "rgba(46, 213, 115, 0.08)";
+            for (let i = 0; i < 35; i++) {
+                ctx.beginPath();
+                ctx.arc((i * 47) % canvas.width, 180 + (i * 23) % 120, 35, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
             ctx.save();
-            ctx.translate(70, 170);
+            ctx.translate(130, 190);
+            const beamGrad = ctx.createLinearGradient(0, -50, 0, 100);
+            beamGrad.addColorStop(0, "rgba(255, 255, 255, 0.35)");
+            beamGrad.addColorStop(1, "rgba(46, 213, 115, 0)");
+            ctx.fillStyle = beamGrad;
+            ctx.beginPath(); ctx.moveTo(0, -50); ctx.lineTo(-60, 90); ctx.lineTo(60, 90); ctx.fill();
+
             ctx.strokeStyle = "#ffa502"; ctx.lineWidth = 4;
-            ctx.beginPath(); ctx.moveTo(-20, 40); ctx.lineTo(-40, 70); ctx.stroke();
-            ctx.beginPath(); ctx.moveTo(20, 40); ctx.lineTo(40, 70); ctx.stroke();
-            ctx.fillStyle = "#ff7f50"; ctx.beginPath(); ctx.ellipse(0, 0, 38, 28, 0, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.moveTo(-25, 40); ctx.lineTo(-50, 85); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(25, 40); ctx.lineTo(50, 85); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(0, 40); ctx.lineTo(0, 90); ctx.stroke();
+            
+            ctx.fillStyle = "#ff5252";
+            ctx.beginPath(); ctx.ellipse(0, 0, 44, 32, 0, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = "#ffa502";
+            ctx.beginPath(); ctx.ellipse(0, -12, 28, 16, 0, 0, Math.PI * 2); ctx.fill();
+            ctx.restore();
+
+            ctx.save();
+            ctx.translate(650, 60);
+            ctx.fillStyle = "rgba(30, 144, 255, 0.25)";
+            ctx.beginPath(); ctx.moveTo(0, 20); ctx.lineTo(-40, 180); ctx.lineTo(40, 180); ctx.fill();
+            
+            ctx.fillStyle = "#f1f2f6";
+            ctx.beginPath(); ctx.ellipse(0, 10, 24, 16, 0, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = "#ff5252";
+            ctx.beginPath(); ctx.arc(0, -2, 7, 0, Math.PI * 2); ctx.fill();
             ctx.restore();
         }
 
         function renderLoop(time) {
-            const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
-            grad.addColorStop(0, selectedStage.bgGrad[0]);
-            grad.addColorStop(1, selectedStage.bgGrad[1]);
-            ctx.fillStyle = grad; ctx.fillRect(0, 0, canvas.width, canvas.height);
+            drawRealisticScenery();
 
-            drawOnion();
             squad.forEach(p => draw3DPikmin(p.x, p.y, p.color, 1.0, time * 0.008 + p.phase));
             draw3DEnemy(time);
 
