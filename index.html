@@ -3,25 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ピクミン タイピング大作戦 - Official Collaboration Edition</title>
+    <title>ピクミン タイピング大作戦 - 3D Live Cinematic Edition</title>
     <style>
         :root {
-            --bg-dark: #071113;
-            --panel-bg: rgba(16, 34, 38, 0.95);
+            --bg-dark: #040907;
+            --panel-bg: rgba(10, 26, 20, 0.95);
             --accent-green: #2ed573;
             --accent-gold: #ffb142;
             --accent-red: #ff5252;
-            --accent-blue: #38adae;
+            --accent-blue: #1e90ff;
             --text-main: #f1f2f6;
             --text-sub: #a4b0be;
         }
         * { box-sizing: border-box; }
         body {
-            background: radial-gradient(circle at center, #16383e 0%, var(--bg-dark) 100%);
+            background: radial-gradient(circle at center, #113524 0%, var(--bg-dark) 100%);
             color: var(--text-main);
             font-family: 'Helvetica Neue', Arial, sans-serif;
             margin: 0;
-            padding: 20px;
+            padding: 15px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -29,58 +29,57 @@
         }
         h1 {
             color: var(--accent-gold);
-            text-shadow: 0 0 20px rgba(255, 177, 66, 0.6);
-            font-size: 28px;
-            margin: 10px 0 5px;
+            text-shadow: 0 0 25px rgba(255, 177, 66, 0.8);
+            font-size: 26px;
+            margin: 5px 0;
             text-align: center;
             letter-spacing: 2px;
         }
         .subtitle {
             color: var(--text-sub);
-            font-size: 13px;
-            margin-bottom: 20px;
+            font-size: 12px;
+            margin-bottom: 12px;
             text-align: center;
         }
         .container {
             background: var(--panel-bg);
-            border: 2px solid rgba(46, 213, 115, 0.3);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+            border: 2px solid rgba(46, 213, 115, 0.4);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9);
             backdrop-filter: blur(15px);
             border-radius: 20px;
-            padding: 25px;
+            padding: 20px;
             width: 100%;
-            max-width: 700px;
-            margin-bottom: 20px;
+            max-width: 780px;
+            margin-bottom: 15px;
         }
         .btn {
             background: linear-gradient(135deg, var(--accent-green), #1b8a43);
             color: #fff;
             border: none;
-            padding: 14px 20px;
-            font-size: 16px;
+            padding: 13px 18px;
+            font-size: 15px;
             font-weight: bold;
             border-radius: 12px;
             cursor: pointer;
             transition: all 0.2s ease;
-            box-shadow: 0 6px 20px rgba(46, 213, 115, 0.4);
-            margin: 6px 0;
+            box-shadow: 0 5px 15px rgba(46, 213, 115, 0.4);
+            margin: 5px 0;
             width: 100%;
-            text-align: center;
         }
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(46, 213, 115, 0.6); }
-        .btn-ai { background: linear-gradient(135deg, var(--accent-red), #b71540); box-shadow: 0 6px 20px rgba(255, 82, 82, 0.4); }
-        .btn-sub { background: linear-gradient(135deg, #3742fa, #2f3542); width: auto; padding: 8px 16px; font-size: 13px; }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(46, 213, 115, 0.6); }
+        .btn-ai { background: linear-gradient(135deg, var(--accent-red), #b71540); box-shadow: 0 5px 15px rgba(255, 82, 82, 0.4); }
+        .btn-sub { background: linear-gradient(135deg, #3742fa, #2f3542); width: auto; padding: 7px 14px; font-size: 12px; }
         
         input[type="text"], input[type="password"] {
             width: 100%;
-            padding: 14px;
-            font-size: 18px;
-            background: rgba(5, 12, 14, 0.95);
+            padding: 13px;
+            font-size: 17px;
+            background: rgba(3, 10, 8, 0.95);
             border: 2px solid #2f3640;
             color: #fff;
             border-radius: 10px;
-            margin-top: 8px;
-            margin-bottom: 15px;
+            margin-top: 6px;
+            margin-bottom: 12px;
             outline: none;
             transition: 0.2s;
         }
@@ -91,59 +90,66 @@
         .status-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 12px;
-            margin-top: 15px;
+            gap: 10px;
+            margin-top: 12px;
         }
         .stat-card {
-            background: rgba(5, 12, 14, 0.8);
-            padding: 12px 15px;
+            background: rgba(3, 10, 8, 0.85);
+            padding: 10px 14px;
             border-radius: 12px;
             border-left: 5px solid var(--accent-gold);
         }
-        .stat-label { font-size: 11px; color: var(--text-sub); text-transform: uppercase; }
-        .stat-val { font-size: 18px; font-weight: bold; color: #fff; margin-top: 4px; }
-        
-        .battle-arena {
-            background: linear-gradient(180deg, rgba(6, 16, 18, 0.95) 0%, rgba(12, 28, 32, 0.98) 100%);
-            border-radius: 16px;
-            padding: 25px;
-            border: 2px solid rgba(255, 177, 66, 0.4);
-            text-align: center;
-            box-shadow: inset 0 0 40px rgba(0,0,0,0.8);
-            position: relative;
-        }
-        @keyframes flashEffect {
-            0% { border-color: rgba(46, 213, 115, 1); box-shadow: 0 0 30px rgba(46, 213, 115, 0.7); }
-            100% { border-color: rgba(255, 177, 66, 0.4); box-shadow: inset 0 0 40px rgba(0,0,0,0.8); }
-        }
-        .attack-flash { animation: flashEffect 0.4s ease; }
+        .stat-label { font-size: 11px; color: var(--text-sub); }
+        .stat-val { font-size: 18px; font-weight: bold; color: #fff; margin-top: 3px; }
 
-        .target-kanji { font-size: 38px; font-weight: 900; color: var(--accent-gold); margin: 10px 0 5px; letter-spacing: 2px; }
-        .target-kana { font-size: 18px; color: var(--accent-green); letter-spacing: 2px; margin-bottom: 10px; }
-        
+        /* 3D疑似空間 Canvas フィールド */
+        .canvas-wrapper {
+            position: relative;
+            width: 100%;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 2px solid rgba(255, 177, 66, 0.6);
+            box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.9), 0 10px 30px rgba(0, 0, 0, 0.8);
+            margin-bottom: 12px;
+            background: #061811;
+        }
+        canvas {
+            display: block;
+            width: 100%;
+            height: 280px;
+        }
+        .word-overlay {
+            background: rgba(3, 10, 8, 0.94);
+            border-radius: 14px;
+            padding: 15px;
+            border: 1px solid rgba(46, 213, 115, 0.35);
+            text-align: center;
+        }
+        .target-kanji { font-size: 34px; font-weight: 900; color: var(--accent-gold); margin: 2px 0; letter-spacing: 2px; text-shadow: 0 0 10px rgba(255,177,66,0.4); }
+        .target-kana { font-size: 15px; color: var(--accent-green); letter-spacing: 2px; margin-bottom: 6px; }
         .roman-guide {
-            font-size: 22px;
+            font-size: 20px;
             font-family: monospace;
-            margin-bottom: 20px;
-            background: rgba(0,0,0,0.6);
+            margin-bottom: 10px;
+            background: rgba(0,0,0,0.7);
             display: inline-block;
-            padding: 8px 16px;
+            padding: 6px 14px;
             border-radius: 8px;
             letter-spacing: 3px;
         }
-        .typed-char { color: #2ed573; text-shadow: 0 0 8px rgba(46,213,115,0.6); }
+        .typed-char { color: #2ed573; text-shadow: 0 0 8px rgba(46,213,115,0.7); }
         .untyped-char { color: #a4b0be; }
 
         .hp-bar-container {
             width: 100%;
-            background: #071113;
-            height: 20px;
-            border-radius: 10px;
+            background: #040907;
+            height: 16px;
+            border-radius: 8px;
             overflow: hidden;
-            margin: 8px 0 16px;
-            border: 2px solid #2f3640;
+            margin: 5px 0 10px;
+            border: 1px solid #2f3640;
         }
-        .hp-bar { height: 100%; transition: width 0.3s ease; }
+        .hp-bar { height: 100%; transition: width 0.25s ease; }
         .hp-player { background: linear-gradient(90deg, #2ed573, #7bed9f); }
         .hp-ai { background: linear-gradient(90deg, var(--accent-red), #ff6b6b); }
         .hidden { display: none !important; }
@@ -152,7 +158,7 @@
 <body>
 
     <h1>🌿 ピクミン タイピング大作戦</h1>
-    <div class="subtitle">Official Collaboration Edition — 惑星探索タイピング</div>
+    <div class="subtitle">3D Cinematic Edition — 立体映像・臨場感あふれる惑星探索バトル</div>
 
     <!-- 1. ログイン画面 -->
     <div class="container" id="authScreen">
@@ -164,7 +170,7 @@
             <button class="btn" onclick="handleRegister()">🌱 新規隊員登録</button>
             <button class="btn" style="background: linear-gradient(135deg, var(--accent-blue), #1e3799);" onclick="handleLogin()">🔑 ログイン</button>
         </div>
-        <div id="authMsg" style="margin-top: 12px; font-size: 13px; color: var(--accent-gold); text-align: center;"></div>
+        <div id="authMsg" style="margin-top: 10px; font-size: 13px; color: var(--accent-gold); text-align: center;"></div>
     </div>
 
     <!-- 2. ホーム画面 -->
@@ -179,7 +185,7 @@
                 <div class="stat-val" id="homeName">-</div>
             </div>
             <div class="stat-card" style="border-color: var(--accent-green);">
-                <div class="stat-label">ピクミン総数</div>
+                <div class="stat-label">ピクミン隊列数</div>
                 <div class="stat-val" id="homePikmin">0 匹</div>
             </div>
             <div class="stat-card" style="border-color: var(--accent-gold);">
@@ -187,47 +193,48 @@
                 <div class="stat-val" id="homeScore">0 pt</div>
             </div>
         </div>
-        <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 20px 0;">
-        <div style="display: flex; flex-direction: column; gap: 12px;">
+        <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 16px 0;">
+        <div style="display: flex; flex-direction: column; gap: 10px;">
             <button class="btn" onclick="startPlay('solo')">🌱 惑星探索（一人プレイ討伐）</button>
             <button class="btn btn-ai" onclick="startPlay('ai')">🔥 ライバル対決（vs ルーイAI）</button>
         </div>
     </div>
 
-    <!-- 3. ゲームプレイ画面 -->
+    <!-- 3. ゲームプレイ画面（3D立体映像風 Canvas） -->
     <div class="container hidden" id="gameScreen">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-            <span id="gameModeTitle" style="font-weight: bold; color: var(--accent-gold); font-size: 16px;">🌱 探索モード</span>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <span id="gameModeTitle" style="font-weight: bold; color: var(--accent-gold); font-size: 15px;">🌱 探索モード</span>
             <button class="btn btn-sub" onclick="backToHome()">← 司令室へ戻る</button>
         </div>
 
-        <div style="margin-bottom: 20px;">
-            <div style="display: flex; justify-content: space-between; font-size: 13px;">
-                <span>オニヨン運搬・制圧ゲージ</span>
+        <div>
+            <div style="display: flex; justify-content: space-between; font-size: 12px;">
+                <span>あなたの討伐ポイント</span>
                 <span id="p1ScoreText">0 / 1000</span>
             </div>
             <div class="hp-bar-container"><div class="hp-bar hp-player" id="p1Bar" style="width: 0%;"></div></div>
 
-            <div id="aiGaugeWrapper" class="hidden" style="margin-top: 10px;">
-                <div style="display: flex; justify-content: space-between; font-size: 13px; color: var(--accent-red);">
-                    <span>🤖 ライバル（ルーイAI）</span>
+            <div id="aiGaugeWrapper" class="hidden">
+                <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--accent-red);">
+                    <span>🤖 ルーイAI</span>
                     <span id="aiScoreText">0 / 1000</span>
                 </div>
                 <div class="hp-bar-container"><div class="hp-bar hp-ai" id="aiBar" style="width: 0%;"></div></div>
             </div>
         </div>
 
-        <div class="battle-arena" id="battleArena">
-            <div style="font-size: 12px; color: var(--accent-red); letter-spacing: 2px;">⚠️ 野生生物 / お宝が出現</div>
+        <!-- 3D立体映像風描画エリア -->
+        <div class="canvas-wrapper">
+            <canvas id="gameCanvas" width="740" height="280"></canvas>
+        </div>
+
+        <!-- タイピングエリア -->
+        <div class="word-overlay">
             <div class="target-kanji" id="wordKanji">チャッピー</div>
             <div class="target-kana" id="wordKana">ちゃっぴー</div>
-            
-            <div class="roman-guide" id="romanGuide">
-                <span class="untyped-char">chappi</span>
-            </div>
-
-            <input type="text" id="typingBox" placeholder="キーボードで入力してピクミンを投げろ！" autocomplete="off" oninput="handleTyping()" style="margin-bottom: 0;">
-            <div id="feedbackMsg" style="margin-top: 12px; font-size: 14px; font-weight: bold; color: var(--accent-green); min-height: 22px;"></div>
+            <div class="roman-guide" id="romanGuide"><span class="untyped-char">chappi</span></div>
+            <input type="text" id="typingBox" placeholder="キーボードで入力してピクミンを投げろ！" autocomplete="off" oninput="handleTyping()" style="margin-bottom: 4px;">
+            <div id="feedbackMsg" style="font-size: 13px; font-weight: bold; color: var(--accent-green); min-height: 18px;"></div>
         </div>
     </div>
 
@@ -235,8 +242,8 @@
 
     <script>
         let currentUser = null;
-        function getAllUsers() { try { return JSON.parse(localStorage.getItem('pikmin_official_users') || '{}'); } catch(e){ return {}; } }
-        function saveAllUsers(u) { localStorage.setItem('pikmin_official_users', JSON.stringify(u)); }
+        function getAllUsers() { try { return JSON.parse(localStorage.getItem('pikmin_3d_users') || '{}'); } catch(e){ return {}; } }
+        function saveAllUsers(u) { localStorage.setItem('pikmin_3d_users', JSON.stringify(u)); }
 
         function handleRegister() {
             const name = document.getElementById('authName').value.trim();
@@ -245,7 +252,7 @@
             if (!name || !pass) { msg.innerText = "⚠️ 隊長名とパスワードを入力してください"; return; }
             let users = getAllUsers();
             if (users[name]) { msg.innerText = "⚠️ すでに登録されている隊長名です"; return; }
-            users[name] = { password: pass, pikmin: 15, score: 0 };
+            users[name] = { password: pass, pikmin: 20, score: 0 };
             saveAllUsers(users);
             currentUser = { name, data: users[name] };
             goToHome();
@@ -271,19 +278,217 @@
             let users = getAllUsers(); users[currentUser.name] = currentUser.data; saveAllUsers(users);
         }
 
-        // 本格的なピクミンお題リスト（ややこしい配列・生物・お宝・アイテム）
+        // ==========================================
+        // 🌟 3D立体映像風 Canvas エンジン (遠近法・光の反射・影)
+        // ==========================================
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        let animFrameId = null;
+
+        let squad = [];
+        let attackers = [];
+        let popups = [];
+        let enemy = {
+            x: 580,
+            y: 150,
+            scale: 1.15,
+            hp: 100,
+            maxHp: 100,
+            shake: 0,
+            name: "チャッピー",
+            color: "#d63031"
+        };
+
+        function initSquad() {
+            squad = [];
+            const colors = ["#ff4757", "#ffa502", "#1e90ff"];
+            const count = Math.min(30, Math.max(10, currentUser ? currentUser.data.pikmin : 15));
+            for (let i = 0; i < count; i++) {
+                squad.push({
+                    x: 90 + (i % 6) * 26 + Math.random() * 8,
+                    y: 90 + Math.floor(i / 6) * 30 + Math.random() * 8,
+                    color: colors[i % 3],
+                    phase: Math.random() * Math.PI * 2
+                });
+            }
+        }
+
+        function spawnAttack(isCritical) {
+            const colors = ["#ff4757", "#ffa502", "#1e90ff"];
+            const num = isCritical ? 10 : 3;
+            for (let i = 0; i < num; i++) {
+                attackers.push({
+                    x: 160 + Math.random() * 50,
+                    y: 110 + Math.random() * 90,
+                    targetX: enemy.x - 40 + Math.random() * 60,
+                    targetY: enemy.y - 20 + Math.random() * 40,
+                    progress: 0,
+                    speed: 0.06 + Math.random() * 0.04,
+                    color: colors[Math.floor(Math.random() * 3)],
+                    crit: isCritical
+                });
+            }
+        }
+
+        function draw3DPikmin(x, y, color, scale, bounce) {
+            ctx.save();
+            ctx.translate(x, y - Math.abs(Math.sin(bounce)) * 7 * scale);
+            ctx.scale(scale, scale);
+
+            // 影（立体感）
+            ctx.fillStyle = "rgba(0,0,0,0.3)";
+            ctx.beginPath(); ctx.ellipse(0, 10, 6, 3, 0, 0, Math.PI * 2); ctx.fill();
+
+            // 胴体
+            ctx.fillStyle = color;
+            ctx.beginPath(); ctx.ellipse(0, 4, 6, 9, 0, 0, Math.PI * 2); ctx.fill();
+            // 頭
+            ctx.beginPath(); ctx.arc(0, -7, 6.5, 0, Math.PI * 2); ctx.fill();
+            // 目
+            ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(2.2, -8, 2, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = "#000"; ctx.beginPath(); ctx.arc(2.9, -8, 1, 0, Math.PI * 2); ctx.fill();
+            // 茎と葉
+            ctx.strokeStyle = "#2ed573"; ctx.lineWidth = 2;
+            ctx.beginPath(); ctx.moveTo(0, -13); ctx.quadraticCurveTo(3, -20, 8, -19); ctx.stroke();
+            ctx.fillStyle = "#2ed573";
+            ctx.beginPath(); ctx.ellipse(10, -19, 4.5, 2.2, 0.4, 0, Math.PI * 2); ctx.fill();
+
+            ctx.restore();
+        }
+
+        function draw3DEnemy(time) {
+            ctx.save();
+            const sx = enemy.shake > 0 ? (Math.random() - 0.5) * enemy.shake : 0;
+            const sy = enemy.shake > 0 ? (Math.random() - 0.5) * enemy.shake : 0;
+            if (enemy.shake > 0) enemy.shake *= 0.82;
+
+            const breathe = Math.sin(time * 0.0035) * 4;
+            ctx.translate(enemy.x + sx, enemy.y + sy + breathe);
+            ctx.scale(enemy.scale, enemy.scale);
+
+            // 立体的な足元の大いなる影
+            ctx.fillStyle = "rgba(0,0,0,0.55)";
+            ctx.beginPath(); ctx.ellipse(10, 58, 62, 18, 0, 0, Math.PI * 2); ctx.fill();
+
+            // 体
+            ctx.fillStyle = enemy.color;
+            ctx.beginPath(); ctx.ellipse(15, 8, 54, 44, 0, 0, Math.PI * 2); ctx.fill();
+
+            // 背中のツヤ・ハイライト（3D立体感を演出）
+            const grad = ctx.createRadialGradient(-5, -10, 5, 0, 0, 45);
+            grad.addColorStop(0, "rgba(255,255,255,0.35)");
+            grad.addColorStop(1, "rgba(0,0,0,0)");
+            ctx.fillStyle = grad;
+            ctx.beginPath(); ctx.ellipse(10, 5, 50, 40, 0, 0, Math.PI * 2); ctx.fill();
+
+            // 水玉模様
+            ctx.fillStyle = "rgba(255,255,255,0.9)";
+            [[-8, -12, 7.5], [22, -20, 8.5], [40, 0, 7], [14, 18, 6.5], [38, 24, 5.5]].forEach(d => {
+                ctx.beginPath(); ctx.arc(d[0], d[1], d[2], 0, Math.PI * 2); ctx.fill();
+            });
+
+            // 顔
+            ctx.fillStyle = "#f5cd79";
+            ctx.beginPath(); ctx.ellipse(-30, 14, 34, 28, 0, 0, Math.PI * 2); ctx.fill();
+
+            // 目玉
+            [[-38, -6, -30, -28], [-20, -6, -14, -28]].forEach(pos => {
+                ctx.strokeStyle = "#f5cd79"; ctx.lineWidth = 6;
+                ctx.beginPath(); ctx.moveTo(pos[0], pos[1]); ctx.lineTo(pos[2], pos[3]); ctx.stroke();
+
+                ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(pos[2], pos[3], 9.5, 0, Math.PI * 2); ctx.fill();
+                ctx.fillStyle = "#1e272e"; ctx.beginPath(); ctx.arc(pos[2] - 2, pos[3], 4.2, 0, Math.PI * 2); ctx.fill();
+            });
+
+            // 敵頭上のHPバー
+            ctx.fillStyle = "rgba(0,0,0,0.75)";
+            ctx.fillRect(-55, -64, 120, 12);
+            ctx.fillStyle = "#2ed573";
+            ctx.fillRect(-53, -62, 116 * Math.max(0, enemy.hp / enemy.maxHp), 8);
+
+            ctx.restore();
+        }
+
+        function renderLoop(time) {
+            // 背景（3D遠近感のある森の奥行き）
+            const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            grad.addColorStop(0, "#081c14");
+            grad.addColorStop(0.6, "#0e2e20");
+            grad.addColorStop(1, "#184530");
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // 地面の草むら装飾（奥から手前への立体グリッド）
+            ctx.fillStyle = "rgba(46, 213, 115, 0.07)";
+            for (let i = 0; i < 22; i++) {
+                ctx.beginPath();
+                ctx.arc((i * 53) % canvas.width, (i * 97) % canvas.height, 20, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // 隊長のホイッスル円
+            ctx.strokeStyle = "rgba(255, 177, 66, 0.4)";
+            ctx.lineWidth = 2.5;
+            ctx.beginPath(); ctx.ellipse(145, 155, 80, 68, 0, 0, Math.PI * 2); ctx.stroke();
+
+            // 待機中のピクミンたちを描画
+            squad.forEach(p => {
+                draw3DPikmin(p.x, p.y, p.color, 1.0, time * 0.008 + p.phase);
+            });
+
+            // 3D原生生物を描画
+            draw3DEnemy(time);
+
+            // 突撃ピクミンのアニメーション
+            for (let i = attackers.length - 1; i >= 0; i--) {
+                let a = attackers[i];
+                a.progress += a.speed;
+                let currX = a.x + (a.targetX - a.x) * a.progress;
+                let currY = a.y + (a.targetY - a.y) * a.progress - Math.sin(a.progress * Math.PI) * 45; // 飛び跳ねる軌道
+
+                draw3DPikmin(currX, currY, a.color, 1.2, time * 0.03);
+
+                if (a.progress >= 1.0) {
+                    enemy.shake = a.crit ? 20 : 8;
+                    popups.push({
+                        x: enemy.x - 10 + (Math.random() - 0.5) * 35,
+                        y: enemy.y - 40,
+                        text: a.crit ? "CRITICAL!! +200" : "HIT!",
+                        color: a.crit ? "#ffb142" : "#2ed573",
+                        life: 40
+                    });
+                    attackers.splice(i, 1);
+                }
+            }
+
+            // ダメージポップアップ
+            for (let i = popups.length - 1; i >= 0; i--) {
+                let pop = popups[i];
+                pop.y -= 1.3;
+                pop.life--;
+                ctx.fillStyle = pop.color;
+                ctx.font = "bold 17px sans-serif";
+                ctx.fillText(pop.text, pop.x, pop.y);
+                if (pop.life <= 0) popups.splice(i, 1);
+            }
+
+            animFrameId = requestAnimationFrame(renderLoop);
+        }
+
+        // ==========================================
+        // 📚 お題・ゲームロジック
+        // ==========================================
         const wordList = [
-            { kanji: "赤ピクミン", kana: "あかぴくみん", patterns: ["akapikumin", "akapikuminn"] },
-            { kanji: "青ピクミン", kana: "あおぴくみん", patterns: ["aopikumin", "aopikuminn"] },
-            { kanji: "黄ピクミン", kana: "きぴくみん", patterns: ["kipikumin", "kipikuminn"] },
-            { kanji: "チャッピー", kana: "ちゃっぴー", patterns: ["chappi", "tyappi", "cchappi"] },
-            { kanji: "フタクチドックリ", kana: "ふたくちどっくり", patterns: ["futakuchidokkuri", "futakuchidokuri"] },
-            { kanji: "ブタドックリ", kana: "ぶたどっくり", patterns: ["butadokkuri"] },
-            { kanji: "ゲキカラスプレー", kana: "げきからすぷれー", patterns: ["gekikarasupure-", "gekikarasupure"] },
-            { kanji: "オニヨン", kana: "おによん", patterns: ["oniyon", "oniyonn"] },
-            { kanji: "ドルフィン号", kana: "どるふぃんごう", patterns: ["dorufingou", "doruhwingou"] },
-            { kanji: "ペレット草", kana: "ぺれっとそう", patterns: ["perettosou"] },
-            { kanji: "イモガエル", kana: "いもがえる", patterns: ["imogaeru"] }
+            { kanji: "チャッピー", kana: "ちゃっぴー", patterns: ["chappi", "tyappi", "cchappi"], color: "#d63031" },
+            { kanji: "フタクチドックリ", kana: "ふたくちどっくり", patterns: ["futakuchidokkuri", "hutakutidokkuri"], color: "#636e72" },
+            { kanji: "ブタドックリ", kana: "ぶたどっくり", patterns: ["butadokkuri"], color: "#e17055" },
+            { kanji: "イモガエル", kana: "いもがえる", patterns: ["imogaeru"], color: "#fdcb6e" },
+            { kanji: "ゲキカラスプレー", kana: "げきからすぷれー", patterns: ["gekikarasupure-", "gekikarasupure"], color: "#ff4757" },
+            { kanji: "赤ピクミン", kana: "あかぴくみん", patterns: ["akapikumin", "akapikuminn"], color: "#ff5252" },
+            { kanji: "青ピクミン", kana: "あおぴくみん", patterns: ["aopikumin", "aopikuminn"], color: "#1e90ff" },
+            { kanji: "黄ピクミン", kana: "きぴくみん", patterns: ["kipikumin", "kipikuminn"], color: "#ffa502" },
+            { kanji: "ドルフィン号", kana: "どるふぃんごう", patterns: ["dorufingou", "doruhwingou"], color: "#00cec9" },
+            { kanji: "ペレット草", kana: "ぺれっとそう", patterns: ["perettosou"], color: "#2ed573" }
         ];
 
         let playMode = 'solo';
@@ -297,6 +502,7 @@
             playMode = mode; myPoints = 0; aiPoints = 0;
             document.getElementById('homeScreen').classList.add('hidden');
             document.getElementById('gameScreen').classList.remove('hidden');
+
             if (mode === 'ai') {
                 document.getElementById('gameModeTitle').innerText = "🔥 ライバル対決：vs ルーイAI";
                 document.getElementById('aiGaugeWrapper').classList.remove('hidden');
@@ -305,16 +511,32 @@
                 document.getElementById('gameModeTitle').innerText = "🌱 惑星探索：討伐ステージ";
                 document.getElementById('aiGaugeWrapper').classList.add('hidden');
             }
+
+            initSquad();
+            if (animFrameId) cancelAnimationFrame(animFrameId);
+            animFrameId = requestAnimationFrame(renderLoop);
+
             updateGauges();
             nextWord();
             const box = document.getElementById('typingBox'); box.value = ""; box.focus();
         }
 
-        function backToHome() { clearInterval(aiTimer); document.getElementById('gameScreen').classList.add('hidden'); document.getElementById('homeScreen').classList.remove('hidden'); updateHomeUI(); }
+        function backToHome() {
+            clearInterval(aiTimer);
+            if (animFrameId) cancelAnimationFrame(animFrameId);
+            document.getElementById('gameScreen').classList.add('hidden');
+            document.getElementById('homeScreen').classList.remove('hidden');
+            updateHomeUI();
+        }
 
         function nextWord() {
             const idx = Math.floor(Math.random() * wordList.length);
             currentWord = wordList[idx];
+            enemy.name = currentWord.kanji;
+            enemy.color = currentWord.color;
+            enemy.hp = 100;
+            enemy.maxHp = 100;
+
             document.getElementById('wordKanji').innerText = currentWord.kanji;
             document.getElementById('wordKana').innerText = currentWord.kana;
             document.getElementById('typingBox').value = "";
@@ -323,13 +545,13 @@
 
         function updateRomanGuide(typed) {
             const guide = document.getElementById('romanGuide');
-            const targetRoman = currentWord.patterns[0];
+            const matchedPattern = currentWord.patterns.find(p => p.startsWith(typed)) || currentWord.patterns[0];
             let html = "";
-            for (let i = 0; i < targetRoman.length; i++) {
-                if (i < typed.length) {
-                    html += `<span class="typed-char">${targetRoman[i]}</span>`;
+            for (let i = 0; i < matchedPattern.length; i++) {
+                if (i < typed.length && typed[i] === matchedPattern[i]) {
+                    html += `<span class="typed-char">${matchedPattern[i]}</span>`;
                 } else {
-                    html += `<span class="untyped-char">${targetRoman[i]}</span>`;
+                    html += `<span class="untyped-char">${matchedPattern[i]}</span>`;
                 }
             }
             guide.innerHTML = html;
@@ -339,7 +561,6 @@
             const input = document.getElementById('typingBox');
             const val = input.value.toLowerCase().trim();
             const fb = document.getElementById('feedbackMsg');
-            const arena = document.getElementById('battleArena');
 
             if (!currentWord) return;
             updateRomanGuide(val);
@@ -348,34 +569,38 @@
 
             if (isMatched) {
                 playHitSound();
+                spawnAttack(true);
+                enemy.hp = 0;
+
                 myPoints += 200;
                 currentUser.data.score += 200;
                 currentUser.data.pikmin += 3;
                 updateHomeUI();
-
-                arena.classList.remove('attack-flash');
-                void arena.offsetWidth;
-                arena.classList.add('attack-flash');
+                initSquad();
 
                 fb.style.color = "var(--accent-green)";
-                fb.innerText = `✨ 撃破！ ピクミンが3匹集まった！`;
+                fb.innerText = `✨ 「${currentWord.kanji}」を撃破！ ピクミンが3匹増えた！`;
                 updateGauges();
 
                 if (myPoints >= GOAL) {
-                    endGame(true);
+                    setTimeout(() => endGame(true), 400);
                 } else {
-                    nextWord();
+                    setTimeout(nextWord, 300);
                 }
             } else {
                 const isPrefix = currentWord.patterns.some(p => p.startsWith(val));
                 if (val === "") {
                     fb.innerText = "";
                 } else if (isPrefix) {
+                    spawnAttack(false);
+                    const targetLen = currentWord.patterns[0].length;
+                    enemy.hp = Math.max(10, 100 - (val.length / targetLen) * 90);
+
                     fb.style.color = "var(--accent-green)";
-                    fb.innerText = "🌿 ピクミンたちが突撃中...";
+                    fb.innerText = "🌿 3D立体突撃中！";
                 } else {
                     fb.style.color = "var(--accent-red)";
-                    fb.innerText = "⚠️ 配列が違います！打ち直そう";
+                    fb.innerText = "⚠️ スペルが違います！";
                 }
             }
         }
@@ -400,16 +625,17 @@
 
         function endGame(isWin) {
             clearInterval(aiTimer);
+            if (animFrameId) cancelAnimationFrame(animFrameId);
             if (playMode === 'ai') {
                 if (isWin) {
                     currentUser.data.score += 500; currentUser.data.pikmin += 10; updateHomeUI();
-                    alert("🏆 探索勝利！ ライバルのルーイに勝利した！");
+                    alert("🏆 3D探索勝利！ ルーイAIに打ち勝った！");
                 } else {
-                    alert("💀 探索失敗... ルーイに先を越されてしまった！");
+                    alert("💀 探索失敗... AIに先を越された！");
                 }
             } else {
                 currentUser.data.score += 300; updateHomeUI();
-                alert("🎉 日誌更新！ 惑星の原生生物を制圧しました！");
+                alert("🎉 探索完了！ 惑星の原生生物を制圧しました！");
             }
             backToHome();
         }
