@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ピクミン タイピング大作戦 - 3D Fixed Master Edition</title>
+    <title>ピクミン タイピング大作戦 - Safe 3D Master Edition</title>
     <!-- Three.js ライブラリの読み込み -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
@@ -204,7 +204,7 @@
 <body>
 
     <h1>🌿 ピクミン タイピング大作戦</h1>
-    <div class="subtitle">3D Fixed Master Edition — 3Dワールド＆キーボード完全対応</div>
+    <div class="subtitle">Safe 3D Master Edition — 完全安全設計3D版</div>
 
     <!-- 1. ログイン画面 -->
     <div class="container" id="authScreen">
@@ -310,9 +310,9 @@
             <button class="btn btn-sub" onclick="playClickSound(); goToHome()">← 司令室へ戻る</button>
         </div>
         <div class="rule-content">
-            <h4>🌿 3Dグラフィック＆タイピング</h4>
+            <h4>🌿 3Dグラフィック＆安全設計</h4>
             <p>・Three.jsによる本格的な3Dポリゴン空間でバトル！</p>
-            <p>・キーボードを直接叩くだけでいつでも反応します。</p>
+            <p>・画面の切り替えタイミングを完全制御し、キーボード入力も常時確実に受け付けます。</p>
         </div>
     </div>
 
@@ -376,8 +376,8 @@
 
     <script>
         let currentUser = null;
-        function getAllUsers() { try { return JSON.parse(localStorage.getItem('pikmin_threejs_fixed_v2') || '{}'); } catch(e){ return {}; } }
-        function saveAllUsers(u) { localStorage.setItem('pikmin_threejs_fixed_v2', JSON.stringify(u)); }
+        function getAllUsers() { try { return JSON.parse(localStorage.getItem('pikmin_safe_3d_v3') || '{}'); } catch(e){ return {}; } }
+        function saveAllUsers(u) { localStorage.setItem('pikmin_safe_3d_v3', JSON.stringify(u)); }
 
         function playClickSound() {
             const audio = document.getElementById('hitSound');
@@ -412,7 +412,7 @@
         function logout() { currentUser = null; goToHome(); }
         
         function goToHome() { 
-            if (threeAnimId) cancelAnimationFrame(threeAnimId);
+            stopGameAndClean();
             document.getElementById('authScreen').classList.add('hidden'); 
             document.getElementById('encyclopediaScreen').classList.add('hidden'); 
             document.getElementById('stageSelectScreen').classList.add('hidden');
@@ -470,7 +470,7 @@
         }
 
         // ==========================================
-        // 🗺️ 全30ステージ（ボス戦含む）データ
+        // 🗺️ 全30ステージデータ
         // ==========================================
         const stages = [];
         for (let i = 1; i <= 30; i++) {
@@ -489,6 +489,7 @@
         let selectedPikminColor = 0xff5252;
 
         function openStageSelect(mode) {
+            stopGameAndClean();
             pendingMode = mode;
             document.getElementById('homeScreen').classList.add('hidden');
             document.getElementById('gameScreen').classList.add('hidden');
@@ -534,12 +535,14 @@
         }
 
         function openEncyclopedia() {
+            stopGameAndClean();
             document.getElementById('homeScreen').classList.add('hidden');
             document.getElementById('encyclopediaScreen').classList.remove('hidden');
             renderEncyclopediaList();
         }
 
         function openRuleModal() {
+            stopGameAndClean();
             document.getElementById('homeScreen').classList.add('hidden');
             document.getElementById('ruleScreen').classList.remove('hidden');
         }
@@ -563,6 +566,7 @@
         function promptAdminPassword() {
             const input = prompt("🛠️ 管理者パスワードを入力してください (PW: 2021):");
             if (input === "2021") {
+                stopGameAndClean();
                 document.getElementById('homeScreen').classList.add('hidden');
                 document.getElementById('adminScreen').classList.remove('hidden');
                 document.getElementById('adminPikminInput').value = currentUser.data.pikmin;
@@ -676,9 +680,12 @@
                 document.getElementById('aiGaugeWrapper').classList.add('hidden');
             }
 
-            initThreeScene();
-            updateGauges();
-            nextWord();
+            // 画面が完全に表示されたあとに安全に3Dを初期化
+            setTimeout(() => {
+                initThreeScene();
+                updateGauges();
+                nextWord();
+            }, 50);
         }
 
         function nextWord() {
@@ -722,7 +729,7 @@
             guide.innerHTML = html;
         }
 
-        // キーボード入力イベント（いつでも確実に反応するように修正）
+        // キーボード入力イベント（常時確実に安全受付）
         window.addEventListener('keydown', (e) => {
             if (!isGameActive || !currentWord) return;
             if (e.ctrlKey || e.altKey || e.metaKey || e.key.length > 1) return;
@@ -801,7 +808,7 @@
         function endGame(isWin) {
             isGameActive = false;
             clearInterval(aiTimer);
-            if (threeAnimId) cancelAnimationFrame(threeAnimId);
+            stopGameAndClean();
 
             if (isWin) {
                 currentUser.data.score += (playMode === 'ai' ? 600 : 400);
@@ -821,7 +828,7 @@
         }
 
         // ==========================================
-        // 🌟 Three.js 3Dグラフィック・エンジン (安定版)
+        // 🌟 Three.js 3Dグラフィック・エンジン（完全安全版）
         // ==========================================
         let scene, camera, renderer, threeAnimId;
         let enemyMesh, onionMesh, dolphinMesh;
@@ -829,18 +836,30 @@
 
         function initThreeScene() {
             const container = document.getElementById('threeContainer');
+            if (!container) return;
+            
+            // 既存の描画を完全に掃除
             container.innerHTML = "";
+            if (threeAnimId) cancelAnimationFrame(threeAnimId);
+
+            const width = container.clientWidth || 600;
+            const height = container.clientHeight || 310;
 
             scene = new THREE.Scene();
             scene.background = new THREE.Color(0x031208);
 
-            camera = new THREE.PerspectiveCamera(55, container.clientWidth / container.clientHeight, 0.1, 1000);
+            camera = new THREE.PerspectiveCamera(55, width / height, 0.1, 1000);
             camera.position.set(0, 3, 10);
             camera.lookAt(0, 0, 0);
 
-            renderer = new THREE.WebGLRenderer({ antialias: true });
-            renderer.setSize(container.clientWidth, container.clientHeight);
-            container.appendChild(renderer.domElement);
+            try {
+                renderer = new THREE.WebGLRenderer({ antialias: true });
+                renderer.setSize(width, height);
+                container.appendChild(renderer.domElement);
+            } catch(e) {
+                console.error("WebGL初期化エラー:", e);
+                return;
+            }
 
             // ライティング
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
@@ -887,6 +906,17 @@
             animateThree();
         }
 
+        function stopGameAndClean() {
+            isGameActive = false;
+            clearInterval(aiTimer);
+            if (threeAnimId) {
+                cancelAnimationFrame(threeAnimId);
+                threeAnimId = null;
+            }
+            const container = document.getElementById('threeContainer');
+            if (container) container.innerHTML = "";
+        }
+
         function updateEnemyMesh(colorHex, scaleMultiplier) {
             if (!enemyMesh) return;
             enemyMesh.material.color.setHex(colorHex);
@@ -914,6 +944,7 @@
         }
 
         function animateThree() {
+            if (!isGameActive) return;
             threeAnimId = requestAnimationFrame(animateThree);
 
             const time = Date.now() * 0.003;
@@ -929,12 +960,14 @@
                 ap.mesh.position.z = (ap.targetZ || 0) * ap.progress;
 
                 if (ap.progress >= 1.0) {
-                    scene.remove(ap.mesh);
+                    if (scene) scene.remove(ap.mesh);
                     attackParticles.splice(i, 1);
                 }
             }
 
-            renderer.render(scene, camera);
+            if (renderer && scene && camera) {
+                renderer.render(scene, camera);
+            }
         }
     </script>
 </body>
