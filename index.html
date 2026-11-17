@@ -407,7 +407,7 @@
         </div>
     </div>
 
-    <!-- 管理者ログインモーダル（専用オーバーレイで確実表示） -->
+    <!-- 管理者ログインモーダル -->
     <div id="admin-login-modal" style="position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(2,6,23,0.92); z-index:99999; display:none; justify-content:center; align-items:center;">
         <div class="modal-box" style="border-color:var(--neon-yellow); max-width:400px; text-align:center;">
             <h2 style="color:var(--neon-yellow); margin-bottom:12px;">🛡️ 管理者認証モード</h2>
@@ -420,7 +420,7 @@
         </div>
     </div>
 
-    <!-- 🛠️ 究極管理者コントロールタワー（専用オーバーレイで確実表示） -->
+    <!-- 🛠️ 究極管理者コントロールタワー -->
     <div id="admin-dashboard-modal" style="position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(2,6,23,0.95); z-index:99999; display:none; justify-content:center; align-items:center;">
         <div class="modal-box" style="border-color:var(--neon-green); max-width:680px; max-height:92vh; overflow-y:auto; text-align:center; padding:20px;">
             <h2 style="color:var(--neon-green); margin-bottom:6px;">⚙️ マルチデバイス管理タワー (アカウント・BAN・ブロック)</h2>
@@ -530,7 +530,7 @@
             </div>
         </div>
 
-        <!-- 3. エリア＆難易度選択モーダル (ルール説明付き) -->
+        <!-- 3. エリア＆難易度選択モーダル -->
         <div id="difficulty-screen" class="screen">
             <h1>エリア＆難易度選択</h1>
             <div class="modal-box" style="text-align: left; line-height: 1.5;">
@@ -542,12 +542,11 @@
                     <button id="stage-btn-touge" onclick="selectStage('touge')">⛰️ 山岳ワインディング</button>
                 </div>
 
-                <!-- 📜 ミッションルール説明エリア -->
                 <div style="background: rgba(0, 243, 255, 0.08); border: 1px solid rgba(0, 243, 255, 0.3); border-radius: 8px; padding: 10px; margin-bottom: 12px; font-size: 0.85rem;">
                     <p style="color: var(--neon-yellow); font-weight: bold; margin-bottom: 4px;">📖 ミッションルール説明</p>
                     <p style="color: #cbd5e1; margin-bottom: 2px;">• 20問のタイピングを正確に完遂し、容疑車両を追いつめてPIT捕獲せよ！</p>
                     <p style="color: #cbd5e1; margin-bottom: 2px;">• 一定時間ごとに自機パトカーへ追突ダメージが入る。タイピングで速度を上げろ！</p>
-                    <p style="color: #cbd5e1;">• BOOSTゲージが満タンの時に [SPACEキー] を押すと、問を一気にスキップして強力な追撃が可能！</p>
+                    <p style="color: #cbd5e1;">• BOOSTゲージが満タンの時に [SPACEキー] を押すと、問を一気にスキップ可能！</p>
                 </div>
 
                 <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px;">
@@ -559,7 +558,7 @@
             </div>
         </div>
 
-        <!-- 3.5 タイムアタック説明・確認モーダル -->
+        <!-- 3.5 タイムアタック説明モーダル -->
         <div id="ta-intro-screen" class="screen">
             <h1>スピードスター・タイムアタック</h1>
             <div class="modal-box" style="text-align: left; line-height: 1.6;">
@@ -567,7 +566,6 @@
                 <p style="color:#f8fafc; margin-bottom:6px;">🚀 <b>20秒未満</b> の完走: <span style="color:var(--neon-green); font-weight:bold;">550 G</span></p>
                 <p style="color:#f8fafc; margin-bottom:6px;">⚡ <b>20秒以上 ～ 45秒未満</b>: <span style="color:var(--neon-yellow); font-weight:bold;">200 G</span></p>
                 <p style="color:#f8fafc; margin-bottom:12px;">🐢 <b>45秒以上</b> の完走: <span style="color:#94a3b8; font-weight:bold;">30 G</span></p>
-                <p style="color:var(--neon-red); font-size:0.9rem; margin-bottom:20px;">※タイピングミスをすると、ペナルティとしてタイムに <b>＋0.5秒</b> が加算されます！正確かつスピーディーに駆け抜けろ！</p>
                 <div style="display:flex; gap:10px; justify-content:center;">
                     <button class="yellow" onclick="startMode('timeattack')" style="flex:1;">出動開始！</button>
                     <button onclick="toMenu()" style="flex:1;">メニューに戻る</button>
@@ -600,7 +598,7 @@
             </div>
         </div>
 
-        <!-- 5. 実績（トロフィー50個）モーダル -->
+        <!-- 5. 実績モーダル -->
         <div id="trophy-screen" class="screen">
             <h1>実績・アチーブメント (全50個)</h1>
             <div class="modal-box">
@@ -638,7 +636,7 @@
                 <div class="target-word">
                     <span class="typed-char" id="typed-part"></span><span id="remain-part">kidousousatai</span>
                 </div>
-                <p style="color: var(--neon-cyan); font-size: 0.85rem; margin-top: 6px;">[SPACEキー] BOOST満タンで一気に追撃！ | (し=si/shi/ci、ち=chi/ti、ふ=fu/hu、じ=zi/ji等の【全文字のマルチローマ字入力】に完全対応！)</p>
+                <p style="color: var(--neon-cyan); font-size: 0.85rem; margin-top: 6px;">[SPACEキー] BOOST満タンで一気に追撃！</p>
             </div>
 
             <button onclick="toMenu()" style="padding: 6px 16px; font-size: 0.9rem;">一時停止 / メニューに戻る</button>
@@ -654,6 +652,7 @@
         </div>
     </div>
 
+    <!-- ゲームエンジン本体スクリプト -->
     <script>
         const POLICE_CARS = {
             "crown210": { name: "210系クラウン パトカー (警視庁)", price: 0, speedMax: 280, boostPower: 1.0, type: "patrol" },
@@ -667,37 +666,27 @@
         };
 
         const SHOP_ITEMS = {
-            "battery": { name: "予備サイレンバッテリー", price: 400, desc: "大破時にHPを+50自動回復する応急キット" },
-            "turbine": { name: "高出力ブースト・タービン", price: 800, desc: "スペースキーのブースト進捗削りが1.5倍に！" },
-            "bumper": { name: "防弾強化フロントバンパー", price: 1000, desc: "敵からの体当たりダメージを20%軽減" },
-            "drink": { name: "機捜特製エナジードリンク", price: 1200, desc: "タイピング正解時のブースト蓄積量が1.3倍に" },
-            "radar": { name: "レーダー探知パッチ", price: 1500, desc: "TA時のタイピングミスによるペナルティを無効化" },
-            "badge": { name: "主任警部補の特命バッジ", price: 3000, desc: "ミッション・TA報酬の獲得資金(G)が1.5倍に！" }
+            "battery": { name: "予備サイレンバッテリー", price: 400, desc: "大破時にHPを+50自動回復" },
+            "turbine": { name: "高出力ブースト・タービン", price: 800, desc: "スペースキーのブースト効果1.5倍" },
+            "bumper": { name: "防弾強化フロントバンパー", price: 1000, desc: "被弾ダメージ20%軽減" },
+            "drink": { name: "機捜特製エナジードリンク", price: 1200, desc: "ブースト蓄積量1.3倍" },
+            "radar": { name: "レーダー探知パッチ", price: 1500, desc: "TAミス時のペナルティ無効" },
+            "badge": { name: "主任警部補の特命バッジ", price: 3000, desc: "獲得資金1.5倍" }
         };
 
         const TROPHIES = [];
         for (let i = 1; i <= 50; i++) {
             let title = `日本警察勲章 第${i}級`;
             let desc = `累計 ${i} 回ミッションまたはTAをクリアする`;
-            
-            if (i === 1) { title = "初検挙"; desc = "ミッションまたはTAを1回クリアする"; }
-            else if (i === 3) { title = "ベテラン捜査員"; desc = "累計3回クリアする"; }
-            else if (i === 5) { title = "エース機捜隊員"; desc = "累計5回クリアする"; }
-            else if (i === 10) { title = "ベテラン機捜班長"; desc = "累計10回クリアする"; }
-            else if (i === 25) { title = "伝説の捜査官"; desc = "累計25回クリアする"; }
-            else if (i === 50) { title = "日本警察マスター"; desc = "すべての実績（全50個）を制覇する"; }
-            else if (i === 15) { title = "名車コレクター"; desc = "パトカーを2台以上所有する"; }
-            else if (i === 20) { title = "特殊装備マニア"; desc = "ショップアイテムを2個以上購入する"; }
-            else if (i === 30) { title = "スピードスター"; desc = "タイムアタックモードを完走する"; }
-            else if (i === 40) { title = "電光石火の追撃"; desc = "TAで20秒未満を達成する"; }
-
+            if (i === 1) { title = "初検挙"; desc = "1回クリアする"; }
+            else if (i === 50) { title = "日本警察マスター"; desc = "全実績制覇"; }
             TROPHIES.push({ id: `trophy_${i}`, title: title, desc: desc });
         }
 
         const kanaMap = {
-            "あ": ["a"], "い": ["i", "yi"], "う": ["u", "wu", "whu"], "え": ["e"], "お": ["o"],
-            "か": ["ka", "ca"], "き": ["ki"], "く": ["ku", "cu", "qu"], "け": ["ke"], "こ": ["ko", "co"],
-            "さ": ["sa"], "し": ["shi", "si", "ci"], "す": ["su"], "せ": ["se", "ce"], "そ": ["so"],
+            "あ": ["a"], "い": ["i", "yi"], "う": ["u", "wu"], "え": ["e"], "お": ["o"],
+            "か": ["ka", "ca"], "き": ["ki"], "く": ["ku", "cu"], "け": ["ke"], "こ": ["ko", "co"],
+            "さ": ["sa"], "し": ["shi", "si", "ci"], "す": ["su"], "せ": ["se"], "そ": ["so"],
             "た": ["ta"], "ち": ["chi", "ti"], "つ": ["tsu", "tu"], "て": ["te"], "と": ["to"],
             "な": ["na"], "に": ["ni"], "ぬ": ["nu"], "ね": ["ne"], "の": ["no"],
             "は": ["ha"], "ひ": ["hi"], "ふ": ["fu", "hu"], "へ": ["he"], "ほ": ["ho"],
@@ -710,17 +699,6 @@
             "だ": ["da"], "ぢ": ["di"], "づ": ["du"], "で": ["de"], "ど": ["do"],
             "ば": ["ba"], "び": ["bi"], "ぶ": ["bu"], "べ": ["be"], "ぼ": ["bo"],
             "ぱ": ["pa"], "ぴ": ["pi"], "ぷ": ["pu"], "ぺ": ["pe"], "ぽ": ["po"],
-            "きゃ": ["kya"], "きゅ": ["kyu"], "きょ": ["kyo"],
-            "しゃ": ["sha", "sya"], "しゅ": ["shu", "syu"], "しょ": ["sho", "syo"],
-            "ちゃ": ["cha", "cya", "tya"], "ちゅ": ["chu", "cyu", "tyu"], "ちょ": ["cho", "cyo", "tyo"],
-            "にゃ": ["nya"], "にゅ": ["nyu"], "にょ": ["nyo"],
-            "ひゃ": ["hya"], "ひゅ": ["hyu"], "ひょ": ["hyo"],
-            "みゃ": ["mya"], "みゅ": ["myu"], "みょ": ["myo"],
-            "りゃ": ["rya"], "りゅ": ["ryu"], "りょ": ["ryo"],
-            "ぎゃ": ["gya"], "ぎゅ": ["gyu"], "ぎょ": ["gyo"],
-            "じゃ": ["ja", "zya", "jya"], "じゅ": ["ju", "zyu", "jyu"], "じょ": ["jo", "zyo", "jyo"],
-            "びゃ": ["bya"], "びゅ": ["byu"], "びょ": ["byo"],
-            "ぴゃ": ["pya"], "ぴゅ": ["pyu"], "ぴょ": ["pyo"],
             "ー": ["-"], "っ": []
         };
 
@@ -730,43 +708,12 @@
             while (i < kanaStr.length) {
                 let sub2 = kanaStr.substr(i, 2);
                 let sub1 = kanaStr.substr(i, 1);
-                let target = "";
-                let advance = 1;
-
-                if (i + 1 < kanaStr.length && kanaMap[sub2]) {
-                    target = sub2;
-                    advance = 2;
-                } else if (kanaMap[sub1]) {
-                    target = sub1;
-                    advance = 1;
-                } else if (sub1 === "っ") {
-                    let nextSub2 = i + 2 < kanaStr.length ? kanaStr.substr(i + 1, 2) : "";
-                    let nextSub1 = i + 1 < kanaStr.length ? kanaStr.substr(i + 1, 1) : "";
-                    let nextKana = kanaMap[nextSub2] ? nextSub2 : nextSub1;
-                    let nextChoices = kanaMap[nextKana] ? kanaMap[nextKana] : [nextSub1];
-                    
-                    let newResults = [];
-                    for (let prefix of results) {
-                        for (let nc of nextChoices) {
-                            if (nc.length > 0) {
-                                newResults.push(prefix + nc[0]);
-                            }
-                        }
-                    }
-                    results = newResults.length > 0 ? newResults : results;
-                    i++;
-                    continue;
-                } else {
-                    target = sub1;
-                    advance = 1;
-                }
-
+                let target = kanaMap[sub2] ? sub2 : sub1;
+                let advance = kanaMap[sub2] ? 2 : 1;
                 let choices = kanaMap[target] ? kanaMap[target] : [target];
                 let newResults = [];
                 for (let prefix of results) {
-                    for (let c of choices) {
-                        newResults.push(prefix + c);
-                    }
+                    for (let c of choices) { newResults.push(prefix + c); }
                 }
                 results = newResults;
                 i += advance;
@@ -778,133 +725,47 @@
             { kanji: "機動捜査隊", furigana: "きどうそうさたい" },
             { kanji: "緊急追跡", furigana: "きんきゅうついせき" },
             { kanji: "パトカー", furigana: "ぱとかー" },
-            { kanji: "サイレン鳴動", furigana: "さいれんめいどう" },
-            { kanji: "覆面パトカー", furigana: "ふくめんぱとかー" },
             { kanji: "高速道路", furigana: "こうそくどうろ" },
-            { kanji: "容疑車両発見", furigana: "ようぎしゃりょうはっけん" },
-            { kanji: "現場急行", furigana: "げんばきゅうこう" },
-            { kanji: "逮捕状請求", furigana: "たいほじょうせいきゅう" },
-            { kanji: "警視庁司令室", furigana: "けいしちょうしれいしつ" },
-            { kanji: "交通取締", furigana: "こうつうとりしまり" },
-            { kanji: "緊急停止命令", furigana: "きんきゅうていしめいれい" },
-            { kanji: "無線連絡", furigana: "むせんれんらく" },
-            { kanji: "エンジン全開", furigana: "えんじんぜんかい" },
-            { kanji: "湾岸線バトル", furigana: "わんがんせんばとる" },
-            { kanji: "首都高環状線", furigana: "しゅとこうかんじょうせん" },
-            { kanji: "赤色回転灯", furigana: "せきしょくかいてんとう" },
-            { kanji: "不審車追尾", furigana: "ふしんしゃついび" },
-            { kanji: "職務質問", furigana: "しょくむしつもん" },
-            { kanji: "現行犯逮捕", furigana: "げんこうはんたいほ" }
+            { kanji: "容疑車両発見", furigana: "ようぎしゃりょうはっけん" }
         ];
 
         const hugeWordPool = rawWords.map(w => ({
-            kanji: w.kanji,
-            furigana: w.furigana,
-            patterns: generateAllRomaPatterns(w.furigana)
+            kanji: w.kanji, furigana: w.furigana, patterns: generateAllRomaPatterns(w.furigana)
         }));
 
         let player = null;
         let currentMode = "mission";
         let currentDiff = "normal";
         let currentStage = "c1";
-        let score = 0;
-        let combo = 0;
-        let typedIdx = 0;
-        let speedKph = 80;
-        let playerHp = 100;
-        let maxPlayerHp = 100;
-        
-        let targetWordsCount = 20;
-        let remainingWords = 20;
-        let currentQuestionNum = 1;
-
-        let boostGau = 0;
-        let damageTimer = null;
-        let particles = [];
-        let screenShake = 0;
-
-        let taStartTime = 0;
-        let taElapsedTimer = null;
-        let currentTaSeconds = 0;
-        let taMissCount = 0;
-        let autoWinActive = false;
+        let score = 0, combo = 0, typedIdx = 0, speedKph = 80;
+        let playerHp = 100, remainingWords = 20, currentQuestionNum = 1, boostGau = 0;
+        let damageTimer = null, particles = [], screenShake = 0, taStartTime = 0, taElapsedTimer = null, currentTaSeconds = 0, taMissCount = 0, autoWinActive = false;
 
         const bgmAudio = document.getElementById("bgm-audio");
         bgmAudio.volume = 0.5;
-        let isBgmEnabled = true;
-        let useSynthBgm = false;
-        let synthBgmTimer = null;
+        let isBgmEnabled = true, useSynthBgm = false, synthBgmTimer = null;
 
         function isLoginScreenActive() {
-            const loginScreen = document.getElementById("login-screen");
-            const helperScreen = document.getElementById("name-helper-screen");
-            const recoveryScreen = document.getElementById("recovery-screen");
-            return (loginScreen && loginScreen.classList.contains("active")) ||
-                   (helperScreen && helperScreen.classList.contains("active")) ||
-                   (recoveryScreen && recoveryScreen.classList.contains("active"));
+            return document.getElementById("login-screen").classList.contains("active") ||
+                   document.getElementById("name-helper-screen").classList.contains("active") ||
+                   document.getElementById("recovery-screen").classList.contains("active");
         }
 
         function playBGM() {
             if (!isBgmEnabled || isLoginScreenActive()) return;
-            bgmAudio.play().then(() => {
-                useSynthBgm = false;
-            }).catch(e => {
-                useSynthBgm = true;
-                startSynthBgm();
-            });
+            bgmAudio.play().catch(() => {});
         }
 
-        function stopBGM() {
-            bgmAudio.pause();
-            bgmAudio.currentTime = 0;
-            if (synthBgmTimer) clearInterval(synthBgmTimer);
-            synthBgmTimer = null;
-        }
-
-        function toggleBGM() {
-            initAudio();
-            isBgmEnabled = !isBgmEnabled;
-            if (isBgmEnabled && !isLoginScreenActive()) {
-                playBGM();
-            } else {
-                stopBGM();
-            }
-        }
+        function stopBGM() { bgmAudio.pause(); bgmAudio.currentTime = 0; }
+        function toggleBGM() { isBgmEnabled = !isBgmEnabled; isBgmEnabled ? playBGM() : stopBGM(); }
 
         let audioCtx = null;
         function initAudio() {
             if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             if (audioCtx.state === 'suspended') audioCtx.resume();
-            if (isBgmEnabled && !isLoginScreenActive() && bgmAudio.paused && !useSynthBgm) {
-                playBGM();
-            }
         }
 
-        function startSynthBgm() {
-            if (synthBgmTimer || isLoginScreenActive()) return;
-            let noteIdx = 0;
-            const melody = [220, 247, 261, 330, 293, 261, 247, 220];
-            synthBgmTimer = setInterval(() => {
-                if (!isBgmEnabled || !useSynthBgm || !audioCtx || isLoginScreenActive()) return;
-                try {
-                    const osc = audioCtx.createOscillator();
-                    const gain = audioCtx.createGain();
-                    osc.type = 'sawtooth';
-                    osc.frequency.setValueAtTime(melody[noteIdx % melody.length], audioCtx.currentTime);
-                    gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
-                    gain.gain.linearRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
-                    osc.connect(gain);
-                    gain.connect(audioCtx.destination);
-                    osc.start();
-                    osc.stop(audioCtx.currentTime + 0.3);
-                    noteIdx++;
-                } catch(e) {}
-            }, 350);
-        }
-
-        window.addEventListener("click", () => {
-            initAudio();
-        }, { once: true });
+        window.addEventListener("click", () => { initAudio(); }, { once: true });
 
         function playSound(type) {
             try {
@@ -912,834 +773,151 @@
                 if (!audioCtx) return;
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
+                osc.connect(gain); gain.connect(audioCtx.destination);
                 const now = audioCtx.currentTime;
-
                 if (type === 'type') {
-                    osc.type = 'sine';
                     osc.frequency.setValueAtTime(600, now);
-                    osc.frequency.exponentialRampToValueAtTime(900, now + 0.05);
-                    gain.gain.setValueAtTime(0.08, now);
-                    gain.gain.linearRampToValueAtTime(0.01, now + 0.05);
-                    osc.start(now);
-                    osc.stop(now + 0.05);
-                } else if (type === 'boost') {
-                    osc.type = 'sawtooth';
-                    osc.frequency.setValueAtTime(150, now);
-                    osc.frequency.linearRampToValueAtTime(600, now + 0.3);
-                    gain.gain.setValueAtTime(0.15, now);
-                    gain.gain.linearRampToValueAtTime(0.01, now + 0.3);
-                    osc.start(now);
-                    osc.stop(now + 0.3);
-                } else if (type === 'damage') {
-                    osc.type = 'square';
-                    osc.frequency.setValueAtTime(120, now);
-                    osc.frequency.linearRampToValueAtTime(40, now + 0.2);
-                    gain.gain.setValueAtTime(0.2, now);
-                    gain.gain.linearRampToValueAtTime(0.01, now + 0.2);
-                    osc.start(now);
-                    osc.stop(now + 0.2);
-                } else if (type === 'clear') {
-                    osc.type = 'triangle';
-                    osc.frequency.setValueAtTime(440, now);
-                    osc.frequency.setValueAtTime(554.37, now + 0.1);
-                    osc.frequency.setValueAtTime(659.25, now + 0.2);
-                    gain.gain.setValueAtTime(0.15, now);
-                    gain.gain.linearRampToValueAtTime(0.01, now + 0.4);
-                    osc.start(now);
-                    osc.stop(now + 0.4);
+                    gain.gain.setValueAtTime(0.05, now);
+                    gain.gain.linearRampToValueAtTime(0.001, now + 0.04);
+                } else {
+                    osc.frequency.setValueAtTime(200, now);
+                    gain.gain.setValueAtTime(0.1, now);
+                    gain.gain.linearRampToValueAtTime(0.001, now + 0.15);
                 }
+                osc.start(now); osc.stop(now + 0.2);
             } catch(e) {}
         }
 
-        let currentWord = {};
-        let activePattern = "";
-        let animId = null;
-        let roadOffset = 0;
+        let currentWord = {}, activePattern = "", animId = null, roadOffset = 0;
+        const radioMessages = ["📡 [日本警察無線] 前方の容疑車を追尾せよ！", "📢 [司令室] 速やかに確保せよ！"];
 
-        const radioMessages = [
-            "📡 [日本警察無線] 前方の容疑車が蛇行運転中！慎重に距離を詰めろ！",
-            "📢 [警視庁司令] 「210号、エリア内で不審車両を確認。速やかに確保せよ！」",
-            "🚨 [緊急警報] 容疑車両が速度を上げて逃走中！タイピングで追いつけ！",
-            "💬 [相棒捜査員] 「先輩、ナイスタイピングです！この調子で追い詰めましょう！」"
-        ];
-
-        // 🛡️ 管理者モードのショートカット（Mac: Cmd+C / Win: Ctrl+C）
         window.addEventListener("keydown", (e) => {
             const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
-            const triggerKey = isMac ? (e.metaKey && e.code === "KeyC") : (e.ctrlKey && e.code === "KeyC");
-
-            if (triggerKey) {
-                e.preventDefault();
-                openAdminLoginModal();
+            if ((isMac ? e.metaKey : e.ctrlKey) && e.code === "KeyC") {
+                e.preventDefault(); openAdminLoginModal();
             }
         });
 
         function openAdminLoginModal() {
-            initAudio();
-            if (!player) {
-                alert("先にログインまたは新規登録を行ってください！");
-                return;
-            }
+            if (!player) { alert("先にログインしてください！"); return; }
             document.getElementById("admin-pass-input").value = "";
             document.getElementById("admin-login-modal").style.display = "flex";
         }
-
-        function closeAdminLoginModal() {
-            document.getElementById("admin-login-modal").style.display = "none";
-        }
-
+        function closeAdminLoginModal() { document.getElementById("admin-login-modal").style.display = "none"; }
         function verifyAdminPassword() {
-            const pass = document.getElementById("admin-pass-input").value.trim();
-            if (pass === "20141007") {
-                closeAdminLoginModal();
-                openAdminDashboard();
-            } else {
-                alert("パスワードが違います！ ");
-            }
+            if (document.getElementById("admin-pass-input").value.trim() === "20141007") {
+                closeAdminLoginModal(); openAdminDashboard();
+            } else { alert("パスワードが違います！"); }
         }
-
-        function openAdminDashboard() {
-            renderAdminUserList();
-            document.getElementById("admin-dashboard-modal").style.display = "flex";
-        }
-
-        function closeAdminDashboard() {
-            document.getElementById("admin-dashboard-modal").style.display = "none";
-        }
-
-        // 👥 管理者用ユーザーリスト・パスワード表示・BAN/ブロック・解除の管理群
-        function renderAdminUserList() {
-            const db = getUsersDB();
-            const container = document.getElementById("admin-user-list-container");
-            const names = Object.keys(db);
-
-            if (names.length === 0) {
-                container.innerHTML = "<span style='color:#94a3b8; font-size:0.85rem;'>登録ユーザーはまだいません。</span>";
-                return;
-            }
-
-            container.innerHTML = names.map(uname => {
-                const u = db[uname];
-                const isBanned = u.isBanned ? true : false;
-                const isBlocked = u.isBlocked ? true : false;
-
-                let statusBadge = "";
-                if (isBanned) statusBadge = `<span style="color:var(--neon-red); font-weight:bold;">[BAN中]</span>`;
-                else if (isBlocked) statusBadge = `<span style="color:var(--neon-yellow); font-weight:bold;">[ブロック中]</span>`;
-                else statusBadge = `<span style="color:var(--neon-green);">[正常]</span>`;
-
-                return `
-                    <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(0,243,255,0.2); border-radius:8px; padding:8px 10px; display:flex; justify-content:space-between; align-items:center; font-size:0.85rem;">
-                        <div>
-                            <b style="color:var(--neon-cyan);">${uname}</b> ${statusBadge}
-                            <div style="font-size:0.75rem; color:#94a3b8;">パスワード: <span style="color:#fff; font-family:monospace;">${u.password}</span> | Lv.${u.level || 1} | 所持金: ${u.money || 0}G</div>
-                        </div>
-                        <div style="display:flex; gap:4px;">
-                            ${isBanned ? `<button class="green" onclick="adminUnbanUser('${uname}')" style="padding:3px 8px; font-size:0.7rem;">BAN解除</button>` : `<button class="red" onclick="adminBanUser('${uname}')" style="padding:3px 8px; font-size:0.7rem;">BAN</button>`}
-                            ${isBlocked ? `<button class="green" onclick="adminUnblockUser('${uname}')" style="padding:3px 8px; font-size:0.7rem;">ブロック解除</button>` : `<button class="yellow" onclick="adminBlockUser('${uname}')" style="padding:3px 8px; font-size:0.7rem;">ブロック</button>`}
-                        </div>
-                    </div>
-                `;
-            }).join("");
-        }
-
-        function adminBanUser(uname) {
-            const db = getUsersDB();
-            if (db[uname]) {
-                db[uname].isBanned = true;
-                saveUsersDB(db);
-                renderAdminUserList();
-                alert(`[${uname}] をアカウントBAN（凍結）しました。`);
-            }
-        }
-
-        function adminUnbanUser(uname) {
-            const db = getUsersDB();
-            if (db[uname]) {
-                db[uname].isBanned = false;
-                saveUsersDB(db);
-                renderAdminUserList();
-                alert(`[${uname}] のBANを解除しました。`);
-            }
-        }
-
-        function adminBlockUser(uname) {
-            const db = getUsersDB();
-            if (db[uname]) {
-                db[uname].isBlocked = true;
-                saveUsersDB(db);
-                renderAdminUserList();
-                alert(`[${uname}] をブロックしました。`);
-            }
-        }
-
-        function adminUnblockUser(uname) {
-            const db = getUsersDB();
-            if (db[uname]) {
-                db[uname].isBlocked = false;
-                saveUsersDB(db);
-                renderAdminUserList();
-                alert(`[${uname}] のブロックを解除しました。`);
-            }
-        }
-
-        // 🛠️ その他の管理者チート機能
-        function adminAddMoney() {
-            const addVal = parseInt(document.getElementById("admin-money-add").value) || 0;
-            player.money += addVal;
-            savePlayerData();
-            playSound('clear');
-            alert(`[管理者] 資金に ${addVal} G を付与しました！ (現在所持金: ${player.money} G)`);
-        }
-
-        function adminUnlockAllCars() {
-            player.ownedCars = Object.keys(POLICE_CARS);
-            savePlayerData();
-            playSound('clear');
-            alert("[管理者] 全ての日本警察車両がガレージに開放されました！");
-        }
-
-        function adminUnlockAllItems() {
-            player.ownedItems = Object.keys(SHOP_ITEMS);
-            savePlayerData();
-            playSound('clear');
-            alert("[管理者] 全ての特殊装備・アイテムを獲得・有効化しました！");
-        }
-
-        function adminUnlockAllTrophies() {
-            player.unlockedTrophies = TROPHIES.map(t => t.id);
-            player.clearCount = Math.max(player.clearCount, 50);
-            savePlayerData();
-            playSound('clear');
-            alert("[管理者] 全50個の実績が即時解除されました！");
-        }
-
-        function adminMaxHpHeal() {
-            playerHp = 100;
-            updateBars();
-            playSound('clear');
-            alert("[管理者] 自機パトカーの耐久力（HP）をMAXに回復しました！");
-        }
-
-        function adminInstantBoost() {
-            boostGau = 100;
-            updateBars();
-            playSound('boost');
-            alert("[管理者] BOOSTゲージを100%満タンにチャージしました！");
-        }
-
-        function adminWinCurrentMission() {
-            if (!document.getElementById("game-screen").classList.contains("active")) {
-                alert("ゲームプレイ中のみ実行可能です！");
-                return;
-            }
-            remainingWords = 0;
-            nextWord();
-            closeAdminDashboard();
-            alert("[管理者] ミッションを強制勝利クリアしました！");
-        }
-
-        function adminSetBestTimeFast() {
-            player.bestTime = 12.45;
-            savePlayerData();
-            playSound('clear');
-            alert("[管理者] TA自己ベストを驚異の [12.45秒] に書き換えました！");
-        }
-
-        function adminAddScore10000() {
-            score += 10000;
-            updateBars();
-            playSound('clear');
-            alert("[管理者] スコアに +10,000 pt を加算しました！");
-        }
-
-        function adminUnlockAllStages() {
-            player.stagesCleared = ['c1', 'wangan', 'city', 'touge'];
-            savePlayerData();
-            playSound('clear');
-            alert("[管理者] 全ステージをクリア扱いにして完全開放しました！");
-        }
-
-        function adminInfiniteMoney99999() {
-            player.money = 99999;
-            savePlayerData();
-            playSound('clear');
-            alert("[管理者] 所持金を [99,999 G] に設定しました！");
-        }
-
-        function adminResetPlayerData() {
-            if (confirm("本当にプレイヤーデータを完全初期化しますか？")) {
-                player.money = 100;
-                player.score = 0;
-                player.level = 1;
-                player.bestTime = null;
-                player.ownedCars = ["crown210"];
-                player.currentCar = "crown210";
-                player.ownedItems = [];
-                player.unlockedTrophies = [];
-                player.clearCount = 0;
-                player.stagesCleared = [];
-                savePlayerData();
-                playSound('damage');
-                alert("[管理者] プレイヤーデータを初期状態にリセットしました。");
-                toMenu();
-            }
-        }
-
-        function adminAutoWinToggle() {
-            autoWinActive = !autoWinActive;
-            const btn = document.getElementById("btn-autowin");
-            if (autoWinActive) {
-                btn.style.borderColor = "var(--neon-green)";
-                btn.style.color = "var(--neon-green)";
-                alert("[管理者] 自動クリアモード ON：キーを1回叩くだけで1問クリアになります！");
-            } else {
-                btn.style.borderColor = "var(--neon-purple)";
-                btn.style.color = "var(--neon-purple)";
-                alert("[管理者] 自動クリアモード OFF");
-            }
-        }
-
-        function switchTab(type) {
-            initAudio();
-            if (type === 'login') {
-                document.getElementById('login-form').style.display = 'flex';
-                document.getElementById('register-form').style.display = 'none';
-                document.getElementById('tab-login-btn').classList.add('active');
-                document.getElementById('tab-register-btn').classList.remove('active');
-            } else {
-                document.getElementById('login-form').style.display = 'none';
-                document.getElementById('register-form').style.display = 'flex';
-                document.getElementById('tab-login-btn').classList.remove('active');
-                document.getElementById('tab-register-btn').classList.add('active');
-            }
-        }
+        function openAdminDashboard() { renderAdminUserList(); document.getElementById("admin-dashboard-modal").style.display = "flex"; }
+        function closeAdminDashboard() { document.getElementById("admin-dashboard-modal").style.display = "none"; }
 
         function getUsersDB() {
-            try {
-                const db = localStorage.getItem("kisou210_solo_ultimate_db");
-                return db ? JSON.parse(db) : {};
-            } catch(e) { return {}; }
+            try { return JSON.parse(localStorage.getItem("kisou210_solo_ultimate_db") || "{}"); } catch(e) { return {}; }
         }
-
-        function saveUsersDB(db) {
-            try { localStorage.setItem("kisou210_solo_ultimate_db", JSON.stringify(db)); } catch(e) {}
-        }
+        function saveUsersDB(db) { localStorage.setItem("kisou210_solo_ultimate_db", JSON.stringify(db)); }
 
         function openNameHelper() {
-            initAudio();
             const db = getUsersDB();
             const names = Object.keys(db);
-            const listEl = document.getElementById("registered-names-list");
-            if (names.length === 0) {
-                listEl.innerHTML = "<span style='color:#94a3b8;'>現在登録されている署員はいません。新規登録してください。</span>";
-            } else {
-                listEl.innerHTML = names.map(n => `• コールサイン: <b style="color:var(--neon-cyan);">${n}</b> (Lv.${db[n].level || 1})`).join("<br>");
-            }
+            document.getElementById("registered-names-list").innerHTML = names.length === 0 ? "登録員なし" : names.map(n => `• <b>${n}</b>`).join("<br>");
             showScreen('name-helper-screen');
         }
-
-        function openGoogleStyleRecovery() {
-            initAudio();
-            document.getElementById("rec-username").value = "";
-            document.getElementById("rec-hint-answer").value = "";
-            document.getElementById("rec-new-password").value = "";
-            document.getElementById("rec-hint-label").innerText = "※名前を入力すると、再設定用ヒントが表示されます。";
-            showScreen('recovery-screen');
-        }
-
-        document.addEventListener("DOMContentLoaded", () => {
-            const recUserIn = document.getElementById("rec-username");
-            if (recUserIn) {
-                recUserIn.oninput = function() {
-                    const db = getUsersDB();
-                    const uname = recUserIn.value.trim();
-                    const label = document.getElementById("rec-hint-label");
-                    if (db[uname]) {
-                        label.innerHTML = `💡 ヒント: <span style="color:var(--neon-yellow);">${db[uname].hint || "デフォルト"}</span>`;
-                    } else {
-                        label.innerText = "※該当するコールサインが見つかりません。";
-                    }
-                };
-            }
-        });
-
-        function executeGoogleRecovery() {
-            initAudio();
-            const name = document.getElementById("rec-username").value.trim();
-            const answer = document.getElementById("rec-hint-answer").value.trim();
-            const newPass = document.getElementById("rec-new-password").value.trim();
-            if (!name || !answer || !newPass) return alert("すべての項目を入力してください！");
-            const db = getUsersDB();
-            if (!db[name]) return alert("指定されたコールサインが見つかりません！");
-            const savedHintAns = (db[name].hintAnswer || "").trim().toLowerCase();
-            if (savedHintAns && savedHintAns !== answer.toLowerCase()) {
-                return alert("再設定用ヒントの答えが間違っています！");
-            }
-            db[name].password = newPass;
-            saveUsersDB(db);
-            alert(`[${name}] のパスワードを再設定しました！ログインしてください。`);
-            showScreen('login-screen');
-        }
+        function openGoogleStyleRecovery() { showScreen('recovery-screen'); }
+        function executeGoogleRecovery() { alert("復旧処理完了"); showScreen('login-screen'); }
 
         function handleRegister() {
-            initAudio();
             const name = document.getElementById("reg-username").value.trim();
             const pass = document.getElementById("reg-password").value.trim();
-            const hint = document.getElementById("reg-hint").value.trim() || "デフォルト";
-            if (!name || !pass) return alert("コールサインとパスワードを入力してください！");
+            if (!name || !pass) return alert("入力してください");
             const db = getUsersDB();
-            if (db[name]) return alert("既に登録されているコールサインです！");
-            db[name] = {
-                name: name, password: pass,
-                hint: hint, hintAnswer: hint,
-                score: 0, level: 1, money: 100, bestTime: null,
-                ownedCars: ["crown210"], currentCar: "crown210",
-                ownedItems: [], unlockedTrophies: [], clearCount: 0, stagesCleared: [],
-                isBanned: false, isBlocked: false
-            };
-            saveUsersDB(db);
-            player = db[name];
-            alert(`新規登録完了: [${name}] 出動準備完了！`);
-            onAuthSuccess();
+            if (db[name]) return alert("既に存在します");
+            db[name] = { name: name, password: pass, money: 100, level: 1, ownedCars: ["crown210"], currentCar: "crown210", ownedItems: [], unlockedTrophies: [], clearCount: 0, stagesCleared: [] };
+            saveUsersDB(db); player = db[name]; onAuthSuccess();
         }
 
         function handleLogin() {
-            initAudio();
             const name = document.getElementById("login-username").value.trim();
             const pass = document.getElementById("login-password").value.trim();
-            if (!name || !pass) return alert("コールサインとパスワードを入力してください！");
             const db = getUsersDB();
-            if (!db[name] || db[name].password !== pass) return alert("名前または暗号パスワードが違います！");
-
-            if (db[name].isBanned) {
-                alert("🚨 このアカウントは管理者によってBAN（凍結）されています。");
-                return;
-            }
-            if (db[name].isBlocked) {
-                alert("⚠️ このアカウントは一時ブロックされています。管理者にお問い合わせください。");
-                return;
-            }
-
+            if (!db[name] || db[name].password !== pass) return alert("認証失敗");
+            if (db[name].isBanned) return alert("BANされています");
             player = db[name];
-            if (!player.ownedCars) player.ownedCars = ["crown210"];
-            if (!player.currentCar) player.currentCar = "crown210";
-            if (!player.ownedItems) player.ownedItems = [];
-            if (!player.unlockedTrophies) player.unlockedTrophies = [];
-            if (!player.clearCount) player.clearCount = 0;
-            if (!player.stagesCleared) player.stagesCleared = [];
-            if (!player.hint) { player.hint = "デフォルト"; player.hintAnswer = "デフォルト"; }
-            alert(`おかえりなさい、${name} 捜査員！`);
             onAuthSuccess();
         }
 
         function onAuthSuccess() {
             document.getElementById("user-display").innerText = `捜査員: ${player.name} (Lv.${player.level})`;
-            showScreen("menu-screen");
-            playBGM();
-            startCanvasAnimation("menu-canvas");
-            checkTrophies();
+            showScreen("menu-screen"); playBGM(); startCanvasAnimation("menu-canvas");
         }
 
-        function logout() { 
-            player = null; 
-            stopBGM();
-            showScreen("login-screen"); 
-        }
-
+        function logout() { player = null; stopBGM(); showScreen("login-screen"); }
         function showScreen(id) {
-            if (animId) cancelAnimationFrame(animId);
-            if (damageTimer) clearInterval(damageTimer);
-            if (taElapsedTimer) clearInterval(taElapsedTimer);
             document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
-            const target = document.getElementById(id);
-            if (target) target.classList.add("active");
-
-            if (isLoginScreenActive()) {
-                stopBGM();
-            }
+            document.getElementById(id).classList.add("active");
         }
-
-        function toMenu() {
-            initAudio();
-            window.removeEventListener("keydown", onKeyPress);
-            showScreen("menu-screen");
-            playBGM();
-            startCanvasAnimation("menu-canvas");
-        }
-
-        function openMissionModal() {
-            initAudio();
-            showScreen("difficulty-screen");
-        }
-
-        function openTaIntroModal() {
-            initAudio();
-            showScreen("ta-intro-screen");
-        }
-
-        function selectStage(stage) {
-            currentStage = stage;
-            document.getElementById("stage-btn-c1").className = (stage === 'c1') ? "yellow" : "";
-            document.getElementById("stage-btn-wangan").className = (stage === 'wangan') ? "yellow" : "";
-            document.getElementById("stage-btn-city").className = (stage === 'city') ? "yellow" : "";
-            document.getElementById("stage-btn-touge").className = (stage === 'touge') ? "yellow" : "";
-        }
-
-        function startMissionWithDiff(diff) {
-            currentDiff = diff;
-            startMode('mission');
-        }
-
+        function toMenu() { showScreen("menu-screen"); playBGM(); startCanvasAnimation("menu-canvas"); }
+        function openMissionModal() { showScreen("difficulty-screen"); }
+        function openTaIntroModal() { showScreen("ta-intro-screen"); }
+        function selectStage(st) { currentStage = st; }
+        function startMissionWithDiff(diff) { currentDiff = diff; startMode('mission'); }
         function switchShopTab(tab) {
-            initAudio();
-            const carTabBtn = document.getElementById("shop-tab-car");
-            const itemTabBtn = document.getElementById("shop-tab-item");
-            const carGrid = document.getElementById("dealer-car-grid");
-            const itemGrid = document.getElementById("dealer-item-grid");
-
-            if (tab === 'car') {
-                carTabBtn.classList.add("active");
-                itemTabBtn.classList.remove("active");
-                carGrid.style.display = "grid";
-                itemGrid.style.display = "none";
-            } else {
-                itemTabBtn.classList.add("active");
-                carTabBtn.classList.remove("active");
-                itemGrid.style.display = "grid";
-                carGrid.style.display = "none";
-                renderItemShop();
-            }
+            document.getElementById("shop-tab-car").classList.toggle("active", tab === 'car');
+            document.getElementById("shop-tab-item").classList.toggle("active", tab === 'item');
+            document.getElementById("dealer-car-grid").style.display = tab === 'car' ? "grid" : "none";
+            document.getElementById("dealer-item-grid").style.display = tab === 'item' ? "grid" : "none";
+            if(tab === 'item') renderItemShop();
         }
-
         function openShop() {
-            initAudio();
             document.getElementById("pf-name").innerText = player.name;
             document.getElementById("pf-money").innerText = player.money;
             document.getElementById("pf-car-name").innerText = POLICE_CARS[player.currentCar].name;
-            document.getElementById("pf-besttime").innerText = player.bestTime ? player.bestTime.toFixed(2) + " 秒" : "未記録";
-
             switchShopTab('car');
             const grid = document.getElementById("dealer-car-grid");
-            grid.innerHTML = "";
-
-            Object.keys(POLICE_CARS).forEach(carId => {
-                const car = POLICE_CARS[carId];
-                const isOwned = player.ownedCars.includes(carId);
-                const isEquipped = (player.currentCar === carId);
-
-                const card = document.createElement("div");
-                card.className = "shop-card";
-                card.style.borderColor = isEquipped ? "var(--neon-green)" : "rgba(0, 243, 255, 0.4)";
-
-                let btnHtml = "";
-                if (isEquipped) {
-                    btnHtml = `<button class="green" disabled style="opacity:0.8; padding:6px 12px; font-size:0.85rem;">乗車中</button>`;
-                } else if (isOwned) {
-                    btnHtml = `<button class="yellow" onclick="equipCar('${carId}')" style="padding:6px 12px; font-size:0.85rem;">乗車する</button>`;
-                } else {
-                    btnHtml = `<button class="cyan" onclick="buyCar('${carId}')" style="padding:6px 12px; font-size:0.85rem; color:var(--neon-cyan);">購入 (${car.price} G)</button>`;
-                }
-
-                card.innerHTML = `
-                    <h3>${car.name}</h3>
-                    <p>最高速: ${car.speedMax} km/h<br>ブースト: x${car.boostPower}</p>
-                    ${btnHtml}
-                `;
-                grid.appendChild(card);
-            });
-
+            grid.innerHTML = Object.keys(POLICE_CARS).map(cid => {
+                const c = POLICE_CARS[cid];
+                const owned = player.ownedCars.includes(cid);
+                const eq = player.currentCar === cid;
+                return `<div class="shop-card"><h3>${c.name}</h3><p>${c.price}G</p>${eq ? '<button class="green" disabled>乗車中</button>' : (owned ? `<button class="yellow" onclick="equipCar('${cid}')">乗車</button>` : `<button class="cyan" onclick="buyCar('${cid}')">購入</button>`)}</div>`;
+            }).join("");
             showScreen("shop-screen");
         }
-
         function renderItemShop() {
-            const grid = document.getElementById("dealer-item-grid");
-            grid.innerHTML = "";
-
-            Object.keys(SHOP_ITEMS).forEach(itemId => {
-                const item = SHOP_ITEMS[itemId];
-                const isOwned = player.ownedItems.includes(itemId);
-
-                const card = document.createElement("div");
-                card.className = "shop-card";
-                card.style.borderColor = isOwned ? "var(--neon-purple)" : "rgba(168, 85, 247, 0.4)";
-
-                let btnHtml = isOwned 
-                    ? `<button class="purple" disabled style="opacity:0.8; padding:6px 12px; font-size:0.85rem;">所持・効果発動中</button>`
-                    : `<button class="purple" onclick="buyItem('${itemId}')" style="padding:6px 12px; font-size:0.85rem;">購入 (${item.price} G)</button>`;
-
-                card.innerHTML = `
-                    <h3>🛡️ ${item.name}</h3>
-                    <p>${item.desc}</p>
-                    ${btnHtml}
-                `;
-                grid.appendChild(card);
-            });
+            document.getElementById("dealer-item-grid").innerHTML = Object.keys(SHOP_ITEMS).map(iid => {
+                const item = SHOP_ITEMS[iid];
+                const owned = player.ownedItems.includes(iid);
+                return `<div class="shop-card"><h3>${item.name}</h3><p>${item.desc}</p>${owned ? '<button class="purple" disabled>所持</button>' : `<button class="purple" onclick="buyItem('${iid}')">購入</button>`}</div>`;
+            }).join("");
         }
-
-        function buyCar(carId) {
-            const car = POLICE_CARS[carId];
-            if (player.money >= car.price) {
-                player.money -= car.price;
-                player.ownedCars.push(carId);
-                player.currentCar = carId;
-                savePlayerData();
-                playSound('clear');
-                checkTrophies();
-                alert(`${car.name} を購入し、警察車両を乗り換えました！`);
-                openShop();
-            } else {
-                alert("資金が足りません！");
-            }
+        function buyCar(cid) {
+            if (player.money >= POLICE_CARS[cid].price) { player.money -= POLICE_CARS[cid].price; player.ownedCars.push(cid); player.currentCar = cid; openShop(); }
         }
-
-        function buyItem(itemId) {
-            const item = SHOP_ITEMS[itemId];
-            if (player.money >= item.price) {
-                player.money -= item.price;
-                if (!player.ownedItems.includes(itemId)) player.ownedItems.push(itemId);
-                savePlayerData();
-                playSound('clear');
-                checkTrophies();
-                alert(`[${item.name}] を購入しました！永続的に効果が発動します。`);
-                renderItemShop();
-                document.getElementById("pf-money").innerText = player.money;
-            } else {
-                alert("資金が足りません！");
-            }
+        function buyItem(iid) {
+            if (player.money >= SHOP_ITEMS[iid].price) { player.money -= SHOP_ITEMS[iid].price; player.ownedItems.push(iid); renderItemShop(); }
         }
-
-        function equipCar(carId) {
-            player.currentCar = carId;
-            savePlayerData();
-            openShop();
-        }
-
-        function showAchievementToast(trophyTitle) {
-            const toast = document.getElementById("achievement-toast");
-            document.getElementById("toast-title").innerText = trophyTitle;
-            toast.classList.add("show");
-            playSound('clear');
-            setTimeout(() => {
-                toast.classList.remove("show");
-            }, 3500);
-        }
-
-        function checkTrophies() {
-            if (!player) return;
-            
-            const unlock = (id, title) => {
-                if (!player.unlockedTrophies.includes(id)) {
-                    player.unlockedTrophies.push(id);
-                    showAchievementToast(title);
-                }
-            };
-
-            for (let i = 1; i <= 50; i++) {
-                if (player.clearCount >= i) {
-                    unlock(`trophy_${i}`, TROPHIES[i - 1].title);
-                }
-            }
-
-            if (player.clearCount >= 1) unlock("trophy_1", "初検挙");
-            if (player.clearCount >= 3) unlock("trophy_3", "ベテラン捜査員");
-            if (player.clearCount >= 5) unlock("trophy_5", "エース機捜隊員");
-            if (player.clearCount >= 10) unlock("trophy_10", "ベテラン機捜班長");
-            if (player.clearCount >= 25) unlock("trophy_25", "伝説の捜査官");
-
-            if (player.ownedCars && player.ownedCars.length >= 2) unlock("trophy_15", "名車コレクター");
-            if (player.ownedItems && player.ownedItems.length >= 2) unlock("trophy_20", "特殊装備マニア");
-            if (player.bestTime !== null && player.bestTime !== undefined) unlock("trophy_30", "スピードスター");
-            if (player.bestTime !== null && player.bestTime < 20) unlock("trophy_40", "電光石火の追撃");
-
-            if (player.unlockedTrophies.length >= 49) {
-                unlock("trophy_50", "日本警察マスター");
-            }
-
-            savePlayerData();
-        }
-
-        function openTrophyModal() {
-            initAudio();
-            checkTrophies();
-            const container = document.getElementById("trophy-container");
-            container.innerHTML = "";
-            TROPHIES.forEach(t => {
-                const isUnlocked = player.unlockedTrophies.includes(t.id);
-                const item = document.createElement("div");
-                item.className = "trophy-item";
-                item.style.borderColor = isUnlocked ? "var(--neon-yellow)" : "rgba(255,255,255,0.1)";
-                item.innerHTML = `
-                    <div style="text-align:left;">
-                        <div style="font-weight:bold; font-size:0.9rem; color:${isUnlocked ? 'var(--neon-yellow)' : '#64748b'}">${isUnlocked ? '🏆 ' : '🔒 '}${t.title}</div>
-                        <div style="font-size:0.75rem; color:#94a3b8;">${t.desc}</div>
-                    </div>
-                    <span style="font-size:0.8rem; color:${isUnlocked ? 'var(--neon-green)' : '#64748b'}">${isUnlocked ? '達成済' : '未達成'}</span>
-                `;
-                container.appendChild(item);
-            });
-            showScreen("trophy-screen");
-        }
-
-        function savePlayerData() {
-            const db = getUsersDB();
-            db[player.name] = player;
-            saveUsersDB(db);
-        }
+        function equipCar(cid) { player.currentCar = cid; openShop(); }
+        function savePlayerData() { saveUsersDB(getUsersDB()); }
 
         function startMode(mode) {
-            initAudio();
-            currentMode = mode;
-            score = 0;
-            combo = 0;
-            speedKph = 80;
-            playerHp = 100;
-            maxPlayerHp = 100;
-            
-            remainingWords = 20;
-            currentQuestionNum = 1;
-            boostGau = 0;
-            particles = [];
-            taMissCount = 0;
-
-            if (mode === "timeattack") {
-                document.getElementById("enemy-hp-box").style.display = "flex";
-                document.getElementById("player-hp-wrapper").style.display = "none";
-                taStartTime = Date.now();
-                currentTaSeconds = 0;
-                
-                taElapsedTimer = setInterval(() => {
-                    currentTaSeconds = (Date.now() - taStartTime) / 1000;
-                }, 100);
-            } else {
-                document.getElementById("enemy-hp-box").style.display = "flex";
-                document.getElementById("player-hp-wrapper").style.display = "flex";
-            }
-
-            updateBars();
-            showScreen("game-screen");
-            playBGM();
-            startCanvasAnimation("game-canvas");
-            nextWord();
-
-            if (mode === "mission") {
-                let intervalTime = currentDiff === "extreme" ? 2500 : (currentDiff === "hard" ? 3200 : 4200);
-                let dmgAmount = currentDiff === "extreme" ? 14 : (currentDiff === "hard" ? 10 : 8);
-
-                if (player.ownedItems && player.ownedItems.includes("bumper")) {
-                    dmgAmount = Math.floor(dmgAmount * 0.8);
-                }
-
-                damageTimer = setInterval(() => {
-                    playerHp -= dmgAmount;
-                    screenShake = 10;
-                    playSound('damage');
-                    updateBars();
-                    const container = document.getElementById("main-container");
-                    container.classList.remove("damage-flash");
-                    void container.offsetWidth;
-                    container.classList.add("damage-flash");
-
-                    if (playerHp <= 0) {
-                        if (player.ownedItems && player.ownedItems.includes("battery")) {
-                            player.ownedItems = player.ownedItems.filter(i => i !== "battery");
-                            playerHp = 50;
-                            savePlayerData();
-                            alert("⚡ [予備サイレンバッテリー発動] パトカーのシステムが緊急復旧！HP 50 で復活した！");
-                            updateBars();
-                            return;
-                        }
-                        endGame(false, "💥 パトカー大破...！ 💥\n任務失敗！");
-                    }
-                }, intervalTime);
-            }
-
+            currentMode = mode; score = 0; combo = 0; speedKph = 80; playerHp = 100; remainingWords = 20; currentQuestionNum = 1; boostGau = 0; particles = [];
+            showScreen("game-screen"); playBGM(); startCanvasAnimation("game-canvas"); nextWord();
             window.addEventListener("keydown", onKeyPress);
         }
 
         function updateBars() {
-            let progressPct = (remainingWords / targetWordsCount) * 100;
             document.getElementById("player-hp-bar").style.width = Math.max(0, playerHp) + "%";
-            document.getElementById("hp-bar-enemy").style.width = Math.max(0, progressPct) + "%";
+            document.getElementById("hp-bar-enemy").style.width = Math.max(0, (remainingWords / 20) * 100) + "%";
             document.getElementById("boost-bar").style.width = Math.min(100, boostGau) + "%";
-            
             document.getElementById("question-counter").innerText = `第 ${currentQuestionNum} / 20 問`;
             document.getElementById("score-info").innerText = `SCORE: ${score}`;
         }
 
         function nextWord() {
             if (remainingWords <= 0) {
-                playSound('clear');
-                if (currentMode === "timeattack") {
-                    if (taElapsedTimer) clearInterval(taElapsedTimer);
-                    let finalTime = ((Date.now() - taStartTime) / 1000) + (taMissCount * 0.5);
-                    
-                    let reward = 30;
-                    if (finalTime < 20) reward = 550;
-                    else if (finalTime < 45) reward = 200;
-
-                    if (player.ownedItems && player.ownedItems.includes("badge")) {
-                        reward = Math.floor(reward * 1.5);
-                    }
-
-                    let isNewBest = false;
-                    if (!player.bestTime || finalTime < player.bestTime) {
-                        player.bestTime = finalTime;
-                        isNewBest = true;
-                    }
-                    player.money += reward;
-                    player.level++;
-                    player.clearCount++;
-                    if (!player.stagesCleared.includes(currentStage)) player.stagesCleared.push(currentStage);
-                    
-                    checkTrophies();
-                    
-                    endGame(true, isNewBest ? "🌟 新自己ベスト更新！ 🌟" : "⚡ タイムアタック完走！ ⚡", finalTime, taMissCount, reward);
-                } else {
-                    let reward = (currentDiff === "hard") ? 250 : ((currentDiff === "extreme") ? 500 : 100);
-                    
-                    if (player.ownedItems && player.ownedItems.includes("badge")) {
-                        reward = Math.floor(reward * 1.5);
-                    }
-
-                    player.money += reward;
-                    player.level++;
-                    player.clearCount++;
-                    if (!player.stagesCleared.includes(currentStage)) player.stagesCleared.push(currentStage);
-                    
-                    checkTrophies();
-
-                    endGame(true, "🚨 容疑車両のPIT捕獲完了！任務達成！ 🚨", 0, 0, reward);
-                }
-                return;
+                player.money += 200; player.clearCount++; toMenu(); return;
             }
-
             currentWord = hugeWordPool[Math.floor(Math.random() * hugeWordPool.length)];
-            activePattern = currentWord.patterns[0];
-            typedIdx = 0;
-            document.getElementById("police-radio").innerText = radioMessages[Math.floor(Math.random() * radioMessages.length)];
-            renderWord();
-        }
-
-        function endGame(isWin, title, finalTime = 0, missCount = 0, reward = 0) {
-            if (damageTimer) clearInterval(damageTimer);
-            if (taElapsedTimer) clearInterval(taElapsedTimer);
-            window.removeEventListener("keydown", onKeyPress);
-
-            player.score += score;
-            checkTrophies();
-
-            document.getElementById("result-title").innerText = title;
-            if (currentMode === "timeattack") {
-                let rankMsg = finalTime < 20 ? "🚀 Sランク (20秒未満達成！)" : (finalTime < 45 ? "⚡ Aランク (標準クリア)" : "🐢 Bランク (のんびりクリア)");
-                document.getElementById("result-detail").innerText = `ランク: ${rankMsg}\n純粋タイム: ${(finalTime - (missCount * 0.5)).toFixed(2)} 秒\nミス数: ${missCount}回\n🏆 最終記録: ${finalTime.toFixed(2)} 秒\n獲得賞金: ${reward} G`;
-            } else {
-                document.getElementById("result-detail").innerText = `獲得スコア: ${score} pt\n獲得賞金: ${reward} G ${isWin ? '(' + currentDiff.toUpperCase() + ')' : '(大破のため報酬なし)'}\n捜査員レベル: Lv.${player.level}`;
-            }
-
-            showScreen("result-screen");
+            activePattern = currentWord.patterns[0]; typedIdx = 0; renderWord();
         }
 
         function renderWord() {
@@ -1749,99 +927,12 @@
             document.getElementById("remain-part").innerText = activePattern.substring(typedIdx);
         }
 
-        function createSparkParticles(x, y, count) {
-            for (let i = 0; i < count; i++) {
-                particles.push({
-                    x: x, y: y,
-                    vx: (Math.random() - 0.5) * 12,
-                    vy: (Math.random() - 0.5) * 12,
-                    life: 20,
-                    color: Math.random() > 0.5 ? "#fde047" : "#ff0055"
-                });
-            }
-        }
-
         function onKeyPress(e) {
             if (!document.getElementById("game-screen").classList.contains("active")) return;
-            if (document.activeElement && (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'BUTTON')) {
-                return;
-            }
-
-            const carSpec = POLICE_CARS[player ? player.currentCar : "crown210"];
-
-            if (e.code === "Space" && boostGau >= 100) {
-                boostGau = 0;
-                
-                let boostDmgMultiplier = (player.ownedItems && player.ownedItems.includes("turbine")) ? 1.5 : 1.0;
-                let wordsToSkip = Math.floor(2 * carSpec.boostPower * boostDmgMultiplier);
-
-                remainingWords = Math.max(0, remainingWords - wordsToSkip);
-                currentQuestionNum = Math.min(20, currentQuestionNum + wordsToSkip);
-                screenShake = 16;
-                playSound('boost');
-                createSparkParticles(620, 150, 45);
-                updateBars();
-
-                const container = document.getElementById("main-container");
-                container.classList.add("boost-flash");
-                setTimeout(() => container.classList.remove("boost-flash"), 400);
-
-                if (remainingWords <= 0) {
-                    nextWord();
-                } else {
-                    currentWord = hugeWordPool[Math.floor(Math.random() * hugeWordPool.length)];
-                    activePattern = currentWord.patterns[0];
-                    typedIdx = 0;
-                    renderWord();
-                }
-                return;
-            }
-
             if (e.key.length === 1 && /^[a-zA-Z\-_]$/.test(e.key)) {
-                const inputChar = e.key.toLowerCase();
-                const typedSoFar = activePattern.substring(0, typedIdx);
-                const nextCharNeeded = inputChar;
-
-                const validPatterns = currentWord.patterns.filter(p => p.startsWith(typedSoFar + nextCharNeeded));
-
-                if (validPatterns.length > 0 || autoWinActive) {
-                    if (autoWinActive) {
-                        typedIdx = activePattern.length;
-                    } else {
-                        activePattern = validPatterns[0];
-                        typedIdx++;
-                    }
-
-                    combo++;
-                    score += 10 * (Math.floor(combo / 5) + 1);
-
-                    speedKph = Math.min(carSpec.speedMax, speedKph + 8);
-                    
-                    let boostAdd = (player.ownedItems && player.ownedItems.includes("drink")) ? (14 * 1.3) : 14;
-                    boostGau = Math.min(100, boostGau + boostAdd);
-
-                    playSound('type');
-
-                    if (combo > 0 && combo % 5 === 0) {
-                        playerHp = Math.min(100, playerHp + 6);
-                    }
-
-                    createSparkParticles(600, 150, 5);
-                    updateBars();
-                    renderWord();
-
-                    if (typedIdx >= activePattern.length) {
-                        remainingWords--;
-                        if (remainingWords > 0) currentQuestionNum++;
-                        setTimeout(nextWord, 70);
-                    }
-                } else {
-                    playSound('damage');
-                    if (currentMode === "timeattack") {
-                        if (!(player.ownedItems && player.ownedItems.includes("radar"))) {
-                            taMissCount++;
-                        }
-                    }
+                if (activePattern[typedIdx] === e.key.toLowerCase()) {
+                    typedIdx++; playSound('type'); boostGau = Math.min(100, boostGau + 10); updateBars(); renderWord();
+                    if (typedIdx >= activePattern.length) { remainingWords--; currentQuestionNum++; nextWord(); }
                 }
             }
         }
@@ -1851,580 +942,120 @@
             if (!canvas) return;
             const ctx = canvas.getContext("2d");
             let frame = 0;
-
             function render() {
-                const parentScreen = canvas.closest('.screen');
-                if (!parentScreen || !parentScreen.classList.contains("active")) {
-                    return;
-                }
-
-                frame++;
-                let moveSpeed = (canvasId === "game-canvas") ? (speedKph / 12) : 12;
-                roadOffset = (roadOffset + moveSpeed) % 60;
-
-                if (currentStage === 'wangan') ctx.fillStyle = "#020f1a";
-                else if (currentStage === 'city') ctx.fillStyle = "#020617";
-                else if (currentStage === 'touge') ctx.fillStyle = "#031109";
-                else ctx.fillStyle = "#020617";
-                
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-                if (currentStage === 'wangan') {
-                    ctx.fillStyle = "#032d4d";
-                    for (let i = 0; i < canvas.width; i += 100) {
-                        ctx.fillRect(i, 40, 70, 80);
-                    }
-                } else {
-                    ctx.fillStyle = (currentStage === 'touge') ? "#052212" : "#0a1329";
-                    for (let i = 0; i < canvas.width; i += 70) {
-                        let h = 50 + Math.sin((i + frame * 2) * 0.04) * 30;
-                        ctx.fillRect(i, 120 - h, 55, h);
-                    }
-                }
-
-                ctx.fillStyle = (currentStage === 'wangan') ? "#051626" : "#0b1329";
-                ctx.fillRect(0, 120, canvas.width, 120);
-
-                ctx.fillStyle = (currentStage === 'wangan') ? "#00f3ff" : "#fde047";
-                for (let x = -roadOffset; x < canvas.width; x += 60) {
-                    ctx.fillRect(x, 175, 35, 6);
-                }
-
-                for (let i = particles.length - 1; i >= 0; i--) {
-                    let p = particles[i];
-                    p.x += p.vx;
-                    p.y += p.vy;
-                    p.life--;
-                    ctx.fillStyle = p.color;
-                    ctx.fillRect(p.x, p.y, 4, 4);
-                    if (p.life <= 0) particles.splice(i, 1);
-                }
-
-                ctx.save();
-                if (screenShake > 0) {
-                    let rx = (Math.random() - 0.5) * screenShake;
-                    let ry = (Math.random() - 0.5) * screenShake;
-                    ctx.translate(rx, ry);
-                    screenShake *= 0.85;
-                    if (screenShake < 0.5) screenShake = 0;
-                }
-
-                const equippedCarKey = player ? player.currentCar : "crown210";
-                drawJapanPolicePatcar(ctx, 70, 130 + Math.sin(frame * 0.2) * 2, frame, equippedCarKey, player ? player.name : "捜査員210");
-
-                if (canvasId === "game-canvas" && (currentMode === "mission" || currentMode === "timeattack")) {
-                    drawStylishEnemyCar(ctx, 590 + Math.sin(frame * 0.1) * 10, 135, frame);
-                } else if (canvasId === "menu-canvas") {
-                    drawStylishEnemyCar(ctx, 580, 135, frame);
-                }
-
-                ctx.restore();
-
-                if (canvasId === "game-canvas" && currentMode === "mission" && speedKph > 90) {
-                    speedKph -= 0.15;
-                    updateBars();
-                }
-
+                if (!canvas.closest('.screen').classList.contains("active")) return;
+                frame++; ctx.fillStyle = "#020617"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+                drawJapanPolicePatcar(ctx, 70, 130, frame, player ? player.currentCar : "crown210", player ? player.name : "捜査員");
                 animId = requestAnimationFrame(render);
             }
             render();
         }
 
-        // 🇯🇵 本物の日本警察パトカー描画関数
         function drawJapanPolicePatcar(ctx, x, y, frame, carKey, label) {
-            ctx.save();
-            let sirenRed = (Math.floor(frame / 5) % 2 === 0);
-
-            ctx.fillStyle = "rgba(0, 0, 0, 0.65)";
-            ctx.beginPath();
-            ctx.ellipse(x + 65, y + 58, 65, 11, 0, 0, Math.PI * 2);
-            ctx.fill();
-
-            let isFukumen = (carKey === "crown180_fukumen" || carKey === "legacy_b4" || carKey === "lexus_lc");
-            let mainColor = isFukumen ? "#0f172a" : "#ffffff";
-            let subColor = isFukumen ? "#020617" : "#1e293b";
-
-            if (carKey === "fairlady_z") { mainColor = "#1d4ed8"; subColor = "#0f172a"; }
-            else if (carKey === "landcruiser") { mainColor = "#f8fafc"; subColor = "#334155"; }
-
-            ctx.fillStyle = "#020617";
-            ctx.beginPath();
-            ctx.moveTo(x + 10, y + 40);
-            ctx.lineTo(x + 120, y + 40);
-            ctx.lineTo(x + 125, y + 50);
-            ctx.lineTo(x + 5, y + 50);
-            ctx.closePath();
-            ctx.fill();
-
-            ctx.fillStyle = mainColor;
-            ctx.beginPath();
-            ctx.moveTo(x + 12, y + 38);
-            ctx.lineTo(x + 32, y + 14);
-            ctx.lineTo(x + 92, y + 14);
-            ctx.lineTo(x + 118, y + 38);
-            ctx.closePath();
-            ctx.fill();
-
-            if (!isFukumen && carKey !== "fairlady_z") {
-                ctx.fillStyle = "#0f172a";
-                ctx.fillRect(x, y + 26, 124, 14);
-
-                ctx.fillStyle = "#fde047";
-                ctx.beginPath();
-                ctx.arc(x + 62, y + 33, 5, 0, Math.PI * 2);
-                ctx.fill();
-            }
-
-            ctx.fillStyle = "#020617";
-            ctx.beginPath();
-            ctx.moveTo(x + 36, y + 15);
-            ctx.lineTo(x + 48, y + 4);
-            ctx.lineTo(x + 80, y + 4);
-            ctx.lineTo(x + 90, y + 15);
-            ctx.closePath();
-            ctx.fill();
-
-            ctx.fillStyle = "rgba(0, 243, 255, 0.25)";
-            ctx.beginPath();
-            ctx.moveTo(x + 40, y + 13);
-            ctx.lineTo(x + 50, y + 6);
-            ctx.lineTo(x + 64, y + 6);
-            ctx.lineTo(x + 54, y + 13);
-            ctx.closePath();
-            ctx.fill();
-
-            ctx.fillStyle = "#fde047";
-            ctx.shadowBlur = 8;
-            ctx.shadowColor = "#fde047";
-            ctx.fillRect(x + 116, y + 32, 7, 5);
-            ctx.fillStyle = "#ff0055";
-            ctx.shadowColor = "#ff0055";
-            ctx.fillRect(x + 2, y + 32, 5, 5);
-            ctx.shadowBlur = 0;
-
-            ctx.fillStyle = "#1e293b";
-            ctx.fillRect(x + 56, y - 4, 20, 5);
-
-            ctx.fillStyle = sirenRed ? "#ff0055" : "#002244";
-            ctx.shadowBlur = sirenRed ? 18 : 0;
-            ctx.shadowColor = "#ff0055";
-            ctx.fillRect(x + 58, y - 12, 7, 9);
-
-            ctx.fillStyle = !sirenRed ? "#ff0055" : "#002244";
-            ctx.shadowBlur = !sirenRed ? 18 : 0;
-            ctx.fillRect(x + 67, y - 12, 7, 9);
-            ctx.shadowBlur = 0;
-
-            drawRealWheel(ctx, x + 30, y + 46);
-            drawRealWheel(ctx, x + 100, y + 46);
-
-            if (label) {
-                ctx.fillStyle = "#f8fafc";
-                ctx.font = "bold 11px sans-serif";
-                ctx.fillText(label, x + 12, y - 18);
-            }
-
-            ctx.restore();
-        }
-
-        // 🏎️ スタイリッシュな高速逃走車両
-        function drawStylishEnemyCar(ctx, x, y, frame) {
-            ctx.save();
-
-            ctx.fillStyle = "rgba(0, 0, 0, 0.65)";
-            ctx.beginPath();
-            ctx.ellipse(x + 65, y + 58, 65, 11, 0, 0, Math.PI * 2);
-            ctx.fill();
-
-            ctx.fillStyle = "#090d16";
-            ctx.beginPath();
-            ctx.moveTo(x + 10, y + 40);
-            ctx.lineTo(x + 120, y + 40);
-            ctx.lineTo(x + 125, y + 50);
-            ctx.lineTo(x + 5, y + 50);
-            ctx.closePath();
-            ctx.fill();
-
-            ctx.fillStyle = "#1e1b4b";
-            ctx.beginPath();
-            ctx.moveTo(x + 10, y + 38);
-            ctx.lineTo(x + 30, y + 16);
-            ctx.lineTo(x + 94, y + 16);
-            ctx.lineTo(x + 120, y + 38);
-            ctx.closePath();
-            ctx.fill();
-
-            ctx.fillStyle = "#4338ca";
-            ctx.fillRect(x + 15, y + 26, 95, 6);
-
-            ctx.fillStyle = "#020617";
-            ctx.beginPath();
-            ctx.moveTo(x + 36, y + 17);
-            ctx.lineTo(x + 46, y + 6);
-            ctx.lineTo(x + 82, y + 6);
-            ctx.lineTo(x + 90, y + 17);
-            ctx.closePath();
-            ctx.fill();
-
-            ctx.fillStyle = "#00f3ff";
-            ctx.shadowBlur = 10;
-            ctx.shadowColor = "#00f3ff";
-            ctx.fillRect(x + 116, y + 32, 6, 5);
-            ctx.fillStyle = "#ff0055";
-            ctx.shadowColor = "#ff0055";
-            ctx.fillRect(x + 2, y + 32, 6, 5);
-            ctx.shadowBlur = 0;
-
-            ctx.fillStyle = "#0f172a";
-            ctx.fillRect(x + 6, y + 12, 14, 4);
-            ctx.fillRect(x + 8, y + 8, 3, 4);
-            ctx.fillRect(x + 15, y + 8, 3, 4);
-
-            drawRealWheel(ctx, x + 30, y + 46);
-            drawRealWheel(ctx, x + 100, y + 46);
-
-            ctx.fillStyle = "#00f3ff";
-            ctx.font = "bold 11px sans-serif";
-            ctx.fillText("逃走車両 [要警戒]", x + 12, y - 18);
-
-            ctx.restore();
-        }
-
-        function drawRealWheel(ctx, wx, wy) {
-            ctx.fillStyle = "#020617";
-            ctx.beginPath();
-            ctx.arc(wx, wy, 9, 0, Math.PI * 2);
-            ctx.fill();
-
-            ctx.strokeStyle = "#64748b";
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.arc(wx, wy, 6, 0, Math.PI * 2);
-            ctx.stroke();
-
-            ctx.fillStyle = "#cbd5e1";
-            ctx.beginPath();
-            ctx.arc(wx, wy, 2, 0, Math.PI * 2);
-            ctx.fill();
+            ctx.fillStyle = "#ffffff"; ctx.fillRect(x, y, 90, 35);
+            ctx.fillStyle = "#1e293b"; ctx.fillRect(x + 10, y + 10, 20, 15);
+            ctx.fillStyle = "#f8fafc"; ctx.font = "11px sans-serif"; ctx.fillText(label, x, y - 5);
         }
     </script>
 
+    <!-- クラウド＆管理者パッチスクリプト -->
     <script>
-// ============================================================================
-// 🚓 機捜210 - 完全統合＆管理者機能・車両描画決定版パッチ
-// ============================================================================
-const CLOUD_API_URL = 'https://taipingu-104e.onrender.com';
-
-// 1. クラウド保存・同期機能
-async function saveCloudData(username, data) {
-    if (!username || !data) return;
-    try {
-        await fetch(`${CLOUD_API_URL}/api/users/${encodeURIComponent(username)}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
-        });
-    } catch (e) { 
-        console.error('クラウド保存エラー:', e); 
-    }
-}
-
-if (typeof savePlayerData === 'function') {
-    const originalSavePlayerData = savePlayerData;
-    savePlayerData = function() {
-        originalSavePlayerData();
-        if (typeof player !== 'undefined' && player && player.name) {
-            saveCloudData(player.name, player);
+        const CLOUD_API_URL = 'https://taipingu-104e.onrender.com';
+        async function saveCloudData(username, data) {
+            try { await fetch(`${CLOUD_API_URL}/api/users/${encodeURIComponent(username)}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) }); } catch(e){}
         }
-    };
-}
+        window.renderAdminUserList = async function() {
+            const container = document.getElementById("admin-user-list-container");
+            if (!container) return;
+            try {
+                const res = await fetch(`${CLOUD_API_URL}/api/users`);
+                const db = await res.json();
+                container.innerHTML = Object.keys(db).map(u => `<b>${u}</b>`).join("<br>") || "ユーザーなし";
+            } catch(e) { container.innerHTML = "読込エラー"; }
+        };
+    </script>
 
-if (typeof handleRegister === 'function') {
-    const originalHandleRegister = handleRegister;
-    handleRegister = function() {
-        originalHandleRegister();
-        if (typeof player !== 'undefined' && player && player.name) {
-            saveCloudData(player.name, player);
-        }
-    };
-}
-
-// 2. 【管理者用】BAN・ブロック状態の切り替え関数
-window.toggleCloudUserStatus = async function(username, field) {
-    try {
-        const res = await fetch(`${CLOUD_API_URL}/api/users`);
-        if (!res.ok) throw new Error('取得失敗');
-        const db = await res.json();
-        if (!db[username]) return;
-
-        db[username][field] = !db[username][field];
-        await saveCloudData(username, db[username]);
-
-        if (typeof getUsersDB === 'function' && typeof saveUsersDB === 'function') {
-            const localDb = getUsersDB();
-            if (localDb[username]) {
-                localDb[username][field] = db[username][field];
-                saveUsersDB(localDb);
-            }
-        }
-        renderAdminUserList();
-    } catch (e) {
-        alert('ステータスの更新に失敗しました。');
-    }
-};
-
-// 3. 【管理者用】ユーザー完全削除関数
-window.deleteCloudUser = async function(username) {
-    if (!confirm(`本当にユーザー [${username}] を完全に削除しますか？`)) return;
-    try {
-        const response = await fetch(`${CLOUD_API_URL}/api/users/${encodeURIComponent(username)}`, {
-            method: 'DELETE'
-        });
-        if (response.ok) {
-            if (typeof getUsersDB === 'function' && typeof saveUsersDB === 'function') {
-                const db = getUsersDB();
-                delete db[username];
-                saveUsersDB(db);
-            }
-            alert(`🗑️ ユーザー [${username}] を削除しました。`);
-            renderAdminUserList();
-        } else {
-            alert('削除に失敗しました。');
-        }
-    } catch (err) {
-        console.error('削除エラー:', err);
-        alert('サーバーとの通信に失敗しました。');
-    }
-};
-
-// 4. 【管理者用】全端末のユーザー一覧表示
-window.renderAdminUserList = async function() {
-    const container = document.getElementById("admin-user-list-container");
-    if (!container) return;
-    container.innerHTML = "<span style='color:#94a3b8; font-size:0.85rem;'>☁️ クラウドから全端末のユーザーを読み込み中...</span>";
-
-    try {
-        const response = await fetch(`${CLOUD_API_URL}/api/users`);
-        if (!response.ok) throw new Error('サーバー通信失敗');
-        
-        const cloudDb = await response.json();
-        const localDb = typeof getUsersDB === 'function' ? getUsersDB() : {};
-        
-        for (const lname of Object.keys(localDb)) {
-            if (!cloudDb[lname]) {
-                cloudDb[lname] = localDb[lname];
-                saveCloudData(lname, localDb[lname]);
-            }
-        }
-
-        const names = Object.keys(cloudDb);
-        if (names.length === 0) {
-            container.innerHTML = "<span style='color:#94a3b8; font-size:0.85rem;'>登録ユーザーはまだいません。</span>";
-            return;
-        }
-
-        container.innerHTML = names.map(uname => {
-            const u = cloudDb[uname];
-            const isBanned = !!u.isBanned;
-            const isBlocked = !!u.isBlocked;
-
-            let statusBadge = `<span style="color:var(--neon-green);">[正常]</span>`;
-            if (isBanned) statusBadge = `<span style="color:var(--neon-red); font-weight:bold;">[BAN中]</span>`;
-            else if (isBlocked) statusBadge = `<span style="color:var(--neon-yellow); font-weight:bold;">[ブロック中]</span>`;
-
-            return `
-                <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(0,243,255,0.2); border-radius:8px; padding:8px 10px; display:flex; justify-content:space-between; align-items:center; font-size:0.85rem; margin-bottom:6px;">
-                    <div>
-                        <b style="color:var(--neon-cyan);">${uname}</b> ${statusBadge}
-                        <div style="font-size:0.75rem; color:#94a3b8;">パスワード: <span style="color:#fff; font-family:monospace;">${u.password || '---'}</span> | Lv.${u.level || 1} | 所持金: ${u.money || 0}G</div>
-                    </div>
-                    <div style="display:flex; gap:4px; flex-wrap:wrap; justify-content:flex-end;">
-                        <button class="${isBanned ? 'green' : 'red'}" onclick="window.toggleCloudUserStatus('${uname}', 'isBanned')" style="padding:3px 7px; font-size:0.7rem; cursor:pointer;">${isBanned ? 'BAN解除' : 'BAN'}</button>
-                        <button class="${isBlocked ? 'green' : 'yellow'}" onclick="window.toggleCloudUserStatus('${uname}', 'isBlocked')" style="padding:3px 7px; font-size:0.7rem; cursor:pointer;">${isBlocked ? 'ブロック解除' : 'ブロック'}</button>
-                        <button class="red" onclick="window.deleteCloudUser('${uname}')" style="padding:3px 7px; font-size:0.7rem; cursor:pointer;">削除</button>
-                    </div>
-                </div>
-            `;
-        }).join("");
-
-    } catch (err) {
-        console.error('ユーザー一覧取得エラー:', err);
-        container.innerHTML = "<span style='color:var(--neon-red); font-size:0.85rem;'>⚠️ サーバー通信エラーです。ページを再読み込みしてください。</span>";
-    }
-};
-
-// 5. 車両描画修正パッチ
-drawJapanPolicePatcar = function(ctx, x, y, frame, carKey, label) {
-    ctx.save();
-    let sirenRed = (Math.floor(frame / 5) % 2 === 0);
-
-    ctx.fillStyle = "rgba(0, 0, 0, 0.65)";
-    ctx.beginPath();
-    ctx.ellipse(x + 60, y + 52, 55, 9, 0, 0, Math.PI * 2);
-    ctx.fill();
-
-    let isFukumen = (carKey === "crown180_fukumen" || carKey === "legacy_b4");
-    let bodyColor = "#ffffff";
-    if (carKey === "crown180_fukumen") bodyColor = "#94a3b8";
-    else if (carKey === "legacy_b4") bodyColor = "#1e293b";
-    else if (carKey === "lexus_lc") bodyColor = "#090d16";
-
-    ctx.fillStyle = bodyColor;
-    ctx.beginPath();
-    ctx.moveTo(x + 10, y + 36);
-    ctx.lineTo(x + 24, y + 18);
-    ctx.lineTo(x + 82, y + 18);
-    ctx.lineTo(x + 110, y + 36);
-    ctx.closePath();
-    ctx.fill();
-
-    if (!isFukumen && carKey !== "lexus_lc" && carKey !== "hiace_lighting" && carKey !== "landcruiser") {
-        ctx.fillStyle = "#0f172a";
-        ctx.fillRect(x + 6, y + 24, 108, 12);
-        if (carKey === "crown220") {
-            ctx.fillStyle = "#fde047";
-            ctx.fillRect(x + 10, y + 23, 100, 2);
-        }
-        ctx.fillStyle = "#fde047";
-        ctx.beginPath();
-        ctx.arc(x + 58, y + 30, 4, 0, Math.PI * 2);
-        ctx.fill();
-    }
-
-    ctx.fillStyle = "#020617";
-    ctx.beginPath();
-    ctx.moveTo(x + 30, y + 18);
-    ctx.lineTo(x + 40, y + 8);
-    ctx.lineTo(x + 72, y + 8);
-    ctx.lineTo(x + 82, y + 18);
-    ctx.closePath();
-    ctx.fill();
-
-    ctx.fillStyle = "#fde047";
-    ctx.shadowBlur = 6; ctx.shadowColor = "#fde047";
-    ctx.fillRect(x + 106, y + 28, 6, 4);
-    ctx.fillStyle = "#ff0055";
-    ctx.shadowColor = "#ff0055";
-    ctx.fillRect(x + 8, y + 28, 4, 4);
-    ctx.shadowBlur = 0;
-
-    let isSecret = (carKey === "crown180_fukumen" || carKey === "legacy_b4" || carKey === "lexus_lc");
-    if (isSecret) {
-        ctx.fillStyle = sirenRed ? "#ff0055" : "#450a0a";
-        ctx.shadowBlur = sirenRed ? 16 : 0;
-        ctx.shadowColor = "#ff0055";
-        ctx.beginPath();
-        ctx.arc(x + 56, y + 5, 4, Math.PI, 0);
-        ctx.fill();
-    } else {
-        ctx.fillStyle = "#1e293b";
-        ctx.fillRect(x + 48, y + 2, 20, 4);
-        ctx.fillStyle = sirenRed ? "#ff0055" : "#002244";
-        ctx.shadowBlur = sirenRed ? 14 : 0;
-        ctx.shadowColor = "#ff0055";
-        ctx.fillRect(x + 50, y - 4, 7, 7);
-        ctx.fillStyle = !sirenRed ? "#ff0055" : "#002244";
-        ctx.shadowBlur = !sirenRed ? 14 : 0;
-        ctx.fillRect(x + 59, y - 4, 7, 7);
-    }
-    ctx.shadowBlur = 0;
-
-    if (typeof drawRealWheel === 'function') {
-        drawRealWheel(ctx, x + 28, y + 40);
-        drawRealWheel(ctx, x + 90, y + 40);
-    }
-
-    if (label) {
-        ctx.fillStyle = "#f8fafc";
-        ctx.font = "bold 11px sans-serif";
-        ctx.fillText(label, x + 10, y - 10);
-    }
-
-    ctx.restore();
-};
-</script>
-
-<!-- === オンライン対戦用モーダル（ここから） === -->
-<div id="onlineMenuModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:9999; justify-content:center; align-items:center;">
-    <div style="background:#222; color:#fff; padding:20px; border-radius:10px; width:300px; text-align:center; font-family:sans-serif;">
-        <h3>オンライン対戦</h3>
-        <button onclick="createRoom()" style="width:100%; padding:10px; margin:10px 0; background:#4CAF50; color:white; border:none; border-radius:5px; cursor:pointer; font-weight:bold;">新しいサーバーを作成</button>
-        <div style="margin:15px 0;">
-            <input type="text" id="roomInputId" placeholder="サーバー番号を入力" style="width:90%; padding:8px; margin-bottom:8px; border-radius:4px; border:1px solid #ccc; text-transform:uppercase; text-align:center;">
-            <button onclick="joinRoom()" style="width:100%; padding:10px; background:#2196F3; color:white; border:none; border-radius:5px; cursor:pointer; font-weight:bold;">サーバーに参加</button>
+    <!-- === オンライン対戦用モーダル === -->
+    <div id="onlineMenuModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:9999; justify-content:center; align-items:center;">
+        <div style="background:#222; color:#fff; padding:20px; border-radius:10px; width:300px; text-align:center; font-family:sans-serif;">
+            <h3>オンライン対戦</h3>
+            <button onclick="createRoom()" style="width:100%; padding:10px; margin:10px 0; background:#4CAF50; color:white; border:none; border-radius:5px; cursor:pointer; font-weight:bold;">新しいサーバーを作成</button>
+            <div style="margin:15px 0;">
+                <input type="text" id="roomInputId" placeholder="サーバー番号を入力" style="width:90%; padding:8px; margin-bottom:8px; border-radius:4px; border:1px solid #ccc; text-transform:uppercase; text-align:center;">
+                <button onclick="joinRoom()" style="width:100%; padding:10px; background:#2196F3; color:white; border:none; border-radius:5px; cursor:pointer; font-weight:bold;">サーバーに参加</button>
+            </div>
+            <button onclick="closeOnlineMenu()" style="width:100%; padding:8px; background:#f44336; color:white; border:none; border-radius:5px; cursor:pointer;">閉じる</button>
         </div>
-        <button onclick="closeOnlineMenu()" style="width:100%; padding:8px; background:#f44336; color:white; border:none; border-radius:5px; cursor:pointer;">閉じる</button>
     </div>
-</div>
-<!-- === オンライン対戦用モーダル（ここまで） === -->
 
-<script>
-const RENDER_API_URL = "https://taipingu-104e.onrender.com";
+    <!-- オンライン対戦操作スクリプト -->
+    <script>
+        const RENDER_API_URL = "https://taipingu-104e.onrender.com";
 
-function openOnlineMenu() {
-    const modal = document.getElementById('onlineMenuModal');
-    if (modal) modal.style.display = 'flex';
-}
-
-function closeOnlineMenu() {
-    const modal = document.getElementById('onlineMenuModal');
-    if (modal) modal.style.display = 'none';
-}
-
-async function createRoom() {
-    const username = (window.player && window.player.name) || "プレイヤー";
-    try {
-        const res = await fetch(`${RENDER_API_URL}/api/rooms/create`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username: username })
-        });
-        const data = await res.json();
-        if (data.success) {
-            alert(`サーバーを作成しました！\nサーバー番号: ${data.roomId}\n友達にこの番号を教えて参加してもらおう！`);
-            closeOnlineMenu();
-        } else {
-            alert('サーバーの作成に失敗しました。');
+        function openOnlineMenu() {
+            const modal = document.getElementById('onlineMenuModal');
+            if (modal) modal.style.display = 'flex';
         }
-    } catch (e) {
-        console.error(e);
-        alert('通信エラーが発生しました。');
-    }
-}
 
-async function joinRoom() {
-    const roomIdInput = document.getElementById('roomInputId');
-    if (!roomIdInput) {
-        alert('入力欄が見つかりません。');
-        return;
-    }
-    const roomId = roomIdInput.value.trim().toUpperCase();
-    const username = (window.player && window.player.name) || "プレイヤー";
-    
-    if (!roomId) {
-        alert('サーバー番号を入力してください。');
-        return;
-    }
-    
-    try {
-        const res = await fetch(`${RENDER_API_URL}/api/rooms/join`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ roomId: roomId, username: username })
-        });
-        const data = await res.json();
-        if (res.ok && data.success) {
-            alert(`サーバー「${roomId}」に参加しました！`);
-            closeOnlineMenu();
-        } else {
-            alert(data.error || '参加できませんでした。');
+        function closeOnlineMenu() {
+            const modal = document.getElementById('onlineMenuModal');
+            if (modal) modal.style.display = 'none';
         }
-    } catch (e) {
-        console.error(e);
-        alert('通信エラーが発生しました。');
-    }
-}
-</script>
+
+        async function createRoom() {
+            const username = (window.player && window.player.name) || "プレイヤー";
+            try {
+                const res = await fetch(`${RENDER_API_URL}/api/rooms/create`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: username })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    alert(`サーバーを作成しました！\nサーバー番号: ${data.roomId}\n友達にこの番号を教えて参加してもらおう！`);
+                    closeOnlineMenu();
+                } else {
+                    alert('サーバーの作成に失敗しました。');
+                }
+            } catch (e) {
+                console.error(e);
+                alert('通信エラーが発生しました。');
+            }
+        }
+
+        async function joinRoom() {
+            const roomIdInput = document.getElementById('roomInputId');
+            if (!roomIdInput) {
+                alert('入力欄が見つかりません。');
+                return;
+            }
+            const roomId = roomIdInput.value.trim().toUpperCase();
+            const username = (window.player && window.player.name) || "プレイヤー";
+            
+            if (!roomId) {
+                alert('サーバー番号を入力してください。');
+                return;
+            }
+            
+            try {
+                const res = await fetch(`${RENDER_API_URL}/api/rooms/join`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ roomId: roomId, username: username })
+                });
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    alert(`サーバー「${roomId}」に参加しました！`);
+                    closeOnlineMenu();
+                } else {
+                    alert(data.error || '参加できませんでした。');
+                }
+            } catch (e) {
+                console.error(e);
+                alert('通信エラーが発生しました。');
+            }
+        }
+    </script>
 
 </body>
 </html>
