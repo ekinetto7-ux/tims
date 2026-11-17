@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ピクミン タイピング大作戦 - 4K Visuals</title>
+    <style>
+        :root {
+            --bg-dark: #091315;
+            --panel-bg: rgba(20, 38, 42, 0.85);
+            --accent-green: #2ed573;
+            --accent-gold: #ffa502;
+            --accent-red: #ff4757;
+            --accent-blue: #1e90ff;
+            --text-main: #f1f2f6;
+            --text-sub: #a4b0be;
+            --border-glow: rgba(46, 213, 115, 0.3);
+        }
+        * { box-sizing: border-box; }
+        body {
+            background: radial-gradient(circle at top, #183a3d 0%, var(--bg-dark) 100%);
+            color: var(--text-main);
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        h1 {
+            color: var(--accent-gold);
+            text-shadow: 0 0 25px rgba(255, 165, 2, 0.7);
+            font-size: 32px;
+            margin: 10px 0 5px;
+            letter-spacing: 2px;
+            text-align: center;
+        }
+        .subtitle {
+            color: var(--text-sub);
+            font-size: 14px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .container {
+            background: var(--panel-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8), 0 0 20px var(--border-glow);
+            backdrop-filter: blur(12px);
+            border-radius: 18px;
+            padding: 25px;
+            width: 100%;
+            max-width: 720px;
+            margin-bottom: 20px;
+        }
+        .btn {
+            background: linear-gradient(135deg, var(--accent-green), #219d53);
+            color: #fff;
+            border: none;
+            padding: 12px 22px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 15px rgba(46, 213, 115, 0.3);
+            margin: 5px;
+        }
+        .btn:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(46, 213, 115, 0.5);
+        }
+        .btn-ai {
+            background: linear-gradient(135deg, var(--accent-red), #c0392b);
+            box-shadow: 0 4px 15px rgba(255, 71, 87, 0.3);
+        }
+        .btn-ai:hover {
+            box-shadow: 0 8px 25px rgba(255, 71, 87, 0.5);
+        }
+        .btn-sub {
+            background: linear-gradient(135deg, #3742fa, #2f3542);
+            box-shadow: none;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 14px;
+            font-size: 18px;
+            background: rgba(10, 20, 22, 0.9);
+            border: 2px solid #2f3640;
+            color: #fff;
+            border-radius: 10px;
+            margin-top: 10px;
+            outline: none;
+            transition: 0.2s;
+        }
+        input[type="text"]:focus {
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 15px rgba(255, 165, 2, 0.4);
+        }
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-top: 15px;
+        }
+        .stat-card {
+            background: rgba(10, 20, 22, 0.7);
+            padding: 12px 15px;
+            border-radius: 12px;
+            border-left: 4px solid var(--accent-gold);
+        }
+        .stat-label { font-size: 12px; color: var(--text-sub); }
+        .stat-val { font-size: 20px; font-weight: bold; color: #fff; margin-top: 4px; }
+        
+        /* バトル・ゲーム画面用 */
+        .battle-arena {
+            background: rgba(8, 16, 18, 0.85);
+            border-radius: 14px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            text-align: center;
+        }
+        .target-kanji {
+            font-size: 36px;
+            font-weight: bold;
+            color: var(--accent-gold);
+            text-shadow: 0 0 15px rgba(255, 165, 2, 0.5);
+            margin: 10px 0 5px;
+        }
+        .target-kana {
+            font-size: 18px;
+            color: var(--accent-green);
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+        }
+        .target-roman {
+            font-size: 15px;
+            color: var(--text-sub);
+            font-family: monospace;
+            margin-bottom: 15px;
+        }
+        .hp-bar-container {
+            width: 100%;
+            background: #1e272e;
+            height: 18px;
+            border-radius: 9px;
+            overflow: hidden;
+            margin: 8px 0 16px;
+            border: 1px solid #353b48;
+        }
+        .hp-bar {
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+        .hp-player { background: linear-gradient(90deg, #2ed573, #7bed9f); }
+        .hp-ai { background: linear-gradient(90deg, #ff4757, #ff6b81); }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <h1>🌿 ピクミン タイピング大作戦</h1>
+    <div class="subtitle">4K Ultra Visual Edition — 一人プレイ ＆ AI対戦モード</div>
+
+    <!-- 1. 登録＆ステータス画面 -->
+    <div class="container" id="lobbyScreen">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+            <h3 style="margin: 0;">👤 隊長プロフィール（自動セーブ）</h3>
+            <span style="font-size: 12px; color: var(--accent-green);">● LocalStorage 同期中</span>
+        </div>
+
+        <div class="status-grid">
+            <div class="stat-card">
+                <div class="stat-label">登録隊長名</div>
+                <div class="stat-val" id="dispName">新人隊長</div>
+            </div>
+            <div class="stat-card" style="border-color: var(--accent-green);">
+                <div class="stat-label">ピクミン隊列数</div>
+                <div class="stat-val" id="dispPikmin">10 匹</div>
+            </div>
+            <div class="stat-card" style="border-color: var(--accent-blue);">
+                <div class="stat-label">累計討伐スコア</div>
+                <div class="stat-val" id="dispScore">0 pt</div>
+            </div>
+        </div>
+
+        <div style="margin-top: 15px; display: flex; gap: 10px;">
+            <input type="text" id="nameInput" placeholder="隊長の名前を入力して登録..." style="margin: 0; flex: 1;">
+            <button class="btn" style="margin: 0;" onclick="registerPlayer()">登録・保存</button>
+        </div>
+
+        <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 20px 0;">
+
+        <h3 style="margin-top: 0;">🎮 出撃モード選択</h3>
+        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;">
+            <button class="btn" onclick="startGame('solo')">🌱 一人プレイ（原生生物討伐）</button>
+            <button class="btn btn-ai" onclick="startGame('ai')">🔥 AI対戦（ルーイAIとスピード対決）</button>
+        </div>
+    </div>
+
+    <!-- 2. ゲームプレイ画面 -->
+    <div class="container hidden" id="gameScreen">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <span id="modeTitle" style="font-weight: bold; color: var(--accent-gold); font-size: 18px;">🌱 一人プレイモード</span>
+            <button class="btn btn-sub" style="padding: 6px 14px; font-size: 13px; margin: 0;" onclick="backToLobby()">← ロビーへ戻る</button>
+        </div>
+
+        <!-- HP / 進行度ゲージ -->
+        <div id="gaugeSection">
+            <div style="display: flex; justify-content: space-between; font-size: 13px;">
+                <span id="p1Label">あなたの隊列ゲージ</span>
+                <span id="p1ScoreText">0 / 1000</span>
+            </div>
+            <div class="hp-bar-container">
+                <div class="hp-bar hp-player" id="p1Bar" style="width: 0%;"></div>
+            </div>
+
+            <div id="aiGaugeWrapper" class="hidden">
+                <div style="display: flex; justify-content: space-between; font-size: 13px; color: #ff6b81;">
+                    <span>🤖 ルーイAI（難易度：ふつう）</span>
+                    <span id="aiScoreText">0 / 1000</span>
+                </div>
+                <div class="hp-bar-container">
+                    <div class="hp-bar hp-ai" id="aiBar" style="width: 0%;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- タイピングエリア -->
+        <div class="battle-arena">
+            <div style="font-size: 13px; color: var(--text-sub);" id="enemyTag">出現した原生生物</div>
+            <div class="target-kanji" id="wordKanji">チャッピー</div>
+            <div class="target-kana" id="wordKana">ちゃっぴー</div>
+            <div class="target-roman" id="wordRoman">chappi- / tyappi-</div>
+
+            <input type="text" id="typingBox" placeholder="ローマ字で入力して突撃！" autocomplete="off" oninput="handleInput()">
+            <div id="feedbackMsg" style="margin-top: 12px; font-size: 14px; color: var(--accent-green); min-height: 20px;"></div>
+        </div>
+    </div>
+
+    <!-- 効果音（リポジトリの d.mp3 を利用） -->
+    <audio id="hitSound" src="d.mp3" preload="auto"></audio>
+
+    <script>
+        // ==========================================
+        // 💾 1. データ保存・登録システム (LocalStorage)
+        // ==========================================
+        let saveData = {
+            name: "新人隊長",
+            pikmin: 10,
+            score: 0
+        };
+
+        function loadSaveData() {
+            const raw = localStorage.getItem('pikmin_4k_save');
+            if (raw) {
+                try { saveData = JSON.parse(raw); } catch (e) {}
+            }
+            updateLobbyUI();
+        }
+
+        function writeSaveData() {
+            localStorage.setItem('pikmin_4k_save', JSON.stringify(saveData));
+            updateLobbyUI();
+        }
+
+        function registerPlayer() {
+            const val = document.getElementById('nameInput').value.trim();
+            if (!val) {
+                alert("隊長の名前を入力してください！");
+                return;
+            }
+            saveData.name = val;
+            writeSaveData();
+            alert(`隊長「${saveData.name}」のデータを登録・保存しました！`);
+        }
+
+        function updateLobbyUI() {
+            document.getElementById('dispName').innerText = saveData.name;
+            document.getElementById('dispPikmin').innerText = `${saveData.pikmin.toLocaleString()} 匹`;
+            document.getElementById('dispScore').innerText = `${saveData.score.toLocaleString()} pt`;
+            document.getElementById('nameInput').value = saveData.name;
+        }
+
+        // ==========================================
+        // 📚 2. ピクミンお題データ（複数ローマ字パターン対応）
+        // ==========================================
+        const wordList = [
+            { kanji: "赤ピクミン", kana: "あかぴくみん", patterns: ["akapikumin", "akapikuminn"] },
+            { kanji: "青ピクミン", kana: "あおぴくみん", patterns: ["aopikumin", "aopikuminn"] },
+            { kanji: "黄ピクミン", kana: "きぴくみん", patterns: ["kipikumin", "kipikuminn"] },
+            { kanji: "チャッピー", kana: "ちゃっぴー", patterns: ["chappi-", "tyappi-"] },
+            { kanji: "通信機", kana: "つうしんき", patterns: ["tsuushinki", "tuushinki", "tuusinki", "tsuusinki"] },
+            { kanji: "オニヨン", kana: "おによん", patterns: ["oniyon", "oniyonn"] },
+            { kanji: "ドルフィン号", kana: "どるふぃんごう", patterns: ["dorufingou", "doruhwingou", "dorufinngou"] },
+            { kanji: "ペレット草", kana: "ぺれっとそう", patterns: ["perettosou"] },
+            { kanji: "ブタドックリ", kana: "ぶたどっくり", patterns: ["butadokkuri"] },
+            { kanji: "イモガエル", kana: "いもがえる", patterns: ["imogaeru"] },
+            { kanji: "ダマグモ", kana: "だまぐも", patterns: ["damagumo"] },
+            { kanji: "ゲキカラスプレー", kana: "げきからすぷれー", patterns: ["gekikarasupure-"] }
+        ];
+
+        // ==========================================
+        // 🎮 3. ゲーム進行・AI対戦ロジック
+        // ==========================================
+        let currentMode = 'solo';
+        let currentWord = null;
+        let matchPoints = 0;
+        let aiPoints = 0;
+        const GOAL_POINTS = 1000;
+        let aiTimer = null;
+
+        function startGame(mode) {
+            currentMode = mode;
+            matchPoints = 0;
+            aiPoints = 0;
+
+            document.getElementById('lobbyScreen').classList.add('hidden');
+            document.getElementById('gameScreen').classList.remove('hidden');
+
+            if (mode === 'ai') {
+                document.getElementById('modeTitle').innerText = "🔥 AI対戦：vs ルーイAI";
+                document.getElementById('aiGaugeWrapper').classList.remove('hidden');
+                startAiLoop();
+            } else {
+                document.getElementById('modeTitle').innerText = "🌱 一人プレイ：原生生物討伐";
+                document.getElementById('aiGaugeWrapper').classList.add('hidden');
+            }
+
+            updateGauges();
+            nextWord();
+            const box = document.getElementById('typingBox');
+            box.value = "";
+            box.focus();
+        }
+
+        function backToLobby() {
+            clearInterval(aiTimer);
+            document.getElementById('gameScreen').classList.add('hidden');
+            document.getElementById('lobbyScreen').classList.remove('hidden');
+            updateLobbyUI();
+        }
+
+        function nextWord() {
+            const idx = Math.floor(Math.random() * wordList.length);
+            currentWord = wordList[idx];
+            document.getElementById('wordKanji').innerText = currentWord.kanji;
+            document.getElementById('wordKana').innerText = currentWord.kana;
+            document.getElementById('wordRoman').innerText = currentWord.patterns.join(" / ");
+        }
+
+        function handleInput() {
+            const inputEl = document.getElementById('typingBox');
+            const val = inputEl.value.toLowerCase().trim();
+            const fb = document.getElementById('feedbackMsg');
+
+            if (!currentWord) return;
+
+            // 登録された複数パターンのいずれかに完全一致したら撃破！
+            if (currentWord.patterns.includes(val)) {
+                playSound();
+                matchPoints += 200;
+                saveData.score += 200;
+                saveData.pikmin += 2;
+                writeSaveData();
+
+                fb.innerText = `✨ 「${currentWord.kanji}」を撃破！ ピクミンが2匹増えた！`;
+                inputEl.value = "";
+                updateGauges();
+
+                if (matchPoints >= GOAL_POINTS) {
+                    finishMatch(true);
+                } else {
+                    nextWord();
+                }
+            } else {
+                // 途中まで合っているか判定
+                const isPrefix = currentWord.patterns.some(p => p.startsWith(val));
+                if (val === "") {
+                    fb.innerText = "";
+                } else if (isPrefix) {
+                    fb.style.color = "var(--accent-green)";
+                    fb.innerText = "🌿 突撃中... そのまま入力！";
+                } else {
+                    fb.style.color = "var(--accent-red)";
+                    fb.innerText = "⚠️ スペルが違います！";
+                }
+            }
+        }
+
+        function startAiLoop() {
+            clearInterval(aiTimer);
+            // 2.8秒ごとにAIがスコアを獲得
+            aiTimer = setInterval(() => {
+                aiPoints += 120;
+                updateGauges();
+                if (aiPoints >= GOAL_POINTS) {
+                    finishMatch(false);
+                }
+            }, 2800);
+        }
+
+        function updateGauges() {
+            const p1Pct = Math.min(100, (matchPoints / GOAL_POINTS) * 100);
+            document.getElementById('p1Bar').style.width = p1Pct + "%";
+            document.getElementById('p1ScoreText').innerText = `${matchPoints} / ${GOAL_POINTS}`;
+
+            const aiPct = Math.min(100, (aiPoints / GOAL_POINTS) * 100);
+            document.getElementById('aiBar').style.width = aiPct + "%";
+            document.getElementById('aiScoreText').innerText = `${aiPoints} / ${GOAL_POINTS}`;
+        }
+
+        function finishMatch(isWin) {
+            clearInterval(aiTimer);
+            if (currentMode === 'ai') {
+                if (isWin) {
+                    saveData.score += 500;
+                    saveData.pikmin += 10;
+                    writeSaveData();
+                    alert("🏆 勝利！ ルーイAIに打ち勝ち、ボーナス500pt＆ピクミン10匹獲得！");
+                } else {
+                    alert("💀 敗北... ルーイAIに先にゴールされてしまった！");
+                }
+            } else {
+                saveData.score += 300;
+                writeSaveData();
+                alert("🎉 ステージクリア！ すべての原生生物を討伐しました！");
+            }
+            backToLobby();
+        }
+
+        function playSound() {
+            const audio = document.getElementById('hitSound');
+            if (audio) {
+                audio.currentTime = 0;
+                audio.play().catch(() => {});
+            }
+        }
+
+        // 起動時にセーブデータ読込
+        window.onload = loadSaveData;
+    </script>
+</body>
+</html>
