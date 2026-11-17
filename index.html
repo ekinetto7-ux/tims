@@ -2108,7 +2108,8 @@
             ctx.fill();
         }
     </script>
- <script>
+
+    <script>
 // ============================================================================
 // 🚓 機捜210 - 完全統合＆管理者機能・車両描画決定版パッチ
 // ============================================================================
@@ -2123,7 +2124,6 @@ async function saveCloudData(username, data) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         });
-        console.log(`💾 [${username}] のデータをクラウドに保存しました`);
     } catch (e) { 
         console.error('クラウド保存エラー:', e); 
     }
@@ -2160,7 +2160,6 @@ window.toggleCloudUserStatus = async function(username, field) {
         db[username][field] = !db[username][field];
         await saveCloudData(username, db[username]);
 
-        // ローカルDBも同期
         if (typeof getUsersDB === 'function' && typeof saveUsersDB === 'function') {
             const localDb = getUsersDB();
             if (localDb[username]) {
@@ -2198,7 +2197,7 @@ window.deleteCloudUser = async function(username) {
     }
 };
 
-// 4. 【管理者用】全端末のユーザー一覧をきれいに表示＆ボタンを有効化する関数
+// 4. 【管理者用】全端末のユーザー一覧表示
 window.renderAdminUserList = async function() {
     const container = document.getElementById("admin-user-list-container");
     if (!container) return;
@@ -2211,7 +2210,6 @@ window.renderAdminUserList = async function() {
         const cloudDb = await response.json();
         const localDb = typeof getUsersDB === 'function' ? getUsersDB() : {};
         
-        // ローカルデータをクラウドへ自動同期
         for (const lname of Object.keys(localDb)) {
             if (!cloudDb[lname]) {
                 cloudDb[lname] = localDb[lname];
@@ -2255,7 +2253,7 @@ window.renderAdminUserList = async function() {
     }
 };
 
-// 5. 車両描画修正パッチ（バランス調整版）
+// 5. 車両描画修正パッチ
 drawJapanPolicePatcar = function(ctx, x, y, frame, carKey, label) {
     ctx.save();
     let sirenRed = (Math.floor(frame / 5) % 2 === 0);
@@ -2344,8 +2342,8 @@ drawJapanPolicePatcar = function(ctx, x, y, frame, carKey, label) {
 
     ctx.restore();
 };
-  
 </script>
+
 <!-- === オンライン対戦用モーダル（ここから） === -->
 <div id="onlineMenuModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:9999; justify-content:center; align-items:center;">
     <div style="background:#222; color:#fff; padding:20px; border-radius:10px; width:300px; text-align:center; font-family:sans-serif;">
@@ -2374,7 +2372,7 @@ function closeOnlineMenu() {
 }
 
 async function createRoom() {
-    const username = window.currentUser || "プレイヤー";
+    const username = (window.player && window.player.name) || "プレイヤー";
     try {
         const res = await fetch(`${RENDER_API_URL}/api/rooms/create`, {
             method: 'POST',
@@ -2401,7 +2399,7 @@ async function joinRoom() {
         return;
     }
     const roomId = roomIdInput.value.trim().toUpperCase();
-    const username = window.currentUser || "プレイヤー";
+    const username = (window.player && window.player.name) || "プレイヤー";
     
     if (!roomId) {
         alert('サーバー番号を入力してください。');
