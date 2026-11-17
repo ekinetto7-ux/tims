@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ピクミン タイピング大作戦 - 30 Stages Master Edition</title>
+    <title>ピクミン タイピング大作戦 - Photorealistic Game World</title>
     <style>
         :root {
-            --bg-dark: #020604;
-            --panel-bg: rgba(6, 20, 14, 0.96);
+            --bg-dark: #010403;
+            --panel-bg: rgba(4, 16, 10, 0.96);
             --accent-green: #2ed573;
             --accent-gold: #ffb142;
             --accent-red: #ff5252;
@@ -19,7 +19,7 @@
         }
         * { box-sizing: border-box; }
         body {
-            background: radial-gradient(circle at center, #0d261a 0%, var(--bg-dark) 100%);
+            background: radial-gradient(circle at center, #0a2015 0%, var(--bg-dark) 100%);
             color: var(--text-main);
             font-family: 'Helvetica Neue', Arial, sans-serif;
             margin: 0;
@@ -116,7 +116,7 @@
             border: 2px solid rgba(255, 177, 66, 0.7);
             box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.95), 0 10px 30px rgba(0, 0, 0, 0.9);
             margin-bottom: 12px;
-            background: #030e08;
+            background: #020b06;
         }
         canvas {
             display: block;
@@ -131,10 +131,10 @@
             text-align: center;
             box-shadow: 0 10px 25px rgba(0,0,0,0.8);
         }
-        .target-kanji { font-size: 36px; font-weight: 900; color: var(--accent-gold); margin: 2px 0; letter-spacing: 2px; text-shadow: 0 0 12px rgba(255,177,66,0.5); }
-        .target-kana { font-size: 16px; color: var(--accent-green); letter-spacing: 2px; margin-bottom: 8px; }
+        .target-kanji { font-size: 34px; font-weight: 900; color: var(--accent-gold); margin: 2px 0; letter-spacing: 2px; text-shadow: 0 0 12px rgba(255,177,66,0.5); }
+        .target-kana { font-size: 15px; color: var(--accent-green); letter-spacing: 2px; margin-bottom: 8px; }
         .roman-guide {
-            font-size: 26px;
+            font-size: 24px;
             font-family: monospace;
             margin: 5px 0;
             background: rgba(0,0,0,0.8);
@@ -202,7 +202,7 @@
 <body>
 
     <h1>🌿 ピクミン タイピング大作戦</h1>
-    <div class="subtitle">30 Stages Mission Edition — 全30ステージ制覇を目指せ</div>
+    <div class="subtitle">Photorealistic Game World Edition — 本家リスペクトの超リアル3D空間表現</div>
 
     <!-- 1. ログイン画面 -->
     <div class="container" id="authScreen">
@@ -237,7 +237,7 @@
                 <div class="stat-val" id="homeScore">0 pt</div>
             </div>
             <div class="stat-card" style="border-color: var(--accent-blue);">
-                <div class="stat-label">クリア状況</div>
+                <div class="stat-label">解放ステージ</div>
                 <div class="stat-val" id="homeStageProgress">Stage 1 / 30</div>
             </div>
         </div>
@@ -258,13 +258,37 @@
         </div>
     </div>
 
+    <!-- 2.5 ピクミン選択画面 -->
+    <div class="container hidden" id="pikminSelectScreen">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <h3 style="margin: 0; color: var(--accent-gold);">🌿 連れていくピクミンを選択</h3>
+            <button class="btn btn-sub" onclick="playClickSound(); openStageSelect(pendingMode)">← ステージ選択へ</button>
+        </div>
+        <p style="font-size: 13px; color: var(--text-sub);">ステージや敵の属性に合わせて編成しよう！</p>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 15px 0;">
+            <div class="card-item" onclick="selectPikminType('red')" style="border-color: #ff5252;">
+                <h4 style="color: #ff5252;">🔴 赤ピクミン</h4>
+                <p>火に強い。攻撃力が高め。</p>
+            </div>
+            <div class="card-item" onclick="selectPikminType('blue')" style="border-color: #1e90ff;">
+                <h4 style="color: #1e90ff;">🔵 青ピクミン</h4>
+                <p>水中でも安心。バランス型。</p>
+            </div>
+            <div class="card-item" onclick="selectPikminType('yellow')" style="border-color: #ffa502;">
+                <h4 style="color: #ffa502;">🟡 黄ピクミン</h4>
+                <p>電気に強い。身軽で素早い。</p>
+            </div>
+        </div>
+        <button class="btn" onclick="playClickSound(); confirmAndStartGame()">🚀 この編成で出撃する！</button>
+    </div>
+
     <!-- 3. ステージ選択画面 (全30ステージ) -->
     <div class="container hidden" id="stageSelectScreen">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
             <h3 style="margin: 0; color: var(--accent-gold);" id="stageSelectTitle">🗺️ ミッションステージ選択 (全30)</h3>
             <button class="btn btn-sub" onclick="playClickSound(); goToHome()">← 司令室へ戻る</button>
         </div>
-        <p style="font-size: 12px; color: var(--text-sub); margin-top: 0;">クリアするごとに次のステージが解放されます！</p>
+        <p style="font-size: 12px; color: var(--text-sub); margin-top: 0;">Stage 10, 20, 30 は強力なボス戦！クリアすると次が解放されます。</p>
         <div class="grid-list" id="stageGrid"></div>
     </div>
 
@@ -284,10 +308,9 @@
             <button class="btn btn-sub" onclick="playClickSound(); goToHome()">← 司令室へ戻る</button>
         </div>
         <div class="rule-content">
-            <h4>🌿 全30ステージ・ミッションクリア制</h4>
-            <p>・ステージは全部で<strong>30ステージ</strong>用意されているよ！</p>
-            <p>・ステージをクリア（目標スコアに到達）すると、次のステージが順次アンロックされて挑戦できるようになります。</p>
-            <p>・「ツ」は <strong>tsu</strong> でも <strong>tu</strong> でもOKなマルチローマ字対応！</p>
+            <h4>🌿 フォトリアルワールドの特徴</h4>
+            <p>・本家のピクミンのように、草木が揺らぎ木漏れ日や花びらが舞う幻想的な3Dフィールド。</p>
+            <p>・オニヨンやドルフィン号からの美しい照射ビームで、リアルな探索気分を味わえるよ！</p>
         </div>
     </div>
 
@@ -324,7 +347,11 @@
                 <span id="p1ScoreText">0 / 1000</span>
             </div>
             <div class="hp-bar-container"><div class="hp-bar hp-player" id="p1Bar" style="width: 0%;"></div></div>
-            <div id="aiGaugeWrapper" class="hidden">
+            <div style="display: flex; justify-content: space-between; font-size: 12px; margin-top: 4px;">
+                <span id="comboLabel" style="color: var(--accent-gold);">🔥 コンボ: 0</span>
+                <span id="sprayLabel" style="color: var(--accent-red);">🧪 ゲキカラスプレー: 0/5 (自動発動準備中)</span>
+            </div>
+            <div id="aiGaugeWrapper" class="hidden" style="margin-top: 6px;">
                 <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--accent-red);">
                     <span>🤖 ルーイAI</span>
                     <span id="aiScoreText">0 / 1000</span>
@@ -347,8 +374,8 @@
 
     <script>
         let currentUser = null;
-        function getAllUsers() { try { return JSON.parse(localStorage.getItem('pikmin_stages30_users') || '{}'); } catch(e){ return {}; } }
-        function saveAllUsers(u) { localStorage.setItem('pikmin_stages30_users', JSON.stringify(u)); }
+        function getAllUsers() { try { return JSON.parse(localStorage.getItem('pikmin_photoreal_v2_users') || '{}'); } catch(e){ return {}; } }
+        function saveAllUsers(u) { localStorage.setItem('pikmin_photoreal_v2_users', JSON.stringify(u)); }
 
         function playClickSound() {
             const audio = document.getElementById('hitSound');
@@ -386,12 +413,13 @@
             document.getElementById('authScreen').classList.add('hidden'); 
             document.getElementById('encyclopediaScreen').classList.add('hidden'); 
             document.getElementById('stageSelectScreen').classList.add('hidden');
+            document.getElementById('pikminSelectScreen').classList.add('hidden');
             document.getElementById('adminScreen').classList.add('hidden');
             document.getElementById('ruleScreen').classList.add('hidden');
             document.getElementById('gameScreen').classList.add('hidden');
             document.getElementById('homeScreen').classList.remove('hidden'); 
             if (currentUser) updateHomeUI();
-            else document.getElementById('authScreen').classList.remove('hidden'), document.getElementById('homeScreen').classList.add('hidden');
+            else document.getElementById('authScreen').classList.add('hidden'), document.getElementById('homeScreen').classList.add('hidden');
         }
         
         function updateHomeUI() {
@@ -439,26 +467,30 @@
         }
 
         // ==========================================
-        // 🗺️ 全30ステージの自動生成データ
+        // 🗺️ 全30ステージ（ボス戦含む）データ
         // ==========================================
         const stages = [];
-        const stageColors = ["#1d3822", "#162c38", "#3d1b11", "#281235", "#1b2631"];
+        const stageColors = ["#12281a", "#0d202b", "#2c140d", "#1c0d26", "#141c24"];
         for (let i = 1; i <= 30; i++) {
+            const isBoss = (i === 10 || i === 20 || i === 30);
             stages.push({
                 id: i,
-                name: `Stage ${i} : ミッション ${i}`,
-                desc: `目標スコア: ${i * 300} pt`,
+                name: isBoss ? `⭐ [BOSS] Stage ${i}` : `Stage ${i} : ミッション ${i}`,
+                desc: isBoss ? "⚠️ 強敵ボスとの決戦ステージ！" : `目標スコア: ${i * 300} pt`,
                 goal: i * 300,
+                isBoss: isBoss,
                 groundColor: stageColors[(i - 1) % stageColors.length]
             });
         }
 
         let selectedStage = stages[0];
         let pendingMode = 'solo';
+        let selectedPikminColor = "#ff4757";
 
         function openStageSelect(mode) {
             pendingMode = mode;
             document.getElementById('homeScreen').classList.add('hidden');
+            document.getElementById('gameScreen').classList.add('hidden');
             document.getElementById('stageSelectScreen').classList.remove('hidden');
             document.getElementById('stageSelectTitle').innerText = mode === 'ai' ? "🔥 ライバル対決：ステージ選択 (全30)" : "🗺️ ミッションステージ選択 (全30)";
 
@@ -471,15 +503,33 @@
                 const isUnlocked = st.id <= maxUnlocked;
                 card.className = isUnlocked ? 'card-item' : 'card-item card-locked';
                 card.innerHTML = `
-                    <h4>${st.name}</h4>
+                    <h4 style="color:${st.isBoss ? 'var(--accent-red)' : 'var(--accent-gold)'};">${st.name}</h4>
                     <p>${st.desc}</p>
-                    <p style="color:${isUnlocked ? 'var(--accent-gold)' : 'var(--accent-red)'}; margin-top:5px;">${isUnlocked ? '✔ 挑戦可能' : '🔒 ロック中'}</p>
+                    <p style="color:${isUnlocked ? 'var(--accent-green)' : 'var(--accent-red)'}; margin-top:5px;">${isUnlocked ? '✔ 挑戦可能' : '🔒 ロック中'}</p>
                 `;
                 if (isUnlocked) {
-                    card.onclick = () => { playClickSound(); startPlay(pendingMode, st); };
+                    card.onclick = () => { playClickSound(); prepareStage(st); };
                 }
                 grid.appendChild(card);
             });
+        }
+
+        function prepareStage(stage) {
+            selectedStage = stage;
+            document.getElementById('stageSelectScreen').classList.add('hidden');
+            document.getElementById('pikminSelectScreen').classList.remove('hidden');
+        }
+
+        function selectPikminType(type) {
+            playClickSound();
+            if (type === 'red') selectedPikminColor = "#ff4757";
+            else if (type === 'blue') selectedPikminColor = "#1e90ff";
+            else if (type === 'yellow') selectedPikminColor = "#ffa502";
+        }
+
+        function confirmAndStartGame() {
+            document.getElementById('pikminSelectScreen').classList.add('hidden');
+            startPlay(pendingMode, selectedStage);
         }
 
         function openEncyclopedia() {
@@ -584,11 +634,20 @@
             { kanji: "オリマー", kana: "おりまー", patterns: ["orima-", "orimaa"], color: "#e17055", category: "探検隊長", desc: "ホタネ星出身の勇敢な宇宙飛行士。" }
         ];
 
+        const bossList = [
+            { kanji: "ダイオウチャッピー", kana: "だいおうちゃっぴー", patterns: ["daiouchappi"], color: "#2d3436", category: "ボス生物", desc: "チャッピーの王様。非常に巨体。" },
+            { kanji: "ダマグモキャノン", kana: "だまぐもきゃのん", patterns: ["damagumokyanon"], color: "#ff7675", category: "ボス生物", desc: "強力なビーム砲を装備した巨大グモ。" },
+            { kanji: "フタクチドックリ", kana: "ふたくちどっくり", patterns: ["futakuchidokkuri"], color: "#636e72", category: "ボス生物", desc: "岩石を口から激しく吐き出す危険なボス。" }
+        ];
+
         let playMode = 'solo';
         let currentWord = null;
         let typedBuffer = "";
         let myPoints = 0;
         let aiPoints = 0;
+        let comboCount = 0;
+        let sprayGauge = 0;
+        let isSprayActive = false;
         let aiTimer = null;
         let isGameActive = false;
 
@@ -597,10 +656,14 @@
             selectedStage = stage;
             myPoints = 0;
             aiPoints = 0;
+            comboCount = 0;
+            sprayGauge = 0;
+            isSprayActive = false;
             typedBuffer = "";
             isGameActive = true;
 
             document.getElementById('stageSelectScreen').classList.add('hidden');
+            document.getElementById('pikminSelectScreen').classList.add('hidden');
             document.getElementById('gameScreen').classList.remove('hidden');
 
             if (mode === 'ai') {
@@ -608,7 +671,7 @@
                 document.getElementById('aiGaugeWrapper').classList.remove('hidden');
                 startAi();
             } else {
-                document.getElementById('gameModeTitle').innerText = `🌱 探索モード [${stage.name}]`;
+                document.getElementById('gameModeTitle').innerText = stage.isBoss ? `⭐ ボス決戦！ [${stage.name}]` : `🌱 探索モード [${stage.name}]`;
                 document.getElementById('aiGaugeWrapper').classList.add('hidden');
             }
 
@@ -622,14 +685,22 @@
 
         function nextWord() {
             if (!isGameActive) return;
-            const idx = Math.floor(Math.random() * wordList.length);
-            currentWord = wordList[idx];
+            
+            if (selectedStage.isBoss) {
+                const bIdx = Math.floor(Math.random() * bossList.length);
+                currentWord = bossList[bIdx];
+            } else {
+                const idx = Math.floor(Math.random() * wordList.length);
+                currentWord = wordList[idx];
+            }
+
             typedBuffer = "";
             enemy.name = currentWord.kanji;
             enemy.color = currentWord.color;
-            enemy.hp = 100;
-            enemy.maxHp = 100;
+            enemy.hp = selectedStage.isBoss ? 200 : 100;
+            enemy.maxHp = enemy.hp;
             enemy.x = 600;
+            enemy.scale = selectedStage.isBoss ? 1.5 : 1.2;
 
             if (currentUser && currentUser.data.unlocked) {
                 if (!currentUser.data.unlocked.includes(currentWord.kanji)) {
@@ -670,18 +741,26 @@
             const isExactMatch = currentWord.patterns.includes(nextBuffer);
 
             if (isExactMatch) {
+                comboCount++;
+                sprayGauge = Math.min(5, sprayGauge + 1);
+                if (sprayGauge >= 5 && !isSprayActive) {
+                    isSprayActive = true;
+                    fb.innerText = "🧪 ゲキカラスプレー発動！攻撃力・スコア2倍！！";
+                }
+
+                const pts = isSprayActive ? 400 : 200;
                 spawnAttack(true);
                 enemy.hp = 0;
 
-                myPoints += 200;
-                currentUser.data.score += 200;
-                currentUser.data.pikmin += 3;
+                myPoints += pts;
+                currentUser.data.score += pts;
+                currentUser.data.pikmin += (isSprayActive ? 6 : 3);
                 updateHomeUI();
                 initSquad();
                 triggerQuickCarryEffect();
 
                 fb.style.color = "var(--accent-green)";
-                fb.innerText = `✨ 「${currentWord.kanji}」を撃破！`;
+                if (!isSprayActive) fb.innerText = `✨ 「${currentWord.kanji}」を撃破！ (+${pts}pt)`;
                 updateGauges();
 
                 typedBuffer = "";
@@ -697,14 +776,19 @@
                 spawnAttack(false);
 
                 const targetLen = currentWord.patterns[0].length;
-                enemy.hp = Math.max(10, 100 - (typedBuffer.length / targetLen) * 90);
+                enemy.hp = Math.max(10, enemy.maxHp - (typedBuffer.length / targetLen) * (enemy.maxHp * 0.9));
 
                 fb.style.color = "var(--accent-green)";
                 fb.innerText = "🌿 ピクミン突撃中！";
             } else {
+                comboCount = 0;
+                sprayGauge = 0;
+                isSprayActive = false;
                 fb.style.color = "var(--accent-red)";
-                fb.innerText = `⚠️ 違うキーです！ (${char.toUpperCase()})`;
+                fb.innerText = `⚠️ ミス！コンボリセット (${char.toUpperCase()})`;
             }
+            document.getElementById('comboLabel').innerText = `🔥 コンボ: ${comboCount}`;
+            document.getElementById('sprayLabel').innerText = `🧪 ゲキカラスプレー: ${sprayGauge}/5 ${isSprayActive ? '⚡発動中!' : ''}`;
         });
 
         function startAi() {
@@ -730,33 +814,27 @@
             isGameActive = false;
             clearInterval(aiTimer);
             if (animFrameId) cancelAnimationFrame(animFrameId);
-            if (playMode === 'ai') {
-                if (isWin) {
-                    currentUser.data.score += 600; currentUser.data.pikmin += 15;
-                    if (selectedStage.id >= currentUser.data.maxStage && selectedStage.id < 30) {
-                        currentUser.data.maxStage = selectedStage.id + 1;
-                    }
-                    updateHomeUI();
-                    alert(`🏆 [${selectedStage.name}] 勝利！ 次のステージが解放された！`);
-                } else {
-                    alert(`💀 [${selectedStage.name}] 探索失敗... AIに先を越された！`);
+
+            if (isWin) {
+                currentUser.data.score += (playMode === 'ai' ? 600 : 400);
+                currentUser.data.pikmin += (playMode === 'ai' ? 15 : 8);
+
+                const nextStageNum = selectedStage.id + 1;
+                if (nextStageNum <= 30 && nextStageNum > (currentUser.data.maxStage || 1)) {
+                    currentUser.data.maxStage = nextStageNum;
                 }
+                updateHomeUI();
+
+                alert(`🎉 [${selectedStage.name}] クリア成功！ 次のステージが解放されました！`);
             } else {
-                if (isWin) {
-                    currentUser.data.score += 400; currentUser.data.pikmin += 8;
-                    if (selectedStage.id >= currentUser.data.maxStage && selectedStage.id < 30) {
-                        currentUser.data.maxStage = selectedStage.id + 1;
-                    }
-                    updateHomeUI();
-                    alert(`🎉 [${selectedStage.name}] ミッションクリア！ 次のステージが解放された！`);
-                } else {
-                    alert(`🎉 [${selectedStage.name}] 探索完了！`);
-                }
+                alert(`💀 [${selectedStage.name}] 探索失敗... 目標スコアに届きませんでした。`);
             }
             goToHome();
         }
 
-        // Canvas描画用エンジン
+        // ==========================================
+        // 🌿 超リアル3D空間表現 & 環境パーティクルエンジン
+        // ==========================================
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
         let animFrameId = null;
@@ -764,25 +842,36 @@
         let attackers = [];
         let quickCarriers = [];
         let popups = [];
+        let petals = []; // 地面に散る花びらや木漏れ日パーティクル
         let enemy = { x: 600, y: 165, scale: 1.2, hp: 100, maxHp: 100, shake: 0, color: "#d63031" };
 
         function initSquad() {
             squad = [];
-            const colors = ["#ff4757", "#ffa502", "#1e90ff"];
             const count = Math.min(35, Math.max(12, currentUser ? currentUser.data.pikmin : 15));
             for (let i = 0; i < count; i++) {
                 squad.push({
                     x: 100 + (i % 6) * 24 + Math.random() * 6,
                     y: 110 + Math.floor(i / 6) * 26 + Math.random() * 6,
-                    color: colors[i % 3],
+                    color: selectedPikminColor,
                     phase: Math.random() * Math.PI * 2
+                });
+            }
+
+            // 花びらパーティクル初期化
+            petals = [];
+            for (let i = 0; i < 20; i++) {
+                petals.push({
+                    x: Math.random() * canvas.width,
+                    y: 150 + Math.random() * 140,
+                    size: 3 + Math.random() * 5,
+                    speedX: 0.2 + Math.random() * 0.5,
+                    alpha: 0.3 + Math.random() * 0.5
                 });
             }
         }
 
         function spawnAttack(isCritical) {
             playClickSound();
-            const colors = ["#ff4757", "#ffa502", "#1e90ff"];
             const num = isCritical ? 10 : 3;
             for (let i = 0; i < num; i++) {
                 attackers.push({
@@ -792,16 +881,15 @@
                     targetY: enemy.y - 20 + Math.random() * 40,
                     progress: 0,
                     speed: 0.07 + Math.random() * 0.04,
-                    color: colors[Math.floor(Math.random() * 3)],
+                    color: selectedPikminColor,
                     crit: isCritical
                 });
             }
         }
 
         function triggerQuickCarryEffect() {
-            const colors = ["#ff4757", "#ffa502", "#1e90ff"];
             for (let i = 0; i < 5; i++) {
-                quickCarriers.push({ x: enemy.x, y: enemy.y, targetX: 130, targetY: 190, progress: 0, color: colors[i % 3] });
+                quickCarriers.push({ x: enemy.x, y: enemy.y, targetX: 130, targetY: 190, progress: 0, color: selectedPikminColor });
             }
         }
 
@@ -809,7 +897,7 @@
             ctx.save();
             ctx.translate(x, y - Math.abs(Math.sin(bounce)) * 7 * scale);
             ctx.scale(scale, scale);
-            ctx.fillStyle = "rgba(0,0,0,0.4)"; ctx.beginPath(); ctx.ellipse(0, 10, 6, 3, 0, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = "rgba(0,0,0,0.5)"; ctx.beginPath(); ctx.ellipse(0, 10, 6, 3, 0, 0, Math.PI * 2); ctx.fill();
             ctx.fillStyle = color; ctx.beginPath(); ctx.ellipse(0, 4, 6, 9, 0, 0, Math.PI * 2); ctx.fill();
             ctx.beginPath(); ctx.arc(0, -7, 6.5, 0, Math.PI * 2); ctx.fill();
             ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(2.2, -8, 2, 0, Math.PI * 2); ctx.fill();
@@ -827,57 +915,77 @@
             const breathe = Math.sin(time * 0.0035) * 4;
             ctx.translate(enemy.x + sx, enemy.y + sy + breathe);
             ctx.scale(enemy.scale, enemy.scale);
-            ctx.fillStyle = "rgba(0,0,0,0.6)"; ctx.beginPath(); ctx.ellipse(10, 58, 62, 18, 0, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = "rgba(0,0,0,0.65)"; ctx.beginPath(); ctx.ellipse(10, 58, 62, 18, 0, 0, Math.PI * 2); ctx.fill();
             ctx.fillStyle = enemy.color; ctx.beginPath(); ctx.ellipse(15, 8, 54, 44, 0, 0, Math.PI * 2); ctx.fill();
             ctx.fillStyle = "rgba(0,0,0,0.8)"; ctx.fillRect(-55, -64, 120, 12);
             ctx.fillStyle = "#2ed573"; ctx.fillRect(-53, -62, 116 * Math.max(0, enemy.hp / enemy.maxHp), 8);
             ctx.restore();
         }
 
-        function drawRealisticScenery() {
+        function drawRealisticScenery(time) {
+            // 背景の原生林グラデーション
             ctx.fillStyle = selectedStage.groundColor;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            ctx.fillStyle = "rgba(46, 213, 115, 0.08)";
-            for (let i = 0; i < 35; i++) {
+            // 立体的な草むら・奥行きのあるテクスチャ
+            ctx.fillStyle = "rgba(46, 213, 115, 0.12)";
+            for (let i = 0; i < 45; i++) {
                 ctx.beginPath();
-                ctx.arc((i * 47) % canvas.width, 180 + (i * 23) % 120, 35, 0, Math.PI * 2);
+                ctx.arc((i * 37 + Math.sin(time*0.001 + i)*10) % canvas.width, 170 + (i * 19) % 130, 40, 0, Math.PI * 2);
                 ctx.fill();
             }
 
+            // 地面に散るピンクの花びらパーティクル
+            petals.forEach(p => {
+                p.x += p.speedX;
+                if (p.x > canvas.width) p.x = 0;
+                ctx.fillStyle = `rgba(255, 182, 193, ${p.alpha})`;
+                ctx.beginPath();
+                ctx.ellipse(p.x, p.y, p.size, p.size * 0.6, 0.5, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            // オニヨン拠点（左側）と幻想的な光の照射ビーム
             ctx.save();
             ctx.translate(130, 190);
-            const beamGrad = ctx.createLinearGradient(0, -50, 0, 100);
-            beamGrad.addColorStop(0, "rgba(255, 255, 255, 0.35)");
+            const beamGrad = ctx.createLinearGradient(0, -60, 0, 110);
+            beamGrad.addColorStop(0, "rgba(255, 255, 255, 0.45)");
+            beamGrad.addColorStop(0.5, "rgba(46, 213, 115, 0.2)");
             beamGrad.addColorStop(1, "rgba(46, 213, 115, 0)");
             ctx.fillStyle = beamGrad;
-            ctx.beginPath(); ctx.moveTo(0, -50); ctx.lineTo(-60, 90); ctx.lineTo(60, 90); ctx.fill();
+            ctx.beginPath(); ctx.moveTo(0, -60); ctx.lineTo(-75, 100); ctx.lineTo(75, 100); ctx.fill();
 
-            ctx.strokeStyle = "#ffa502"; ctx.lineWidth = 4;
-            ctx.beginPath(); ctx.moveTo(-25, 40); ctx.lineTo(-50, 85); ctx.stroke();
-            ctx.beginPath(); ctx.moveTo(25, 40); ctx.lineTo(50, 85); ctx.stroke();
-            ctx.beginPath(); ctx.moveTo(0, 40); ctx.lineTo(0, 90); ctx.stroke();
+            // オニヨンの三本脚（立体感・影）
+            ctx.strokeStyle = "#d4ac0d"; ctx.lineWidth = 5;
+            ctx.beginPath(); ctx.moveTo(-25, 40); ctx.lineTo(-55, 90); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(25, 40); ctx.lineTo(55, 90); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(0, 40); ctx.lineTo(0, 95); ctx.stroke();
             
+            // オニヨン本体
             ctx.fillStyle = "#ff5252";
-            ctx.beginPath(); ctx.ellipse(0, 0, 44, 32, 0, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.ellipse(0, 0, 48, 35, 0, 0, Math.PI * 2); ctx.fill();
             ctx.fillStyle = "#ffa502";
-            ctx.beginPath(); ctx.ellipse(0, -12, 28, 16, 0, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.ellipse(0, -14, 30, 18, 0, 0, Math.PI * 2); ctx.fill();
             ctx.restore();
 
+            // ドルフィン号（右奥）とスキャンレーザー
             ctx.save();
             ctx.translate(650, 60);
-            ctx.fillStyle = "rgba(30, 144, 255, 0.25)";
-            ctx.beginPath(); ctx.moveTo(0, 20); ctx.lineTo(-40, 180); ctx.lineTo(40, 180); ctx.fill();
+            const dolphinBeam = ctx.createLinearGradient(0, 10, 0, 200);
+            dolphinBeam.addColorStop(0, "rgba(30, 144, 255, 0.35)");
+            dolphinBeam.addColorStop(1, "rgba(30, 144, 255, 0)");
+            ctx.fillStyle = dolphinBeam;
+            ctx.beginPath(); ctx.moveTo(0, 20); ctx.lineTo(-50, 200); ctx.lineTo(50, 200); ctx.fill();
             
             ctx.fillStyle = "#f1f2f6";
-            ctx.beginPath(); ctx.ellipse(0, 10, 24, 16, 0, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.ellipse(0, 10, 26, 17, 0, 0, Math.PI * 2); ctx.fill();
             ctx.fillStyle = "#ff5252";
-            ctx.beginPath(); ctx.arc(0, -2, 7, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.arc(0, -2, 7.5, 0, Math.PI * 2); ctx.fill();
             ctx.restore();
         }
 
         function renderLoop(time) {
-            drawRealisticScenery();
+            drawRealisticScenery(time);
 
             squad.forEach(p => draw3DPikmin(p.x, p.y, p.color, 1.0, time * 0.008 + p.phase));
             draw3DEnemy(time);
