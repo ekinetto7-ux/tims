@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ピクミン タイピング大作戦 - Photorealistic Game World</title>
+    <title>ピクミン タイピング大作戦 - Photorealistic & Hardcore Edition</title>
     <style>
         :root {
             --bg-dark: #010403;
@@ -202,7 +202,7 @@
 <body>
 
     <h1>🌿 ピクミン タイピング大作戦</h1>
-    <div class="subtitle">Photorealistic Game World Edition — 本家リスペクトの超リアル3D空間表現</div>
+    <div class="subtitle">Photorealistic & Hardcore Edition — リアルな生態表現と歯応えのある本格バランス</div>
 
     <!-- 1. ログイン画面 -->
     <div class="container" id="authScreen">
@@ -243,8 +243,8 @@
         </div>
         <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 16px 0;">
         <div style="display: flex; flex-direction: column; gap: 10px;">
-            <button class="btn" onclick="playClickSound(); openStageSelect('solo')">🗺️ ミッションステージ選択 (全30)</button>
-            <button class="btn btn-ai" onclick="playClickSound(); openStageSelect('ai')">🔥 ライバル対決（vs ルーイAI）</button>
+            <button class="btn" onclick="playClickSound(); openStageSelect('solo')">🗺️ ミッションステージ選択 (全30 - 歯応え強化)</button>
+            <button class="btn btn-ai" onclick="playClickSound(); openStageSelect('ai')">🔥 ライバル対決（vs ルーイAI・ハード）</button>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                 <button class="btn btn-book" onclick="playClickSound(); openEncyclopedia()">📖 生物ファイル図鑑</button>
                 <button class="btn btn-rule" onclick="playClickSound(); openRuleModal()">📜 ルール・遊び方</button>
@@ -288,7 +288,7 @@
             <h3 style="margin: 0; color: var(--accent-gold);" id="stageSelectTitle">🗺️ ミッションステージ選択 (全30)</h3>
             <button class="btn btn-sub" onclick="playClickSound(); goToHome()">← 司令室へ戻る</button>
         </div>
-        <p style="font-size: 12px; color: var(--text-sub); margin-top: 0;">Stage 10, 20, 30 は強力なボス戦！クリアすると次が解放されます。</p>
+        <p style="font-size: 12px; color: var(--text-sub); margin-top: 0;">歯応え抜群！ステージを進むごとに目標スコアと敵の耐久が跳ね上がります。</p>
         <div class="grid-list" id="stageGrid"></div>
     </div>
 
@@ -308,9 +308,9 @@
             <button class="btn btn-sub" onclick="playClickSound(); goToHome()">← 司令室へ戻る</button>
         </div>
         <div class="rule-content">
-            <h4>🌿 フォトリアルワールドの特徴</h4>
-            <p>・本家のピクミンのように、草木が揺らぎ木漏れ日や花びらが舞う幻想的な3Dフィールド。</p>
-            <p>・オニヨンやドルフィン号からの美しい照射ビームで、リアルな探索気分を味わえるよ！</p>
+            <h4>🌿 ハードコア＆リアルデザインの特徴</h4>
+            <p>・生物たちの表面質感やオニヨンの生体ドームがよりリアルに進化！</p>
+            <p>・ミスをするとコンボが途切れ、敵のHPが回復する緊張感のある歯応えバランス。</p>
         </div>
     </div>
 
@@ -349,11 +349,11 @@
             <div class="hp-bar-container"><div class="hp-bar hp-player" id="p1Bar" style="width: 0%;"></div></div>
             <div style="display: flex; justify-content: space-between; font-size: 12px; margin-top: 4px;">
                 <span id="comboLabel" style="color: var(--accent-gold);">🔥 コンボ: 0</span>
-                <span id="sprayLabel" style="color: var(--accent-red);">🧪 ゲキカラスプレー: 0/5 (自動発動準備中)</span>
+                <span id="sprayLabel" style="color: var(--accent-red);">🧪 ゲキカラスプレー: 0/5 (ハードで重要)</span>
             </div>
             <div id="aiGaugeWrapper" class="hidden" style="margin-top: 6px;">
                 <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--accent-red);">
-                    <span>🤖 ルーイAI</span>
+                    <span>🤖 ルーイAI (高速追撃)</span>
                     <span id="aiScoreText">0 / 1000</span>
                 </div>
                 <div class="hp-bar-container"><div class="hp-bar hp-ai" id="aiBar" style="width: 0%;"></div></div>
@@ -366,7 +366,7 @@
             <div class="target-kanji" id="wordKanji">チャッピー</div>
             <div class="target-kana" id="wordKana">ちゃっぴー</div>
             <div class="roman-guide" id="romanGuide"><span class="untyped-char">chappi</span></div>
-            <div id="feedbackMsg" style="font-size: 14px; font-weight: bold; color: var(--accent-green); min-height: 20px; margin-top: 5px;">キーボードを直接叩いてピクミンを突撃させろ！</div>
+            <div id="feedbackMsg" style="font-size: 14px; font-weight: bold; color: var(--accent-green); min-height: 20px; margin-top: 5px;">正確かつ素早くキーボードを叩いて撃破せよ！</div>
         </div>
     </div>
 
@@ -374,8 +374,8 @@
 
     <script>
         let currentUser = null;
-        function getAllUsers() { try { return JSON.parse(localStorage.getItem('pikmin_photoreal_v2_users') || '{}'); } catch(e){ return {}; } }
-        function saveAllUsers(u) { localStorage.setItem('pikmin_photoreal_v2_users', JSON.stringify(u)); }
+        function getAllUsers() { try { return JSON.parse(localStorage.getItem('pikmin_hardcore_real_v3') || '{}'); } catch(e){ return {}; } }
+        function saveAllUsers(u) { localStorage.setItem('pikmin_hardcore_real_v3', JSON.stringify(u)); }
 
         function playClickSound() {
             const audio = document.getElementById('hitSound');
@@ -466,18 +466,16 @@
             reader.readAsText(file);
         }
 
-        // ==========================================
-        // 🗺️ 全30ステージ（ボス戦含む）データ
-        // ==========================================
+        // 歯応え強化：ステージごとの目標スコアをハードに調整
         const stages = [];
-        const stageColors = ["#12281a", "#0d202b", "#2c140d", "#1c0d26", "#141c24"];
+        const stageColors = ["#102416", "#091a24", "#24100b", "#160a20", "#0f151c"];
         for (let i = 1; i <= 30; i++) {
             const isBoss = (i === 10 || i === 20 || i === 30);
             stages.push({
                 id: i,
                 name: isBoss ? `⭐ [BOSS] Stage ${i}` : `Stage ${i} : ミッション ${i}`,
-                desc: isBoss ? "⚠️ 強敵ボスとの決戦ステージ！" : `目標スコア: ${i * 300} pt`,
-                goal: i * 300,
+                desc: isBoss ? "⚠️ 超高耐久ボスとのハード決戦！" : `目標スコア: ${i * 450} pt (難関)`,
+                goal: i * 450, // 目標値を引き上げて歯応え追加
                 isBoss: isBoss,
                 groundColor: stageColors[(i - 1) % stageColors.length]
             });
@@ -492,7 +490,7 @@
             document.getElementById('homeScreen').classList.add('hidden');
             document.getElementById('gameScreen').classList.add('hidden');
             document.getElementById('stageSelectScreen').classList.remove('hidden');
-            document.getElementById('stageSelectTitle').innerText = mode === 'ai' ? "🔥 ライバル対決：ステージ選択 (全30)" : "🗺️ ミッションステージ選択 (全30)";
+            document.getElementById('stageSelectTitle').innerText = mode === 'ai' ? "🔥 ライバル対決：ステージ選択 (ハード)" : "🗺️ ミッションステージ選択 (全30)";
 
             const grid = document.getElementById('stageGrid');
             grid.innerHTML = "";
@@ -635,7 +633,7 @@
         ];
 
         const bossList = [
-            { kanji: "ダイオウチャッピー", kana: "だいおうちゃっぴー", patterns: ["daiouchappi"], color: "#2d3436", category: "ボス生物", desc: "チャッピーの王様。非常に巨体。" },
+            { kanji: "ダイオウチャッピー", kana: "daiおうちゃっぴー", patterns: ["daiouchappi"], color: "#2d3436", category: "ボス生物", desc: "チャッピーの王様。非常に巨体。" },
             { kanji: "ダマグモキャノン", kana: "だまぐもきゃのん", patterns: ["damagumokyanon"], color: "#ff7675", category: "ボス生物", desc: "強力なビーム砲を装備した巨大グモ。" },
             { kanji: "フタクチドックリ", kana: "ふたくちどっくり", patterns: ["futakuchidokkuri"], color: "#636e72", category: "ボス生物", desc: "岩石を口から激しく吐き出す危険なボス。" }
         ];
@@ -667,7 +665,7 @@
             document.getElementById('gameScreen').classList.remove('hidden');
 
             if (mode === 'ai') {
-                document.getElementById('gameModeTitle').innerText = `🔥 ライバル対決 [${stage.name}]`;
+                document.getElementById('gameModeTitle').innerText = `🔥 ライバル対決 [${stage.name}] (ハード)`;
                 document.getElementById('aiGaugeWrapper').classList.remove('hidden');
                 startAi();
             } else {
@@ -697,10 +695,10 @@
             typedBuffer = "";
             enemy.name = currentWord.kanji;
             enemy.color = currentWord.color;
-            enemy.hp = selectedStage.isBoss ? 200 : 100;
+            enemy.hp = selectedStage.isBoss ? 300 : 150; // 歯応えアップ：HPを増加
             enemy.maxHp = enemy.hp;
-            enemy.x = 600;
-            enemy.scale = selectedStage.isBoss ? 1.5 : 1.2;
+            enemy.x = 580;
+            enemy.scale = selectedStage.isBoss ? 1.6 : 1.3;
 
             if (currentUser && currentUser.data.unlocked) {
                 if (!currentUser.data.unlocked.includes(currentWord.kanji)) {
@@ -776,16 +774,18 @@
                 spawnAttack(false);
 
                 const targetLen = currentWord.patterns[0].length;
-                enemy.hp = Math.max(10, enemy.maxHp - (typedBuffer.length / targetLen) * (enemy.maxHp * 0.9));
+                enemy.hp = Math.max(10, enemy.maxHp - (typedBuffer.length / targetLen) * (enemy.maxHp * 0.8));
 
                 fb.style.color = "var(--accent-green)";
                 fb.innerText = "🌿 ピクミン突撃中！";
             } else {
+                // 歯応え追加：ミスするとコンボリセットだけでなく、敵のHPが少し回復して威圧してくる！
                 comboCount = 0;
                 sprayGauge = 0;
                 isSprayActive = false;
+                enemy.hp = Math.min(enemy.maxHp, enemy.hp + 15);
                 fb.style.color = "var(--accent-red)";
-                fb.innerText = `⚠️ ミス！コンボリセット (${char.toUpperCase()})`;
+                fb.innerText = `⚠️ ミス！敵が反撃してHPが回復した！ (${char.toUpperCase()})`;
             }
             document.getElementById('comboLabel').innerText = `🔥 コンボ: ${comboCount}`;
             document.getElementById('sprayLabel').innerText = `🧪 ゲキカラスプレー: ${sprayGauge}/5 ${isSprayActive ? '⚡発動中!' : ''}`;
@@ -794,10 +794,10 @@
         function startAi() {
             clearInterval(aiTimer);
             aiTimer = setInterval(() => {
-                aiPoints += 120;
+                aiPoints += 150; // AIも少し強めに調整して歯応えアップ
                 updateGauges();
                 if (aiPoints >= selectedStage.goal) { endGame(false); }
-            }, 2400);
+            }, 2000);
         }
 
         function updateGauges() {
@@ -816,8 +816,8 @@
             if (animFrameId) cancelAnimationFrame(animFrameId);
 
             if (isWin) {
-                currentUser.data.score += (playMode === 'ai' ? 600 : 400);
-                currentUser.data.pikmin += (playMode === 'ai' ? 15 : 8);
+                currentUser.data.score += (playMode === 'ai' ? 800 : 500);
+                currentUser.data.pikmin += (playMode === 'ai' ? 20 : 10);
 
                 const nextStageNum = selectedStage.id + 1;
                 if (nextStageNum <= 30 && nextStageNum > (currentUser.data.maxStage || 1)) {
@@ -825,7 +825,7 @@
                 }
                 updateHomeUI();
 
-                alert(`🎉 [${selectedStage.name}] クリア成功！ 次のステージが解放されました！`);
+                alert(`🎉 [${selectedStage.name}] ハードクリア成功！ 次のステージが解放されました！`);
             } else {
                 alert(`💀 [${selectedStage.name}] 探索失敗... 目標スコアに届きませんでした。`);
             }
@@ -833,7 +833,7 @@
         }
 
         // ==========================================
-        // 🌿 超リアル3D空間表現 & 環境パーティクルエンジン
+        // 🌿 超リアル＆立体的な生物・オニヨン描画エンジン
         // ==========================================
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
@@ -842,30 +842,29 @@
         let attackers = [];
         let quickCarriers = [];
         let popups = [];
-        let petals = []; // 地面に散る花びらや木漏れ日パーティクル
-        let enemy = { x: 600, y: 165, scale: 1.2, hp: 100, maxHp: 100, shake: 0, color: "#d63031" };
+        let petals = [];
+        let enemy = { x: 580, y: 165, scale: 1.3, hp: 150, maxHp: 150, shake: 0, color: "#d63031", name: "チャッピー" };
 
         function initSquad() {
             squad = [];
             const count = Math.min(35, Math.max(12, currentUser ? currentUser.data.pikmin : 15));
             for (let i = 0; i < count; i++) {
                 squad.push({
-                    x: 100 + (i % 6) * 24 + Math.random() * 6,
-                    y: 110 + Math.floor(i / 6) * 26 + Math.random() * 6,
+                    x: 90 + (i % 6) * 22 + Math.random() * 6,
+                    y: 115 + Math.floor(i / 6) * 24 + Math.random() * 6,
                     color: selectedPikminColor,
                     phase: Math.random() * Math.PI * 2
                 });
             }
 
-            // 花びらパーティクル初期化
             petals = [];
-            for (let i = 0; i < 20; i++) {
+            for (let i = 0; i < 25; i++) {
                 petals.push({
                     x: Math.random() * canvas.width,
-                    y: 150 + Math.random() * 140,
-                    size: 3 + Math.random() * 5,
-                    speedX: 0.2 + Math.random() * 0.5,
-                    alpha: 0.3 + Math.random() * 0.5
+                    y: 140 + Math.random() * 150,
+                    size: 2.5 + Math.random() * 5,
+                    speedX: 0.3 + Math.random() * 0.6,
+                    alpha: 0.4 + Math.random() * 0.4
                 });
             }
         }
@@ -875,12 +874,12 @@
             const num = isCritical ? 10 : 3;
             for (let i = 0; i < num; i++) {
                 attackers.push({
-                    x: 180 + Math.random() * 50,
-                    y: 120 + Math.random() * 90,
-                    targetX: enemy.x - 40 + Math.random() * 60,
-                    targetY: enemy.y - 20 + Math.random() * 40,
+                    x: 170 + Math.random() * 50,
+                    y: 110 + Math.random() * 90,
+                    targetX: enemy.x - 30 + Math.random() * 50,
+                    targetY: enemy.y - 20 + Math.random() * 30,
                     progress: 0,
-                    speed: 0.07 + Math.random() * 0.04,
+                    speed: 0.08 + Math.random() * 0.04,
                     color: selectedPikminColor,
                     crit: isCritical
                 });
@@ -889,10 +888,11 @@
 
         function triggerQuickCarryEffect() {
             for (let i = 0; i < 5; i++) {
-                quickCarriers.push({ x: enemy.x, y: enemy.y, targetX: 130, targetY: 190, progress: 0, color: selectedPikminColor });
+                quickCarriers.push({ x: enemy.x, y: enemy.y, targetX: 120, targetY: 190, progress: 0, color: selectedPikminColor });
             }
         }
 
+        // ピクミンのリアルな立体表現
         function draw3DPikmin(x, y, color, scale, bounce) {
             ctx.save();
             ctx.translate(x, y - Math.abs(Math.sin(bounce)) * 7 * scale);
@@ -907,35 +907,74 @@
             ctx.restore();
         }
 
-        function draw3DEnemy(time) {
+        // 🌟 敵（チャッピー等）をよりリアルで立体的な質感に進化
+        function drawRealisticEnemy(time) {
             ctx.save();
             const sx = enemy.shake > 0 ? (Math.random() - 0.5) * enemy.shake : 0;
             const sy = enemy.shake > 0 ? (Math.random() - 0.5) * enemy.shake : 0;
             if (enemy.shake > 0) enemy.shake *= 0.82;
-            const breathe = Math.sin(time * 0.0035) * 4;
+            const breathe = Math.sin(time * 0.0035) * 5;
             ctx.translate(enemy.x + sx, enemy.y + sy + breathe);
             ctx.scale(enemy.scale, enemy.scale);
-            ctx.fillStyle = "rgba(0,0,0,0.65)"; ctx.beginPath(); ctx.ellipse(10, 58, 62, 18, 0, 0, Math.PI * 2); ctx.fill();
-            ctx.fillStyle = enemy.color; ctx.beginPath(); ctx.ellipse(15, 8, 54, 44, 0, 0, Math.PI * 2); ctx.fill();
-            ctx.fillStyle = "rgba(0,0,0,0.8)"; ctx.fillRect(-55, -64, 120, 12);
-            ctx.fillStyle = "#2ed573"; ctx.fillRect(-53, -62, 116 * Math.max(0, enemy.hp / enemy.maxHp), 8);
+
+            // 影
+            ctx.fillStyle = "rgba(0,0,0,0.7)"; ctx.beginPath(); ctx.ellipse(10, 52, 68, 20, 0, 0, Math.PI * 2); ctx.fill();
+
+            // 胴体・頭部の立体グラデーション
+            const bodyGrad = ctx.createRadialGradient(-10, -10, 5, 20, 20, 70);
+            bodyGrad.addColorStop(0, "#ff6b6b");
+            bodyGrad.addColorStop(0.5, enemy.color);
+            bodyGrad.addColorStop(1, "#721c24");
+            ctx.fillStyle = bodyGrad;
+            ctx.beginPath(); ctx.ellipse(15, 6, 58, 46, 0, 0, Math.PI * 2); ctx.fill();
+
+            // 背中の水玉模様（リアルな立体感）
+            ctx.fillStyle = "#ffffff";
+            ctx.beginPath(); ctx.arc(25, -12, 10, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = "rgba(0,0,0,0.15)"; ctx.beginPath(); ctx.arc(27, -10, 8, 0, Math.PI * 2); ctx.fill();
+
+            ctx.fillStyle = "#ffffff";
+            ctx.beginPath(); ctx.arc(-5, -18, 7, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = "#ffffff";
+            ctx.beginPath(); ctx.arc(42, 6, 8, 0, Math.PI * 2); ctx.fill();
+
+            // 大きく不気味に光る目
+            ctx.fillStyle = "#f1c40f";
+            ctx.beginPath(); ctx.ellipse(32, -18, 12, 9, 0.3, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = "#000";
+            ctx.beginPath(); ctx.ellipse(34, -18, 5, 7, 0.3, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = "#fff"; // 鋭いハイライト
+            ctx.beginPath(); ctx.arc(36, -21, 2, 0, Math.PI * 2); ctx.fill();
+
+            // 口元・牙
+            ctx.strokeStyle = "#4a151b"; ctx.lineWidth = 3;
+            ctx.beginPath(); ctx.arc(22, 16, 22, 0.1, Math.PI * 0.8); ctx.stroke();
+            
+            // 牙
+            ctx.fillStyle = "#fff";
+            ctx.beginPath(); ctx.moveTo(35, 12); ctx.lineTo(40, 25); ctx.lineTo(30, 20); ctx.fill();
+
+            // HPバー
+            ctx.fillStyle = "rgba(0,0,0,0.85)"; ctx.fillRect(-55, -74, 120, 14);
+            ctx.fillStyle = "#2ed573"; ctx.fillRect(-53, -72, 116 * Math.max(0, enemy.hp / enemy.maxHp), 10);
+            ctx.fillStyle = "#fff"; ctx.font = "bold 10px sans-serif";
+            ctx.fillText(`HP: ${Math.ceil(enemy.hp)}/${enemy.maxHp}`, -30, -62);
+
             ctx.restore();
         }
 
+        // 🌟 オニヨンを本家のドーム型・生体感溢れるリアルデザインに進化
         function drawRealisticScenery(time) {
-            // 背景の原生林グラデーション
             ctx.fillStyle = selectedStage.groundColor;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // 立体的な草むら・奥行きのあるテクスチャ
-            ctx.fillStyle = "rgba(46, 213, 115, 0.12)";
-            for (let i = 0; i < 45; i++) {
+            ctx.fillStyle = "rgba(46, 213, 115, 0.14)";
+            for (let i = 0; i < 50; i++) {
                 ctx.beginPath();
-                ctx.arc((i * 37 + Math.sin(time*0.001 + i)*10) % canvas.width, 170 + (i * 19) % 130, 40, 0, Math.PI * 2);
+                ctx.arc((i * 35 + Math.sin(time*0.001 + i)*12) % canvas.width, 160 + (i * 21) % 140, 45, 0, Math.PI * 2);
                 ctx.fill();
             }
 
-            // 地面に散るピンクの花びらパーティクル
             petals.forEach(p => {
                 p.x += p.speedX;
                 if (p.x > canvas.width) p.x = 0;
@@ -945,42 +984,55 @@
                 ctx.fill();
             });
 
-            // オニヨン拠点（左側）と幻想的な光の照射ビーム
+            // 🌟 超リアルなオニヨン母艦
             ctx.save();
-            ctx.translate(130, 190);
-            const beamGrad = ctx.createLinearGradient(0, -60, 0, 110);
-            beamGrad.addColorStop(0, "rgba(255, 255, 255, 0.45)");
-            beamGrad.addColorStop(0.5, "rgba(46, 213, 115, 0.2)");
+            ctx.translate(120, 185);
+            
+            // 照射ビーム
+            const beamGrad = ctx.createLinearGradient(0, -70, 0, 120);
+            beamGrad.addColorStop(0, "rgba(255, 255, 255, 0.55)");
+            beamGrad.addColorStop(0.5, "rgba(46, 213, 115, 0.25)");
             beamGrad.addColorStop(1, "rgba(46, 213, 115, 0)");
             ctx.fillStyle = beamGrad;
-            ctx.beginPath(); ctx.moveTo(0, -60); ctx.lineTo(-75, 100); ctx.lineTo(75, 100); ctx.fill();
+            ctx.beginPath(); ctx.moveTo(0, -70); ctx.lineTo(-85, 110); ctx.lineTo(85, 110); ctx.fill();
 
-            // オニヨンの三本脚（立体感・影）
-            ctx.strokeStyle = "#d4ac0d"; ctx.lineWidth = 5;
-            ctx.beginPath(); ctx.moveTo(-25, 40); ctx.lineTo(-55, 90); ctx.stroke();
-            ctx.beginPath(); ctx.moveTo(25, 40); ctx.lineTo(55, 90); ctx.stroke();
-            ctx.beginPath(); ctx.moveTo(0, 40); ctx.lineTo(0, 95); ctx.stroke();
-            
-            // オニヨン本体
-            ctx.fillStyle = "#ff5252";
-            ctx.beginPath(); ctx.ellipse(0, 0, 48, 35, 0, 0, Math.PI * 2); ctx.fill();
-            ctx.fillStyle = "#ffa502";
-            ctx.beginPath(); ctx.ellipse(0, -14, 30, 18, 0, 0, Math.PI * 2); ctx.fill();
+            // 三本脚（金属質と生物的な結合部）
+            ctx.strokeStyle = "#b7950b"; ctx.lineWidth = 6;
+            ctx.beginPath(); ctx.moveTo(-25, 30); ctx.lineTo(-65, 105); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(25, 30); ctx.lineTo(65, 105); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(0, 30); ctx.lineTo(0, 110); ctx.stroke();
+
+            // オニヨン本体（立体球体グラデーション）
+            const onionGrad = ctx.createRadialGradient(-15, -15, 5, 20, 20, 60);
+            onionGrad.addColorStop(0, "#ff6b81");
+            onionGrad.addColorStop(0.6, "#ff5252");
+            onionGrad.addColorStop(1, "#900c3f");
+            ctx.fillStyle = onionGrad;
+            ctx.beginPath(); ctx.ellipse(0, 0, 52, 38, 0, 0, Math.PI * 2); ctx.fill();
+
+            // 上部の発光ドーム部分
+            const topGrad = ctx.createRadialGradient(-5, -20, 2, 10, 10, 30);
+            topGrad.addColorStop(0, "#fffa65");
+            topGrad.addColorStop(0.6, "#ffa502");
+            topGrad.addColorStop(1, "#b7950b");
+            ctx.fillStyle = topGrad;
+            ctx.beginPath(); ctx.ellipse(0, -18, 32, 20, 0, 0, Math.PI * 2); ctx.fill();
+
             ctx.restore();
 
-            // ドルフィン号（右奥）とスキャンレーザー
+            // ドルフィン号（右奥）
             ctx.save();
             ctx.translate(650, 60);
             const dolphinBeam = ctx.createLinearGradient(0, 10, 0, 200);
-            dolphinBeam.addColorStop(0, "rgba(30, 144, 255, 0.35)");
+            dolphinBeam.addColorStop(0, "rgba(30, 144, 255, 0.45)");
             dolphinBeam.addColorStop(1, "rgba(30, 144, 255, 0)");
             ctx.fillStyle = dolphinBeam;
-            ctx.beginPath(); ctx.moveTo(0, 20); ctx.lineTo(-50, 200); ctx.lineTo(50, 200); ctx.fill();
+            ctx.beginPath(); ctx.moveTo(0, 20); ctx.lineTo(-55, 200); ctx.lineTo(55, 200); ctx.fill();
             
             ctx.fillStyle = "#f1f2f6";
-            ctx.beginPath(); ctx.ellipse(0, 10, 26, 17, 0, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.ellipse(0, 10, 28, 18, 0, 0, Math.PI * 2); ctx.fill();
             ctx.fillStyle = "#ff5252";
-            ctx.beginPath(); ctx.arc(0, -2, 7.5, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.arc(0, -2, 8.5, 0, Math.PI * 2); ctx.fill();
             ctx.restore();
         }
 
@@ -988,7 +1040,7 @@
             drawRealisticScenery(time);
 
             squad.forEach(p => draw3DPikmin(p.x, p.y, p.color, 1.0, time * 0.008 + p.phase));
-            draw3DEnemy(time);
+            drawRealisticEnemy(time);
 
             for (let i = attackers.length - 1; i >= 0; i--) {
                 let a = attackers[i];
@@ -997,8 +1049,8 @@
                 let currY = a.y + (a.targetY - a.y) * a.progress - Math.sin(a.progress * Math.PI) * 45;
                 draw3DPikmin(currX, currY, a.color, 1.2, time * 0.03);
                 if (a.progress >= 1.0) {
-                    enemy.shake = a.crit ? 20 : 8;
-                    popups.push({ x: enemy.x - 10, y: enemy.y - 40, text: a.crit ? "CRITICAL!! +200" : "HIT!", color: a.crit ? "#ffb142" : "#2ed573", life: 40 });
+                    enemy.shake = a.crit ? 22 : 9;
+                    popups.push({ x: enemy.x - 10, y: enemy.y - 45, text: a.crit ? "CRITICAL!! +200" : "HIT!", color: a.crit ? "#ffb142" : "#2ed573", life: 40 });
                     attackers.splice(i, 1);
                 }
             }
@@ -1013,7 +1065,7 @@
             for (let i = popups.length - 1; i >= 0; i--) {
                 let pop = popups[i];
                 pop.y -= 1.3; pop.life--;
-                ctx.fillStyle = pop.color; ctx.font = "bold 17px sans-serif";
+                ctx.fillStyle = pop.color; ctx.font = "bold 18px sans-serif";
                 ctx.fillText(pop.text, pop.x, pop.y);
                 if (pop.life <= 0) popups.splice(i, 1);
             }
