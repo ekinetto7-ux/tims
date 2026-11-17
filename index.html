@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ピクミン タイピング大作戦 - Photorealistic Game World</title>
+    <title>ピクミン タイピング大作戦 - Three.js 3D Master Edition</title>
+    <!-- Three.js ライブラリの読み込み -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
         :root {
             --bg-dark: #010403;
@@ -116,12 +118,12 @@
             border: 2px solid rgba(255, 177, 66, 0.7);
             box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.95), 0 10px 30px rgba(0, 0, 0, 0.9);
             margin-bottom: 12px;
-            background: #020b06;
+            background: #010804;
         }
-        canvas {
-            display: block;
+        #threeContainer {
             width: 100%;
             height: 310px;
+            display: block;
         }
         .word-overlay {
             background: rgba(3, 10, 8, 0.96);
@@ -202,7 +204,7 @@
 <body>
 
     <h1>🌿 ピクミン タイピング大作戦</h1>
-    <div class="subtitle">Photorealistic Game World Edition — 本家リスペクトの超リアル3D空間表現</div>
+    <div class="subtitle">Three.js 3D Master Edition — 本格3Dグラフィックワールド</div>
 
     <!-- 1. ログイン画面 -->
     <div class="container" id="authScreen">
@@ -308,9 +310,9 @@
             <button class="btn btn-sub" onclick="playClickSound(); goToHome()">← 司令室へ戻る</button>
         </div>
         <div class="rule-content">
-            <h4>🌿 フォトリアルワールドの特徴</h4>
-            <p>・本家のピクミンのように、草木が揺らぎ木漏れ日や花びらが舞う幻想的な3Dフィールド。</p>
-            <p>・オニヨンやドルフィン号からの美しい照射ビームで、リアルな探索気分を味わえるよ！</p>
+            <h4>🌿 Three.js 3Dグラフィックの世界</h4>
+            <p>・本家のピクミンのように、立体的なオニヨンや宇宙船、原生生物が3Dポリゴンとしてグリグリ動くよ！</p>
+            <p>・「ツ」は <strong>tsu</strong> でも <strong>tu</strong> でもOKなマルチローマ字対応！</p>
         </div>
     </div>
 
@@ -360,7 +362,7 @@
             </div>
         </div>
         <div class="canvas-wrapper">
-            <canvas id="gameCanvas" width="760" height="310"></canvas>
+            <div id="threeContainer"></div>
         </div>
         <div class="word-overlay">
             <div class="target-kanji" id="wordKanji">チャッピー</div>
@@ -374,8 +376,8 @@
 
     <script>
         let currentUser = null;
-        function getAllUsers() { try { return JSON.parse(localStorage.getItem('pikmin_photoreal_v2_users') || '{}'); } catch(e){ return {}; } }
-        function saveAllUsers(u) { localStorage.setItem('pikmin_photoreal_v2_users', JSON.stringify(u)); }
+        function getAllUsers() { try { return JSON.parse(localStorage.getItem('pikmin_threejs_users') || '{}'); } catch(e){ return {}; } }
+        function saveAllUsers(u) { localStorage.setItem('pikmin_threejs_users', JSON.stringify(u)); }
 
         function playClickSound() {
             const audio = document.getElementById('hitSound');
@@ -419,7 +421,7 @@
             document.getElementById('gameScreen').classList.add('hidden');
             document.getElementById('homeScreen').classList.remove('hidden'); 
             if (currentUser) updateHomeUI();
-            else document.getElementById('authScreen').classList.add('hidden'), document.getElementById('homeScreen').classList.add('hidden');
+            else document.getElementById('authScreen').classList.remove('hidden'), document.getElementById('homeScreen').classList.add('hidden');
         }
         
         function updateHomeUI() {
@@ -470,7 +472,6 @@
         // 🗺️ 全30ステージ（ボス戦含む）データ
         // ==========================================
         const stages = [];
-        const stageColors = ["#12281a", "#0d202b", "#2c140d", "#1c0d26", "#141c24"];
         for (let i = 1; i <= 30; i++) {
             const isBoss = (i === 10 || i === 20 || i === 30);
             stages.push({
@@ -479,13 +480,13 @@
                 desc: isBoss ? "⚠️ 強敵ボスとの決戦ステージ！" : `目標スコア: ${i * 300} pt`,
                 goal: i * 300,
                 isBoss: isBoss,
-                groundColor: stageColors[(i - 1) % stageColors.length]
+                groundColor: 0x0f2a1a + i * 1000
             });
         }
 
         let selectedStage = stages[0];
         let pendingMode = 'solo';
-        let selectedPikminColor = "#ff4757";
+        let selectedPikminColor = 0xff5252;
 
         function openStageSelect(mode) {
             pendingMode = mode;
@@ -522,9 +523,9 @@
 
         function selectPikminType(type) {
             playClickSound();
-            if (type === 'red') selectedPikminColor = "#ff4757";
-            else if (type === 'blue') selectedPikminColor = "#1e90ff";
-            else if (type === 'yellow') selectedPikminColor = "#ffa502";
+            if (type === 'red') selectedPikminColor = 0xff5252;
+            else if (type === 'blue') selectedPikminColor = 0x1e90ff;
+            else if (type === 'yellow') selectedPikminColor = 0xffa502;
         }
 
         function confirmAndStartGame() {
@@ -592,52 +593,52 @@
         }
 
         const wordList = [
-            { kanji: "チャッピー", kana: "ちゃっぴー", patterns: ["chappi", "tyappi", "cchappi"], color: "#d63031", category: "イヌムシ科", desc: "背中の水玉模様が特徴的な原生生物。" },
-            { kanji: "フタクチドックリ", kana: "ふたくちどっくり", patterns: ["futakuchidokkuri", "hutakutidokkuri"], color: "#636e72", category: "ドックリ科", desc: "岩石を口から激しく吐き出す危険な生物。" },
-            { kanji: "ブタドックリ", kana: "ぶたどっくり", patterns: ["butadokkuri"], color: "#e17055", category: "ドックリ科", desc: "高熱の炎を吐き出す厄介な生物。" },
-            { kanji: "イモガエル", kana: "いもがえる", patterns: ["imogaeru"], color: "#fdcb6e", category: "カエル科", desc: "飛び跳ねて押しつぶそうとしてくる。" },
-            { kanji: "ゲキカラスプレー", kana: "げきからすぷれー", patterns: ["gekikarasupure-", "gekikarasupure"], color: "#ff4757", category: "アイテム", desc: "攻撃力とスピードが爆発的にアップ。" },
-            { kanji: "赤ピクミン", kana: "あかぴくみん", patterns: ["akapikumin", "akapikuminn"], color: "#ff5252", category: "ピクミン族", desc: "火に強く、攻撃力も高いリーダー的存在。" },
-            { kanji: "青ピクミン", kana: "あおぴくみん", patterns: ["aopikumin", "aopikuminn"], color: "#1e90ff", category: "ピクミン族", desc: "水の中でも溺れない泳ぎが得意な仲間。" },
-            { kanji: "黄ピクミン", kana: "きぴくみん", patterns: ["kipikumin", "kipikuminn"], color: "#ffa502", category: "ピクミン族", desc: "電気に強く高く投げることができる耳を持つ。" },
-            { kanji: "ドルフィン号", kana: "どるふぃんごう", patterns: ["dorufingou", "doruhwingou"], color: "#00cec9", category: "宇宙船", desc: "オリマーが乗ってきた大切な宇宙船。" },
-            { kanji: "ペレット草", kana: "ぺれっとそう", patterns: ["perettosou"], color: "#2ed573", category: "植物系", desc: "運ぶとたくさんのピクミンを増やせる。" },
-            { kanji: "ツキノサワ", kana: "つきのさわ", patterns: ["tsukinosawa", "tukinosawa"], color: "#a29bfe", category: "謎の生物", desc: "夜の惑星を優しく照らす光を放つ。" },
-            { kanji: "ツチブル", kana: "つちぶる", patterns: ["tsuchiburu", "tuchiburu"], color: "#fab1a0", category: "地中生物", desc: "土の中に隠れて獲物を待っている。" },
-            { kanji: "コチャッピー", kana: "こちゃっぴー", patterns: ["kochappi", "kotyappi"], color: "#ff7675", category: "イヌムシ科", desc: "チャッピーの子供。群れで行動する。" },
-            { kanji: "ヤマチャッピー", kana: "やまちゃっぴー", patterns: ["yamachappi", "yamatyappi"], color: "#e84393", category: "イヌムシ科", desc: "山岳地帯に適応したチャッピーの亜種。" },
-            { kanji: "アカメチャッピー", kana: "あかめちゃっぴー", patterns: ["akamechappi"], color: "#d63031", category: "イヌムシ科", desc: "目が赤く光る警戒心の強いチャッピー。" },
-            { kanji: "ダイオウチャッピー", kana: "だいおうちゃっぴー", patterns: ["daiouchappi"], color: "#2d3436", category: "イヌムシ科", desc: "チャッピーの王様。非常に巨体。" },
-            { kanji: "ウダンコ", kana: "うだんこ", patterns: ["udanko"], color: "#ffeaa7", category: "虫類", desc: "地面を這い回るおとなしい虫。" },
-            { kanji: "サカサマダラ", kana: "さかさまだら", patterns: ["sakasamadara"], color: "#74b9ff", category: "昆虫型", desc: "天井に張り付いて獲物を狙う。" },
-            { kanji: "ハオリムシ", kana: "はおりむし", patterns: ["haorimushi"], color: "#55efc4", category: "軟体生物", desc: "綺麗な羽衣のようなヒレを持つ。" },
-            { kanji: "ミズドックリ", kana: "みずどっくり", patterns: ["mizudokkuri"], color: "#74b9ff", category: "ドックリ科", desc: "冷たい水を勢いよく発射する。" },
-            { kanji: "ダマグモ", kana: "だまぐも", patterns: ["damagumo"], color: "#fd79a8", category: "クモ科", desc: "機械のような足を持つ巨大グモ。" },
-            { kanji: "ダマグモキャノン", kana: "だまぐもきゃのん", patterns: ["damagumokyanon"], color: "#ff7675", category: "クモ科", desc: "強力なビーム砲を装備したダマグモ。" },
-            { kanji: "カニタマ", kana: "かにたま", patterns: ["kanitama"], color: "#e17055", category: "甲殻類", desc: "硬い甲羅で身を守るカニに似た生物。" },
-            { kanji: "ヤキチャッピー", kana: "やきちゃっぴー", patterns: ["yakichappi"], color: "#fab1a0", category: "イヌムシ科", desc: "高温のマグマ地帯に生息する。" },
-            { kanji: "タコヤマ", kana: "たこやま", patterns: ["takoyama"], color: "#0984e3", category: "水棲生物", desc: "深い水底にひっそり暮らすタコ型生物。" },
-            { kanji: "オオパンモドキ", kana: "おおぱんもどき", patterns: ["oopanmodoki"], color: "#ffeaa7", category: "モドキ科", desc: "食料を巣穴にひたすら引っ張り込む。" },
-            { kanji: "パンモドキ", kana: "ぱんもどき", patterns: ["panmodoki"], color: "#fab1a0", category: "モドキ科", desc: "パンのような見た目をした不思議な生物。" },
-            { kanji: "ミウラ", kana: "みうら", patterns: ["miura"], color: "#81ecec", category: "原生生物", desc: "のんびり屋な性格の小型生物。" },
-            { kanji: "ハナガサ", kana: "はながさ", patterns: ["hanagasa"], color: "#fd79a8", category: "植物生物", desc: "頭に綺麗な花を咲かせている。" },
-            { kanji: "ネオチャッピー", kana: "ねおちゃっぴー", patterns: ["neochappi"], color: "#6c5ce7", category: "イヌムシ科", desc: "最新の調査で発見された新種のチャッピー。" },
-            { kanji: "ピクミン", kana: "ぴくみん", patterns: ["pikumin", "pikuminn"], color: "#55efc4", category: "不思議な生き物", desc: "動物と植物の両方の特徴を持つ。" },
-            { kanji: "紫ピクミン", kana: "むらさきぴくみん", patterns: ["murasakipikumin"], color: "#6c5ce7", category: "ピクミン族", desc: "力持ちで体重が重い力自慢のピクミン。" },
-            { kanji: "白ピクミン", kana: "しろぴくみん", patterns: ["shiropikumin"], color: "#dfe6e9", category: "ピクミン族", desc: "毒を持ち、足が速く地中の宝を見つける。" },
-            { kanji: "白のオニヨン", kana: "しろのおによん", patterns: ["shironooniyon"], color: "#dfe6e9", category: "オニヨン", desc: "白いピクミンを生み出す母艦。" },
-            { kanji: "黒のオニヨン", kana: "くろのおによん", patterns: ["kuronooniyon"], color: "#2d3436", category: "オニヨン", desc: "謎に包まれた黒い母艦。" },
-            { kanji: "白蝶貝", kana: "しろちょうがい", patterns: ["shirochougai", "sirochougai"], color: "#fff", category: "お宝", desc: "光り輝く美しい貝の化石。" },
-            { kanji: "宇宙服", kana: "うちゅうふく", patterns: ["uchuufuku", "utyuufuku"], color: "#ff7675", category: "装備", desc: "オリマーが宇宙探索で着用する頑丈な服。" },
-            { kanji: "レーダー", kana: "れーだー", patterns: ["re-da-", "reeda"], color: "#00b894", category: "機械", desc: "宇宙船の周囲のパーツを探知する。" },
-            { kanji: "エンジン", kana: "えんじん", patterns: ["enjin"], color: "#fdcb6e", category: "宇宙船パーツ", desc: "ドルフィン号の要となる心臓部。" },
-            { kanji: "オリマー", kana: "おりまー", patterns: ["orima-", "orimaa"], color: "#e17055", category: "探検隊長", desc: "ホタネ星出身の勇敢な宇宙飛行士。" }
+            { kanji: "チャッピー", kana: "ちゃっぴー", patterns: ["chappi", "tyappi", "cchappi"], color: 0xd63031, category: "イヌムシ科", desc: "背中の水玉模様が特徴的な原生生物。" },
+            { kanji: "フタクチドックリ", kana: "ふたくちどっくり", patterns: ["futakuchidokkuri", "hutakutidokkuri"], color: 0x636e72, category: "ドックリ科", desc: "岩石を口から激しく吐き出す危険な生物。" },
+            { kanji: "ブタドックリ", kana: "ぶたどっくり", patterns: ["butadokkuri"], color: 0xe17055, category: "ドックリ科", desc: "高熱の炎を吐き出す厄介な生物。" },
+            { kanji: "イモガエル", kana: "いもがえる", patterns: ["imogaeru"], color: 0xfdcb6e, category: "カエル科", desc: "飛び跳ねて押しつぶそうとしてくる。" },
+            { kanji: "ゲキカラスプレー", kana: "げきからすぷれー", patterns: ["gekikarasupure-", "gekikarasupure"], color: 0xff4757, category: "アイテム", desc: "攻撃力とスピードが爆発的にアップ。" },
+            { kanji: "赤ピクミン", kana: "あかぴくみん", patterns: ["akapikumin", "akapikuminn"], color: 0xff5252, category: "ピクミン族", desc: "火に強く、攻撃力も高いリーダー的存在。" },
+            { kanji: "青ピクミン", kana: "あおぴくみん", patterns: ["aopikumin", "aopikuminn"], color: 0x1e90ff, category: "ピクミン族", desc: "水の中でも溺れない泳ぎが得意な仲間。" },
+            { kanji: "黄ピクミン", kana: "きぴくみん", patterns: ["kipikumin", "kipikuminn"], color: 0xffa502, category: "ピクミン族", desc: "電気に強く高く投げることができる耳を持つ。" },
+            { kanji: "ドルフィン号", kana: "どるふぃんごう", patterns: ["dorufingou", "doruhwingou"], color: 0x00cec9, category: "宇宙船", desc: "オリマーが乗ってきた大切な宇宙船。" },
+            { kanji: "ペレット草", kana: "ぺれっとそう", patterns: ["perettosou"], color: 0x2ed573, category: "植物系", desc: "運ぶとたくさんのピクミンを増やせる。" },
+            { kanji: "ツキノサワ", kana: "つきのさわ", patterns: ["tsukinosawa", "tukinosawa"], color: 0xa29bfe, category: "謎の生物", desc: "夜の惑星を優しく照らす光を放つ。" },
+            { kanji: "ツチブル", kana: "つちぶる", patterns: ["tsuchiburu", "tuchiburu"], color: 0xfab1a0, category: "地中生物", desc: "土の中に隠れて獲物を待っている。" },
+            { kanji: "コチャッピー", kana: "こちゃっぴー", patterns: ["kochappi", "kotyappi"], color: 0xff7675, category: "イヌムシ科", desc: "チャッピーの子供。群れで行動する。" },
+            { kanji: "ヤマチャッピー", kana: "やまちゃっぴー", patterns: ["yamachappi", "yamatyappi"], color: 0xe84393, category: "イヌムシ科", desc: "山岳地帯に適応したチャッピーの亜種。" },
+            { kanji: "アカメチャッピー", kana: "あかめちゃっぴー", patterns: ["akamechappi"], color: 0xd63031, category: "イヌムシ科", desc: "目が赤く光る警戒心の強いチャッピー。" },
+            { kanji: "ダイオウチャッピー", kana: "だいおうちゃっぴー", patterns: ["daiouchappi"], color: 0x2d3436, category: "イヌムシ科", desc: "チャッピーの王様。非常に巨体。" },
+            { kanji: "ウダンコ", kana: "うだんこ", patterns: ["udanko"], color: 0xffeaa7, category: "虫類", desc: "地面を這い回るおとなしい虫。" },
+            { kanji: "サカサマダラ", kana: "さかさまだら", patterns: ["sakasamadara"], color: 0x74b9ff, category: "昆虫型", desc: "天井に張り付いて獲物を狙う。" },
+            { kanji: "ハオリムシ", kana: "はおりむし", patterns: ["haorimushi"], color: 0x55efc4, category: "軟体生物", desc: "綺麗な羽衣のようなヒレを持つ。" },
+            { kanji: "ミズドックリ", kana: "みずどっくり", patterns: ["mizudokkuri"], color: 0x74b9ff, category: "ドックリ科", desc: "冷たい水を勢いよく発射する。" },
+            { kanji: "ダマグモ", kana: "だまぐも", patterns: ["damagumo"], color: 0xfd79a8, category: "クモ科", desc: "機械のような足を持つ巨大グモ。" },
+            { kanji: "ダマグモキャノン", kana: "だまぐもきゃのん", patterns: ["damagumokyanon"], color: 0xff7675, category: "クモ科", desc: "強力なビーム砲を装備したダマグモ。" },
+            { kanji: "カニタマ", kana: "かにたま", patterns: ["kanitama"], color: 0xe17055, category: "甲殻類", desc: "硬い甲羅で身を守るカニに似た生物。" },
+            { kanji: "ヤキチャッピー", kana: "やきちゃっぴー", patterns: ["yakichappi"], color: 0xfab1a0, category: "イヌムシ科", desc: "高温のマグマ地帯に生息する。" },
+            { kanji: "タコヤマ", kana: "たこやま", patterns: ["takoyama"], color: 0x0984e3, category: "水棲生物", desc: "深い水底にひっそり暮らすタコ型生物。" },
+            { kanji: "オオパンモドキ", kana: "おおぱんもどき", patterns: ["oopanmodoki"], color: 0xffeaa7, category: "モドキ科", desc: "食料を巣穴にひたすら引っ張り込む。" },
+            { kanji: "パンモドキ", kana: "ぱんもどき", patterns: ["panmodoki"], color: 0xfab1a0, category: "モドキ科", desc: "パンのような見た目をした不思議な生物。" },
+            { kanji: "ミウラ", kana: "みうら", patterns: ["miura"], color: 0x81ecec, category: "原生生物", desc: "のんびり屋な性格の小型生物。" },
+            { kanji: "ハナガサ", kana: "はながさ", patterns: ["hanagasa"], color: 0xfd79a8, category: "植物生物", desc: "頭に綺麗な花を咲かせている。" },
+            { kanji: "ネオチャッピー", kana: "ねおちゃっぴー", patterns: ["neochappi"], color: 0x6c5ce7, category: "イヌムシ科", desc: "最新の調査で発見された新種のチャッピー。" },
+            { kanji: "ピクミン", kana: "ぴくみん", patterns: ["pikumin", "pikuminn"], color: 0x55efc4, category: "不思議な生き物", desc: "動物と植物の両方の特徴を持つ。" },
+            { kanji: "紫ピクミン", kana: "むらさきぴくみん", patterns: ["murasakipikumin"], color: 0x6c5ce7, category: "ピクミン族", desc: "力持ちで体重が重い力自慢のピクミン。" },
+            { kanji: "白ピクミン", kana: "しろぴくみん", patterns: ["shiropikumin"], color: 0xdfe6e9, category: "ピクミン族", desc: "毒を持ち、足が速く地中の宝を見つける。" },
+            { kanji: "白のオニヨン", kana: "しろのおによん", patterns: ["shironooniyon"], color: 0xdfe6e9, category: "オニヨン", desc: "白いピクミンを生み出す母艦。" },
+            { kanji: "黒のオニヨン", kana: "くろのおによん", patterns: ["kuronooniyon"], color: 0x2d3436, category: "オニヨン", desc: "謎に包まれた黒い母艦。" },
+            { kanji: "白蝶貝", kana: "しろちょうがい", patterns: ["shirochougai", "sirochougai"], color: 0xffffff, category: "お宝", desc: "光り輝く美しい貝の化石。" },
+            { kanji: "宇宙服", kana: "うちゅうふく", patterns: ["uchuufuku", "utyuufuku"], color: 0xff7675, category: "装備", desc: "オリマーが宇宙探索で着用する頑丈な服。" },
+            { kanji: "レーダー", kana: "れーだー", patterns: ["re-da-", "reeda"], color: 0x00b894, category: "機械", desc: "宇宙船の周囲のパーツを探知する。" },
+            { kanji: "エンジン", kana: "えんじん", patterns: ["enjin"], color: 0xfdcb6e, category: "宇宙船パーツ", desc: "ドルフィン号の要となる心臓部。" },
+            { kanji: "オリマー", kana: "おりまー", patterns: ["orima-", "orimaa"], color: 0xe17055, category: "探検隊長", desc: "ホタネ星出身の勇敢な宇宙飛行士。" }
         ];
 
         const bossList = [
-            { kanji: "ダイオウチャッピー", kana: "だいおうちゃっぴー", patterns: ["daiouchappi"], color: "#2d3436", category: "ボス生物", desc: "チャッピーの王様。非常に巨体。" },
-            { kanji: "ダマグモキャノン", kana: "だまぐもきゃのん", patterns: ["damagumokyanon"], color: "#ff7675", category: "ボス生物", desc: "強力なビーム砲を装備した巨大グモ。" },
-            { kanji: "フタクチドックリ", kana: "ふたくちどっくり", patterns: ["futakuchidokkuri"], color: "#636e72", category: "ボス生物", desc: "岩石を口から激しく吐き出す危険なボス。" }
+            { kanji: "ダイオウチャッピー", kana: "だいおうちゃっぴー", patterns: ["daiouchappi"], color: 0x2d3436, category: "ボス生物", desc: "チャッピーの王様。非常に巨体。" },
+            { kanji: "ダマグモキャノン", kana: "だまぐもきゃのん", patterns: ["damagumokyanon"], color: 0xff7675, category: "ボス生物", desc: "強力なビーム砲を装備した巨大グモ。" },
+            { kanji: "フタクチドックリ", kana: "ふたくちどっくり", patterns: ["futakuchidokkuri"], color: 0x636e72, category: "ボス生物", desc: "岩石を口から激しく吐き出す危険なボス。" }
         ];
 
         let playMode = 'solo';
@@ -675,10 +676,7 @@
                 document.getElementById('aiGaugeWrapper').classList.add('hidden');
             }
 
-            initSquad();
-            if (animFrameId) cancelAnimationFrame(animFrameId);
-            animFrameId = requestAnimationFrame(renderLoop);
-
+            initThreeScene();
             updateGauges();
             nextWord();
         }
@@ -695,12 +693,7 @@
             }
 
             typedBuffer = "";
-            enemy.name = currentWord.kanji;
-            enemy.color = currentWord.color;
-            enemy.hp = selectedStage.isBoss ? 200 : 100;
-            enemy.maxHp = enemy.hp;
-            enemy.x = 600;
-            enemy.scale = selectedStage.isBoss ? 1.5 : 1.2;
+            updateEnemyMesh(currentWord.color, selectedStage.isBoss ? 2.0 : 1.3);
 
             if (currentUser && currentUser.data.unlocked) {
                 if (!currentUser.data.unlocked.includes(currentWord.kanji)) {
@@ -749,15 +742,12 @@
                 }
 
                 const pts = isSprayActive ? 400 : 200;
-                spawnAttack(true);
-                enemy.hp = 0;
+                spawnAttackParticles(true);
 
                 myPoints += pts;
                 currentUser.data.score += pts;
                 currentUser.data.pikmin += (isSprayActive ? 6 : 3);
                 updateHomeUI();
-                initSquad();
-                triggerQuickCarryEffect();
 
                 fb.style.color = "var(--accent-green)";
                 if (!isSprayActive) fb.innerText = `✨ 「${currentWord.kanji}」を撃破！ (+${pts}pt)`;
@@ -773,10 +763,7 @@
             } else if (isValidPrefix) {
                 typedBuffer = nextBuffer;
                 updateRomanGuide(typedBuffer);
-                spawnAttack(false);
-
-                const targetLen = currentWord.patterns[0].length;
-                enemy.hp = Math.max(10, enemy.maxHp - (typedBuffer.length / targetLen) * (enemy.maxHp * 0.9));
+                spawnAttackParticles(false);
 
                 fb.style.color = "var(--accent-green)";
                 fb.innerText = "🌿 ピクミン突撃中！";
@@ -813,7 +800,7 @@
         function endGame(isWin) {
             isGameActive = false;
             clearInterval(aiTimer);
-            if (animFrameId) cancelAnimationFrame(animFrameId);
+            if (threeAnimId) cancelAnimationFrame(threeAnimId);
 
             if (isWin) {
                 currentUser.data.score += (playMode === 'ai' ? 600 : 400);
@@ -833,192 +820,161 @@
         }
 
         // ==========================================
-        // 🌿 超リアル3D空間表現 & 環境パーティクルエンジン
+        // 🌟 Three.js 3Dグラフィック・エンジン
         // ==========================================
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
-        let animFrameId = null;
-        let squad = [];
-        let attackers = [];
-        let quickCarriers = [];
-        let popups = [];
-        let petals = []; // 地面に散る花びらや木漏れ日パーティクル
-        let enemy = { x: 600, y: 165, scale: 1.2, hp: 100, maxHp: 100, shake: 0, color: "#d63031" };
+        let scene, camera, renderer, threeAnimId;
+        let enemyMesh, onionMesh, dolphinMesh;
+        let pikminGroup = [];
+        let attackParticles = [];
 
-        function initSquad() {
-            squad = [];
-            const count = Math.min(35, Math.max(12, currentUser ? currentUser.data.pikmin : 15));
+        function initThreeScene() {
+            const container = document.getElementById('threeContainer');
+            container.innerHTML = "";
+
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x031208);
+
+            camera = new THREE.PerspectiveCamera(55, container.clientWidth / container.clientHeight, 0.1, 1000);
+            camera.position.set(0, 4, 12);
+            camera.lookAt(0, 0, 0);
+
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            container.appendChild(renderer.domElement);
+
+            // ライティング（太陽光と環境光）
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+            scene.add(ambientLight);
+
+            const dirLight = new THREE.DirectionalLight(0xfffaed, 1.2);
+            dirLight.position.set(10, 20, 10);
+            scene.add(dirLight);
+
+            // 地面（原生林）
+            const planeGeo = new THREE.PlaneGeometry(40, 40);
+            const planeMat = new THREE.MeshStandardMaterial({ color: 0x183822, roughness: 0.8 });
+            const plane = new THREE.Mesh(planeGeo, planeMat);
+            plane.rotation.x = -Math.PI / 2;
+            plane.position.y = -1.5;
+            scene.add(plane);
+
+            // オニヨン（左側3Dオブジェクト）
+            const onionGroup = new THREE.Group();
+            const onionBodyGeo = new THREE.SphereGeometry(1.2, 32, 32);
+            const onionBodyMat = new THREE.MeshStandardMaterial({ color: 0xff5252, roughness: 0.3 });
+            const onionBody = new THREE.Mesh(onionBodyGeo, onionBodyMat);
+            onionGroup.add(onionBody);
+
+            const onionTopGeo = new THREE.SphereGeometry(0.8, 32, 32);
+            const onionTopMat = new THREE.MeshStandardMaterial({ color: 0xffa502, roughness: 0.3 });
+            const onionTop = new THREE.Mesh(onionTopGeo, onionTopMat);
+            onionTop.position.y = 0.8;
+            onionGroup.add(onionTop);
+
+            // 脚
+            for (let i = 0; i < 3; i++) {
+                const legGeo = new THREE.CylinderGeometry(0.06, 0.06, 2, 8);
+                const legMat = new THREE.MeshStandardMaterial({ color: 0x2ed573 });
+                const leg = new THREE.Mesh(legGeo, legMat);
+                leg.rotation.z = (i === 0 ? 0.3 : (i === 1 ? -0.3 : 0));
+                leg.rotation.x = (i === 2 ? 0.3 : 0);
+                leg.position.set(Math.sin((i / 3) * Math.PI * 2) * 0.8, -1, Math.cos((i / 3) * Math.PI * 2) * 0.8);
+                onionGroup.add(leg);
+            }
+            onionGroup.position.set(-4, 0.5, 0);
+            scene.add(onionGroup);
+            onionMesh = onionGroup;
+
+            // ドルフィン号（右奥3Dオブジェクト）
+            const dolphinGroup = new THREE.Group();
+            const dBodyGeo = new THREE.CapsuleGeometry(0.6, 1.2, 16, 16);
+            const dBodyMat = new THREE.MeshStandardMaterial({ color: 0xf1f2f6, metalness: 0.5 });
+            const dBody = new THREE.Mesh(dBodyGeo, dBodyMat);
+            dolphinGroup.add(dBody);
+
+            const dRedGeo = new THREE.SphereGeometry(0.4, 16, 16);
+            const dRedMat = new THREE.MeshStandardMaterial({ color: 0xff5252 });
+            const dRed = new THREE.Mesh(dRedGeo, dRedMat);
+            dRed.position.y = 1.0;
+            dolphinGroup.add(dRed);
+
+            dolphinGroup.position.set(4, 2.5, -2);
+            scene.add(dolphinGroup);
+            dolphinMesh = dolphinGroup;
+
+            // 敵キャラクターの3Dモデル初期配置
+            const enemyGeo = new THREE.SphereGeometry(1.2, 32, 32);
+            const enemyMat = new THREE.MeshStandardMaterial({ color: 0xd63031, roughness: 0.4 });
+            enemyMesh = new THREE.Mesh(enemyGeo, enemyMat);
+            enemyMesh.position.set(3, -0.3, 0);
+            scene.add(enemyMesh);
+
+            // プレイヤーのピクミン軍団（3D小さな球体たち）
+            pikminGroup = [];
+            const count = Math.min(25, currentUser ? currentUser.data.pirmin || 15 : 15);
             for (let i = 0; i < count; i++) {
-                squad.push({
-                    x: 100 + (i % 6) * 24 + Math.random() * 6,
-                    y: 110 + Math.floor(i / 6) * 26 + Math.random() * 6,
-                    color: selectedPikminColor,
-                    phase: Math.random() * Math.PI * 2
-                });
+                const pGeo = new THREE.SphereGeometry(0.25, 16, 16);
+                const pMat = new THREE.MeshStandardMaterial({ color: selectedPikminColor });
+                const pMesh = new THREE.Mesh(pGeo, pMat);
+                pMesh.position.set(-2 + (i % 5) * 0.4 + (Math.random() - 0.5) * 0.2, -1.0 + Math.floor(i / 5) * 0.4, 1 + (Math.random() - 0.5) * 0.5);
+                scene.add(pMesh);
+                pikminGroup.push(pMesh);
             }
 
-            // 花びらパーティクル初期化
-            petals = [];
-            for (let i = 0; i < 20; i++) {
-                petals.push({
-                    x: Math.random() * canvas.width,
-                    y: 150 + Math.random() * 140,
-                    size: 3 + Math.random() * 5,
-                    speedX: 0.2 + Math.random() * 0.5,
-                    alpha: 0.3 + Math.random() * 0.5
-                });
-            }
+            animateThree();
         }
 
-        function spawnAttack(isCritical) {
+        function updateEnemyMesh(colorHex, scaleMultiplier) {
+            if (!enemyMesh) return;
+            enemyMesh.material.color.setHex(colorHex);
+            enemyMesh.scale.set(scaleMultiplier, scaleMultiplier, scaleMultiplier);
+        }
+
+        function spawnAttackParticles(isCrit) {
             playClickSound();
-            const num = isCritical ? 10 : 3;
-            for (let i = 0; i < num; i++) {
-                attackers.push({
-                    x: 180 + Math.random() * 50,
-                    y: 120 + Math.random() * 90,
-                    targetX: enemy.x - 40 + Math.random() * 60,
-                    targetY: enemy.y - 20 + Math.random() * 40,
+            const count = isCrit ? 12 : 4;
+            for (let i = 0; i < count; i++) {
+                const pGeo = new THREE.SphereGeometry(0.15, 8, 8);
+                const pMat = new THREE.MeshBasicMaterial({ color: selectedPikminColor });
+                const particle = new THREE.Mesh(pGeo, pMat);
+                particle.position.set(-2, -0.5, 1);
+                scene.add(particle);
+
+                attackParticles.push({
+                    mesh: particle,
+                    targetX: 3 + (Math.random() - 0.5) * 1.0,
+                    targetY: 0 + (Math.random() - 0.5) * 1.0,
                     progress: 0,
-                    speed: 0.07 + Math.random() * 0.04,
-                    color: selectedPikminColor,
-                    crit: isCritical
+                    speed: 0.05 + Math.random() * 0.03
                 });
             }
         }
 
-        function triggerQuickCarryEffect() {
-            for (let i = 0; i < 5; i++) {
-                quickCarriers.push({ x: enemy.x, y: enemy.y, targetX: 130, targetY: 190, progress: 0, color: selectedPikminColor });
-            }
-        }
+        function animateThree() {
+            threeAnimId = requestAnimationFrame(animateThree);
 
-        function draw3DPikmin(x, y, color, scale, bounce) {
-            ctx.save();
-            ctx.translate(x, y - Math.abs(Math.sin(bounce)) * 7 * scale);
-            ctx.scale(scale, scale);
-            ctx.fillStyle = "rgba(0,0,0,0.5)"; ctx.beginPath(); ctx.ellipse(0, 10, 6, 3, 0, 0, Math.PI * 2); ctx.fill();
-            ctx.fillStyle = color; ctx.beginPath(); ctx.ellipse(0, 4, 6, 9, 0, 0, Math.PI * 2); ctx.fill();
-            ctx.beginPath(); ctx.arc(0, -7, 6.5, 0, Math.PI * 2); ctx.fill();
-            ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(2.2, -8, 2, 0, Math.PI * 2); ctx.fill();
-            ctx.fillStyle = "#000"; ctx.beginPath(); ctx.arc(2.9, -8, 1, 0, Math.PI * 2); ctx.fill();
-            ctx.strokeStyle = "#2ed573"; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(0, -13); ctx.quadraticCurveTo(3, -20, 8, -19); ctx.stroke();
-            ctx.fillStyle = "#2ed573"; ctx.beginPath(); ctx.ellipse(10, -19, 4.5, 2.2, 0.4, 0, Math.PI * 2); ctx.fill();
-            ctx.restore();
-        }
+            const time = Date.now() * 0.003;
 
-        function draw3DEnemy(time) {
-            ctx.save();
-            const sx = enemy.shake > 0 ? (Math.random() - 0.5) * enemy.shake : 0;
-            const sy = enemy.shake > 0 ? (Math.random() - 0.5) * enemy.shake : 0;
-            if (enemy.shake > 0) enemy.shake *= 0.82;
-            const breathe = Math.sin(time * 0.0035) * 4;
-            ctx.translate(enemy.x + sx, enemy.y + sy + breathe);
-            ctx.scale(enemy.scale, enemy.scale);
-            ctx.fillStyle = "rgba(0,0,0,0.65)"; ctx.beginPath(); ctx.ellipse(10, 58, 62, 18, 0, 0, Math.PI * 2); ctx.fill();
-            ctx.fillStyle = enemy.color; ctx.beginPath(); ctx.ellipse(15, 8, 54, 44, 0, 0, Math.PI * 2); ctx.fill();
-            ctx.fillStyle = "rgba(0,0,0,0.8)"; ctx.fillRect(-55, -64, 120, 12);
-            ctx.fillStyle = "#2ed573"; ctx.fillRect(-53, -62, 116 * Math.max(0, enemy.hp / enemy.maxHp), 8);
-            ctx.restore();
-        }
+            // オニヨンやドルフィン号のふわふわ浮遊アニメーション
+            if (onionMesh) onionMesh.position.y = 0.5 + Math.sin(time) * 0.15;
+            if (dolphinMesh) dolphinMesh.position.y = 2.5 + Math.cos(time * 0.8) * 0.2;
+            if (enemyMesh) enemyMesh.rotation.y += 0.01;
 
-        function drawRealisticScenery(time) {
-            // 背景の原生林グラデーション
-            ctx.fillStyle = selectedStage.groundColor;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            // 突撃パーティクルの移動処理
+            for (let i = attackParticles.length - 1; i >= 0; i--) {
+                let ap = attackParticles[i];
+                ap.progress += ap.speed;
+                ap.mesh.position.x = -2 + (ap.targetX - (-2)) * ap.progress;
+                ap.mesh.position.y = -0.5 + (ap.targetY - (-0.5)) * ap.progress + Math.sin(ap.progress * Math.PI) * 2;
+                ap.mesh.position.z = 1 + (0 - 1) * ap.progress;
 
-            // 立体的な草むら・奥行きのあるテクスチャ
-            ctx.fillStyle = "rgba(46, 213, 115, 0.12)";
-            for (let i = 0; i < 45; i++) {
-                ctx.beginPath();
-                ctx.arc((i * 37 + Math.sin(time*0.001 + i)*10) % canvas.width, 170 + (i * 19) % 130, 40, 0, Math.PI * 2);
-                ctx.fill();
-            }
-
-            // 地面に散るピンクの花びらパーティクル
-            petals.forEach(p => {
-                p.x += p.speedX;
-                if (p.x > canvas.width) p.x = 0;
-                ctx.fillStyle = `rgba(255, 182, 193, ${p.alpha})`;
-                ctx.beginPath();
-                ctx.ellipse(p.x, p.y, p.size, p.size * 0.6, 0.5, 0, Math.PI * 2);
-                ctx.fill();
-            });
-
-            // オニヨン拠点（左側）と幻想的な光の照射ビーム
-            ctx.save();
-            ctx.translate(130, 190);
-            const beamGrad = ctx.createLinearGradient(0, -60, 0, 110);
-            beamGrad.addColorStop(0, "rgba(255, 255, 255, 0.45)");
-            beamGrad.addColorStop(0.5, "rgba(46, 213, 115, 0.2)");
-            beamGrad.addColorStop(1, "rgba(46, 213, 115, 0)");
-            ctx.fillStyle = beamGrad;
-            ctx.beginPath(); ctx.moveTo(0, -60); ctx.lineTo(-75, 100); ctx.lineTo(75, 100); ctx.fill();
-
-            // オニヨンの三本脚（立体感・影）
-            ctx.strokeStyle = "#d4ac0d"; ctx.lineWidth = 5;
-            ctx.beginPath(); ctx.moveTo(-25, 40); ctx.lineTo(-55, 90); ctx.stroke();
-            ctx.beginPath(); ctx.moveTo(25, 40); ctx.lineTo(55, 90); ctx.stroke();
-            ctx.beginPath(); ctx.moveTo(0, 40); ctx.lineTo(0, 95); ctx.stroke();
-            
-            // オニヨン本体
-            ctx.fillStyle = "#ff5252";
-            ctx.beginPath(); ctx.ellipse(0, 0, 48, 35, 0, 0, Math.PI * 2); ctx.fill();
-            ctx.fillStyle = "#ffa502";
-            ctx.beginPath(); ctx.ellipse(0, -14, 30, 18, 0, 0, Math.PI * 2); ctx.fill();
-            ctx.restore();
-
-            // ドルフィン号（右奥）とスキャンレーザー
-            ctx.save();
-            ctx.translate(650, 60);
-            const dolphinBeam = ctx.createLinearGradient(0, 10, 0, 200);
-            dolphinBeam.addColorStop(0, "rgba(30, 144, 255, 0.35)");
-            dolphinBeam.addColorStop(1, "rgba(30, 144, 255, 0)");
-            ctx.fillStyle = dolphinBeam;
-            ctx.beginPath(); ctx.moveTo(0, 20); ctx.lineTo(-50, 200); ctx.lineTo(50, 200); ctx.fill();
-            
-            ctx.fillStyle = "#f1f2f6";
-            ctx.beginPath(); ctx.ellipse(0, 10, 26, 17, 0, 0, Math.PI * 2); ctx.fill();
-            ctx.fillStyle = "#ff5252";
-            ctx.beginPath(); ctx.arc(0, -2, 7.5, 0, Math.PI * 2); ctx.fill();
-            ctx.restore();
-        }
-
-        function renderLoop(time) {
-            drawRealisticScenery(time);
-
-            squad.forEach(p => draw3DPikmin(p.x, p.y, p.color, 1.0, time * 0.008 + p.phase));
-            draw3DEnemy(time);
-
-            for (let i = attackers.length - 1; i >= 0; i--) {
-                let a = attackers[i];
-                a.progress += a.speed;
-                let currX = a.x + (a.targetX - a.x) * a.progress;
-                let currY = a.y + (a.targetY - a.y) * a.progress - Math.sin(a.progress * Math.PI) * 45;
-                draw3DPikmin(currX, currY, a.color, 1.2, time * 0.03);
-                if (a.progress >= 1.0) {
-                    enemy.shake = a.crit ? 20 : 8;
-                    popups.push({ x: enemy.x - 10, y: enemy.y - 40, text: a.crit ? "CRITICAL!! +200" : "HIT!", color: a.crit ? "#ffb142" : "#2ed573", life: 40 });
-                    attackers.splice(i, 1);
+                if (ap.progress >= 1.0) {
+                    scene.remove(ap.mesh);
+                    attackParticles.splice(i, 1);
                 }
             }
 
-            for (let i = quickCarriers.length - 1; i >= 0; i--) {
-                let qc = quickCarriers[i];
-                qc.progress += 0.08;
-                draw3DPikmin(qc.x + (qc.targetX - qc.x) * qc.progress, qc.y + (qc.targetY - qc.y) * qc.progress, qc.color, 1.0, time * 0.03);
-                if (qc.progress >= 1.0) quickCarriers.splice(i, 1);
-            }
-
-            for (let i = popups.length - 1; i >= 0; i--) {
-                let pop = popups[i];
-                pop.y -= 1.3; pop.life--;
-                ctx.fillStyle = pop.color; ctx.font = "bold 17px sans-serif";
-                ctx.fillText(pop.text, pop.x, pop.y);
-                if (pop.life <= 0) popups.splice(i, 1);
-            }
-
-            animFrameId = requestAnimationFrame(renderLoop);
+            renderer.render(scene, camera);
         }
     </script>
 </body>
