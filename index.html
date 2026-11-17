@@ -2344,5 +2344,81 @@ drawJapanPolicePatcar = function(ctx, x, y, frame, carKey, label) {
     ctx.restore();
 };
 </script>
+    <!-- オンライン対戦メニューモーダル -->
+<div id="onlineMenuModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:9999; justify-content:center; align-items:center; color:white; font-family:sans-serif;">
+    <div style="background:#1e293b; padding:30px; border-radius:12px; text-align:center; width:320px; box-shadow:0 4px 20px rgba(0,0,0,0.5);">
+        <h2 style="margin-top:0;">🌐 オンライン対戦</h2>
+        <div style="margin:20px 0;">
+            <button onclick="createRoom()" style="width:100%; padding:12px; background:#3b82f6; color:white; border:none; border-radius:6px; font-weight:bold; cursor:pointer; margin-bottom:10px;">🏠 新しいサーバーを作成</button>
+        </div>
+        <hr style="border:0; border-top:1px solid #475569; margin:15px 0;">
+        <div style="margin:20px 0; text-align:left;">
+            <label style="font-size:14px; color:#94a3b8;">サーバー番号を入力して参加:</label>
+            <input type="text" id="roomInputId" placeholder="例: AB12CD" style="width:100%; padding:10px; margin-top:5px; border-radius:6px; border:1px solid #475569; background:#0f172a; color:white; box-sizing:border-box;">
+            <button onclick="joinRoom()" style="width:100%; padding:12px; background:#10b981; color:white; border:none; border-radius:6px; font-weight:bold; cursor:pointer; margin-top:10px;">🔗 サーバーに参加</button>
+        </div>
+        <button onclick="closeOnlineMenu()" style="background:transparent; color:#94a3b8; border:none; cursor:pointer; margin-top:10px;">閉じる</button>
+    </div>
+</div>
+
+<script>
+const RENDER_API_URL = "https://taipingu-104e.onrender.com";
+
+// オンライン対戦メニューを開く関数（ゲーム内のボタンから呼び出してね）
+function openOnlineMenu() {
+    document.getElementById('onlineMenuModal').style.display = 'flex';
+}
+
+// オンライン対戦メニューを閉じる
+function closeOnlineMenu() {
+    document.getElementById('onlineMenuModal').style.display = 'none';
+}
+
+// 部屋を作成する処理
+async function createRoom() {
+    const username = window.currentUser || "プレイヤー";
+    try {
+        const res = await fetch(`${RENDER_API_URL}/api/rooms/create`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username: username })
+        });
+        const data = await res.json();
+        if (data.success) {
+            alert(`サーバーを作成しました！\nサーバー番号: ${data.roomId}\n友達にこの番号を教えて参加してもらおう！`);
+            closeOnlineMenu();
+        }
+    } catch (e) {
+        alert('サーバーの作成に失敗しました。');
+    }
+}
+
+// 部屋に参加する処理
+async function joinRoom() {
+    const roomId = document.getElementById('roomInputId').value.trim().toUpperCase();
+    const username = window.currentUser || "プレイヤー";
+    if (!roomId) {
+        alert('サーバー番号を入力してください。');
+        return;
+    }
+    try {
+        const res = await fetch(`${RENDER_API_URL}/api/rooms/join`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ roomId: roomId, username: username })
+        });
+        const data = await res.json();
+        if (data.success) {
+            alert(`サーバー「${roomId}」に参加しました！`);
+            closeOnlineMenu();
+        } else {
+            alert(data.error || '参加できませんでした。');
+        }
+    } catch (e) {
+        alert('通信エラーが発生しました。');
+    }
+}
+</script>
+
 </body>
 </html>
