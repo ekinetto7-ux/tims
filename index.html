@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ピクミン タイピング大作戦 - Multi-Input & Cute Edition</title>
+    <title>ピクミン タイピング大作戦 - Chappy Edition</title>
     <style>
         :root {
             --bg-dark: #010403;
@@ -198,7 +198,7 @@
 <body>
 
     <h1>🌿 ピクミン タイピング大作戦</h1>
-    <div class="subtitle">Multi-Input & Cute Edition — マルチ入力対応＆可愛いピクミンたち</div>
+    <div class="subtitle">Chappy & Multi-Input Edition — 本家チャッピー忠実再現＆マルチ入力</div>
 
     <!-- 1. ログイン画面 -->
     <div class="container" id="authScreen">
@@ -249,7 +249,7 @@
                 <button class="btn btn-file" onclick="playClickSound(); document.getElementById('importFileBtn').click()">📂 セーブ読込</button>
                 <input type="file" id="importFileBtn" class="hidden" accept=".json" onchange="importSaveFile(event)">
             </div>
-            <button class="btn btn-admin" onclick="playClickSound(); promptAdminPassword()">🛠️ 管理者モード </button>
+            <button class="btn btn-admin" onclick="playClickSound(); promptAdminPassword()">🛠️ 管理者モード (PW: 2021)</button>
         </div>
     </div>
 
@@ -315,7 +315,7 @@
         <div class="grid-list" id="encyclopediaList"></div>
     </div>
 
-    <!-- 5. ルール説明画面（マルチ入力ルールを追記！） -->
+    <!-- 5. ルール説明画面 -->
     <div class="container hidden" id="ruleScreen">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
             <h3 style="margin: 0; color: #00cec9;">📜 ルール・遊び方ガイド</h3>
@@ -323,7 +323,7 @@
         </div>
         <div class="rule-content">
             <h4>⌨️ マルチ入力システムについて</h4>
-            <p>・「チャッピー」を「chappi」のほか、「tyappi」や「cchappi」など、自分の打ちやすい好みのローマ字パターン（複数対応）でスムーズに入力できます！</p>
+            <p>・「チャッピー」を「chappi」のほか、「tyappi」や「cchappi」など、自分の打ちやすい好みのローマ字パターンでスムーズに入力できます！</p>
             
             <h4>✨ 全体出動モードについて</h4>
             <p>・ピクミン選択で「全体出動」を選ぶと、赤・青・黄・紫・白・羽・ヒカリピクミンのいろんな仲間たちが画面いっぱいに大集合して一斉に突撃します！</p>
@@ -336,7 +336,7 @@
     <!-- 6. 管理者モード画面 -->
     <div class="container hidden" id="adminScreen">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-            <h3 style="margin: 0; color: var(--accent-purple);">🛠️ 管理者モード </h3>
+            <h3 style="margin: 0; color: var(--accent-purple);">🛠️ 管理者モード (PW: 2021)</h3>
             <button class="btn btn-sub" onclick="playClickSound(); goToHome()">← 司令室へ戻る</button>
         </div>
         <div style="margin-top: 15px;">
@@ -385,7 +385,7 @@
             <div class="target-kanji" id="wordKanji">チャッピー</div>
             <div class="target-kana" id="wordKana">ちゃっぴー</div>
             <div class="roman-guide" id="romanGuide"><span class="untyped-char">chappi</span></div>
-            <div id="feedbackMsg" style="font-size: 14px; font-weight: bold; color: var(--accent-green); min-height: 20px; margin-top: 5px;">マルチ入力対応！好きなローマ字で突撃しよう！</div>
+            <div id="feedbackMsg" style="font-size: 14px; font-weight: bold; color: var(--accent-green); min-height: 20px; margin-top: 5px;">本家のチャッピーに向かってピクミンを突撃させよう！</div>
         </div>
     </div>
 
@@ -393,8 +393,8 @@
 
     <script>
         let currentUser = null;
-        function getAllUsers() { try { return JSON.parse(localStorage.getItem('pikmin_multi_input_v1') || '{}'); } catch(e){ return {}; } }
-        function saveAllUsers(u) { localStorage.setItem('pikmin_multi_input_v1', JSON.stringify(u)); }
+        function getAllUsers() { try { return JSON.parse(localStorage.getItem('pikmin_chappy_v1') || '{}'); } catch(e){ return {}; } }
+        function saveAllUsers(u) { localStorage.setItem('pikmin_chappy_v1', JSON.stringify(u)); }
 
         function playClickSound() {
             const audio = document.getElementById('hitSound');
@@ -587,7 +587,7 @@
         }
 
         const wordList = [
-            { kanji: "チャッピー", kana: "ちゃっぴー", patterns: ["chappi", "tyappi", "cchappi"], color: "#d63031", desc: "くりくりお目目が可愛い原生生物。" },
+            { kanji: "チャッピー", kana: "ちゃっぴー", patterns: ["chappi", "tyappi", "cchappi"], color: "#d63031", desc: "ぴょこんとした目玉が可愛い本家そっくりの原生生物。" },
             { kanji: "フタクチドックリ", kana: "ふたくちどっくり", patterns: ["futakuchidokkuri", "hutakutidokkuri"], color: "#636e72", desc: "岩石をぽんっと吐き出す愛嬌ある生物。" },
             { kanji: "赤ピクミン", kana: "あかぴくみん", patterns: ["akapikumin", "akapikuminn"], color: "#ff5252", desc: "真っ赤で元気なリーダー的存在。" },
             { kanji: "青ピクミン", kana: "あおぴくみん", patterns: ["aopikumin", "aopikuminn"], color: "#1e90ff", desc: "すまし顔が可愛いお口チャームポイント。" },
@@ -595,12 +595,12 @@
             { kanji: "白ピクミン", kana: "しろぴくみん", patterns: ["shiropikumin", "siropikumin"], color: "#dfe6e9", desc: "大きなおめめがとってもキュート。" },
             { kanji: "羽ピクミン", kana: "はぴくみん", patterns: ["hapikumin", "hanepikumin"], color: "#ff7675", desc: "ピンクの羽でふわふわ飛ぶよ。" },
             { kanji: "ヒカリピクミン", kana: "ひかりぴくみん", patterns: ["hikaripikumin"], color: "#00cec9", desc: "夜の星のようにきらめく神秘的な姿。" },
-            { kanji: "ドルフィン号", kana: "どるふぃんごう", patterns: ["dorufingou", "doruhwingou"], color: "#00cec9", desc: "オリマーの大切な相棒。" },
+            { kanji: "ドルフィン号", kana: "dorufingou", patterns: ["dorufingou", "doruhwingou"], color: "#00cec9", desc: "オリマーの大切な相棒。" },
             { kanji: "オリマー", kana: "おりまー", patterns: ["orima-", "orimaa"], color: "#e17055", desc: "勇敢で優しい宇宙飛行士。" }
         ];
 
         const bossList = [
-            { kanji: "ダイオウチャッピー", kana: "だいおうちゃっぴー", patterns: ["daiouchappi"], color: "#2d3436", desc: "大きな体だけどどこか愛嬌がある王様。" },
+            { kanji: "ダイオウチャッピー", kana: "daiおうちゃっぴー", patterns: ["daiouchappi"], color: "#2d3436", desc: "大きな体だけどどこか愛嬌がある王様。" },
             { kanji: "ダマグモキャノン", kana: "だまぐもきゃのん", patterns: ["damagumokyanon"], color: "#ff7675", desc: "トコトコ歩くメカ足グモ。" }
         ];
 
@@ -795,33 +795,86 @@
             ctx.restore();
         }
 
-        function drawCuteEnemy(time) {
+        // 🌟 画像を完全再現した「本家のチャッピー」描画
+        function drawChappyEnemy(time) {
             ctx.save();
             const sx = enemy.shake > 0 ? (Math.random() - 0.5) * enemy.shake : 0;
             const sy = enemy.shake > 0 ? (Math.random() - 0.5) * enemy.shake : 0;
             if (enemy.shake > 0) enemy.shake *= 0.8;
             ctx.translate(enemy.x + sx, enemy.y + sy);
 
-            ctx.fillStyle = "rgba(0,0,0,0.4)"; ctx.beginPath(); ctx.ellipse(5, 48, 55, 15, 0, 0, Math.PI * 2); ctx.fill();
-            ctx.fillStyle = enemy.color; ctx.beginPath(); ctx.ellipse(10, 8, 48, 38, 0, 0, Math.PI * 2); ctx.fill();
+            // 影
+            ctx.fillStyle = "rgba(0,0,0,0.4)"; 
+            ctx.beginPath(); ctx.ellipse(0, 52, 55, 15, 0, 0, Math.PI * 2); ctx.fill();
 
+            // ちょこんとした足（後ろと前）
+            ctx.fillStyle = "#c25115";
+            ctx.beginPath(); ctx.roundRect(-18, 25, 10, 26, 5); ctx.fill();
+            ctx.beginPath(); ctx.roundRect(12, 25, 10, 26, 5); ctx.fill();
+            // 足の爪
             ctx.fillStyle = "#fff";
-            ctx.beginPath(); ctx.arc(20, -10, 8, 0, Math.PI * 2); ctx.fill();
-            ctx.beginPath(); ctx.arc(-8, -12, 6, 0, Math.PI * 2); ctx.fill();
-            ctx.beginPath(); ctx.arc(35, 8, 7, 0, Math.PI * 2); ctx.fill();
+            ctx.fillRect(-22, 48, 6, 4);
+            ctx.fillRect(14, 48, 6, 4);
 
+            // 横長の茶色いメインボディ
+            ctx.fillStyle = "#d36829";
+            ctx.beginPath(); 
+            ctx.ellipse(0, 5, 52, 34, 0, 0, Math.PI * 2); 
+            ctx.fill();
+
+            // お尻側の赤み（グラデーション風の重なり）
+            ctx.fillStyle = "#a83214";
+            ctx.beginPath();
+            ctx.arc(30, 2, 28, -Math.PI/2, Math.PI/2);
+            ctx.fill();
+
+            // 正面のベージュ色の口元
+            ctx.fillStyle = "#f39c6b";
+            ctx.beginPath();
+            ctx.ellipse(-18, 8, 26, 20, 0.2, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 鼻の穴
+            ctx.fillStyle = "#782d0e";
+            ctx.beginPath(); ctx.ellipse(-38, 4, 3, 2, -0.2, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.ellipse(-38, 12, 3, 2, 0.2, 0, Math.PI * 2); ctx.fill();
+
+            // 口のラインと白い牙
+            ctx.strokeStyle = "#782d0e"; ctx.lineWidth = 3;
+            ctx.beginPath(); ctx.moveTo(-30, 18); ctx.quadraticCurveTo(-5, 24, 20, 16); ctx.stroke();
+            
+            // 牙
             ctx.fillStyle = "#fff";
-            ctx.beginPath(); ctx.arc(28, -14, 11, 0, Math.PI * 2); ctx.fill();
-            ctx.fillStyle = "#000";
-            ctx.beginPath(); ctx.arc(30, -14, 5, 0, Math.PI * 2); ctx.fill();
-            ctx.fillStyle = "#fff";
-            ctx.beginPath(); ctx.arc(32, -16, 2, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.moveTo(-15, 18); ctx.lineTo(-12, 26); ctx.lineTo(-9, 19); ctx.fill();
+            ctx.beginPath(); ctx.moveTo(8, 18); ctx.lineTo(11, 25); ctx.lineTo(14, 18); ctx.fill();
 
-            ctx.strokeStyle = "#4a151b"; ctx.lineWidth = 2.5; ctx.beginPath();
-            ctx.arc(20, 10, 12, 0.1, Math.PI * 0.8); ctx.stroke();
+            // 🌟 ぴょこんと長い茎の先に付いた大きな目玉 2つ
+            // 左側の目玉
+            ctx.strokeStyle = "#d36829"; ctx.lineWidth = 8;
+            ctx.beginPath(); ctx.moveTo(-22, -18); ctx.lineTo(-28, -36); ctx.stroke();
+            // 右側の目玉
+            ctx.beginPath(); ctx.moveTo(6, -16); ctx.lineTo(12, -34); ctx.stroke();
 
-            ctx.fillStyle = "rgba(0,0,0,0.8)"; ctx.fillRect(-45, -60, 100, 12);
-            ctx.fillStyle = "#2ed573"; ctx.fillRect(-43, -58, 96 * Math.max(0, enemy.hp / enemy.maxHp), 8);
+            // 目玉本体（丸い白目）
+            const drawEyeball = (ex, ey) => {
+                ctx.fillStyle = "#fff";
+                ctx.beginPath(); ctx.arc(ex, ey, 15, 0, Math.PI * 2); ctx.fill();
+                ctx.lineWidth = 1.5; ctx.strokeStyle = "#d36829"; ctx.stroke();
+                // 青い瞳
+                ctx.fillStyle = "#1e90ff";
+                ctx.beginPath(); ctx.arc(ex + 3, ey, 7, 0, Math.PI * 2); ctx.fill();
+                ctx.fillStyle = "#000";
+                ctx.beginPath(); ctx.arc(ex + 4, ey, 3.5, 0, Math.PI * 2); ctx.fill();
+                // ハイライト
+                ctx.fillStyle = "#fff";
+                ctx.beginPath(); ctx.arc(ex + 6, ey - 3, 1.5, 0, Math.PI * 2); ctx.fill();
+            };
+            drawEyeball(-28, -42);
+            drawEyeball(14, -40);
+
+            // HPバー
+            ctx.fillStyle = "rgba(0,0,0,0.8)"; ctx.fillRect(-45, -72, 100, 12);
+            ctx.fillStyle = "#2ed573"; ctx.fillRect(-43, -70, 96 * Math.max(0, enemy.hp / enemy.maxHp), 8);
             ctx.restore();
         }
 
@@ -841,7 +894,7 @@
             ctx.restore();
 
             squad.forEach(p => drawCutePikmin(p.x, p.y, p.color, 1.0, time * 0.008 + p.phase));
-            drawCuteEnemy(time);
+            drawChappyEnemy(time);
 
             for (let i = attackers.length - 1; i >= 0; i--) {
                 let a = attackers[i];
