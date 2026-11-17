@@ -2107,196 +2107,9 @@
             ctx.fill();
         }
     </script>
-    <script>
+    // ============================================================================
+// 🚓 機捜210 - 車両描画修正パッチ（バランス調整版）
 // ============================================================================
-// 🚓 機捜210 - 完全統合システムパッチ（1〜10全機能オールインワン）
-// ============================================================================
-const CLOUD_API_URL = 'https://taipingu-104e.onrender.com';
-
-// 【1】クラウドサーバーへプレイヤーデータを保存する
-async function saveCloudData(username, data) {
-    if (!username || !data) return;
-    try {
-        await fetch(`${CLOUD_API_URL}/api/users/${encodeURIComponent(username)}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
-        });
-        console.log(`💾 [${username}] のデータをクラウドに保存しました`);
-    } catch (e) { 
-        console.error('クラウド保存エラー:', e); 
-    }
-}
-
-// 【2】ローカル保存（savePlayerData）とクラウド保存を自動合体させる
-if (typeof savePlayerData === 'function') {
-    const originalSavePlayerData = savePlayerData;
-    savePlayerData = function() {
-        originalSavePlayerData();
-        if (typeof player !== 'undefined' && player && player.name) {
-            saveCloudData(player.name, player);
-        }
-    };
-}
-
-// 【3】新規登録（handleRegister）の直後にクラウドへ即時送信する
-if (typeof handleRegister === 'function') {
-    const originalHandleRegister = handleRegister;
-    handleRegister = function() {
-        originalHandleRegister();
-        if (typeof player !== 'undefined' && player && player.name) {
-            saveCloudData(player.name, player);
-        }
-    };
-}
-
-// 【4】ログイン（handleLogin）時に他端末で作ったアカウントもクラウドから検索・同期する
-handleLogin = async function() {
-    if (typeof initAudio === 'function') initAudio();
-    const name = document.getElementById("login-username").value.trim();
-    const pass = document.getElementById("login-password").value.trim();
-    if (!name || !pass) return alert("コールサインとパスワードを入力してください！");
-
-    let db = typeof getUsersDB === 'function' ? getUsersDB() : {};
-    
-    // クラウドから最新データを取得してマージ
-    try {
-        const res = await fetch(`${CLOUD_API_URL}/api/users`);
-        if (res.ok) {
-            const cloudDb = await res.json();
-            if (cloudDb[name]) {
-                db[name] = cloudDb[name];
-                if (typeof saveUsersDB === 'function') saveUsersDB(db);
-            }
-        }
-    } catch (e) { 
-        console.log("クラウド検索スキップ（オフラインまたは起動中）"); 
-    }
-
-    if (!db[name] || db[name].password !== pass) return alert("名前または暗号パスワードが違います！");
-    if (db[name].isBanned) return alert("🚨 このアカウントは管理者によってBAN（凍結）されています。");
-    if (db[name].isBlocked) return alert("⚠️ このアカウントは一時ブロックされています。");
-
-    player = db[name];
-    if (!player.ownedCars) player.ownedCars = ["crown210"];
-    if (!player.currentCar) player.currentCar = "crown210";
-    if (!player.ownedItems) player.ownedItems = [];
-    if (!player.unlockedTrophies) player.unlockedTrophies = [];
-    if (!player.clearCount) player.clearCount = 0;
-    if (!player.stagesCleared) player.stagesCleared = [];
-    if (!player.hint) { player.hint = "デフォルト"; player.hintAnswer = "デフォルト"; }
-
-    alert(`おかえりなさい、${name} 捜査員！`);
-    if (typeof onAuthSuccess === 'function') onAuthSuccess();
-};
-
-// 【5】【管理者用】クラウド上のユーザーのBAN・ブロック状態を切り替え保存する
-async function toggleCloudUserStatus(username, field) {
-    try {
-        const res = await fetch(`${CLOUD_API_URL}/api/users`);
-        if (!res.ok) throw new Error('取得失敗');
-        const db = await res.json();
-        if (!db[username]) return;
-
-        db[username][field] = !db[username][field];
-        await saveCloudData(username, db[username]);
-
-        // ローカルDBも更新
-        if (typeof getUsersDB === 'function' && typeof saveUsersDB === 'function') {
-            const localDb = getUsersDB();
-            if (localDb[username]) {
-                localDb[username][field] = db[username][field];
-                saveUsersDB(localDb);
-            }
-        }
-        renderAdminUserList();
-    } catch (e) {
-        alert('ステータスの更新に失敗しました。');
-    }
-}
-
-// 【6】【管理者用】指定ユーザーをクラウド＆ローカルから完全削除する
-async function deleteCloudUser(username) {
-    if (!confirm(`本当にユーザー [${username}] を完全に削除しますか？`)) return;
-    try {
-        const response = await fetch(`${CLOUD_API_URL}/api/users/${encodeURIComponent(username)}`, {
-            method: 'DELETE'
-        });
-        if (response.ok) {
-            if (typeof getUsersDB === 'function' && typeof saveUsersDB === 'function') {
-                const db = getUsersDB();
-                delete db[username];
-                saveUsersDB(db);
-            }
-            alert(`🗑️ ユーザー [${username}] を削除しました。`);
-            renderAdminUserList();
-        } else {
-            alert('削除に失敗しました。');
-        }
-    } catch (err) {
-        console.error('削除エラー:', err);
-        alert('サーバーとの通信に失敗しました。');
-    }
-}
-
-// 【7】【管理者用】全端末のユーザー一覧をクラウドから読み込んで表示する
-async function renderAdminUserList() {
-    const container = document.getElementById("admin-user-list-container");
-    if (!container) return;
-    container.innerHTML = "<span style='color:#94a3b8; font-size:0.85rem;'>☁️ クラウドから全端末のユーザーを読み込み中...</span>";
-
-    try {
-        const response = await fetch(`${CLOUD_API_URL}/api/users`);
-        if (!response.ok) throw new Error('サーバー通信失敗');
-        
-        const cloudDb = await response.json();
-        const localDb = typeof getUsersDB === 'function' ? getUsersDB() : {};
-        
-        // ローカルにしかまだないデータがあればクラウドへ自動同期しておく
-        for (const lname of Object.keys(localDb)) {
-            if (!cloudDb[lname]) {
-                cloudDb[lname] = localDb[lname];
-                saveCloudData(lname, localDb[lname]);
-            }
-        }
-
-        const names = Object.keys(cloudDb);
-        if (names.length === 0) {
-            container.innerHTML = "<span style='color:#94a3b8; font-size:0.85rem;'>登録ユーザーはまだいません。</span>";
-            return;
-        }
-
-        container.innerHTML = names.map(uname => {
-            const u = cloudDb[uname];
-            const isBanned = !!u.isBanned;
-            const isBlocked = !!u.isBlocked;
-
-            let statusBadge = `<span style="color:var(--neon-green);">[正常]</span>`;
-            if (isBanned) statusBadge = `<span style="color:var(--neon-red); font-weight:bold;">[BAN中]</span>`;
-            else if (isBlocked) statusBadge = `<span style="color:var(--neon-yellow); font-weight:bold;">[ブロック中]</span>`;
-
-            return `
-                <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(0,243,255,0.2); border-radius:8px; padding:8px 10px; display:flex; justify-content:space-between; align-items:center; font-size:0.85rem; margin-bottom:6px;">
-                    <div>
-                        <b style="color:var(--neon-cyan);">${uname}</b> ${statusBadge}
-                        <div style="font-size:0.75rem; color:#94a3b8;">パスワード: <span style="color:#fff; font-family:monospace;">${u.password || '---'}</span> | Lv.${u.level || 1} | 所持金: ${u.money || 0}G</div>
-                    </div>
-                    <div style="display:flex; gap:4px; flex-wrap:wrap; justify-content:flex-end;">
-                        <button class="${isBanned ? 'green' : 'red'}" onclick="toggleCloudUserStatus('${uname}', 'isBanned')" style="padding:3px 7px; font-size:0.7rem;">${isBanned ? 'BAN解除' : 'BAN'}</button>
-                        <button class="${isBlocked ? 'green' : 'yellow'}" onclick="toggleCloudUserStatus('${uname}', 'isBlocked')" style="padding:3px 7px; font-size:0.7rem;">${isBlocked ? 'ブロック解除' : 'ブロック'}</button>
-                        <button class="red" onclick="deleteCloudUser('${uname}')" style="padding:3px 7px; font-size:0.7rem;">削除</button>
-                    </div>
-                </div>
-            `;
-        }).join("");
-
-    } catch (err) {
-        console.error('ユーザー一覧取得エラー:', err);
-        container.innerHTML = "<span style='color:var(--neon-red); font-size:0.85rem;'>⚠️ サーバー起動中または通信エラーです。10秒ほど待ってから再度開いてください。</span>";
-    }
-}
-
-// 【8】全8車種の見た目（シルエット・カラー・赤色灯）描き分けエンジン
 drawJapanPolicePatcar = function(ctx, x, y, frame, carKey, label) {
     ctx.save();
     let sirenRed = (Math.floor(frame / 5) % 2 === 0);
@@ -2304,170 +2117,99 @@ drawJapanPolicePatcar = function(ctx, x, y, frame, carKey, label) {
     // 車体影
     ctx.fillStyle = "rgba(0, 0, 0, 0.65)";
     ctx.beginPath();
-    ctx.ellipse(x + 65, y + 58, 65, 11, 0, 0, Math.PI * 2);
+    ctx.ellipse(x + 60, y + 52, 55, 9, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // 1. バン型（ハイエース 機動隊投光車）
-    if (carKey === "hiace_lighting") {
-        ctx.fillStyle = "#1e3a8a";
-        ctx.fillRect(x + 8, y + 8, 112, 42);
-        ctx.fillStyle = "#ffffff";
-        ctx.fillRect(x + 8, y + 26, 112, 6);
-        ctx.fillStyle = "#020617";
-        ctx.fillRect(x + 85, y + 12, 28, 14);
-        ctx.fillRect(x + 16, y + 12, 60, 12);
-        // 大型投光器
-        ctx.fillStyle = "#94a3b8";
-        ctx.fillRect(x + 35, y - 6, 30, 14);
-        ctx.fillStyle = "#fef08a";
-        ctx.shadowBlur = 15; ctx.shadowColor = "#fef08a";
-        ctx.fillRect(x + 60, y - 4, 8, 10);
-        ctx.shadowBlur = 0;
-    }
-    // 2. 大型SUV型（ランクル 高速隊ヘビー）
-    else if (carKey === "landcruiser") {
-        ctx.fillStyle = "#ffffff";
-        ctx.beginPath();
-        ctx.moveTo(x + 8, y + 42);
-        ctx.lineTo(x + 12, y + 10);
-        ctx.lineTo(x + 85, y + 10);
-        ctx.lineTo(x + 122, y + 24);
-        ctx.lineTo(x + 124, y + 42);
-        ctx.closePath();
-        ctx.fill();
+    // 車体のベースカラー判定
+    let isFukumen = (carKey === "crown180_fukumen" || carKey === "legacy_b4");
+    let bodyColor = "#ffffff";
+    if (carKey === "crown180_fukumen") bodyColor = "#94a3b8"; // シルバー
+    else if (carKey === "legacy_b4") bodyColor = "#1e293b"; // ダークネイビー
+    else if (carKey === "lexus_lc") bodyColor = "#090d16"; // 漆黒
+
+    // 基本セダン・クーペ共通のきれいなボディ形状
+    ctx.fillStyle = bodyColor;
+    ctx.beginPath();
+    ctx.moveTo(x + 10, y + 36);
+    ctx.lineTo(x + 24, y + 18);
+    ctx.lineTo(x + 82, y + 18);
+    ctx.lineTo(x + 110, y + 36);
+    ctx.closePath();
+    ctx.fill();
+
+    // 白黒パトカーの場合の黒ツートン帯
+    if (!isFukumen && carKey !== "lexus_lc" && carKey !== "hiace_lighting" && carKey !== "landcruiser") {
         ctx.fillStyle = "#0f172a";
-        ctx.fillRect(x + 8, y + 28, 116, 16);
-        ctx.fillStyle = "#020617";
-        ctx.fillRect(x + 18, y + 13, 62, 12);
-        // フロントグリルガード
-        ctx.strokeStyle = "#cbd5e1"; ctx.lineWidth = 3;
-        ctx.strokeRect(x + 118, y + 26, 8, 16);
-    }
-    // 3. スポーツクーペ型（フェアレディZ / レクサスLC）
-    else if (carKey === "fairlady_z" || carKey === "lexus_lc") {
-        let isZ = (carKey === "fairlady_z");
-        ctx.fillStyle = isZ ? "#ffffff" : "#090d16";
-        ctx.beginPath();
-        ctx.moveTo(x + 5, y + 42);
-        ctx.lineTo(x + 25, y + 20);
-        ctx.lineTo(x + 75, y + 20);
-        ctx.lineTo(x + 125, y + 34);
-        ctx.lineTo(x + 125, y + 44);
-        ctx.closePath();
-        ctx.fill();
-
-        if (isZ) {
-            ctx.fillStyle = "#0f172a";
-            ctx.fillRect(x + 5, y + 32, 120, 12);
-        }
-        // 大型リアウイング
-        ctx.fillStyle = isZ ? "#0f172a" : "#334155";
-        ctx.fillRect(x + 4, y + 14, 14, 4);
-        ctx.fillRect(x + 8, y + 18, 4, 6);
-        // 低いキャビン
-        ctx.fillStyle = "#020617";
-        ctx.beginPath();
-        ctx.moveTo(x + 28, y + 20);
-        ctx.lineTo(x + 42, y + 10);
-        ctx.lineTo(x + 70, y + 10);
-        ctx.lineTo(x + 82, y + 20);
-        ctx.closePath();
-        ctx.fill();
-    }
-    // 4. セダン型（210クラウン / 220クラウン / 180覆面 / B4レガシー機捜）
-    else {
-        let isFukumen = (carKey === "crown180_fukumen" || carKey === "legacy_b4");
-        let bodyColor = "#ffffff";
-        if (carKey === "crown180_fukumen") bodyColor = "#94a3b8";
-        else if (carKey === "legacy_b4") bodyColor = "#1e293b";
-
-        ctx.fillStyle = bodyColor;
-        ctx.beginPath();
-        ctx.moveTo(x + 12, y + 38);
-        ctx.lineTo(x + 32, y + 14);
-        ctx.lineTo(x + 92, y + 14);
-        ctx.lineTo(x + 118, y + 38);
-        ctx.closePath();
-        ctx.fill();
-
-        if (!isFukumen) {
-            ctx.fillStyle = "#0f172a";
-            ctx.fillRect(x + 2, y + 26, 120, 14);
-            if (carKey === "crown220") {
-                ctx.fillStyle = "#fde047";
-                ctx.fillRect(x + 10, y + 25, 105, 2);
-            }
+        ctx.fillRect(x + 6, y + 24, 108, 12);
+        // 220系クラウンのゴールドライン
+        if (carKey === "crown220") {
             ctx.fillStyle = "#fde047";
-            ctx.beginPath();
-            ctx.arc(x + 62, y + 33, 5, 0, Math.PI * 2);
-            ctx.fill();
+            ctx.fillRect(x + 10, y + 23, 100, 2);
         }
-
-        ctx.fillStyle = "#020617";
+        // 旭日章風エンブレム
+        ctx.fillStyle = "#fde047";
         ctx.beginPath();
-        ctx.moveTo(x + 36, y + 15);
-        ctx.lineTo(x + 48, y + 4);
-        ctx.lineTo(x + 80, y + 4);
-        ctx.lineTo(x + 90, y + 15);
-        ctx.closePath();
+        ctx.arc(x + 58, y + 30, 4, 0, Math.PI * 2);
         ctx.fill();
     }
 
-    // 【9】ヘッドライト・テールランプ・回転灯の個別制御
+    // キャビン（窓）
+    ctx.fillStyle = "#020617";
+    ctx.beginPath();
+    ctx.moveTo(x + 30, y + 18);
+    ctx.lineTo(x + 40, y + 8);
+    ctx.lineTo(x + 72, y + 8);
+    ctx.lineTo(x + 82, y + 18);
+    ctx.closePath();
+    ctx.fill();
+
+    // ヘッドライト＆テールランプ
     ctx.fillStyle = "#fde047";
-    ctx.shadowBlur = 8; ctx.shadowColor = "#fde047";
-    ctx.fillRect(x + 116, y + 32, 7, 5);
+    ctx.shadowBlur = 6; ctx.shadowColor = "#fde047";
+    ctx.fillRect(x + 106, y + 28, 6, 4);
     ctx.fillStyle = "#ff0055";
     ctx.shadowColor = "#ff0055";
-    ctx.fillRect(x + 2, y + 32, 5, 5);
+    ctx.fillRect(x + 8, y + 28, 4, 4);
     ctx.shadowBlur = 0;
 
+    // 赤色回転灯
     let isSecret = (carKey === "crown180_fukumen" || carKey === "legacy_b4" || carKey === "lexus_lc");
     if (isSecret) {
-        // 覆面・VIP警護用の反転赤色灯
+        // 覆面・警護車の反転式赤色灯（1灯）
         ctx.fillStyle = sirenRed ? "#ff0055" : "#450a0a";
-        ctx.shadowBlur = sirenRed ? 20 : 0;
+        ctx.shadowBlur = sirenRed ? 16 : 0;
         ctx.shadowColor = "#ff0055";
         ctx.beginPath();
-        ctx.arc(x + 64, y + 2, 5, Math.PI, 0);
+        ctx.arc(x + 56, y + 5, 4, Math.PI, 0);
         ctx.fill();
-    } else if (carKey !== "hiace_lighting") {
-        // 白黒パトカー用のブーメラン型赤色灯
+    } else {
+        // 通常パトカーのブーメラン型赤色灯
         ctx.fillStyle = "#1e293b";
-        ctx.fillRect(x + 54, y - 3, 24, 5);
+        ctx.fillRect(x + 48, y + 2, 20, 4);
         ctx.fillStyle = sirenRed ? "#ff0055" : "#002244";
-        ctx.shadowBlur = sirenRed ? 18 : 0;
+        ctx.shadowBlur = sirenRed ? 14 : 0;
         ctx.shadowColor = "#ff0055";
-        ctx.fillRect(x + 56, y - 10, 8, 8);
+        ctx.fillRect(x + 50, y - 4, 7, 7);
         ctx.fillStyle = !sirenRed ? "#ff0055" : "#002244";
-        ctx.shadowBlur = !sirenRed ? 18 : 0;
-        ctx.fillRect(x + 68, y - 10, 8, 8);
+        ctx.shadowBlur = !sirenRed ? 14 : 0;
+        ctx.fillRect(x + 59, y - 4, 7, 7);
     }
     ctx.shadowBlur = 0;
 
-    // タイヤ＆車名ラベル
+    // タイヤ描画
     if (typeof drawRealWheel === 'function') {
-        drawRealWheel(ctx, x + 30, y + 46);
-        drawRealWheel(ctx, x + 100, y + 46);
+        drawRealWheel(ctx, x + 28, y + 40);
+        drawRealWheel(ctx, x + 90, y + 40);
     }
+
+    // 車名ラベル
     if (label) {
         ctx.fillStyle = "#f8fafc";
         ctx.font = "bold 11px sans-serif";
-        ctx.fillText(label, x + 12, y - 18);
+        ctx.fillText(label, x + 10, y - 10);
     }
 
     ctx.restore();
 };
-
-// 【10】ページ読み込み時にRenderサーバーを自動起動（スリープ解除）＆初期同期
-window.addEventListener('load', () => {
-    fetch(`${CLOUD_API_URL}/api/users`)
-        .then(res => res.ok ? res.json() : null)
-        .then(data => {
-            if (data) console.log('☁️ Renderクラウドサーバー接続完了！登録ユーザー数:', Object.keys(data).length);
-        })
-        .catch(() => console.log('⏳ Renderサーバーを起動中です...'));
-});
-</script>
 </body>
 </html>
