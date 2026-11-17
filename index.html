@@ -2107,9 +2107,48 @@
             ctx.fill();
         }
     </script>
-    // ============================================================================
-// 🚓 機捜210 - 車両描画修正パッチ（バランス調整版）
+  <script>
 // ============================================================================
+// 🚓 機捜210 - 統合＆車両描画修正パッチ（完全版）
+// ============================================================================
+const CLOUD_API_URL = 'https://taipingu-104e.onrender.com';
+
+// 1. クラウド保存・同期機能
+async function saveCloudData(username, data) {
+    if (!username || !data) return;
+    try {
+        await fetch(`${CLOUD_API_URL}/api/users/${encodeURIComponent(username)}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        console.log(`💾 [${username}] のデータをクラウドに保存しました`);
+    } catch (e) { 
+        console.error('クラウド保存エラー:', e); 
+    }
+}
+
+if (typeof savePlayerData === 'function') {
+    const originalSavePlayerData = savePlayerData;
+    savePlayerData = function() {
+        originalSavePlayerData();
+        if (typeof player !== 'undefined' && player && player.name) {
+            saveCloudData(player.name, player);
+        }
+    };
+}
+
+if (typeof handleRegister === 'function') {
+    const originalHandleRegister = handleRegister;
+    handleRegister = function() {
+        originalHandleRegister();
+        if (typeof player !== 'undefined' && player && player.name) {
+            saveCloudData(player.name, player);
+        }
+    };
+}
+
+// 2. 車両描画修正パッチ（バランス調整版）
 drawJapanPolicePatcar = function(ctx, x, y, frame, carKey, label) {
     ctx.save();
     let sirenRed = (Math.floor(frame / 5) % 2 === 0);
@@ -2141,12 +2180,10 @@ drawJapanPolicePatcar = function(ctx, x, y, frame, carKey, label) {
     if (!isFukumen && carKey !== "lexus_lc" && carKey !== "hiace_lighting" && carKey !== "landcruiser") {
         ctx.fillStyle = "#0f172a";
         ctx.fillRect(x + 6, y + 24, 108, 12);
-        // 220系クラウンのゴールドライン
         if (carKey === "crown220") {
             ctx.fillStyle = "#fde047";
             ctx.fillRect(x + 10, y + 23, 100, 2);
         }
-        // 旭日章風エンブレム
         ctx.fillStyle = "#fde047";
         ctx.beginPath();
         ctx.arc(x + 58, y + 30, 4, 0, Math.PI * 2);
@@ -2175,7 +2212,6 @@ drawJapanPolicePatcar = function(ctx, x, y, frame, carKey, label) {
     // 赤色回転灯
     let isSecret = (carKey === "crown180_fukumen" || carKey === "legacy_b4" || carKey === "lexus_lc");
     if (isSecret) {
-        // 覆面・警護車の反転式赤色灯（1灯）
         ctx.fillStyle = sirenRed ? "#ff0055" : "#450a0a";
         ctx.shadowBlur = sirenRed ? 16 : 0;
         ctx.shadowColor = "#ff0055";
@@ -2183,7 +2219,6 @@ drawJapanPolicePatcar = function(ctx, x, y, frame, carKey, label) {
         ctx.arc(x + 56, y + 5, 4, Math.PI, 0);
         ctx.fill();
     } else {
-        // 通常パトカーのブーメラン型赤色灯
         ctx.fillStyle = "#1e293b";
         ctx.fillRect(x + 48, y + 2, 20, 4);
         ctx.fillStyle = sirenRed ? "#ff0055" : "#002244";
@@ -2211,5 +2246,6 @@ drawJapanPolicePatcar = function(ctx, x, y, frame, carKey, label) {
 
     ctx.restore();
 };
+</script>
 </body>
 </html>
