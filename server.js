@@ -1,16 +1,13 @@
 const express = require('express');
 const cors = require('cors');
 const sqlite3 = require('sqlite3').verbose();
-
 const app = express();
-const PORT = process.env.PORT || 3000;
 
-// ミドルウェアの設定
 app.use(cors());
 app.use(express.json());
 
-// 🗄️ SQLiteデータベースの初期化（users.db ファイルに保存）
-const db = new sqlite3.Database('./users.db', (err) => {
+// データベースの接続（ファイルとして保存）
+const db = new sqlite3.Database('./database.sqlite', (err) => {
     if (err) {
         console.error('データベース接続エラー:', err.message);
     } else {
@@ -18,113 +15,62 @@ const db = new sqlite3.Database('./users.db', (err) => {
     }
 });
 
-// ユーザーテーブルの作成
+// テーブルの作成（ユーザー情報保存用）
 db.run(`CREATE TABLE IF NOT EXISTS users (
     username TEXT PRIMARY KEY,
-    password TEXT NOT NULL,
-    hint TEXT,
-    hintAnswer TEXT,
-    score INTEGER DEFAULT 0,
-    level INTEGER DEFAULT 1,
-    money INTEGER DEFAULT 100,
-    bestTime REAL,
-    ownedCars TEXT,
-    currentCar TEXT,
-    ownedItems TEXT,
-    unlockedTrophies TEXT,
-    clearCount INTEGER DEFAULT 0,
-    stagesCleared TEXT,
+    password TEXT,
+    data TEXT,
     isBanned INTEGER DEFAULT 0,
     isBlocked INTEGER DEFAULT 0
 )`);
 
-// --- 🌐 API エンドポイント ---
-
-// 1. 全ユーザー一覧の取得（管理者用：パスワードやBAN状態を網羅）
+// 1. 全ユーザー一覧の取得（/api/users）
 app.get('/api/users', (req, res) => {
     db.all(`SELECT * FROM users`, [], (err, rows) => {
         if (err) {
             return res.status(500).json({ error: err.message });
         }
-        const users = {};
+        const usersObj = {};
         rows.forEach(row => {
-            users[row.username] = {
-                name: row.username,
-                password: row.password,
-                hint: row.hint,
-                hintAnswer: row.hintAnswer,
-                score: row.score,
-                level: row.level,
-                money: row.money,
-                bestTime: row.bestTime,
-                ownedCars: JSON.parse(row.ownedCars || '["crown210"]'),
-                currentCar: row.currentCar || 'crown210',
-                ownedItems: JSON.parse(row.ownedItems || '[]'),
-                unlockedTrophies: JSON.parse(row.unlockedTrophies || '[]'),
-                clearCount: row.clearCount,
-                stagesCleared: JSON.parse(row.stagesCleared || '[]'),
-                isBanned: row.isBanned === 1,
-                isBlocked: row.isBlocked === 1
-            };
+            try {
+                let parsedData = JSON.parse(row.data || '{}');
+                parsedData.password = row.password;
+                parsedData.isBanned = !!row.isBanned;
+                parsedData.isBlocked = !!row.isBlocked;
+                usersObj[row.username] = parsedData;
+            } catch (e) {
+                usersObj[row.username] = { password: row.password, isBanned: !!row.isBanned, isBlocked: !!row.isBlocked };
+            }
         });
-        res.json(users);
+        res.json(usersObj);
     });
 });
 
-// 2. ユーザー登録 / データ保存 (Upsert)
+// 2. ユーザーデータの保存・新規登録（POST /api/users/:username）
 app.post('/api/users/:username', (req, res) => {
     const username = req.params.username;
-    const u = req.body;
+    const userData = req.body;
+    const password = userData.password || '';
+    const isBanned = userData.isBanned ? 1 : 0;
+    const isBlocked = userData.isBlocked ? 1 : 0;
+    const dataString = JSON.stringify(userData);
 
-    const query = `
-        INSERT INTO users (username, password, hint, hintAnswer, score, level, money, bestTime, ownedCars, currentCar, ownedItems, unlockedTrophies, clearCount, stagesCleared, isBanned, isBlocked)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        ON CONFLICT(username) DO UPDATE SET
-            password=excluded.password,
-            hint=excluded.hint,
-            hintAnswer=excluded.hintAnswer,
-            score=excluded.score,
-            level=excluded.level,
-            money=excluded.money,
-            bestTime=excluded.bestTime,
-            ownedCars=excluded.ownedCars,
-            currentCar=excluded.currentCar,
-            ownedItems=excluded.ownedItems,
-            unlockedTrophies=excluded.unlockedTrophies,
-            clearCount=excluded.clearCount,
-            stagesCleared=excluded.stagesCleared,
-            isBanned=excluded.isBanned,
-            isBlocked=excluded.isBlocked
-    `;
-
-    const params = [
-        username,
-        u.password,
-        u.hint || '',
-        u.hintAnswer || '',
-        u.score || 0,
-        u.level || 1,
-        u.money || 100,
-        u.bestTime !== undefined ? u.bestTime : null,
-        JSON.stringify(u.ownedCars || ['crown210']),
-        u.currentCar || 'crown210',
-        JSON.stringify(u.ownedItems || []),
-        JSON.stringify(u.unlockedTrophies || []),
-        u.clearCount || 0,
-        JSON.stringify(u.stagesCleared || []),
-        u.isBanned ? 1 : 0,
-        u.isBlocked ? 1 : 0
-    ];
-
-    db.run(query, params, function(err) {
-        if (err) {
-            return res.status(500).json({ error: err.message });
+    db.run(
+        `INSERT INTO users (username, password, data, isBanned, isBlocked) 
+         VALUES (?, ?, ?, ?, ?) 
+         ON CONFLICT(username) 
+         DO UPDATE SET password=excluded.password, data=excluded.data, isBanned=excluded.isBanned, isBlocked=excluded.isBlocked`,
+        [username, password, dataString, isBanned, isBlocked],
+        function(err) {
+            if (err) {
+                return res.status(500).json({ error: err.message });
+            }
+            res.json({ success: true, message: '保存しました。' });
         }
-        res.json({ success: true, message: 'データを保存しました。' });
-    });
+    );
 });
 
-// 3. 管理者用：アカウントのBAN / ブロック状態の更新
+// 3. 管理者用：BAN・ブロック状態の更新（POST /api/admin/status/:username）
 app.post('/api/admin/status/:username', (req, res) => {
     const username = req.params.username;
     const { isBanned, isBlocked } = req.body;
@@ -141,6 +87,10 @@ app.post('/api/admin/status/:username', (req, res) => {
     }
     params.push(username);
 
+    if (fields.length === 0) {
+        return res.status(400).json({ error: '更新する項目がありません。' });
+    }
+
     const query = `UPDATE users SET ${fields.join(', ')} WHERE username = ?`;
 
     db.run(query, params, function(err) {
@@ -151,7 +101,19 @@ app.post('/api/admin/status/:username', (req, res) => {
     });
 });
 
+// 4. ユーザーの削除（DELETE /api/users/:username）
+app.delete('/api/users/:username', (req, res) => {
+    const username = req.params.username;
+    db.run(`DELETE FROM users WHERE username = ?`, [username], function(err) {
+        if (err) {
+            return res.status(500).json({ error: err.message });
+        }
+        res.json({ success: true, message: '削除しました。' });
+    });
+});
+
 // サーバー起動
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`🚀 機捜210 管理サーバーがポート ${PORT} で起動しました`);
+    console.log(`🚀 サーバーが起動しました（ポート: ${PORT}）`);
 });
