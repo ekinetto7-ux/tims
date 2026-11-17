@@ -2344,7 +2344,21 @@ drawJapanPolicePatcar = function(ctx, x, y, frame, carKey, label) {
 
     ctx.restore();
 };
-
+  <!-- === オンライン対戦用モーダル（ここから） === -->
+<div id="onlineMenuModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:9999; justify-content:center; align-items:center;">
+    <div style="background:#222; color:#fff; padding:20px; border-radius:10px; width:300px; text-align:center; font-family:sans-serif;">
+        <h3>オンライン対戦</h3>
+        <button onclick="createRoom()" style="width:100%; padding:10px; margin:10px 0; background:#4CAF50; color:white; border:none; border-radius:5px; cursor:pointer; font-weight:bold;">新しいサーバーを作成</button>
+        <div style="margin:15px 0;">
+            <input type="text" id="roomInputId" placeholder="サーバー番号を入力" style="width:90%; padding:8px; margin-bottom:8px; border-radius:4px; border:1px solid #ccc; text-transform:uppercase; text-align:center;">
+            <button onclick="joinRoom()" style="width:100%; padding:10px; background:#2196F3; color:white; border:none; border-radius:5px; cursor:pointer; font-weight:bold;">サーバーに参加</button>
+        </div>
+        <button onclick="closeOnlineMenu()" style="width:100%; padding:8px; background:#f44336; color:white; border:none; border-radius:5px; cursor:pointer;">閉じる</button>
+    </div>
+</div>
+<!-- === オンライン対戦用モーダル（ここまで） === -->
+   
+</script>
 
 </body>
 </html>
