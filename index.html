@@ -2419,6 +2419,76 @@ async function joinRoom() {
         alert('通信エラーが発生しました。');
     }
 }
+    const RENDER_API_URL = "https://taipingu-104e.onrender.com";
+
+// オンライン対戦メニューを開く
+function openOnlineMenu() {
+    const modal = document.getElementById('onlineMenuModal');
+    if (modal) modal.style.display = 'flex';
+}
+
+// オンライン対戦メニューを閉じる
+function closeOnlineMenu() {
+    const modal = document.getElementById('onlineMenuModal');
+    if (modal) modal.style.display = 'none';
+}
+
+// 部屋を作成する処理
+async function createRoom() {
+    const username = window.currentUser || "プレイヤー";
+    try {
+        const res = await fetch(`${RENDER_API_URL}/api/rooms/create`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username: username })
+        });
+        const data = await res.json();
+        if (data.success) {
+            alert(`サーバーを作成しました！\nサーバー番号: ${data.roomId}\n友達にこの番号を教えて参加してもらおう！`);
+            closeOnlineMenu();
+        } else {
+            alert('サーバーの作成に失敗しました。');
+        }
+    } catch (e) {
+        console.error(e);
+        alert('通信エラーが発生しました。');
+    }
+}
+
+// 部屋に参加する処理（エラー対策版）
+async function joinRoom() {
+    const roomIdInput = document.getElementById('roomInputId');
+    if (!roomIdInput) {
+        alert('入力欄が見つかりません。');
+        return;
+    }
+    const roomId = roomIdInput.value.trim().toUpperCase();
+    const username = window.currentUser || "プレイヤー";
+    
+    if (!roomId) {
+        alert('サーバー番号を入力してください。');
+        return;
+    }
+    
+    try {
+        const res = await fetch(`${RENDER_API_URL}/api/rooms/join`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ roomId: roomId, username: username })
+        });
+        const data = await res.json();
+        if (res.ok && data.success) {
+            alert(`サーバー「${roomId}」に参加しました！`);
+            closeOnlineMenu();
+        } else {
+            alert(data.error || '参加できませんでした。');
+        }
+    } catch (e) {
+        console.error(e);
+        alert('通信エラーが発生しました。');
+    }
+}
+
 </script>
 
 </body>
