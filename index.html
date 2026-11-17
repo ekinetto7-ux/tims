@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ピクミン タイピング大作戦 - Chappy Edition</title>
+    <title>ピクミン タイピング大作戦 - Ice Pikmin & Chappy Edition</title>
     <style>
         :root {
             --bg-dark: #010403;
@@ -13,6 +13,7 @@
             --accent-red: #ff5252;
             --accent-blue: #1e90ff;
             --accent-purple: #9b59b6;
+            --accent-ice: #70a1ff;
             --accent-white: #dfe6e9;
             --accent-pink: #ff7675;
             --accent-yellow: #ffa502;
@@ -198,7 +199,7 @@
 <body>
 
     <h1>🌿 ピクミン タイピング大作戦</h1>
-    <div class="subtitle">Chappy & Multi-Input Edition — 本家チャッピー忠実再現＆マルチ入力</div>
+    <div class="subtitle">Ice Pikmin & Chappy Edition — 氷ピクミン参戦＆ローカルストレージ保存</div>
 
     <!-- 1. ログイン画面 -->
     <div class="container" id="authScreen">
@@ -249,17 +250,17 @@
                 <button class="btn btn-file" onclick="playClickSound(); document.getElementById('importFileBtn').click()">📂 セーブ読込</button>
                 <input type="file" id="importFileBtn" class="hidden" accept=".json" onchange="importSaveFile(event)">
             </div>
-            <button class="btn btn-admin" onclick="playClickSound(); promptAdminPassword()">🛠️ 管理者モード </button>
+            <button class="btn btn-admin" onclick="playClickSound(); promptAdminPassword()">🛠️ 管理者モード (PW: 2021)</button>
         </div>
     </div>
 
-    <!-- 2.5 ピクミン選択画面 -->
+    <!-- 2.5 ピクミン選択画面 (氷ピクミン追加) -->
     <div class="container hidden" id="pikminSelectScreen">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
             <h3 style="margin: 0; color: var(--accent-gold);">🌿 連れていくピクミンを選択</h3>
             <button class="btn btn-sub" onclick="playClickSound(); openStageSelect(pendingMode)">← ステージ選択へ</button>
         </div>
-        <p style="font-size: 13px; color: var(--text-sub);">仲間を選んで出撃しよう！</p>
+        <p style="font-size: 13px; color: var(--text-sub);">仲間を選んで出撃しよう！（ローカルストレージ自動保存）</p>
         <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 15px 0;">
             <div class="card-item" onclick="selectPikminType('red')" style="border-color: #ff5252;">
                 <h4 style="color: #ff5252;">🔴 赤ピクミン</h4>
@@ -285,9 +286,9 @@
                 <h4 style="color: #ff7675;">🪽 羽ピクミン</h4>
                 <p>空をふわふわ飛べる</p>
             </div>
-            <div class="card-item" onclick="selectPikminType('glow')" style="border-color: #00cec9;">
-                <h4 style="color: #00cec9;">🧊　氷ピクミン</h4>
-                <p>とても冷いピクミン</p>
+            <div class="card-item" onclick="selectPikminType('ice')" style="border-color: #70a1ff;">
+                <h4 style="color: #70a1ff;">❄️ 氷ピクミン</h4>
+                <p>ひんやり凍らせる新種！</p>
             </div>
             <div class="card-item" onclick="selectPikminType('all')" style="border-color: var(--accent-gold); grid-column: span 2;">
                 <h4 style="color: var(--accent-gold);">✨ 全体出動（全員集合！）</h4>
@@ -322,21 +323,24 @@
             <button class="btn btn-sub" onclick="playClickSound(); goToHome()">← 司令室へ戻る</button>
         </div>
         <div class="rule-content">
+            <h4>💾 ローカルストレージ自動保存</h4>
+            <p>・スコアやステージの進行度、ピクミンの数はブラウザのローカルストレージに自動でセーブされます。</p>
+
+            <h4>❄️ 氷ピクミンについて</h4>
+            <p>・ひんやりクリアな氷ピクミンが選べるようになりました！</p>
+
             <h4>⌨️ マルチ入力システムについて</h4>
             <p>・「チャッピー」を「chappi」のほか、「tyappi」や「cchappi」など、自分の打ちやすい好みのローマ字パターンでスムーズに入力できます！</p>
             
             <h4>✨ 全体出動モードについて</h4>
-            <p>・ピクミン選択で「全体出動」を選ぶと、赤・青・黄・紫・白・羽・ヒカリピクミンのいろんな仲間たちが画面いっぱいに大集合して一斉に突撃します！</p>
-
-            <h4>🧪 ゲキカラスプレー</h4>
-            <p>・連続で正しく入力してコンボを繋げるとスプレーがたまり、5個たまると自動で攻撃力と獲得スコアが2倍にパワーアップします！</p>
+            <p>・ピクミン選択で「全体出動」を選ぶと、いろんな色のピクミン（氷ピクミン含む）が画面いっぱいに大集合して一斉に突撃します！</p>
         </div>
     </div>
 
     <!-- 6. 管理者モード画面 -->
     <div class="container hidden" id="adminScreen">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-            <h3 style="margin: 0; color: var(--accent-purple);">🛠️ 管理者モード </h3>
+            <h3 style="margin: 0; color: var(--accent-purple);">🛠️ 管理者モード (PW: 2021)</h3>
             <button class="btn btn-sub" onclick="playClickSound(); goToHome()">← 司令室へ戻る</button>
         </div>
         <div style="margin-top: 15px;">
@@ -393,8 +397,8 @@
 
     <script>
         let currentUser = null;
-        function getAllUsers() { try { return JSON.parse(localStorage.getItem('pikmin_chappy_v1') || '{}'); } catch(e){ return {}; } }
-        function saveAllUsers(u) { localStorage.setItem('pikmin_chappy_v1', JSON.stringify(u)); }
+        function getAllUsers() { try { return JSON.parse(localStorage.getItem('pikmin_ice_chappy_v1') || '{}'); } catch(e){ return {}; } }
+        function saveAllUsers(u) { localStorage.setItem('pikmin_ice_chappy_v1', JSON.stringify(u)); }
 
         function playClickSound() {
             const audio = document.getElementById('hitSound');
@@ -447,7 +451,7 @@
             document.getElementById('homePikmin').innerText = `${currentUser.data.pikmin.toLocaleString()} 匹`;
             document.getElementById('homeScore').innerText = `${currentUser.data.score.toLocaleString()} pt`;
             document.getElementById('homeStageProgress').innerText = `Stage ${currentUser.data.maxStage} / 30`;
-            let users = getAllUsers(); users[currentUser.name] = currentUser.data; saveAllUsers(users);
+            let users = getAllUsers(); users[currentUser.name] = currentUser.data; saveAllUsers(users); // 🔄 ローカルストレージ自動保存
         }
 
         function exportSaveFile() {
@@ -474,7 +478,7 @@
                         saveAllUsers(users);
                         currentUser = imported;
                         goToHome();
-                        alert("📂 セーブデータを読み込みました！");
+                        alert("📂 セーブデータをローカルストレージに読み込みました！");
                     } else { alert("❌ 無効なファイルです"); }
                 } catch(err) { alert("❌ 読み込み失敗"); }
             };
@@ -536,7 +540,7 @@
             else if (type === 'purple') selectedPikminColor = "#9b59b6";
             else if (type === 'white') selectedPikminColor = "#dfe6e9";
             else if (type === 'winged') selectedPikminColor = "#ff7675";
-            else if (type === 'glow') selectedPikminColor = "#00cec9";
+            else if (type === 'ice') selectedPikminColor = "#70a1ff"; // ❄️ 氷ピクミンカラー
             else if (type === 'all') { isAllOut = true; selectedPikminColor = "all"; }
         }
 
@@ -594,7 +598,7 @@
             { kanji: "紫ピクミン", kana: "むらさきぴくみん", patterns: ["murasakipikumin"], color: "#9b59b6", desc: "もっちりボディで力持ち。" },
             { kanji: "白ピクミン", kana: "しろぴくみん", patterns: ["shiropikumin", "siropikumin"], color: "#dfe6e9", desc: "大きなおめめがとってもキュート。" },
             { kanji: "羽ピクミン", kana: "はぴくみん", patterns: ["hapikumin", "hanepikumin"], color: "#ff7675", desc: "ピンクの羽でふわふわ飛ぶよ。" },
-            { kanji: "ヒカリピクミン", kana: "ひかりぴくみん", patterns: ["hikaripikumin"], color: "#00cec9", desc: "夜の星のようにきらめく神秘的な姿。" },
+            { kanji: "氷ピクミン", kana: "こおりぴくみん", patterns: ["kooripikumin"], color: "#70a1ff", desc: "ひんやりクリアな氷の体を持つ仲間。" },
             { kanji: "ドルフィン号", kana: "dorufingou", patterns: ["dorufingou", "doruhwingou"], color: "#00cec9", desc: "オリマーの大切な相棒。" },
             { kanji: "オリマー", kana: "おりまー", patterns: ["orima-", "orimaa"], color: "#e17055", desc: "勇敢で優しい宇宙飛行士。" }
         ];
@@ -745,7 +749,7 @@
 
         function initSquad() {
             squad = [];
-            const colors = ["#ff5252", "#1e90ff", "#ffa502", "#9b59b6", "#dfe6e9", "#ff7675", "#00cec9"];
+            const colors = ["#ff5252", "#1e90ff", "#ffa502", "#9b59b6", "#dfe6e9", "#ff7675", "#70a1ff"];
             const count = Math.min(40, Math.max(15, currentUser ? currentUser.data.pikmin : 20));
             
             for (let i = 0; i < count; i++) {
@@ -765,7 +769,7 @@
 
         function spawnAttack(isCrit) {
             const num = isCrit ? 12 : 4;
-            const colors = ["#ff5252", "#1e90ff", "#ffa502", "#9b59b6", "#dfe6e9", "#ff7675", "#00cec9"];
+            const colors = ["#ff5252", "#1e90ff", "#ffa502", "#9b59b6", "#dfe6e9", "#ff7675", "#70a1ff"];
             for (let i = 0; i < num; i++) {
                 let col = isAllOut ? colors[Math.floor(Math.random() * colors.length)] : selectedPikminColor;
                 attackers.push({
@@ -795,7 +799,6 @@
             ctx.restore();
         }
 
-        // 🌟 画像を完全再現した「本家のチャッピー」描画
         function drawChappyEnemy(time) {
             ctx.save();
             const sx = enemy.shake > 0 ? (Math.random() - 0.5) * enemy.shake : 0;
@@ -803,76 +806,54 @@
             if (enemy.shake > 0) enemy.shake *= 0.8;
             ctx.translate(enemy.x + sx, enemy.y + sy);
 
-            // 影
             ctx.fillStyle = "rgba(0,0,0,0.4)"; 
             ctx.beginPath(); ctx.ellipse(0, 52, 55, 15, 0, 0, Math.PI * 2); ctx.fill();
 
-            // ちょこんとした足（後ろと前）
             ctx.fillStyle = "#c25115";
             ctx.beginPath(); ctx.roundRect(-18, 25, 10, 26, 5); ctx.fill();
             ctx.beginPath(); ctx.roundRect(12, 25, 10, 26, 5); ctx.fill();
-            // 足の爪
             ctx.fillStyle = "#fff";
             ctx.fillRect(-22, 48, 6, 4);
             ctx.fillRect(14, 48, 6, 4);
 
-            // 横長の茶色いメインボディ
             ctx.fillStyle = "#d36829";
-            ctx.beginPath(); 
-            ctx.ellipse(0, 5, 52, 34, 0, 0, Math.PI * 2); 
-            ctx.fill();
+            ctx.beginPath(); ctx.ellipse(0, 5, 52, 34, 0, 0, Math.PI * 2); ctx.fill();
 
-            // お尻側の赤み（グラデーション風の重なり）
             ctx.fillStyle = "#a83214";
-            ctx.beginPath();
-            ctx.arc(30, 2, 28, -Math.PI/2, Math.PI/2);
-            ctx.fill();
+            ctx.beginPath(); ctx.arc(30, 2, 28, -Math.PI/2, Math.PI/2); ctx.fill();
 
-            // 正面のベージュ色の口元
             ctx.fillStyle = "#f39c6b";
-            ctx.beginPath();
-            ctx.ellipse(-18, 8, 26, 20, 0.2, 0, Math.PI * 2);
-            ctx.fill();
+            ctx.beginPath(); ctx.ellipse(-18, 8, 26, 20, 0.2, 0, Math.PI * 2); ctx.fill();
 
-            // 鼻の穴
             ctx.fillStyle = "#782d0e";
             ctx.beginPath(); ctx.ellipse(-38, 4, 3, 2, -0.2, 0, Math.PI * 2); ctx.fill();
             ctx.beginPath(); ctx.ellipse(-38, 12, 3, 2, 0.2, 0, Math.PI * 2); ctx.fill();
 
-            // 口のラインと白い牙
             ctx.strokeStyle = "#782d0e"; ctx.lineWidth = 3;
             ctx.beginPath(); ctx.moveTo(-30, 18); ctx.quadraticCurveTo(-5, 24, 20, 16); ctx.stroke();
             
-            // 牙
             ctx.fillStyle = "#fff";
             ctx.beginPath(); ctx.moveTo(-15, 18); ctx.lineTo(-12, 26); ctx.lineTo(-9, 19); ctx.fill();
             ctx.beginPath(); ctx.moveTo(8, 18); ctx.lineTo(11, 25); ctx.lineTo(14, 18); ctx.fill();
 
-            // 🌟 ぴょこんと長い茎の先に付いた大きな目玉 2つ
-            // 左側の目玉
             ctx.strokeStyle = "#d36829"; ctx.lineWidth = 8;
             ctx.beginPath(); ctx.moveTo(-22, -18); ctx.lineTo(-28, -36); ctx.stroke();
-            // 右側の目玉
             ctx.beginPath(); ctx.moveTo(6, -16); ctx.lineTo(12, -34); ctx.stroke();
 
-            // 目玉本体（丸い白目）
             const drawEyeball = (ex, ey) => {
                 ctx.fillStyle = "#fff";
                 ctx.beginPath(); ctx.arc(ex, ey, 15, 0, Math.PI * 2); ctx.fill();
                 ctx.lineWidth = 1.5; ctx.strokeStyle = "#d36829"; ctx.stroke();
-                // 青い瞳
                 ctx.fillStyle = "#1e90ff";
                 ctx.beginPath(); ctx.arc(ex + 3, ey, 7, 0, Math.PI * 2); ctx.fill();
                 ctx.fillStyle = "#000";
                 ctx.beginPath(); ctx.arc(ex + 4, ey, 3.5, 0, Math.PI * 2); ctx.fill();
-                // ハイライト
                 ctx.fillStyle = "#fff";
                 ctx.beginPath(); ctx.arc(ex + 6, ey - 3, 1.5, 0, Math.PI * 2); ctx.fill();
             };
             drawEyeball(-28, -42);
             drawEyeball(14, -40);
 
-            // HPバー
             ctx.fillStyle = "rgba(0,0,0,0.8)"; ctx.fillRect(-45, -72, 100, 12);
             ctx.fillStyle = "#2ed573"; ctx.fillRect(-43, -70, 96 * Math.max(0, enemy.hp / enemy.maxHp), 8);
             ctx.restore();
