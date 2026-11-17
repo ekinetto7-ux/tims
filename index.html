@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ピクミン タイピング大作戦 - 2D Master Edition</title>
+    <title>ピクミン タイピング大作戦 - Photorealistic Game World</title>
     <style>
         :root {
             --bg-dark: #010403;
@@ -116,12 +116,12 @@
             border: 2px solid rgba(255, 177, 66, 0.7);
             box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.95), 0 10px 30px rgba(0, 0, 0, 0.9);
             margin-bottom: 12px;
-            background: #010804;
+            background: #020b06;
         }
-        #gameCanvas {
-            width: 100%;
-            height: 280px;
+        canvas {
             display: block;
+            width: 100%;
+            height: 310px;
         }
         .word-overlay {
             background: rgba(3, 10, 8, 0.96);
@@ -202,7 +202,7 @@
 <body>
 
     <h1>🌿 ピクミン タイピング大作戦</h1>
-    <div class="subtitle">2D Master Edition — サクサク快適・完全安定版</div>
+    <div class="subtitle">Photorealistic Game World Edition — 本家リスペクトの超リアル3D空間表現</div>
 
     <!-- 1. ログイン画面 -->
     <div class="container" id="authScreen">
@@ -276,7 +276,7 @@
             </div>
             <div class="card-item" onclick="selectPikminType('yellow')" style="border-color: #ffa502;">
                 <h4 style="color: #ffa502;">🟡 黄ピクミン</h4>
-                <p>電気に強く高く投げることができる耳を持つ。</p>
+                <p>電気に強い。身軽で素早い。</p>
             </div>
         </div>
         <button class="btn" onclick="playClickSound(); confirmAndStartGame()">🚀 この編成で出撃する！</button>
@@ -308,10 +308,9 @@
             <button class="btn btn-sub" onclick="playClickSound(); goToHome()">← 司令室へ戻る</button>
         </div>
         <div class="rule-content">
-            <h4>🌿 2Dタイピング大作戦の遊び方</h4>
-            <p>・画面に表示される原生生物の名前（漢字・かな）のローマ字をキーボードで入力しよう！</p>
-            <p>・「ツ」は <strong>tsu</strong> でも <strong>tu</strong> でもOKなマルチローマ字対応！</p>
-            <p>・5コンボごとに「ゲキカラスプレー」が自動スタンバイし、討伐ポイントが2倍にアップ！</p>
+            <h4>🌿 フォトリアルワールドの特徴</h4>
+            <p>・本家のピクミンのように、草木が揺らぎ木漏れ日や花びらが舞う幻想的な3Dフィールド。</p>
+            <p>・オニヨンやドルフィン号からの美しい照射ビームで、リアルな探索気分を味わえるよ！</p>
         </div>
     </div>
 
@@ -350,7 +349,7 @@
             <div class="hp-bar-container"><div class="hp-bar hp-player" id="p1Bar" style="width: 0%;"></div></div>
             <div style="display: flex; justify-content: space-between; font-size: 12px; margin-top: 4px;">
                 <span id="comboLabel" style="color: var(--accent-gold);">🔥 コンボ: 0</span>
-                <span id="sprayLabel" style="color: var(--accent-red);">🧪 ゲキカラスプレー: 0/5</span>
+                <span id="sprayLabel" style="color: var(--accent-red);">🧪 ゲキカラスプレー: 0/5 (自動発動準備中)</span>
             </div>
             <div id="aiGaugeWrapper" class="hidden" style="margin-top: 6px;">
                 <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--accent-red);">
@@ -361,7 +360,7 @@
             </div>
         </div>
         <div class="canvas-wrapper">
-            <canvas id="gameCanvas" width="760" height="280"></canvas>
+            <canvas id="gameCanvas" width="760" height="310"></canvas>
         </div>
         <div class="word-overlay">
             <div class="target-kanji" id="wordKanji">チャッピー</div>
@@ -375,8 +374,8 @@
 
     <script>
         let currentUser = null;
-        function getAllUsers() { try { return JSON.parse(localStorage.getItem('pikmin_2d_master_v1') || '{}'); } catch(e){ return {}; } }
-        function saveAllUsers(u) { localStorage.setItem('pikmin_2d_master_v1', JSON.stringify(u)); }
+        function getAllUsers() { try { return JSON.parse(localStorage.getItem('pikmin_photoreal_v2_users') || '{}'); } catch(e){ return {}; } }
+        function saveAllUsers(u) { localStorage.setItem('pikmin_photoreal_v2_users', JSON.stringify(u)); }
 
         function playClickSound() {
             const audio = document.getElementById('hitSound');
@@ -411,7 +410,6 @@
         function logout() { currentUser = null; goToHome(); }
         
         function goToHome() { 
-            stopGameAndClean();
             document.getElementById('authScreen').classList.add('hidden'); 
             document.getElementById('encyclopediaScreen').classList.add('hidden'); 
             document.getElementById('stageSelectScreen').classList.add('hidden');
@@ -421,7 +419,7 @@
             document.getElementById('gameScreen').classList.add('hidden');
             document.getElementById('homeScreen').classList.remove('hidden'); 
             if (currentUser) updateHomeUI();
-            else document.getElementById('authScreen').classList.remove('hidden'), document.getElementById('homeScreen').classList.add('hidden');
+            else document.getElementById('authScreen').classList.add('hidden'), document.getElementById('homeScreen').classList.add('hidden');
         }
         
         function updateHomeUI() {
@@ -469,9 +467,10 @@
         }
 
         // ==========================================
-        // 🗺️ 全30ステージデータ
+        // 🗺️ 全30ステージ（ボス戦含む）データ
         // ==========================================
         const stages = [];
+        const stageColors = ["#12281a", "#0d202b", "#2c140d", "#1c0d26", "#141c24"];
         for (let i = 1; i <= 30; i++) {
             const isBoss = (i === 10 || i === 20 || i === 30);
             stages.push({
@@ -479,16 +478,16 @@
                 name: isBoss ? `⭐ [BOSS] Stage ${i}` : `Stage ${i} : ミッション ${i}`,
                 desc: isBoss ? "⚠️ 強敵ボスとの決戦ステージ！" : `目標スコア: ${i * 300} pt`,
                 goal: i * 300,
-                isBoss: isBoss
+                isBoss: isBoss,
+                groundColor: stageColors[(i - 1) % stageColors.length]
             });
         }
 
         let selectedStage = stages[0];
         let pendingMode = 'solo';
-        let selectedPikminColor = "#ff5252";
+        let selectedPikminColor = "#ff4757";
 
         function openStageSelect(mode) {
-            stopGameAndClean();
             pendingMode = mode;
             document.getElementById('homeScreen').classList.add('hidden');
             document.getElementById('gameScreen').classList.add('hidden');
@@ -523,7 +522,7 @@
 
         function selectPikminType(type) {
             playClickSound();
-            if (type === 'red') selectedPikminColor = "#ff5252";
+            if (type === 'red') selectedPikminColor = "#ff4757";
             else if (type === 'blue') selectedPikminColor = "#1e90ff";
             else if (type === 'yellow') selectedPikminColor = "#ffa502";
         }
@@ -534,14 +533,12 @@
         }
 
         function openEncyclopedia() {
-            stopGameAndClean();
             document.getElementById('homeScreen').classList.add('hidden');
             document.getElementById('encyclopediaScreen').classList.remove('hidden');
             renderEncyclopediaList();
         }
 
         function openRuleModal() {
-            stopGameAndClean();
             document.getElementById('homeScreen').classList.add('hidden');
             document.getElementById('ruleScreen').classList.remove('hidden');
         }
@@ -565,7 +562,6 @@
         function promptAdminPassword() {
             const input = prompt("🛠️ 管理者パスワードを入力してください (PW: 2021):");
             if (input === "2021") {
-                stopGameAndClean();
                 document.getElementById('homeScreen').classList.add('hidden');
                 document.getElementById('adminScreen').classList.remove('hidden');
                 document.getElementById('adminPikminInput').value = currentUser.data.pikmin;
@@ -631,7 +627,7 @@
             { kanji: "白ピクミン", kana: "しろぴくみん", patterns: ["shiropikumin"], color: "#dfe6e9", category: "ピクミン族", desc: "毒を持ち、足が速く地中の宝を見つける。" },
             { kanji: "白のオニヨン", kana: "しろのおによん", patterns: ["shironooniyon"], color: "#dfe6e9", category: "オニヨン", desc: "白いピクミンを生み出す母艦。" },
             { kanji: "黒のオニヨン", kana: "くろのおによん", patterns: ["kuronooniyon"], color: "#2d3436", category: "オニヨン", desc: "謎に包まれた黒い母艦。" },
-            { kanji: "白蝶貝", kana: "しろちょうがい", patterns: ["shirochougai", "sirochougai"], color: "#ffffff", category: "お宝", desc: "光り輝く美しい貝の化石。" },
+            { kanji: "白蝶貝", kana: "しろちょうがい", patterns: ["shirochougai", "sirochougai"], color: "#fff", category: "お宝", desc: "光り輝く美しい貝の化石。" },
             { kanji: "宇宙服", kana: "うちゅうふく", patterns: ["uchuufuku", "utyuufuku"], color: "#ff7675", category: "装備", desc: "オリマーが宇宙探索で着用する頑丈な服。" },
             { kanji: "レーダー", kana: "れーだー", patterns: ["re-da-", "reeda"], color: "#00b894", category: "機械", desc: "宇宙船の周囲のパーツを探知する。" },
             { kanji: "エンジン", kana: "えんじん", patterns: ["enjin"], color: "#fdcb6e", category: "宇宙船パーツ", desc: "ドルフィン号の要となる心臓部。" },
@@ -639,7 +635,7 @@
         ];
 
         const bossList = [
-            { kanji: "ダイオウチャッピー", kana: "daiouchappi", patterns: ["daiouchappi"], color: "#2d3436", category: "ボス生物", desc: "チャッピーの王様。非常に巨体。" },
+            { kanji: "ダイオウチャッピー", kana: "だいおうちゃっぴー", patterns: ["daiouchappi"], color: "#2d3436", category: "ボス生物", desc: "チャッピーの王様。非常に巨体。" },
             { kanji: "ダマグモキャノン", kana: "だまぐもきゃのん", patterns: ["damagumokyanon"], color: "#ff7675", category: "ボス生物", desc: "強力なビーム砲を装備した巨大グモ。" },
             { kanji: "フタクチドックリ", kana: "ふたくちどっくり", patterns: ["futakuchidokkuri"], color: "#636e72", category: "ボス生物", desc: "岩石を口から激しく吐き出す危険なボス。" }
         ];
@@ -654,8 +650,6 @@
         let isSprayActive = false;
         let aiTimer = null;
         let isGameActive = false;
-        let canvasAnimId = null;
-        let attackParticles = [];
 
         function startPlay(mode, stage) {
             playMode = mode;
@@ -667,7 +661,6 @@
             isSprayActive = false;
             typedBuffer = "";
             isGameActive = true;
-            attackParticles = [];
 
             document.getElementById('stageSelectScreen').classList.add('hidden');
             document.getElementById('pikminSelectScreen').classList.add('hidden');
@@ -682,9 +675,12 @@
                 document.getElementById('aiGaugeWrapper').classList.add('hidden');
             }
 
+            initSquad();
+            if (animFrameId) cancelAnimationFrame(animFrameId);
+            animFrameId = requestAnimationFrame(renderLoop);
+
             updateGauges();
             nextWord();
-            startCanvasLoop();
         }
 
         function nextWord() {
@@ -699,6 +695,12 @@
             }
 
             typedBuffer = "";
+            enemy.name = currentWord.kanji;
+            enemy.color = currentWord.color;
+            enemy.hp = selectedStage.isBoss ? 200 : 100;
+            enemy.maxHp = enemy.hp;
+            enemy.x = 600;
+            enemy.scale = selectedStage.isBoss ? 1.5 : 1.2;
 
             if (currentUser && currentUser.data.unlocked) {
                 if (!currentUser.data.unlocked.includes(currentWord.kanji)) {
@@ -727,7 +729,6 @@
             guide.innerHTML = html;
         }
 
-        // キーボード入力
         window.addEventListener('keydown', (e) => {
             if (!isGameActive || !currentWord) return;
             if (e.ctrlKey || e.altKey || e.metaKey || e.key.length > 1) return;
@@ -748,12 +749,15 @@
                 }
 
                 const pts = isSprayActive ? 400 : 200;
-                spawnAttackParticles(true);
+                spawnAttack(true);
+                enemy.hp = 0;
 
                 myPoints += pts;
                 currentUser.data.score += pts;
                 currentUser.data.pikmin += (isSprayActive ? 6 : 3);
                 updateHomeUI();
+                initSquad();
+                triggerQuickCarryEffect();
 
                 fb.style.color = "var(--accent-green)";
                 if (!isSprayActive) fb.innerText = `✨ 「${currentWord.kanji}」を撃破！ (+${pts}pt)`;
@@ -769,7 +773,10 @@
             } else if (isValidPrefix) {
                 typedBuffer = nextBuffer;
                 updateRomanGuide(typedBuffer);
-                spawnAttackParticles(false);
+                spawnAttack(false);
+
+                const targetLen = currentWord.patterns[0].length;
+                enemy.hp = Math.max(10, enemy.maxHp - (typedBuffer.length / targetLen) * (enemy.maxHp * 0.9));
 
                 fb.style.color = "var(--accent-green)";
                 fb.innerText = "🌿 ピクミン突撃中！";
@@ -806,7 +813,7 @@
         function endGame(isWin) {
             isGameActive = false;
             clearInterval(aiTimer);
-            stopGameAndClean();
+            if (animFrameId) cancelAnimationFrame(animFrameId);
 
             if (isWin) {
                 currentUser.data.score += (playMode === 'ai' ? 600 : 400);
@@ -825,114 +832,193 @@
             goToHome();
         }
 
-        function stopGameAndClean() {
-            isGameActive = false;
-            clearInterval(aiTimer);
-            if (canvasAnimId) {
-                cancelAnimationFrame(canvasAnimId);
-                canvasAnimId = null;
-            }
-        }
+        // ==========================================
+        // 🌿 超リアル3D空間表現 & 環境パーティクルエンジン
+        // ==========================================
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        let animFrameId = null;
+        let squad = [];
+        let attackers = [];
+        let quickCarriers = [];
+        let popups = [];
+        let petals = []; // 地面に散る花びらや木漏れ日パーティクル
+        let enemy = { x: 600, y: 165, scale: 1.2, hp: 100, maxHp: 100, shake: 0, color: "#d63031" };
 
-        function spawnAttackParticles(isCrit) {
-            playClickSound();
-            const count = isCrit ? 10 : 3;
+        function initSquad() {
+            squad = [];
+            const count = Math.min(35, Math.max(12, currentUser ? currentUser.data.pikmin : 15));
             for (let i = 0; i < count; i++) {
-                attackParticles.push({
-                    x: 120,
-                    y: 200,
-                    targetX: 580,
-                    targetY: 120 + (Math.random() - 0.5) * 60,
-                    progress: 0,
-                    speed: 0.08 + Math.random() * 0.05,
-                    color: selectedPikminColor
+                squad.push({
+                    x: 100 + (i % 6) * 24 + Math.random() * 6,
+                    y: 110 + Math.floor(i / 6) * 26 + Math.random() * 6,
+                    color: selectedPikminColor,
+                    phase: Math.random() * Math.PI * 2
+                });
+            }
+
+            // 花びらパーティクル初期化
+            petals = [];
+            for (let i = 0; i < 20; i++) {
+                petals.push({
+                    x: Math.random() * canvas.width,
+                    y: 150 + Math.random() * 140,
+                    size: 3 + Math.random() * 5,
+                    speedX: 0.2 + Math.random() * 0.5,
+                    alpha: 0.3 + Math.random() * 0.5
                 });
             }
         }
 
-        // ==========================================
-        // 🎨 2D Canvas 描画ループ
-        // ==========================================
-        function startCanvasLoop() {
-            const canvas = document.getElementById('gameCanvas');
-            if (!canvas) return;
-            const ctx = canvas.getContext('2d');
+        function spawnAttack(isCritical) {
+            playClickSound();
+            const num = isCritical ? 10 : 3;
+            for (let i = 0; i < num; i++) {
+                attackers.push({
+                    x: 180 + Math.random() * 50,
+                    y: 120 + Math.random() * 90,
+                    targetX: enemy.x - 40 + Math.random() * 60,
+                    targetY: enemy.y - 20 + Math.random() * 40,
+                    progress: 0,
+                    speed: 0.07 + Math.random() * 0.04,
+                    color: selectedPikminColor,
+                    crit: isCritical
+                });
+            }
+        }
 
-            function render() {
-                if (!isGameActive) return;
+        function triggerQuickCarryEffect() {
+            for (let i = 0; i < 5; i++) {
+                quickCarriers.push({ x: enemy.x, y: enemy.y, targetX: 130, targetY: 190, progress: 0, color: selectedPikminColor });
+            }
+        }
 
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
+        function draw3DPikmin(x, y, color, scale, bounce) {
+            ctx.save();
+            ctx.translate(x, y - Math.abs(Math.sin(bounce)) * 7 * scale);
+            ctx.scale(scale, scale);
+            ctx.fillStyle = "rgba(0,0,0,0.5)"; ctx.beginPath(); ctx.ellipse(0, 10, 6, 3, 0, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = color; ctx.beginPath(); ctx.ellipse(0, 4, 6, 9, 0, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.arc(0, -7, 6.5, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(2.2, -8, 2, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = "#000"; ctx.beginPath(); ctx.arc(2.9, -8, 1, 0, Math.PI * 2); ctx.fill();
+            ctx.strokeStyle = "#2ed573"; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(0, -13); ctx.quadraticCurveTo(3, -20, 8, -19); ctx.stroke();
+            ctx.fillStyle = "#2ed573"; ctx.beginPath(); ctx.ellipse(10, -19, 4.5, 2.2, 0.4, 0, Math.PI * 2); ctx.fill();
+            ctx.restore();
+        }
 
-                // 背景（原生林のグラデーション）
-                const bgGrad = ctx.createLinearGradient(0, 0, 0, canvas.height);
-                bgGrad.addColorStop(0, '#0a2015');
-                bgGrad.addColorStop(1, '#020d07');
-                ctx.fillStyle = bgGrad;
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
+        function draw3DEnemy(time) {
+            ctx.save();
+            const sx = enemy.shake > 0 ? (Math.random() - 0.5) * enemy.shake : 0;
+            const sy = enemy.shake > 0 ? (Math.random() - 0.5) * enemy.shake : 0;
+            if (enemy.shake > 0) enemy.shake *= 0.82;
+            const breathe = Math.sin(time * 0.0035) * 4;
+            ctx.translate(enemy.x + sx, enemy.y + sy + breathe);
+            ctx.scale(enemy.scale, enemy.scale);
+            ctx.fillStyle = "rgba(0,0,0,0.65)"; ctx.beginPath(); ctx.ellipse(10, 58, 62, 18, 0, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = enemy.color; ctx.beginPath(); ctx.ellipse(15, 8, 54, 44, 0, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = "rgba(0,0,0,0.8)"; ctx.fillRect(-55, -64, 120, 12);
+            ctx.fillStyle = "#2ed573"; ctx.fillRect(-53, -62, 116 * Math.max(0, enemy.hp / enemy.maxHp), 8);
+            ctx.restore();
+        }
 
-                // 地面
-                ctx.fillStyle = '#183822';
-                ctx.fillRect(0, 210, canvas.width, 70);
+        function drawRealisticScenery(time) {
+            // 背景の原生林グラデーション
+            ctx.fillStyle = selectedStage.groundColor;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                // 左側：オニヨン（母艦）
-                ctx.fillStyle = '#ff5252';
+            // 立体的な草むら・奥行きのあるテクスチャ
+            ctx.fillStyle = "rgba(46, 213, 115, 0.12)";
+            for (let i = 0; i < 45; i++) {
                 ctx.beginPath();
-                ctx.arc(90, 110, 40, 0, Math.PI * 2);
+                ctx.arc((i * 37 + Math.sin(time*0.001 + i)*10) % canvas.width, 170 + (i * 19) % 130, 40, 0, Math.PI * 2);
                 ctx.fill();
-                ctx.fillStyle = '#ffa502';
-                ctx.beginPath();
-                ctx.arc(90, 75, 25, 0, Math.PI * 2);
-                ctx.fill();
-
-                // 右側：敵キャラクター（チャッピー等）
-                if (currentWord) {
-                    ctx.fillStyle = currentWord.color;
-                    ctx.beginPath();
-                    const radius = selectedStage.isBoss ? 55 : 42;
-                    ctx.arc(580, 130, radius, 0, Math.PI * 2);
-                    ctx.fill();
-                    // 目
-                    ctx.fillStyle = '#fff';
-                    ctx.beginPath();
-                    ctx.arc(560, 110, 12, 0, Math.PI * 2);
-                    ctx.arc(600, 110, 12, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.fillStyle = '#000';
-                    ctx.beginPath();
-                    ctx.arc(562, 110, 4, 0, Math.PI * 2);
-                    ctx.arc(598, 110, 4, 0, Math.PI * 2);
-                    ctx.fill();
-                }
-
-                // ピクミン軍団（待機中）
-                for (let i = 0; i < 12; i++) {
-                    ctx.fillStyle = selectedPikminColor;
-                    ctx.beginPath();
-                    ctx.arc(60 + (i % 4) * 18, 225 + Math.floor(i / 4) * 16, 8, 0, Math.PI * 2);
-                    ctx.fill();
-                }
-
-                // 突撃パーティクル
-                for (let i = attackParticles.length - 1; i >= 0; i--) {
-                    let ap = attackParticles[i];
-                    ap.progress += ap.speed;
-                    let currX = ap.x + (ap.targetX - ap.x) * ap.progress;
-                    let currY = ap.y + (ap.targetY - ap.y) * ap.progress - Math.sin(ap.progress * Math.PI) * 40;
-
-                    ctx.fillStyle = ap.color;
-                    ctx.beginPath();
-                    ctx.arc(currX, currY, 10, 0, Math.PI * 2);
-                    ctx.fill();
-
-                    if (ap.progress >= 1.0) {
-                        attackParticles.splice(i, 1);
-                    }
-                }
-
-                canvasAnimId = requestAnimationFrame(render);
             }
 
-            render();
+            // 地面に散るピンクの花びらパーティクル
+            petals.forEach(p => {
+                p.x += p.speedX;
+                if (p.x > canvas.width) p.x = 0;
+                ctx.fillStyle = `rgba(255, 182, 193, ${p.alpha})`;
+                ctx.beginPath();
+                ctx.ellipse(p.x, p.y, p.size, p.size * 0.6, 0.5, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            // オニヨン拠点（左側）と幻想的な光の照射ビーム
+            ctx.save();
+            ctx.translate(130, 190);
+            const beamGrad = ctx.createLinearGradient(0, -60, 0, 110);
+            beamGrad.addColorStop(0, "rgba(255, 255, 255, 0.45)");
+            beamGrad.addColorStop(0.5, "rgba(46, 213, 115, 0.2)");
+            beamGrad.addColorStop(1, "rgba(46, 213, 115, 0)");
+            ctx.fillStyle = beamGrad;
+            ctx.beginPath(); ctx.moveTo(0, -60); ctx.lineTo(-75, 100); ctx.lineTo(75, 100); ctx.fill();
+
+            // オニヨンの三本脚（立体感・影）
+            ctx.strokeStyle = "#d4ac0d"; ctx.lineWidth = 5;
+            ctx.beginPath(); ctx.moveTo(-25, 40); ctx.lineTo(-55, 90); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(25, 40); ctx.lineTo(55, 90); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(0, 40); ctx.lineTo(0, 95); ctx.stroke();
+            
+            // オニヨン本体
+            ctx.fillStyle = "#ff5252";
+            ctx.beginPath(); ctx.ellipse(0, 0, 48, 35, 0, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = "#ffa502";
+            ctx.beginPath(); ctx.ellipse(0, -14, 30, 18, 0, 0, Math.PI * 2); ctx.fill();
+            ctx.restore();
+
+            // ドルフィン号（右奥）とスキャンレーザー
+            ctx.save();
+            ctx.translate(650, 60);
+            const dolphinBeam = ctx.createLinearGradient(0, 10, 0, 200);
+            dolphinBeam.addColorStop(0, "rgba(30, 144, 255, 0.35)");
+            dolphinBeam.addColorStop(1, "rgba(30, 144, 255, 0)");
+            ctx.fillStyle = dolphinBeam;
+            ctx.beginPath(); ctx.moveTo(0, 20); ctx.lineTo(-50, 200); ctx.lineTo(50, 200); ctx.fill();
+            
+            ctx.fillStyle = "#f1f2f6";
+            ctx.beginPath(); ctx.ellipse(0, 10, 26, 17, 0, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = "#ff5252";
+            ctx.beginPath(); ctx.arc(0, -2, 7.5, 0, Math.PI * 2); ctx.fill();
+            ctx.restore();
+        }
+
+        function renderLoop(time) {
+            drawRealisticScenery(time);
+
+            squad.forEach(p => draw3DPikmin(p.x, p.y, p.color, 1.0, time * 0.008 + p.phase));
+            draw3DEnemy(time);
+
+            for (let i = attackers.length - 1; i >= 0; i--) {
+                let a = attackers[i];
+                a.progress += a.speed;
+                let currX = a.x + (a.targetX - a.x) * a.progress;
+                let currY = a.y + (a.targetY - a.y) * a.progress - Math.sin(a.progress * Math.PI) * 45;
+                draw3DPikmin(currX, currY, a.color, 1.2, time * 0.03);
+                if (a.progress >= 1.0) {
+                    enemy.shake = a.crit ? 20 : 8;
+                    popups.push({ x: enemy.x - 10, y: enemy.y - 40, text: a.crit ? "CRITICAL!! +200" : "HIT!", color: a.crit ? "#ffb142" : "#2ed573", life: 40 });
+                    attackers.splice(i, 1);
+                }
+            }
+
+            for (let i = quickCarriers.length - 1; i >= 0; i--) {
+                let qc = quickCarriers[i];
+                qc.progress += 0.08;
+                draw3DPikmin(qc.x + (qc.targetX - qc.x) * qc.progress, qc.y + (qc.targetY - qc.y) * qc.progress, qc.color, 1.0, time * 0.03);
+                if (qc.progress >= 1.0) quickCarriers.splice(i, 1);
+            }
+
+            for (let i = popups.length - 1; i >= 0; i--) {
+                let pop = popups[i];
+                pop.y -= 1.3; pop.life--;
+                ctx.fillStyle = pop.color; ctx.font = "bold 17px sans-serif";
+                ctx.fillText(pop.text, pop.x, pop.y);
+                if (pop.life <= 0) popups.splice(i, 1);
+            }
+
+            animFrameId = requestAnimationFrame(renderLoop);
         }
     </script>
 </body>
