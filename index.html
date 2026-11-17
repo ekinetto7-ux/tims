@@ -249,7 +249,7 @@
                 <button class="btn btn-file" onclick="playClickSound(); document.getElementById('importFileBtn').click()">📂 セーブ読込</button>
                 <input type="file" id="importFileBtn" class="hidden" accept=".json" onchange="importSaveFile(event)">
             </div>
-            <button class="btn btn-admin" onclick="playClickSound(); promptAdminPassword()">🛠️ 管理者モード (PW: 2021)</button>
+            <button class="btn btn-admin" onclick="playClickSound(); promptAdminPassword()">🛠️ 管理者モード </button>
         </div>
     </div>
 
@@ -286,8 +286,8 @@
                 <p>空をふわふわ飛べる</p>
             </div>
             <div class="card-item" onclick="selectPikminType('glow')" style="border-color: #00cec9;">
-                <h4 style="color: #00cec9;">💡 ヒカリピクミン</h4>
-                <p>幻想的に光る仲間</p>
+                <h4 style="color: #00cec9;">🧊　氷ピクミン</h4>
+                <p>とても冷いピクミン</p>
             </div>
             <div class="card-item" onclick="selectPikminType('all')" style="border-color: var(--accent-gold); grid-column: span 2;">
                 <h4 style="color: var(--accent-gold);">✨ 全体出動（全員集合！）</h4>
@@ -336,7 +336,7 @@
     <!-- 6. 管理者モード画面 -->
     <div class="container hidden" id="adminScreen">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-            <h3 style="margin: 0; color: var(--accent-purple);">🛠️ 管理者モード (PW: 2021)</h3>
+            <h3 style="margin: 0; color: var(--accent-purple);">🛠️ 管理者モード </h3>
             <button class="btn btn-sub" onclick="playClickSound(); goToHome()">← 司令室へ戻る</button>
         </div>
         <div style="margin-top: 15px;">
