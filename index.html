@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ピクミン タイピング大作戦 - 4K Visuals</title>
+    <title>ピクミン タイピング大作戦 - ログイン＆ホーム画面</title>
     <style>
         :root {
             --bg-dark: #091315;
-            --panel-bg: rgba(20, 38, 42, 0.85);
+            --panel-bg: rgba(20, 38, 42, 0.9);
             --accent-green: #2ed573;
             --accent-gold: #ffa502;
             --accent-red: #ff4757;
@@ -31,14 +31,13 @@
         h1 {
             color: var(--accent-gold);
             text-shadow: 0 0 25px rgba(255, 165, 2, 0.7);
-            font-size: 32px;
+            font-size: 28px;
             margin: 10px 0 5px;
-            letter-spacing: 2px;
             text-align: center;
         }
         .subtitle {
             color: var(--text-sub);
-            font-size: 14px;
+            font-size: 13px;
             margin-bottom: 20px;
             text-align: center;
         }
@@ -50,69 +49,67 @@
             border-radius: 18px;
             padding: 25px;
             width: 100%;
-            max-width: 720px;
+            max-width: 650px;
             margin-bottom: 20px;
         }
         .btn {
             background: linear-gradient(135deg, var(--accent-green), #219d53);
             color: #fff;
             border: none;
-            padding: 12px 22px;
-            font-size: 16px;
+            padding: 12px 20px;
+            font-size: 15px;
             font-weight: bold;
-            border-radius: 12px;
+            border-radius: 10px;
             cursor: pointer;
             transition: all 0.2s ease;
             box-shadow: 0 4px 15px rgba(46, 213, 115, 0.3);
             margin: 5px;
+            width: 100%;
         }
         .btn:hover {
-            transform: translateY(-2px) scale(1.02);
-            box-shadow: 0 8px 25px rgba(46, 213, 115, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(46, 213, 115, 0.5);
         }
         .btn-ai {
             background: linear-gradient(135deg, var(--accent-red), #c0392b);
             box-shadow: 0 4px 15px rgba(255, 71, 87, 0.3);
         }
-        .btn-ai:hover {
-            box-shadow: 0 8px 25px rgba(255, 71, 87, 0.5);
-        }
         .btn-sub {
             background: linear-gradient(135deg, #3742fa, #2f3542);
-            box-shadow: none;
+            width: auto;
         }
-        input[type="text"] {
+        input[type="text"], input[type="password"] {
             width: 100%;
-            padding: 14px;
-            font-size: 18px;
+            padding: 12px;
+            font-size: 16px;
             background: rgba(10, 20, 22, 0.9);
             border: 2px solid #2f3640;
             color: #fff;
-            border-radius: 10px;
-            margin-top: 10px;
+            border-radius: 8px;
+            margin-top: 8px;
+            margin-bottom: 15px;
             outline: none;
             transition: 0.2s;
         }
-        input[type="text"]:focus {
+        input[type="text"]:focus, input[type="password"]:focus {
             border-color: var(--accent-gold);
-            box-shadow: 0 0 15px rgba(255, 165, 2, 0.4);
+            box-shadow: 0 0 12px rgba(255, 165, 2, 0.3);
         }
         .status-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 12px;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 10px;
             margin-top: 15px;
         }
         .stat-card {
             background: rgba(10, 20, 22, 0.7);
-            padding: 12px 15px;
-            border-radius: 12px;
+            padding: 10px 12px;
+            border-radius: 10px;
             border-left: 4px solid var(--accent-gold);
         }
-        .stat-label { font-size: 12px; color: var(--text-sub); }
-        .stat-val { font-size: 20px; font-weight: bold; color: #fff; margin-top: 4px; }
+        .stat-label { font-size: 11px; color: var(--text-sub); }
+        .stat-val { font-size: 18px; font-weight: bold; color: #fff; margin-top: 3px; }
         
-        /* バトル・ゲーム画面用 */
         .battle-arena {
             background: rgba(8, 16, 18, 0.85);
             border-radius: 14px;
@@ -120,95 +117,89 @@
             border: 1px solid rgba(255, 255, 255, 0.08);
             text-align: center;
         }
-        .target-kanji {
-            font-size: 36px;
-            font-weight: bold;
-            color: var(--accent-gold);
-            text-shadow: 0 0 15px rgba(255, 165, 2, 0.5);
-            margin: 10px 0 5px;
-        }
-        .target-kana {
-            font-size: 18px;
-            color: var(--accent-green);
-            letter-spacing: 2px;
-            margin-bottom: 5px;
-        }
-        .target-roman {
-            font-size: 15px;
-            color: var(--text-sub);
-            font-family: monospace;
-            margin-bottom: 15px;
-        }
+        .target-kanji { font-size: 32px; font-weight: bold; color: var(--accent-gold); margin: 10px 0 5px; }
+        .target-kana { font-size: 16px; color: var(--accent-green); letter-spacing: 2px; margin-bottom: 5px; }
+        .target-roman { font-size: 14px; color: var(--text-sub); font-family: monospace; margin-bottom: 15px; }
+        
         .hp-bar-container {
             width: 100%;
             background: #1e272e;
-            height: 18px;
-            border-radius: 9px;
+            height: 16px;
+            border-radius: 8px;
             overflow: hidden;
             margin: 8px 0 16px;
             border: 1px solid #353b48;
         }
-        .hp-bar {
-            height: 100%;
-            transition: width 0.3s ease;
-        }
+        .hp-bar { height: 100%; transition: width 0.3s ease; }
         .hp-player { background: linear-gradient(90deg, #2ed573, #7bed9f); }
         .hp-ai { background: linear-gradient(90deg, #ff4757, #ff6b81); }
-        .hidden { display: none; }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
     <h1>🌿 ピクミン タイピング大作戦</h1>
-    <div class="subtitle">4K Ultra Visual Edition — 一人プレイ ＆ AI対戦モード</div>
+    <div class="subtitle">4K Visual Edition — 認証・セーブシステム</div>
 
-    <!-- 1. 登録＆ステータス画面 -->
-    <div class="container" id="lobbyScreen">
+    <!-- ================= 1. ログイン・新規登録画面 ================= -->
+    <div class="container" id="authScreen">
+        <h3>🔐 隊員認証システム</h3>
+        <p style="font-size: 13px; color: var(--text-sub);">初めての方は登録、すでにお持ちの方はログインしてください。</p>
+        
+        <label style="font-size: 13px; color: var(--text-sub);">プレイヤー名（ID）</label>
+        <input type="text" id="authName" placeholder="例: 主人公隊長">
+
+        <label style="font-size: 13px; color: var(--text-sub);">パスワード</label>
+        <input type="password" id="authPass" placeholder="パスワードを入力">
+
+        <div style="display: flex; gap: 10px; margin-top: 5px;">
+            <button class="btn" onclick="handleRegister()">📝 新規登録して始める</button>
+            <button class="btn" style="background: linear-gradient(135deg, var(--accent-blue), #0056b3);" onclick="handleLogin()">🔑 ログイン</button>
+        </div>
+        <div id="authMsg" style="margin-top: 12px; font-size: 13px; color: var(--accent-gold); text-align: center;"></div>
+    </div>
+
+    <!-- ================= 2. ホーム画面（ロビー） ================= -->
+    <div class="container hidden" id="homeScreen">
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
-            <h3 style="margin: 0;">👤 隊長プロフィール（自動セーブ）</h3>
-            <span style="font-size: 12px; color: var(--accent-green);">● LocalStorage 同期中</span>
+            <h3 style="margin: 0;">🏠 ホーム画面（ロビー）</h3>
+            <button class="btn btn-sub" style="padding: 6px 12px; font-size: 12px;" onclick="logout()">ログアウト</button>
         </div>
 
         <div class="status-grid">
             <div class="stat-card">
-                <div class="stat-label">登録隊長名</div>
-                <div class="stat-val" id="dispName">新人隊長</div>
+                <div class="stat-label">ログイン隊長</div>
+                <div class="stat-val" id="homeName">-</div>
             </div>
             <div class="stat-card" style="border-color: var(--accent-green);">
                 <div class="stat-label">ピクミン隊列数</div>
-                <div class="stat-val" id="dispPikmin">10 匹</div>
+                <div class="stat-val" id="homePikmin">0 匹</div>
             </div>
             <div class="stat-card" style="border-color: var(--accent-blue);">
-                <div class="stat-label">累計討伐スコア</div>
-                <div class="stat-val" id="dispScore">0 pt</div>
+                <div class="stat-label">累計スコア</div>
+                <div class="stat-val" id="homeScore">0 pt</div>
             </div>
-        </div>
-
-        <div style="margin-top: 15px; display: flex; gap: 10px;">
-            <input type="text" id="nameInput" placeholder="隊長の名前を入力して登録..." style="margin: 0; flex: 1;">
-            <button class="btn" style="margin: 0;" onclick="registerPlayer()">登録・保存</button>
         </div>
 
         <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 20px 0;">
 
-        <h3 style="margin-top: 0;">🎮 出撃モード選択</h3>
-        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;">
-            <button class="btn" onclick="startGame('solo')">🌱 一人プレイ（原生生物討伐）</button>
-            <button class="btn btn-ai" onclick="startGame('ai')">🔥 AI対戦（ルーイAIとスピード対決）</button>
+        <h3 style="margin-top: 0;">🎮 モード選択</h3>
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+            <button class="btn" onclick="startPlay('solo')">🌱 一人プレイ（原生生物討伐）</button>
+            <button class="btn btn-ai" onclick="startPlay('ai')">🔥 AI対戦（ルーイAIとスピード対決）</button>
         </div>
     </div>
 
-    <!-- 2. ゲームプレイ画面 -->
+    <!-- ================= 3. ゲームプレイ画面 ================= -->
     <div class="container hidden" id="gameScreen">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-            <span id="modeTitle" style="font-weight: bold; color: var(--accent-gold); font-size: 18px;">🌱 一人プレイモード</span>
-            <button class="btn btn-sub" style="padding: 6px 14px; font-size: 13px; margin: 0;" onclick="backToLobby()">← ロビーへ戻る</button>
+            <span id="gameModeTitle" style="font-weight: bold; color: var(--accent-gold); font-size: 16px;">🌱 モード</span>
+            <button class="btn btn-sub" style="padding: 6px 14px; font-size: 13px;" onclick="backToHome()">← ホームへ戻る</button>
         </div>
 
-        <!-- HP / 進行度ゲージ -->
         <div id="gaugeSection">
             <div style="display: flex; justify-content: space-between; font-size: 13px;">
-                <span id="p1Label">あなたの隊列ゲージ</span>
+                <span id="p1Label">あなたの討伐ゲージ</span>
                 <span id="p1ScoreText">0 / 1000</span>
             </div>
             <div class="hp-bar-container">
@@ -217,7 +208,7 @@
 
             <div id="aiGaugeWrapper" class="hidden">
                 <div style="display: flex; justify-content: space-between; font-size: 13px; color: #ff6b81;">
-                    <span>🤖 ルーイAI（難易度：ふつう）</span>
+                    <span>🤖 ルーイAI</span>
                     <span id="aiScoreText">0 / 1000</span>
                 </div>
                 <div class="hp-bar-container">
@@ -226,64 +217,130 @@
             </div>
         </div>
 
-        <!-- タイピングエリア -->
         <div class="battle-arena">
-            <div style="font-size: 13px; color: var(--text-sub);" id="enemyTag">出現した原生生物</div>
+            <div style="font-size: 13px; color: var(--text-sub);">出現したお題</div>
             <div class="target-kanji" id="wordKanji">チャッピー</div>
             <div class="target-kana" id="wordKana">ちゃっぴー</div>
             <div class="target-roman" id="wordRoman">chappi- / tyappi-</div>
 
-            <input type="text" id="typingBox" placeholder="ローマ字で入力して突撃！" autocomplete="off" oninput="handleInput()">
-            <div id="feedbackMsg" style="margin-top: 12px; font-size: 14px; color: var(--accent-green); min-height: 20px;"></div>
+            <input type="text" id="typingBox" placeholder="ローマ字で入力..." autocomplete="off" oninput="handleTyping()" style="margin-bottom: 0;">
+            <div id="feedbackMsg" style="margin-top: 10px; font-size: 14px; color: var(--accent-green); min-height: 20px;"></div>
         </div>
     </div>
 
-    <!-- 効果音（リポジトリの d.mp3 を利用） -->
+    <!-- 効果音 -->
     <audio id="hitSound" src="d.mp3" preload="auto"></audio>
 
     <script>
         // ==========================================
-        // 💾 1. データ保存・登録システム (LocalStorage)
+        // 🔐 認証・セーブ管理システム
         // ==========================================
-        let saveData = {
-            name: "新人隊長",
-            pikmin: 10,
-            score: 0
-        };
+        let currentUser = null; // 現在ログイン中のユーザーデータ
 
-        function loadSaveData() {
-            const raw = localStorage.getItem('pikmin_4k_save');
-            if (raw) {
-                try { saveData = JSON.parse(raw); } catch (e) {}
+        function getAllUsers() {
+            try {
+                return JSON.parse(localStorage.getItem('pikmin_all_users') || '{}');
+            } catch (e) {
+                return {};
             }
-            updateLobbyUI();
         }
 
-        function writeSaveData() {
-            localStorage.setItem('pikmin_4k_save', JSON.stringify(saveData));
-            updateLobbyUI();
+        function saveAllUsers(users) {
+            localStorage.setItem('pikmin_all_users', JSON.stringify(users));
         }
 
-        function registerPlayer() {
-            const val = document.getElementById('nameInput').value.trim();
-            if (!val) {
-                alert("隊長の名前を入力してください！");
+        function handleRegister() {
+            const name = document.getElementById('authName').value.trim();
+            const pass = document.getElementById('authPass').value.trim();
+            const msg = document.getElementById('authMsg');
+
+            if (!name || !pass) {
+                msg.style.color = "var(--accent-red)";
+                msg.innerText = "⚠️ 名前とパスワードを入力してください！";
                 return;
             }
-            saveData.name = val;
-            writeSaveData();
-            alert(`隊長「${saveData.name}」のデータを登録・保存しました！`);
+
+            let users = getAllUsers();
+            if (users[name]) {
+                msg.style.color = "var(--accent-red)";
+                msg.innerText = "⚠️ その名前はすでに登録されています（ログインしてください）";
+                return;
+            }
+
+            // 新規アカウント作成
+            users[name] = {
+                password: pass,
+                pikmin: 10,
+                score: 0
+            };
+            saveAllUsers(users);
+
+            currentUser = { name: name, data: users[name] };
+            msg.style.color = "var(--accent-green)";
+            msg.innerText = "✨ 登録成功！ ホーム画面へ移動します...";
+            setTimeout(goToHome, 800);
         }
 
-        function updateLobbyUI() {
-            document.getElementById('dispName').innerText = saveData.name;
-            document.getElementById('dispPikmin').innerText = `${saveData.pikmin.toLocaleString()} 匹`;
-            document.getElementById('dispScore').innerText = `${saveData.score.toLocaleString()} pt`;
-            document.getElementById('nameInput').value = saveData.name;
+        function handleLogin() {
+            const name = document.getElementById('authName').value.trim();
+            const pass = document.getElementById('authPass').value.trim();
+            const msg = document.getElementById('authMsg');
+
+            if (!name || !pass) {
+                msg.style.color = "var(--accent-red)";
+                msg.innerText = "⚠️ 名前とパスワードを入力してください！";
+                return;
+            }
+
+            let users = getAllUsers();
+            if (!users[name]) {
+                msg.style.color = "var(--accent-red)";
+                msg.innerText = "⚠️ その名前のユーザーは見つかりません（新規登録してください）";
+                return;
+            }
+
+            if (users[name].password !== pass) {
+                msg.style.color = "var(--accent-red)";
+                msg.innerText = "❌ パスワードが間違っています！";
+                return;
+            }
+
+            currentUser = { name: name, data: users[name] };
+            msg.style.color = "var(--accent-green)";
+            msg.innerText = "🔓 ログイン成功！ ホーム画面へ移動します...";
+            setTimeout(goToHome, 800);
+        }
+
+        function logout() {
+            currentUser = null;
+            document.getElementById('authName').value = "";
+            document.getElementById('authPass').value = "";
+            document.getElementById('authMsg').innerText = "";
+            
+            document.getElementById('homeScreen').classList.add('hidden');
+            document.getElementById('authScreen').classList.remove('hidden');
+        }
+
+        function goToHome() {
+            document.getElementById('authScreen').classList.add('hidden');
+            document.getElementById('homeScreen').classList.remove('hidden');
+            updateHomeUI();
+        }
+
+        function updateHomeUI() {
+            if (!currentUser) return;
+            document.getElementById('homeName').innerText = currentUser.name;
+            document.getElementById('homePikmin').innerText = `${currentUser.data.pikmin.toLocaleString()} 匹`;
+            document.getElementById('homeScore').innerText = `${currentUser.data.score.toLocaleString()} pt`;
+            
+            // データを自動保存（全ユーザーデータも更新）
+            let users = getAllUsers();
+            users[currentUser.name] = currentUser.data;
+            saveAllUsers(users);
         }
 
         // ==========================================
-        // 📚 2. ピクミンお題データ（複数ローマ字パターン対応）
+        // ⌨️ ゲームロジック
         // ==========================================
         const wordList = [
             { kanji: "赤ピクミン", kana: "あかぴくみん", patterns: ["akapikumin", "akapikuminn"] },
@@ -292,38 +349,31 @@
             { kanji: "チャッピー", kana: "ちゃっぴー", patterns: ["chappi-", "tyappi-"] },
             { kanji: "通信機", kana: "つうしんき", patterns: ["tsuushinki", "tuushinki", "tuusinki", "tsuusinki"] },
             { kanji: "オニヨン", kana: "おによん", patterns: ["oniyon", "oniyonn"] },
-            { kanji: "ドルフィン号", kana: "どるふぃんごう", patterns: ["dorufingou", "doruhwingou", "dorufinngou"] },
-            { kanji: "ペレット草", kana: "ぺれっとそう", patterns: ["perettosou"] },
-            { kanji: "ブタドックリ", kana: "ぶたどっくり", patterns: ["butadokkuri"] },
-            { kanji: "イモガエル", kana: "いもがえる", patterns: ["imogaeru"] },
-            { kanji: "ダマグモ", kana: "だまぐも", patterns: ["damagumo"] },
-            { kanji: "ゲキカラスプレー", kana: "げきからすぷれー", patterns: ["gekikarasupure-"] }
+            { kanji: "ドルフィン号", kana: "どるふぃんごう", patterns: ["dorufingou", "doruhwingou"] },
+            { kanji: "ペレット草", kana: "ぺれっとそう", patterns: ["perettosou"] }
         ];
 
-        // ==========================================
-        // 🎮 3. ゲーム進行・AI対戦ロジック
-        // ==========================================
-        let currentMode = 'solo';
+        let playMode = 'solo';
         let currentWord = null;
-        let matchPoints = 0;
+        let myPoints = 0;
         let aiPoints = 0;
-        const GOAL_POINTS = 1000;
+        const GOAL = 1000;
         let aiTimer = null;
 
-        function startGame(mode) {
-            currentMode = mode;
-            matchPoints = 0;
+        function startPlay(mode) {
+            playMode = mode;
+            myPoints = 0;
             aiPoints = 0;
 
-            document.getElementById('lobbyScreen').classList.add('hidden');
+            document.getElementById('homeScreen').classList.add('hidden');
             document.getElementById('gameScreen').classList.remove('hidden');
 
             if (mode === 'ai') {
-                document.getElementById('modeTitle').innerText = "🔥 AI対戦：vs ルーイAI";
+                document.getElementById('gameModeTitle').innerText = "🔥 AI対戦：vs ルーイAI";
                 document.getElementById('aiGaugeWrapper').classList.remove('hidden');
-                startAiLoop();
+                startAi();
             } else {
-                document.getElementById('modeTitle').innerText = "🌱 一人プレイ：原生生物討伐";
+                document.getElementById('gameModeTitle').innerText = "🌱 一人プレイ：原生生物討伐";
                 document.getElementById('aiGaugeWrapper').classList.add('hidden');
             }
 
@@ -334,11 +384,11 @@
             box.focus();
         }
 
-        function backToLobby() {
+        function backToHome() {
             clearInterval(aiTimer);
             document.getElementById('gameScreen').classList.add('hidden');
-            document.getElementById('lobbyScreen').classList.remove('hidden');
-            updateLobbyUI();
+            document.getElementById('homeScreen').classList.remove('hidden');
+            updateHomeUI();
         }
 
         function nextWord() {
@@ -349,96 +399,90 @@
             document.getElementById('wordRoman').innerText = currentWord.patterns.join(" / ");
         }
 
-        function handleInput() {
-            const inputEl = document.getElementById('typingBox');
-            const val = inputEl.value.toLowerCase().trim();
+        function handleTyping() {
+            const input = document.getElementById('typingBox');
+            const val = input.value.toLowerCase().trim();
             const fb = document.getElementById('feedbackMsg');
 
             if (!currentWord) return;
 
-            // 登録された複数パターンのいずれかに完全一致したら撃破！
             if (currentWord.patterns.includes(val)) {
-                playSound();
-                matchPoints += 200;
-                saveData.score += 200;
-                saveData.pikmin += 2;
-                writeSaveData();
+                playHitSound();
+                myPoints += 200;
+                currentUser.data.score += 200;
+                currentUser.data.pikmin += 2;
+                updateHomeUI();
 
-                fb.innerText = `✨ 「${currentWord.kanji}」を撃破！ ピクミンが2匹増えた！`;
-                inputEl.value = "";
+                fb.innerText = `✨ 撃破！ ピクミンが2匹増えた！`;
+                input.value = "";
                 updateGauges();
 
-                if (matchPoints >= GOAL_POINTS) {
-                    finishMatch(true);
+                if (myPoints >= GOAL) {
+                    endGame(true);
                 } else {
                     nextWord();
                 }
             } else {
-                // 途中まで合っているか判定
                 const isPrefix = currentWord.patterns.some(p => p.startsWith(val));
                 if (val === "") {
                     fb.innerText = "";
                 } else if (isPrefix) {
                     fb.style.color = "var(--accent-green)";
-                    fb.innerText = "🌿 突撃中... そのまま入力！";
+                    fb.innerText = "🌿 突撃中...";
                 } else {
                     fb.style.color = "var(--accent-red)";
-                    fb.innerText = "⚠️ スペルが違います！";
+                    fb.innerText = "⚠️ スペル違い";
                 }
             }
         }
 
-        function startAiLoop() {
+        function startAi() {
             clearInterval(aiTimer);
-            // 2.8秒ごとにAIがスコアを獲得
             aiTimer = setInterval(() => {
                 aiPoints += 120;
                 updateGauges();
-                if (aiPoints >= GOAL_POINTS) {
-                    finishMatch(false);
+                if (aiPoints >= GOAL) {
+                    endGame(false);
                 }
             }, 2800);
         }
 
         function updateGauges() {
-            const p1Pct = Math.min(100, (matchPoints / GOAL_POINTS) * 100);
+            const p1Pct = Math.min(100, (myPoints / GOAL) * 100);
             document.getElementById('p1Bar').style.width = p1Pct + "%";
-            document.getElementById('p1ScoreText').innerText = `${matchPoints} / ${GOAL_POINTS}`;
+            document.getElementById('p1ScoreText').innerText = `${myPoints} / ${GOAL}`;
 
-            const aiPct = Math.min(100, (aiPoints / GOAL_POINTS) * 100);
+            const aiPct = Math.min(100, (aiPoints / GOAL) * 100);
             document.getElementById('aiBar').style.width = aiPct + "%";
-            document.getElementById('aiScoreText').innerText = `${aiPoints} / ${GOAL_POINTS}`;
+            document.getElementById('aiScoreText').innerText = `${aiPoints} / ${GOAL}`;
         }
 
-        function finishMatch(isWin) {
+        function endGame(isWin) {
             clearInterval(aiTimer);
-            if (currentMode === 'ai') {
+            if (playMode === 'ai') {
                 if (isWin) {
-                    saveData.score += 500;
-                    saveData.pikmin += 10;
-                    writeSaveData();
-                    alert("🏆 勝利！ ルーイAIに打ち勝ち、ボーナス500pt＆ピクミン10匹獲得！");
+                    currentUser.data.score += 500;
+                    currentUser.data.pikmin += 10;
+                    updateHomeUI();
+                    alert("🏆 勝利！ ルーイAIに勝ち、ボーナス獲得！");
                 } else {
-                    alert("💀 敗北... ルーイAIに先にゴールされてしまった！");
+                    alert("💀 敗北... AIに先にゴールされた！");
                 }
             } else {
-                saveData.score += 300;
-                writeSaveData();
-                alert("🎉 ステージクリア！ すべての原生生物を討伐しました！");
+                currentUser.data.score += 300;
+                updateHomeUI();
+                alert("🎉 クリア！ 原生生物をすべて討伐しました！");
             }
-            backToLobby();
+            backToHome();
         }
 
-        function playSound() {
+        function playHitSound() {
             const audio = document.getElementById('hitSound');
             if (audio) {
                 audio.currentTime = 0;
                 audio.play().catch(() => {});
             }
         }
-
-        // 起動時にセーブデータ読込
-        window.onload = loadSaveData;
     </script>
 </body>
 </html>
