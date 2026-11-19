@@ -6,13 +6,12 @@
     <title>MARS-SIM 駅員切符発券シミュレーター</title>
     <style>
         :root {
-            --bg-main: #12181f;
-            --panel-bg: #1e2732;
-            --terminal-screen: #0b192c;
+            --bg-main: #0b1118;
+            --panel-bg: #16202c;
+            --terminal-screen: #0f1923;
             --mars-green: #00a86b;
             --mars-blue: #0077b6;
             --mars-amber: #f39c12;
-            --mars-red: #e74c3c;
             --text-light: #ecf0f1;
             --text-dim: #95a5a6;
             --ticket-paper: #e3f4ea;
@@ -31,7 +30,7 @@
         }
         header {
             width: 100%;
-            max-width: 1000px;
+            max-width: 1050px;
             background: linear-gradient(90deg, #004d40, #00695c);
             padding: 12px 20px;
             border-radius: 10px;
@@ -44,7 +43,7 @@
         }
         header h1 {
             margin: 0;
-            font-size: 20px;
+            font-size: 19px;
             letter-spacing: 1px;
         }
         .status-badge {
@@ -57,12 +56,12 @@
         }
         .main-grid {
             display: grid;
-            grid-template-columns: 1.3fr 1fr;
+            grid-template-columns: 1.4fr 1fr;
             gap: 15px;
             width: 100%;
-            max-width: 1000px;
+            max-width: 1050px;
         }
-        @media (max-width: 800px) {
+        @media (max-width: 850px) {
             .main-grid { grid-template-columns: 1fr; }
         }
         .panel {
@@ -83,62 +82,69 @@
             justify-content: space-between;
             align-items: center;
         }
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
+        .section-box {
+            background: #0f1721;
+            border: 1px solid #293846;
+            border-radius: 8px;
+            padding: 12px;
             margin-bottom: 12px;
         }
         label {
             display: block;
             font-size: 12px;
-            color: var(--text-dim);
-            margin-bottom: 4px;
+            color: #80cbc4;
+            margin-bottom: 6px;
+            font-weight: bold;
         }
-        input, select {
-            width: 100%;
-            padding: 10px;
-            background: #0f161e;
-            border: 1px solid #455a64;
-            color: #fff;
+        
+        /* 駅選択ボタン群 */
+        .station-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+        .station-btn {
+            background: #1e293b;
+            color: #cbd5e1;
+            border: 1px solid #475569;
             border-radius: 6px;
-            font-size: 15px;
-            outline: none;
-        }
-        input:focus, select:focus {
-            border-color: #26a69a;
-        }
-        .station-presets {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 5px;
-            margin-top: 6px;
-        }
-        .preset-btn {
-            background: #2c3e50;
-            color: #ecf0f1;
-            border: 1px solid #455a64;
-            border-radius: 4px;
-            padding: 4px 8px;
-            font-size: 11px;
+            padding: 8px 4px;
+            font-size: 12px;
+            font-weight: bold;
             cursor: pointer;
+            text-align: center;
+            transition: 0.1s;
         }
-        .preset-btn:hover { background: #00796b; }
+        .station-btn:hover { background: #00796b; color: #fff; }
+        .station-btn.active-dep { background: #00897b; border-color: #26a69a; color: #fff; }
+        .station-btn.active-arr { background: #c0392b; border-color: #e74c3c; color: #fff; }
+
+        .selected-display {
+            font-size: 13px;
+            color: #f1f2f6;
+            background: #131b24;
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            border-left: 4px solid #26a69a;
+            display: flex;
+            justify-content: space-between;
+        }
 
         .btn-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            margin-bottom: 12px;
+            gap: 6px;
+            margin-bottom: 10px;
         }
         .type-btn {
-            padding: 10px 6px;
-            background: #263238;
-            color: #cfd8dc;
-            border: 2px solid #37474f;
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 13px;
+            padding: 8px 4px;
+            background: #1e293b;
+            color: #cbd5e1;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            font-size: 12px;
             cursor: pointer;
             text-align: center;
         }
@@ -146,25 +152,43 @@
             background: #00695c;
             border-color: #4db6ac;
             color: #fff;
+            font-weight: bold;
         }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        select, input {
+            width: 100%;
+            padding: 8px;
+            background: #131b24;
+            border: 1px solid #455a64;
+            color: #fff;
+            border-radius: 6px;
+            font-size: 13px;
+            outline: none;
+        }
+        select:focus, input:focus { border-color: #26a69a; }
 
         .action-btn {
             width: 100%;
-            padding: 14px;
-            font-size: 16px;
+            padding: 13px;
+            font-size: 15px;
             font-weight: bold;
             border: none;
             border-radius: 8px;
             cursor: pointer;
             color: #fff;
-            margin-top: 6px;
+            margin-top: 4px;
             transition: 0.15s;
         }
         .btn-issue { background: linear-gradient(135deg, #00a86b, #00796b); box-shadow: 0 4px 12px rgba(0,168,107,0.4); }
         .btn-issue:hover { filter: brightness(1.1); }
-        .btn-clear { background: #455a64; font-size: 13px; padding: 10px; }
 
-        /* リアル切符デザイン（マルス券風） */
+        /* リアル切符デザイン */
         .ticket-stage {
             background: #0a0e14;
             padding: 20px;
@@ -173,12 +197,12 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 250px;
+            min-height: 240px;
             border: 2px dashed #37474f;
         }
         .mars-ticket {
             width: 100%;
-            max-width: 380px;
+            max-width: 370px;
             background-color: var(--ticket-paper);
             background-image: 
                 radial-gradient(rgba(0, 150, 100, 0.12) 1px, transparent 1px),
@@ -197,7 +221,7 @@
         .ticket-header {
             display: flex;
             justify-content: space-between;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: bold;
             border-bottom: 1px solid #546e7a;
             padding-bottom: 4px;
@@ -207,21 +231,20 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 22px;
+            font-size: 21px;
             font-weight: 900;
-            margin: 10px 0;
+            margin: 8px 0;
             letter-spacing: 2px;
         }
         .ticket-via {
             font-size: 11px;
             text-align: center;
             color: #37474f;
-            margin-top: -6px;
             margin-bottom: 8px;
         }
         .ticket-details {
-            font-size: 12px;
-            line-height: 1.6;
+            font-size: 11px;
+            line-height: 1.5;
             border-top: 1px dashed #78909c;
             padding-top: 6px;
         }
@@ -229,25 +252,22 @@
             display: flex;
             justify-content: space-between;
             align-items: baseline;
-            margin-top: 8px;
+            margin-top: 6px;
             font-weight: bold;
         }
-        .ticket-price {
-            font-size: 20px;
-            letter-spacing: 1px;
-        }
+        .ticket-price { font-size: 19px; }
         .ticket-footer {
             display: flex;
             justify-content: space-between;
             font-size: 10px;
             color: #455a64;
-            margin-top: 10px;
+            margin-top: 8px;
             border-top: 1px solid #90a4ae;
             padding-top: 4px;
         }
         .stamp-box {
             position: absolute;
-            top: 38px;
+            top: 36px;
             right: 16px;
             border: 2px solid rgba(211, 47, 47, 0.75);
             color: rgba(211, 47, 47, 0.85);
@@ -261,21 +281,38 @@
 
         /* 履歴リスト */
         .history-list {
-            max-height: 200px;
+            max-height: 170px;
             overflow-y: auto;
-            margin-top: 10px;
+            margin-top: 8px;
             font-size: 12px;
         }
         .history-item {
             background: #131b24;
-            padding: 8px 10px;
+            padding: 7px 10px;
             border-radius: 6px;
-            margin-bottom: 6px;
+            margin-bottom: 5px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-left: 3px solid #26a69a;
         }
+        .tab-changer {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 6px;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 5px;
+            background: #1e293b;
+            border: 1px solid #475569;
+            color: #94a3b8;
+            border-radius: 4px;
+            font-size: 11px;
+            cursor: pointer;
+            text-align: center;
+        }
+        .tab-btn.active { background: #00796b; color: #fff; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -283,106 +320,94 @@
     <header>
         <div>
             <h1>🎫 MARS-SIM 駅員切符発券シミュレーター</h1>
-            <div style="font-size: 11px; color: #b2dfdb;">JR・私鉄 窓口発券端末エミュレータ (管理者専用システム)</div>
+            <div style="font-size: 11px; color: #b2dfdb;">JR東日本マルス端末エミュレータ</div>
         </div>
         <div class="status-badge">
-            発行窓口: <span id="headerStation">君津駅 窓口1</span> | 本日売上: <strong id="totalSalesDisplay">¥0</strong>
+            窓口: <span id="headerStation">君津駅 窓口1</span> | 本日売上: <strong id="totalSalesDisplay">¥0</strong>
         </div>
     </header>
 
-    <div class="main-grid">
-        <!-- 左側：駅員操作パネル -->
+    <main class="main-grid">
+        <!-- 左側：タッチパネル操作画面 -->
         <div class="panel">
             <div class="panel-title">
-                <span>🖥️ 発券条件入力（マルス操作盤）</span>
-                <button class="preset-btn" onclick="window.close()">✖ 画面を閉じる</button>
+                <span>🖥️ マルスタッチパネル操作</span>
+                <button class="station-btn" style="padding:3px 8px;" onclick="window.close()">✖ 閉じる</button>
             </div>
 
             <!-- 券種選択 -->
-            <label>1. 券種・列車種別を選択</label>
-            <div class="btn-grid" id="ticketTypeGrid">
-                <div class="type-btn active" onclick="selectTicketType('普通乗車券（片道）', 1.0, this)">普通乗車券(片道)</div>
-                <div class="type-btn" onclick="selectTicketType('普通乗車券（往復）', 2.0, this)">普通乗車券(往復)</div>
-                <div class="type-btn" onclick="selectTicketType('特急券（指定席）', 1.8, this)">特急指定席券</div>
-                <div class="type-btn" onclick="selectTicketType('新幹線特急券', 2.5, this)">新幹線特急券</div>
-                <div class="type-btn" onclick="selectTicketType('グリーン券', 2.2, this)">グリーン券</div>
-                <div class="type-btn" onclick="selectTicketType('普通入場券', 0, this)">普通入場券</div>
+            <div class="section-box">
+                <label>1. 券種・種別を選択</label>
+                <div class="btn-grid" id="ticketTypeGrid">
+                    <div class="type-btn active" onclick="selectTicketType('普通乗車券（片道）', 1.0, this)">片道乗車券</div>
+                    <div class="type-btn" onclick="selectTicketType('普通乗車券（往復）', 2.0, this)">往復乗車券</div>
+                    <div class="type-btn" onclick="selectTicketType('特急券（指定席）', 1.8, this)">特急指定席</div>
+                    <div class="type-btn" onclick="selectTicketType('新幹線特急券', 2.5, this)">新幹線特急</div>
+                    <div class="type-btn" onclick="selectTicketType('グリーン券', 2.2, this)">グリーン券</div>
+                    <div class="type-btn" onclick="selectTicketType('普通入場券', 0, this)">入場券</div>
+                </div>
             </div>
 
-            <!-- 発駅・着駅 -->
-            <div class="form-row">
-                <div>
-                    <label>2. 発駅（乗車駅）</label>
-                    <input type="text" id="depStation" value="君津" oninput="updatePreview()">
-                    <div class="station-presets">
-                        <button class="preset-btn" onclick="setStation('dep', '君津')">君津</button>
-                        <button class="preset-btn" onclick="setStation('dep', '木更津')">木更津</button>
-                        <button class="preset-btn" onclick="setStation('dep', '蘇我')">蘇我</button>
-                        <button class="preset-btn" onclick="setStation('dep', '千葉')">千葉</button>
-                        <button class="preset-btn" onclick="setStation('dep', '東京')">東京</button>
+            <!-- 駅選択エリア -->
+            <div class="section-box">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                    <label style="margin-bottom:0;">2. 発着駅を選択（ボタンをタッチ）</label>
+                    <div class="tab-changer">
+                        <button class="tab-btn active" id="tabDep" onclick="setSelectMode('dep')">発駅を選ぶ</button>
+                        <button class="tab-btn" id="tabArr" onclick="setSelectMode('arr')">着駅を選ぶ</button>
                     </div>
                 </div>
-                <div>
-                    <label>3. 着駅（降車駅）</label>
-                    <input type="text" id="arrStation" value="東京" oninput="updatePreview()">
-                    <div class="station-presets">
-                        <button class="preset-btn" onclick="setStation('arr', '千葉')">千葉</button>
-                        <button class="preset-btn" onclick="setStation('arr', '東京')">東京</button>
-                        <button class="preset-btn" onclick="setStation('arr', '品川')">品川</button>
-                        <button class="preset-btn" onclick="setStation('arr', '横浜')">横浜</button>
-                        <button class="preset-btn" onclick="setStation('arr', '新大阪')">新大阪</button>
-                    </div>
+
+                <div class="selected-display">
+                    <span>🟢 発: <strong id="selectedDepName" style="color:#26a69a;">君津</strong></span>
+                    <span>🔴 着: <strong id="selectedArrName" style="color:#e74c3c;">東京</strong></span>
+                </div>
+
+                <!-- 駅名ボタンパネル -->
+                <div class="station-grid" id="stationButtonsContainer">
+                    <!-- JSで自動生成 -->
                 </div>
             </div>
 
-            <!-- 経由・列車名 -->
-            <div class="form-row">
-                <div>
-                    <label>4. 経由路線</label>
-                    <input type="text" id="viaLine" value="内房・総武線" oninput="updatePreview()">
-                </div>
-                <div>
-                    <label>5. 列車名・座席（任意）</label>
-                    <input type="text" id="trainInfo" value="普通列車（自由席）" oninput="updatePreview()">
-                </div>
-            </div>
-
-            <!-- 人数・運賃 -->
-            <div class="form-row">
-                <div>
-                    <label>6. 大人人数（12歳以上）</label>
-                    <input type="number" id="adultCount" value="1" min="0" max="10" oninput="recalcPrice()">
-                </div>
-                <div>
-                    <label>7. 小児人数（半額・端数切捨）</label>
-                    <input type="number" id="childCount" value="0" min="0" max="10" oninput="recalcPrice()">
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div>
-                    <label>8. 基本大人運賃（円）</label>
-                    <input type="number" id="baseFare" value="1340" step="10" oninput="updatePreview()">
-                </div>
-                <div>
-                    <label>9. 決済方法</label>
-                    <select id="payMethod" onchange="toggleCashInput(); updatePreview();">
-                        <option value="IC">交通系ICカード (Suica等)</option>
-                        <option value="現金">現金（お釣り計算）</option>
-                        <option value="クレジット">クレジットカード</option>
-                    </select>
-                </div>
-            </div>
-
-            <div id="cashCalcBox" style="display:none; background:#131b24; padding:10px; border-radius:6px; margin-bottom:10px;">
-                <div class="form-row" style="margin-bottom:0;">
+            <!-- 人数・決済 -->
+            <div class="section-box">
+                <div class="form-row">
                     <div>
-                        <label>お預かり金額（円）</label>
-                        <input type="number" id="cashReceived" value="2000" step="100" oninput="calcChange()">
+                        <label>3. 人数（大人 / 小児）</label>
+                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px;">
+                            <select id="adultCount" onchange="updatePreview()">
+                                <option value="1">大人 1名</option>
+                                <option value="2">大人 2名</option>
+                                <option value="3">大人 3名</option>
+                                <option value="4">大人 4名</option>
+                            </select>
+                            <select id="childCount" onchange="updatePreview()">
+                                <option value="0">小児 0名</option>
+                                <option value="1">小児 1名</option>
+                                <option value="2">小児 2名</option>
+                            </select>
+                        </div>
                     </div>
                     <div>
-                        <label>お釣り</label>
-                        <div id="changeDisplay" style="font-size:18px; font-weight:bold; color:#f39c12; padding-top:8px;">¥660</div>
+                        <label>4. 決済方法</label>
+                        <select id="payMethod" onchange="toggleCashInput(); updatePreview();">
+                            <option value="IC">交通系IC (Suica等)</option>
+                            <option value="現金">現金（お釣り計算）</option>
+                            <option value="クレジット">クレジット</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="cashCalcBox" style="display:none; margin-top:8px; padding-top:8px; border-top:1px dashed #334155;">
+                    <div class="form-row" style="margin-bottom:0;">
+                        <div>
+                            <label>お預かり金額（円）</label>
+                            <input type="number" id="cashReceived" value="2000" step="100" oninput="calcChange()">
+                        </div>
+                        <div>
+                            <label>お釣り</label>
+                            <div id="changeDisplay" style="font-size:16px; font-weight:bold; color:#f39c12; padding-top:6px;">¥660</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -390,10 +415,10 @@
             <button class="action-btn btn-issue" onclick="issueTicket()">🖨️ 切符を発券する（確定・売上計上）</button>
         </div>
 
-        <!-- 右側：リアルタイム切符プレビュー＆発券履歴 -->
+        <!-- 右側：プレビュー＆履歴 -->
         <div class="panel">
             <div class="panel-title">
-                <span>🎟️ 発券プレビュー（実寸イメージ）</span>
+                <span>🎟️ 発券プレビュー</span>
                 <span id="ticketSerialDisplay" style="font-size:11px; color:#95a5a6;">No.0001</span>
             </div>
 
@@ -402,7 +427,7 @@
                     <div class="stamp-box" id="ticketStamp">入鋏済<br>君津駅</div>
                     <div class="ticket-header">
                         <span id="pvType">普通乗車券（片道）</span>
-                        <span id="pvDate">2026年11月18日</span>
+                        <span id="pvDate">2026年11月19日</span>
                     </div>
                     <div class="ticket-route" id="pvRouteBox">
                         <span id="pvDep">君　津</span>
@@ -413,48 +438,51 @@
                     <div class="ticket-details">
                         <div>列車・設備：<span id="pvTrain">普通列車（自由席）</span></div>
                         <div>人員区分　：<span id="pvPax">大人 1名</span></div>
-                        <div>有効期間　：発売日当日限り有効（下車前途無効）</div>
+                        <div>有効期間　：発売日当日限り有効</div>
                     </div>
                     <div class="ticket-price-row">
-                        <span style="font-size:12px;" id="pvPayBadge">[IC決済]</span>
+                        <span style="font-size:11px;" id="pvPayBadge">[IC決済]</span>
                         <span class="ticket-price" id="pvTotalPrice">¥ 1,340</span>
                     </div>
                     <div class="ticket-footer">
                         <span id="pvIssuer">君津駅 Ｍ１発行</span>
-                        <span id="pvSerial">券番 20261118-001</span>
+                        <span id="pvSerial">券番 20261119-001</span>
                     </div>
                 </div>
             </div>
 
-            <div style="margin-top: 15px;">
-                <div class="panel-title">
-                    <span>📋 本日の発券履歴（localStorage保存）</span>
-                    <button class="preset-btn" style="background:#c0392b;" onclick="clearHistory()">履歴・売上リセット</button>
+            <div style="margin-top: 12px;">
+                <div class="panel-title" style="margin-bottom:8px;">
+                    <span>📋 本日の発券履歴</span>
+                    <button class="station-btn" style="background:#c0392b;" onclick="clearHistory()">リセット</button>
                 </div>
                 <div class="history-list" id="historyList">
-                    <div style="color:#7f8c8d; text-align:center; padding:15px;">まだ発券履歴はありません</div>
+                    <div style="color:#7f8c8d; text-align:center; padding:12px;">まだ発券履歴はありません</div>
                 </div>
             </div>
         </div>
-    </div>
+    </main>
 
     <script>
-        const STORAGE_KEY = 'station_mars_simulator_v1';
+        const STORAGE_KEY = 'station_mars_simulator_v2';
         let currentTicketType = '普通乗車券（片道）';
         let priceMultiplier = 1.0;
+        let selectMode = 'dep'; // 'dep' または 'arr'
+        let currentDep = '君津';
+        let currentArr = '東京';
 
-        // 駅間運賃の簡易辞書（リアルなJR運賃目安）
+        // 登録駅リストと運賃・経由データ
+        const stationList = [
+            "君津", "木更津", "姉ヶ崎", "五井", "蘇我", "千葉", 
+            "大貫", "佐貫町", "浜金谷", "館山", 
+            "東京", "品川", "横浜", "新宿", "大宮", "新大阪"
+        ];
+
         const fareTable = {
-            "君津-木更津": 200,
-            "君津-蘇我": 680,
-            "君津-千葉": 770,
-            "君津-東京": 1340,
-            "君津-品川": 1520,
-            "君津-横浜": 1690,
-            "君津-新大阪": 9680,
-            "木更津-東京": 1170,
-            "千葉-東京": 660,
-            "東京-新大阪": 8910
+            "君津-木更津": 200, "君津-姉ヶ崎": 420, "君津-五井": 510, "君津-蘇我": 680, "君津-千葉": 770,
+            "君津-大貫": 210, "君津-佐貫町": 330, "君津-浜金谷": 510, "君津-館山": 990,
+            "君津-東京": 1340, "君津-品川": 1520, "君津-横浜": 1690, "君津-新宿": 1420, "君津-大宮": 1980, "君津-新大阪": 9680,
+            "木更津-東京": 1170, "千葉-東京": 660, "東京-新大阪": 8910
         };
 
         function loadSimData() {
@@ -469,23 +497,34 @@
             localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
         }
 
-        function setStation(target, name) {
-            if (target === 'dep') document.getElementById('depStation').value = name;
-            else document.getElementById('arrStation').value = name;
-            autoEstimateFare();
-            updatePreview();
+        // 駅ボタンの描画
+        function renderStationButtons() {
+            const container = document.getElementById('stationButtonsContainer');
+            container.innerHTML = stationList.map(st => {
+                let cls = 'station-btn';
+                if (st === currentDep) cls += ' active-dep';
+                if (st === currentArr) cls += ' active-arr';
+                return `<div class="${cls}" onclick="handleStationClick('${st}')">${st}</div>`;
+            }).join('');
         }
 
-        function autoEstimateFare() {
-            const dep = document.getElementById('depStation').value.trim();
-            const arr = document.getElementById('arrStation').value.trim();
-            const key1 = `${dep}-${arr}`;
-            const key2 = `${arr}-${dep}`;
-            if (fareTable[key1]) {
-                document.getElementById('baseFare').value = fareTable[key1];
-            } else if (fareTable[key2]) {
-                document.getElementById('baseFare').value = fareTable[key2];
+        function setSelectMode(mode) {
+            selectMode = mode;
+            document.getElementById('tabDep').className = mode === 'dep' ? 'tab-btn active' : 'tab-btn';
+            document.getElementById('tabArr').className = mode === 'arr' ? 'tab-btn active' : 'tab-btn';
+        }
+
+        function handleStationClick(stName) {
+            if (selectMode === 'dep') {
+                currentDep = stName;
+                // 自動で着駅を切り替えるか維持するか
+            } else {
+                currentArr = stName;
             }
+            document.getElementById('selectedDepName').innerText = currentDep;
+            document.getElementById('selectedArrName').innerText = currentArr;
+            renderStationButtons();
+            updatePreview();
         }
 
         function selectTicketType(typeName, mult, el) {
@@ -493,38 +532,35 @@
             priceMultiplier = mult;
             document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
             el.classList.add('active');
-
-            if (typeName === '普通入場券') {
-                document.getElementById('baseFare').value = 150;
-                document.getElementById('trainInfo').value = '旅客車内立入禁止（2時間以内）';
-            } else if (typeName === '新幹線特急券') {
-                document.getElementById('trainInfo').value = 'のぞみ号 指定席（12号車 5番A席）';
-            } else if (typeName === '特急券（指定席）') {
-                document.getElementById('trainInfo').value = 'さざなみ号 指定席（3号車 8番D席）';
-            } else if (typeName === 'グリーン券') {
-                document.getElementById('trainInfo').value = '総武快速線 グリーン車自由席';
-            } else {
-                document.getElementById('trainInfo').value = '普通列車（自由席）';
-                autoEstimateFare();
-            }
             updatePreview();
+        }
+
+        function getFare() {
+            const key1 = `${currentDep}-${currentArr}`;
+            const key2 = `${currentArr}-${currentDep}`;
+            if (currentDep === currentArr) return 0;
+            if (fareTable[key1]) return fareTable[key1];
+            if (fareTable[key2]) return fareTable[key2];
+            // 登録されていない組み合わせの仮計算
+            return 850;
+        }
+
+        function calcTotalFare() {
+            if (currentTicketType === '普通入場券') return 150;
+            const base = getFare();
+            const adults = parseInt(document.getElementById('adultCount').value) || 1;
+            const children = parseInt(document.getElementById('childCount').value) || 0;
+            const mult = priceMultiplier;
+
+            const adultUnit = Math.floor((base * mult) / 10) * 10;
+            const childUnit = Math.floor((adultUnit / 2) / 10) * 10;
+            return (adultUnit * adults) + (childUnit * children);
         }
 
         function toggleCashInput() {
             const method = document.getElementById('payMethod').value;
             document.getElementById('cashCalcBox').style.display = (method === '現金') ? 'block' : 'none';
             calcChange();
-        }
-
-        function calcTotalFare() {
-            const base = parseInt(document.getElementById('baseFare').value) || 0;
-            const adults = parseInt(document.getElementById('adultCount').value) || 0;
-            const children = parseInt(document.getElementById('childCount').value) || 0;
-            const mult = (currentTicketType === '普通入場券') ? 1.0 : priceMultiplier;
-
-            const adultUnit = Math.floor((base * mult) / 10) * 10;
-            const childUnit = Math.floor((adultUnit / 2) / 10) * 10;
-            return (adultUnit * adults) + (childUnit * children);
         }
 
         function calcChange() {
@@ -543,16 +579,13 @@
 
         function formatStationName(name) {
             if (name.length === 2) return name[0] + '　' + name[1];
+            if (name.length === 3) return name[0] + name[1] + '　' + name[2];
             return name;
         }
 
         function updatePreview() {
-            const dep = document.getElementById('depStation').value.trim() || '君津';
-            const arr = document.getElementById('arrStation').value.trim() || '東京';
-            const via = document.getElementById('viaLine').value.trim() || '指定路線';
-            const train = document.getElementById('trainInfo').value.trim() || '普通列車';
-            const adults = parseInt(document.getElementById('adultCount').value) || 0;
-            const children = parseInt(document.getElementById('childCount').value) || 0;
+            const adults = document.getElementById('adultCount').value;
+            const children = document.getElementById('childCount').value;
             const pay = document.getElementById('payMethod').value;
             const total = calcTotalFare();
 
@@ -561,28 +594,28 @@
 
             document.getElementById('pvType').innerText = currentTicketType;
             document.getElementById('pvDate').innerText = dateStr;
-            document.getElementById('headerStation').innerText = `${dep}駅 窓口1`;
-            document.getElementById('ticketStamp').innerHTML = `入鋏済<br>${dep}駅`;
-            document.getElementById('pvIssuer').innerText = `${dep}駅 Ｍ１発行`;
+            document.getElementById('headerStation').innerText = `${currentDep}駅 窓口1`;
+            document.getElementById('ticketStamp').innerHTML = `入鋏済<br>${currentDep}駅`;
+            document.getElementById('pvIssuer').innerText = `${currentDep}駅 Ｍ１発行`;
 
             if (currentTicketType === '普通入場券') {
-                document.getElementById('pvRouteBox').innerHTML = `<span style="margin:0 auto;">${formatStationName(dep)} 駅 入場券</span>`;
+                document.getElementById('pvRouteBox').innerHTML = `<span style="margin:0 auto;">${formatStationName(currentDep)} 駅 入場券</span>`;
                 document.getElementById('pvVia').innerText = '旅客車内に立ち入ることはできません';
+                document.getElementById('pvTrain').innerText = '入場券（2時間以内）';
             } else {
                 const arrow = currentTicketType.includes('往復') ? '⇄' : '➔';
                 document.getElementById('pvRouteBox').innerHTML = `
-                    <span>${formatStationName(dep)}</span>
+                    <span>${formatStationName(currentDep)}</span>
                     <span style="font-size:16px;">${arrow}</span>
-                    <span>${formatStationName(arr)}</span>
+                    <span>${formatStationName(currentArr)}</span>
                 `;
-                document.getElementById('pvVia').innerText = `経由：${via}`;
+                document.getElementById('pvVia').innerText = currentTicketType.includes('特急') || currentTicketType.includes('新幹線') ? '経由：主要幹線・指定席特急' : '経由：内房・総武線';
+                document.getElementById('pvTrain').innerText = currentTicketType.includes('新幹線') ? 'のぞみ号 指定席' : (currentTicketType.includes('特急') ? 'さざなみ号 指定席' : '普通列車（自由席）');
             }
 
-            document.getElementById('pvTrain').innerText = train;
-            let paxArr = [];
-            if (adults > 0) paxArr.push(`大人 ${adults}名`);
-            if (children > 0) paxArr.push(`小児 ${children}名`);
-            document.getElementById('pvPax').innerText = paxArr.length > 0 ? paxArr.join(' / ') : '人員未指定';
+            let paxArr = [`大人 ${adults}名`];
+            if (parseInt(children) > 0) paxArr.push(`小児 ${children}名`);
+            document.getElementById('pvPax').innerText = paxArr.join(' / ');
 
             document.getElementById('pvPayBadge').innerText = `[${pay}決済]`;
             document.getElementById('pvTotalPrice').innerText = `¥ ${total.toLocaleString()}`;
@@ -593,10 +626,6 @@
             document.getElementById('pvSerial').innerText = `券番 ${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}-${nextNo}`;
 
             calcChange();
-        }
-
-        function recalcPrice() {
-            updatePreview();
         }
 
         function issueTicket() {
@@ -610,8 +639,6 @@
                 }
             }
 
-            const dep = document.getElementById('depStation').value.trim() || '君津';
-            const arr = document.getElementById('arrStation').value.trim() || '東京';
             const now = new Date();
             const timeStr = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
 
@@ -622,7 +649,7 @@
                 no: String(data.count).padStart(4, '0'),
                 time: timeStr,
                 type: currentTicketType,
-                route: currentTicketType === '普通入場券' ? `${dep}駅 入場券` : `${dep} → ${arr}`,
+                route: currentTicketType === '普通入場券' ? `${currentDep}駅 入場券` : `${currentDep} → ${currentArr}`,
                 price: total,
                 pay: pay
             });
@@ -630,10 +657,10 @@
             renderHistory();
             updatePreview();
 
-            // 発券アニメーション効果
+            // 発券時の演出
             const ticketEl = document.getElementById('ticketPreview');
-            ticketEl.style.transform = 'translateY(12px) scale(0.98)';
-            setTimeout(() => { ticketEl.style.transform = 'translateY(0) scale(1)'; }, 180);
+            ticketEl.style.transform = 'translateY(10px) scale(0.98)';
+            setTimeout(() => { ticketEl.style.transform = 'translateY(0) scale(1)'; }, 150);
         }
 
         function renderHistory() {
@@ -641,7 +668,7 @@
             document.getElementById('totalSalesDisplay').innerText = `¥${data.sales.toLocaleString()}`;
             const listEl = document.getElementById('historyList');
             if (data.history.length === 0) {
-                listEl.innerHTML = '<div style="color:#7f8c8d; text-align:center; padding:15px;">まだ発券履歴はありません</div>';
+                listEl.innerHTML = '<div style="color:#7f8c8d; text-align:center; padding:12px;">まだ発券履歴はありません</div>';
                 return;
             }
             listEl.innerHTML = data.history.map(item => `
@@ -656,15 +683,15 @@
         }
 
         function clearHistory() {
-            if (confirm('本日の売上と発券履歴を締め処理（リセット）しますか？')) {
+            if (confirm('本日の売上と発券履歴をリセットしますか？')) {
                 saveSimData({ sales: 0, count: 0, history: [] });
                 renderHistory();
                 updatePreview();
             }
         }
 
-        // 初期化
-        renderHistory();
+        // 初期化実行
+        renderStationButtons();
         updatePreview();
     </script>
 </body>
